@@ -8,4 +8,4 @@
 
 [submodule "tilestache"]
 	path = tilestache
-	url = https://github.com/joshbrooks/docker-timestache
+	url = https://github.com/joshbrooks/docker-tilestache
