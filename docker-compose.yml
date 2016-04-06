@@ -51,6 +51,10 @@ services:
     build: ./postgis
     networks:
       - front
+    environment:
+      POSTGRES_PASSWORD:  L1terary20@
+      POSTGRES_USER: belun
+      POSTGRES_DB: timordata.info
 
   tilestache:
     build: tilestache
