@@ -1,0 +1,7 @@
+{"type":"FeatureCollection",
+"features": [{% for place in places %}
+  {
+    "type": "Feature",
+    "properties": {"id":{{place.id}}, "pcode": {{place.pcode}}, "name": "{{place.name}}", "path": "{{place.path}}", "popupContent": "{{place.name}}", "count": "{{place.count}}"},{% autoescape off %}
+    "geometry":  {{place.geom_low_res.json}}{% endautoescape %}}{% if not forloop.last %},{% endif %}{% endfor %}
+]}

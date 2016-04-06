@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block script %}
+<script src="{{ STATIC_URL }}require.js" data-main="{{ STATIC_URL }}js/researchhub/required.publication_edit.js"></script>
+{% endblock script %}
+
+{% block style %}
+<style>
+
+
+.context-menu-pane a{
+  text-size: 30%;
+  padding: 2px;
+
+}
+
+.context-menu-pane input{
+  display:none;
+
+}
+
+#articles img.loading {
+    display: none;
+    height: 50px;
+    margin-bottom: -50px;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+.context-menu-pane{
+  min-height: 100px;
+  overflow-x:hidden;
+  overflow-y:auto;
+}
+
+.result {
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+  color: #555;
+  display: block;
+  padding: 6px;
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+.result:hover {
+  border-color: #66afe9;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+  outline: 0 none;
+}
+
+.jumbotron {
+  width:100%
+  height: auto;
+  padding: 0px;
+  margin-bottom: 0px;
+  overflow-x: auto;
+  overflow-y:auto;
+}
+
+.dropdown-menu {
+  font-size: 12px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.dropdown-menu-wide {
+  font-size: 12px;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 300px;
+}
+
+
+.dropdown-menu input {
+  display: none;
+}
+
+.jumbotron li {
+    display: inline;
+    float: left;
+    width:25%;
+    cursor: pointer;
+}
+.jumbotron ul {
+    display: none;
+}
+.jumbotron li.selected{
+    background-color: #EEEEEE;
+    text-shadow: 0px 1px 1px #4d4d4d;
+}
+
+
+path {
+    fill: #00cc00;
+    stroke: #006600;
+}
+
+path:hover {
+  fill: #f9ff7f;
+  stroke: #008000;
+  fill-opacity:0.50;
+}
+
+path.selected, path.selected:hover {
+    fill: #f9ff7f;
+    stroke: #661600;
+}
+
+path.background, path.background.selected, path.background:hover, path.background.selected:hover {
+    fill: #E6E6FA;
+    stroke: #9F9F9F;
+    }
+    
+text {
+    font-size: 16px;
+    fill: #f9ff7f;
+    stroke: #008000;
+    text-anchor:middle;
+  }
+  
+.place-list-item {
+    float: left;
+    font-size: 16px;
+    height: 50px;
+    line-height: 20px;
+    padding: 15px;
+}
+
+object#alphasvg {
+  width:100%;
+  height:100%;
+  min-height: 100px;
+  min-width: 500px;
+  }
+  
+.modal-dialog {
+  width: 90%;
+}
+
+.modal-body {
+  overflow-x:auto;
+}
+
+
+</style>
+{% endblock %}
+{% block content %}
+
+<div class="well">
+  <h4>Year and Type</h4>
+    {% crispy form helper %} 
+  <h4>Versions</h4>
+    {% include "library/publication_versions_form.html" %}
+  </div><!-- /.well -->
+
+  <div class="well">
+  
+    <div class="row">
+      <div class="col-sm-12 col-md-6 col-lg-6">
+        <h4>organizations</h4>
+        <div class="input-group">
+          <input type="text" class="form-control" id="organization-list" placeholder="Belun, Oxfam, World Vision, UNICEF, etc...">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button" data-replace="#organization-list" data-el="#placeholder_organization_search" data-url="/myapp/research/suggest/organization/?name=">Add</button>
+          </span>
+        </div><!-- /input-group -->
+        <div id="placeholder_organization_search"></div>
+        <form class="organizations">
+          {% include "library/organization_search_table.html" %}
+        </form>
+      </div><!-- /.col-lg-6 -->
+      
+      <div class="col-sm-12 col-md-6 col-lg-6">
+        <h4>Author(s)</h4>
+          <div class="input-group">
+            <input type="text" class="form-control" id="author-list" placeholder="Jane Doe, Jack Daniels, etc...">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" data-replace="#author-list" data-el="#placeholder_author_search" data-url="/myapp/research/suggest/author/?publication={{object.pk}}&name=">Add</button>
+            </span>
+          </div><!-- /input-group -->
+        <div id="placeholder_author_search"></div>
+        <form class="authors">
+          {% include "library/author_search_table.html" %}
+        </form>        
+      </div><!-- /.col-lg-6 -->
+    
+    </div>
+  </div><!-- /.well -->
+
+  <div class="well">
+    <h4>Sectors and Tags</h4>
+    <form class="sectors" autocomplete="off">
+      <div id="context-menu-main-pane">
+        <ul class="nav nav-tabs" role="tablist">{% for r in tags.get_root_nodes %}
+          <li {% if forloop.first %}class="active"{% endif %}>
+            <a href="#{{r.path|lower}}" role="tab" data-toggle="tab">
+              {{r.name}}
+            </a>{% endfor %}
+          </li>
+          <li>
+            <a href="#tags-custom" role="tab" data-toggle="tab">
+              Extra tags
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="tab-content context-menu-pane">{% for r in tags.get_root_nodes %}
+        <div class="tab-pane {% if forloop.first %}active{%endif%}" id="{{r.path|lower}}">
+          <h4>{{r.description}}</h4>
+          <div class="row">{% for child in r.get_children %}
+            <div class="col-xs-6 col-sm-4 col-md-3">{% if child in object.sector.all %}
+              <input type="checkbox" checked name="propertytag" id="{{child.pathstring}}" value='{{child.pathstring}}'/><button data-toggle="#{{child.pathstring}}" class="btn btn-sm btn-block btn-primary active">{{child.name}}</button>{% else %}
+              <input type="checkbox" name="propertytag" id="{{child.pathstring}}" value='{{child.pathstring}}'/><button data-toggle="#{{child.pathstring}}" class="btn btn-sm btn-block btn-default">{{child.name}}</button>{% endif %}
+            </div>{% endfor %}
+          </div>
+        </div>{% endfor %}
+        
+        <div class="tab-pane" id="tags-custom">
+
+          <div class="col-lg-12">
+            <div class="input-group">
+              <input type="text" class="form-control" id="tag-list" placeholder="Malaria, mosquito control">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button" data-lookup-tags="#tag-list" data-url="/myapp/research/createtags/">Create tag(s)</button>
+              </span>
+            </div><!-- /input-group -->
+            <span class="help-block">Enter any tags not shown above separated by comma e.g. "Pest control, Library"</span>
+          </div>
+          <span style="display:none">
+          <div class="col-xs-6 col-sm-4 col-md-3 tag-template">
+            <input type="checkbox" checked name="tag_id" id="" value=''/><button data-toggle="#tag_" class="btn btn-sm btn-block btn-primary active">User created template (hide me)</button>
+          </div>
+          </span>
+        {% for tag in researchtags %}
+          <div class="col-xs-6 col-sm-4 col-md-3">{% if tag in object.tags.all %}
+            <input type="checkbox" checked name="tag_id" id="tag_{{tag.id}}" value='{{tag.id}}'/><button data-toggle="#tag_{{tag.id}}" class="btn btn-sm btn-block btn-primary active">{{tag.name}}</button>{% else %}
+            <input type="checkbox" name="tag_id" id="tag_{{tag.id}}" value='{{tag.id}}'/><button data-toggle="#tag_{{tag.id}}" class="btn btn-sm btn-block btn-default">{{tag.name}}</button>{% endif %}
+          </div>{% endfor %}
+
+        
+        </div>
+        
+      </div>
+       </form>
+    </div>
+
+  <div class="well">
+    <h4>Locations</h4>
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="active"><a href="#location_world" role="tab" data-toggle="tab">World</a></li>
+          <li><a href="#location_regional" role="tab" data-toggle="tab">Regional</a></li>
+        </ul>
+        <div class="tab-content" style="height:500px; overflow:scroll;">
+          <div class="tab-pane active" id="location_world">
+            <div class="col-lg-6">
+              <div class="input-group">
+                <input type="text" class="form-control" id="country-list" placeholder="Timor, Indo, USA, NZL et...">
+                <span class="input-group-btn">
+                  <button class="btn btn-default" type="button" data-lookup="#country-list" data-url="/myapp/research/suggest/country/?name=">Search</button>
+                </span>
+              </div><!-- /input-group -->
+              <span class="help-block">Enter any country name, part of a name or the three letter ISO code to search</span>
+            </div>
+          <span class="svgselect_world"></span>
+          <p class="svghover"></p>
+          <form class="world" autocomplete="off" style="display:none">
+          {% csrf_token %}{% for country in object.country.all %}
+            <label for="location{{country.iso3}}"><input type="checkbox" id="location_{{country.iso3}}" checked name="location" value="{{country.iso3}}">{{country.name}}</label>{% endfor %}
+          </form>
+        </div>
+        
+        <div class="tab-pane" id="location_regional">
+          <div class="col-lg-6">
+            <div class="input-group">
+              <input type="text" class="form-control" id="regional-list" placeholder="AIN.AIN, Ainaro, Baucau, Suai etc...">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button" data-lookup="#regional-list" data-url="/myapp/research/suggest/region/?name=">Search</button>
+              </span>
+            </div>
+            <span class="help-block">Enter any place name, part of a name or a code to search for</span>
+          </div>
+
+          <span class="svgselect_regional"></span>
+
+          <form class="regional">
+            {% csrf_token %}{% for place in object.location.all %}
+            <label for="location{{place.id}}"><input type="checkbox" id="location_{{place.path}}" checked name="place" value="{{place.path}}">{{place.name}}</label>{% endfor %}
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+{% endblock content %}

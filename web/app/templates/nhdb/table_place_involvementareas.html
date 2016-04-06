@@ -1,0 +1,20 @@
+
+    <table>
+        <caption>Involvement Areas</caption>
+        <thead>
+            <tr>
+                <th>Area</th>
+                <th>Projects</th>
+            </tr>
+        </thead>
+        <tbody>{% for i in inv %}
+            <tr>
+                <td>
+                    <a data-mainactivitypk={{i.pk}} href='#'>{{ i.description }}</a>
+                </td>
+                <td>
+                    {{ i.project__count }}
+                </td>
+            </tr>{% endfor %}
+        </tbody>
+    </table>

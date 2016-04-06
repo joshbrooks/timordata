@@ -1,0 +1,60 @@
+{% load i18n %}
+<div role="navigation" class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+
+            <button data-toggle="collapse" data-target="#navbar" class="navbar-toggle" type="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">TimorData.info</a>
+        </div>
+
+        <nav id="navbar" class="navbar-collapse collapse">
+
+            <ul class="nav navbar-nav">
+                <li><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Database
+                    <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{% url 'nhdb:project:list' %}?q=status.A">{% trans "Projects" %} </a></li>
+                        <li><a href="/nhdb/organization/?q=active.true">{% trans "Organizations" %} </a></li>
+                    </ul>
+                </li>
+                <li><a href="{% url 'library:publication:list' %}">{% trans "Library" %} </a></li>
+                <li><a href="{% url 'donormapping:fundingoffer:list' %}">{% trans "Donor Funding" %} </a></li>
+            </ul>
+
+            <form class="navbar-form navbar-right" role="form" action="{% url 'set_language' %}" method="post"
+                      autocomplete="off">
+                    {%csrf_token%}{% get_language_info_list for LANGUAGES as languages %}{% for language in languages %}
+                    <button name="language"
+                            class="btn btn-language {% if language.code == request.LANGUAGE_CODE %}btn-success{% endif %}"
+                            value="{{ language.code }}">
+                        <img class="language-button-image"
+                             src="{{ STATIC_URL }}locales/{{ language.code }}{% if language.code != request.LANGUAGE_CODE %}_bw{% endif %}.png"
+                             alt="Change language to {{language.code}}">
+                    </button>
+                    {% endfor%}
+                </form>
+            <ul class="nav navbar-nav navbar-right">
+                {% block managementdropdown %}
+{% endblock managementdropdown %}
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{% trans "About" %}<span class="caret"></span></a>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='history' %}">{% trans "History" %}</a></li>
+            <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about' %}">{% trans "About Us" %}</a></li>
+            <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/tet/' %}">{% trans "About Us" %} (Tetun)</a></li>
+            <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='help' %}">{% trans "Help" %}</a></li>
+
+        </ul>
+    </li>
+</ul>
+            </nav>
+        <!--/.nav-collapse -->
+    </div>
+
+    <!--/.container-fluid -->
+</div><!--/.container-fluid -->

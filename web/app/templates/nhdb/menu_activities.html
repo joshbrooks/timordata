@@ -1,0 +1,8 @@
+<li id='activities_menu' data-fieldname='mainactivities' data-project={{proj.pk}}>Activities
+    <ul class='activities'  style='width:250px;'>{% for object in mainactivities.all %}
+        <li class='activity {% if object in proj.mainactivities.all %}remove{%else%}add{%endif%}' data-pk={{object.pk}}>
+                {{ object.description }}
+        </li>{% endfor %}
+    </ul>
+</li>
+

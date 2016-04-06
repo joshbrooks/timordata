@@ -1,0 +1,8 @@
+<div class='col col_10' style='height:100px'>
+	<h3>Project Photos</h3>
+{% for item in proj.projectimage_set.all %}
+	{% thumbnail item.image "200x200" crop="center" as im %}
+		<a href='{{item.image.url}}'><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
+	{% endthumbnail %}
+{% endfor %}
+</div>

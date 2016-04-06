@@ -1,0 +1,1 @@
+{% for p in projects %}<p><input type='radio' id='proj_{{p.pk}}' data-pk={{p.pk}} class='projid_radio' name='projid'/><label for='proj_{{p.pk}}'>{{p.name}} (led by {{p.lead.name}})</label></p>{% endfor %}

@@ -1,0 +1,126 @@
+from django.db.models import Count
+from nhdb.crispyforms import selectHtml
+from library.models import *
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Submit, HTML, Field
+from django import forms
+
+from django.utils.translation import ugettext_lazy as _
+
+
+class PublicationSearchForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(PublicationSearchForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-5'
+        self.helper.form_method = 'get'
+        self.helper.layout = Layout(
+            Field('year', css_class="applyselectize"),
+            Field('pubtype', css_class="applyselectize"),
+            Field('organisation', css_class="applyselectize"),
+            Field('tags', css_class="applyselectize"),
+            Field('location__pk', css_class="applyselectize"),
+            Field('country__pk', css_class="applyselectize"),
+            Field('versions__language__id', css_class="applyselectize"),
+        )
+        self.helper.add_input(Submit('search', 'Search'))
+
+    year = forms.MultipleChoiceField(
+        required=False,
+        label=_("Year"),
+        choices=Publication.objects.order_by(
+            'year').values_list('year', 'year').distinct()
+    )
+
+    pubtype = forms.MultipleChoiceField(
+        required=False,
+        label=_("Publication Types"),
+        choices=Pubtype.objects.values_list('pk', 'name')
+    )
+
+    organisation = forms.MultipleChoiceField(
+        choices=Publication.objects.all().select_related('organisation').values_list(
+            'organisation__pk', 'organisation__name').distinct(),
+        required=False,
+        label=_("Organisations")
+    )
+
+    tags = forms.MultipleChoiceField(
+        label=_('Tags or keywords'),
+        required=False,
+        choices=[
+            (t[0], '%s (%s)' % (t[1], t[2])) for t in Tag.objects.all()
+            .values_list('pk', 'name')
+            .annotate(Count('publication'))]
+
+    )
+
+    location__pk = forms.MultipleChoiceField(
+        label=_('Location'),
+        required=False,
+        choices=[(location['location__pk'], '{} ({})'.format(location['location__name'], location['c'])) for location in Publication.objects.values('location__pk','location__name').annotate(c = Count('location__name')).exclude(c=0)]
+    )
+
+    versions__language__id = forms.MultipleChoiceField(
+        label=_('Language'),
+        required=False,
+        choices=Language.objects.values_list('pk', 'name')
+    )
+
+    country__pk = forms.MultipleChoiceField(
+        label=_('Country'),
+        required=False,
+        choices=[(country['country__pk'], '{} ({})'.format(country['country__name'], country['c'])) for country in Publication.objects.values('country__pk','country__name').annotate(c = Count('country__name')).exclude(c=0)]
+    )
+
+
+class PublicationCreateForm(forms.ModelForm):
+    class Meta:
+        model = Publication
+        fields = ('year', 'name', 'description', 'pubtype',
+                  'author', 'country', 'location', 'tags', 'hyperlink')
+
+    def __init__(self, *args, **kwargs):
+        super(PublicationCreateForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-4'
+
+        self.helper.layout = Layout(
+            'year', 'name', 'description', 'pubtype', 'author', 'country', 'location', 'tags', 'hyperlink',
+            selectHtml('ACT'),
+            selectHtml('BEN'),
+            selectHtml('INV'),
+        )
+
+        self.helper.add_input(Submit('submit', 'Submit'))
+
+
+class VersionCreateForm(forms.ModelForm):
+    class Meta:
+        model = Version
+
+    def __init__(self, *args, **kwargs):
+        super(VersionCreateForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-4'
+        self.helper.add_input(Submit('submit', 'Submit'))
+
+
+class VersionUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Version
+
+    def __init__(self, *args, **kwargs):
+        super(VersionUpdateForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-4'
+        self.helper.add_input(Submit('submit', 'Submit'))

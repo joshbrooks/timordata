@@ -1,0 +1,62 @@
+{% block content %}
+
+<div class='row' style='width:880px'>
+    <div class='col_15'>
+<span id='org_id' style='display:none'>{{org.pk}}</span>
+<h2>{{ org.name }}</h2>
+</div>
+<div class='col col_5'>
+<table>
+    <caption>Details</caption>
+    <tbody>
+        <tr><td>Projects:</td><td>{{org.activeprojects}}</td></tr>
+        <tr><td>Status:</td><td>{{org.orgstatus}}</td></tr>
+        <tr><td>Org. Type:</td><td>{{org.orgtype}}</td></tr>
+        {% for n, d in contact %}
+        <tr><td>{{n}}:</td><td>{{d}}</td></tr>{% endfor%}
+    </tbody>
+</table>
+<a href='{% url "nhdb:organization:organization" org.pk %}'><p>Organization page</p></a>
+<a href='{% url "nhdb:organization:edit" org.pk %}'><p>Edit organization</p></a>
+</div>
+<div id='organizationmap' class='col col_8' style='height:320px'>
+</div>
+</div>
+<div class='row'>
+<div class='col col_12'>
+	<table>
+		<caption>Projects <span class='toggleonclick'>Show/ Hide inactive</span></caption>
+			<thead>
+				<th>Name</th>
+				<th class='toggleonclick'>Status</th>
+				<th>Organization Involvement</th>
+			</thead>
+
+        {% for link in org.projectorganization_set.all %}
+        <tr class={% if link.project.status %}"active"{% else %}"inactive" style='display:none'{%endif%}>
+			<td><a href="{% url 'nhdb:project:project' link.project.id %}">{{ link.project.name }}</a></td>
+			<td>{{ link.project.status }}</td>
+			<td>{{ link.organizationclass }}</td>
+		</tr>
+			{% endfor %}
+	</table>
+
+{% if org.fundingagency_set.all %}
+    <table>
+		<caption>Project Funding</caption>
+			<thead>
+				<th>Name</th>
+				<th>Status</th>
+			</thead>
+        
+        {% for link in org.fundingagency_set.all %}
+        
+        <td><a href="{% url 'nhdb:project:project' link.project.id %}">{{ link.project.name }}</a></td>
+        <td>{{ link.project.get_status_display }}</td>
+        </tr>
+        {% endfor %}
+        </table>
+{% endif %}
+</div>
+</div>
+{% endblock content %}

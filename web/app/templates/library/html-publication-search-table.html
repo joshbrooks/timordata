@@ -1,0 +1,45 @@
+{% extends 'nhdb/new_project_search/base.html' %}
+{% load i18n %}
+{% load django_select2_tags %}
+
+{% block script %}
+    {{block.super}}
+    {% import_django_select2_js_css %}
+{% endblock script %}
+
+{% block style %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}datatables/media/css/dataTables.bootstrap.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}/css/zebra/default.css">
+    <style>
+    span.tags {
+        line-height: 22px;
+        font-size: 10px;
+    }
+    .tag {
+        white-space: nowrap;
+        border-radius: 5px;
+        color: #000000;
+        background: #E6E6FA;
+        padding: 2px;
+    }
+    .sector {
+        white-space: nowrap;
+        border-radius: 5px;
+        color: #000000;
+        background: #90EE90;
+        padding: 2px;
+    }
+    </style>
+{% endblock style %}
+{% block body %}
+{% csrf_token %}
+<input type="hidden" name="project" value="{{p.pk}}">
+    
+    <div class="container">
+      {% include "library/div-publication-list.html" %}
+    </div>
+
+
+</body>
+{% endblock body %}
+</html>

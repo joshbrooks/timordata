@@ -1,0 +1,19 @@
+ <table>
+        <caption>Target Beneficiaries</caption>
+        <thead>
+            <tr>
+                <th>Beneficiary group</th>
+                <th>Projects</th>
+            </tr>
+        </thead>
+        <tbody>{% for m in ben %}
+            <tr>
+                <td>
+                    <a data-mainactivitypk={{m.pk}} href='#'>{{ m.description }}</a>
+                </td>
+                <td>
+                    {{ m.project__count }}
+                </td>
+            </tr>{% endfor %}
+        </tbody>
+    </table>

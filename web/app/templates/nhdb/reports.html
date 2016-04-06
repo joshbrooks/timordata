@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+	<link rel="stylesheet" href="{{ STATIC_URL }}/dataTables.css" />
+{% endblock extra_css %}
+
+{% block resources %}
+     <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}jquery.dataTables.min.js"></script>
+{% endblock resources%}
+
+{% block script %}
+<script language="javascript">
+			$(document).ready(function() {
+				$('.sorttable').dataTable( {
+					"aaSorting": [[ 0, "desc" ]]
+				} );
+			} );
+ </script>
+{% endblock script %}
+
+{% block content %}
+
+<h3>Reports</h3>
+
+</div>
+
+{% for r in reports %}
+
+<div class='row' style='overflow-x:scroll'>
+<table class='sorttable'>
+  <caption>{{ r.caption }}</caption>
+    <thead>
+      <tr>
+        {% for text in r.theaders %} <th>{{text}}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>{% for row in r.table %}
+      <tr> {% for col in row %} 
+        <td>{{ col }}</td>{% endfor %}
+      </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+
+{% endfor %}
+<div class='row'>
+
+{% endblock content %}

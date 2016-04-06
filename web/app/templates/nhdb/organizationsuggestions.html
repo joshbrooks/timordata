@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<h4> {% trans "New Organizations Suggested" %}</h4>
+
+{% for s in suggestions %}
+
+ <p><a href="{{s.pk}}/">&raquo; {{s.data_jsonify.name}} ({{s.data_jsonify.orgtype}})</a></p>
+{% endfor %}
+
+{% endblock content %}

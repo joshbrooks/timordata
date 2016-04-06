@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+
+    {% block content %}
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-12">
+
+            <h2>{% trans 'Information' %}</h2>
+            <p> The Online Library has {{ publications.count }} publications from different organizations.</p>
+            <p><a class="btn btn-default" href='{% url "library:publication:list" %}' role="button">{% trans 'Search Publications' %} &raquo;</a></p>
+
+        </div>
+        <div class="col-md-4">
+            <h2>{% trans 'Add Documents' %}</h2>
+            <p>Add information about documents or useful links</p>
+            <p><a class="btn btn-default" href='{% url "library:publication:create" %}' role="button">{% trans 'Add' %} &raquo;</a></p>
+        </div>
+      </div>
+
+    {% endblock content %}

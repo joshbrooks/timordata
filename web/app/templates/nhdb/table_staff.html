@@ -1,0 +1,73 @@
+
+<!--
+        Takes a "project" instance; an "organization" instance; and "OPTION_STAFFCLASS"
+        and creates markup suitable for appending to a 'modal' div
+-->
+
+      <form method="POST" action=''>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">People from ?? Org</h4>
+      </div>
+      <div class="modal-body">
+
+
+    <table id='persons'> 
+        <caption>Staff</caption>
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+            </tr>
+    <!--
+            Begin with staff already in the project
+    -->
+            {% for projperson in proj.projectperson_set.all %}
+            {% if projperson.person in organization.person_set.all %}
+            <tr>
+                <td>{{ projperson.person.name }}
+                    <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+                    <span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+                    <span class="glyphicon glyphicon-sort form-control-feedback"></span>
+                </td>
+                <td>
+                    <input type="hidden" name='id' value={{projperson.pk}}>
+                    <input type="hidden" name='person' value={{projperson.person.pk}}>
+                    <input type="hidden" name='project' value={{proj.pk}}>
+                    <select name="staffclass" class="form-control input-sm" style='width:auto;'>{% for char, text in OPTION_STAFFCLASS %}
+                        <option value="{{char}}"{% if projperson.staffclass = char %} selected class="active"{%endif %}> {{text}}</option>{% endfor %}
+                        <option>-</option>
+                    </select>
+                    
+                </td>
+            </tr>{% endif %}{% endfor %}
+    <!--
+            Add staff from the organization but not in the project
+    -->     
+            {% for person in organization.person_set.all %}{% if person not in proj.person.all %}
+            <tr> 
+                <td>{{ person.name }}
+                    <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+                    <span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+                    <span class="glyphicon glyphicon-sort form-control-feedback"></span>
+                </td>
+                <td> 
+                    <input type="hidden" name='id'>
+                    <input type="hidden" name='person' value={{person.pk}}>
+                    <input type="hidden" name='project' value={{proj.pk}}>
+                    <select name="staffclass" class="form-control input-sm" style='width:auto;'>{% for char, text in OPTION_STAFFCLASS %}
+                        <option value="{{char}}"> {{text}}</option>{% endfor %}
+                        <option selected>-</option>
+                    </select>
+                </td>
+            </tr>{% endif %}{% endfor %}
+            
+        </tbody>
+    </table>
+
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+<button type="submit" class="btn btn-primary">Save changes</button>
+</div>
+</form>

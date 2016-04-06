@@ -1,0 +1,20 @@
+<table id='projectorganizations' class='editable'>
+	<caption>Organizations</caption>
+	<tbody>
+		<tr>
+			<th>Organization</th>
+			<th class='involvement'>Involvement</th>
+            <th>Email</th>
+		</tr>	
+		{% for link in proj.projectorganization_set.all %}
+            {% with org=link.organization %}
+			<tr>
+				<td><a href="{% url 'nhdb:organization:organization' org.id %}">{{ org.name }}</a></td>
+				<td class='involvement'><div class='text'>{{link.organizationclass}}</div></td>
+                <td>{% if org.contact.email %}{% if user.is_authenticated %}<a href='mailto:{{org.contact.email}}'>{{org.contact.email}}</a>{% else %} (Log in to see email) {% endif %}{% else %} No email given{% endif %}</td>
+			</tr>
+            {% endwith %}
+		{% endfor %}
+
+	</tbody>
+</table> 

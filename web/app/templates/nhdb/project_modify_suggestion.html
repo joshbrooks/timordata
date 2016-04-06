@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load django_select2_tags %}
+
+{% block script %}
+    {{block.super}}
+
+    <link rel="stylesheet" href="{{ STATIC_URL }}zebra/css/bootstrap.css" />
+    <script src="{{ STATIC_URL }}zebra/javascript/zebra_datepicker.js"></script>
+    <script src="{{ STATIC_URL }}simply-toast/simply-toast.js"></script>
+
+<script>
+
+        $(document).ready(function() {
+
+                            $('input[name=startdate]').Zebra_DatePicker({view:'years'});
+                            $('input[name=enddate]').Zebra_DatePicker({view:'years'});
+        });
+
+    $(document).ready(function(){
+           $('.form.personal_details_form [name="_name"]').val(localStorage['personal_details_name']);
+            $('.form.personal_details_form [name="_email"]').val(localStorage['personal_details_email']);
+    })
+    $(document).ready(function(){
+           $('.selecttwo').select2({closeOnSelect:false});
+    })
+
+    $(document).ready(function() {
+        var projectForm = $('#project-form');
+
+                /*
+             {% comment %} Sets the required properties of the Suggestion {%endcomment%}
+                */
+
+        $('<input name="_url" value="/rest/nhdb/project/">').appendTo(projectForm);
+        $('<input name="_action" value="CM">').appendTo(projectForm);
+        $('<input name="_user_name" value="{{user}}">').appendTo(projectForm);
+        $('<input name="_user_id" value="{{user.id}}">').appendTo(projectForm);
+        // $('<input name="_affected_instance_primary" value="nhdb_project {{object.id}}">').appendTo(projectForm);
+        $('<input name="_method" value="POST">').appendTo(projectForm);
+        $('<input name="_description" value="Create a new project">').appendTo(projectForm);
+
+                /*
+             {% comment %} Because we are using translated fields, we'll get an error when we try to POST a new project
+             when the 'name' is null
+             Therefore, rename one of the translated fields ('name_en' usually) to 'name'{%endcomment%}
+                */
+        $('<input name="name" value="Created through the New Project Suggestion form">').appendTo(projectForm);
+        $('<input name="notes" value="-">').appendTo(projectForm);
+        $('<input name="description" value="-">').appendTo(projectForm);
+
+
+        })
+
+</script>
+
+    {% import_django_select2_js_css %}
+    <script src="{{ STATIC_URL }}project_edit.js"></script>
+    <script src="{{ STATIC_URL }}select2/js/select2.min.js"></script>
+{% endblock script %}
+ {% block style %}
+    <link href="{{ STATIC_URL }}django_tables2/themes/paleblu/css/screen.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}selectize/css/selectize.bootstrap3.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}select2/css/select2.min.css" rel="stylesheet">
+    <style>
+    ul.pagination {
+        border-radius: 0px;
+        display: block;
+    }
+    .datacenter-search-form {
+        background-color:#FFD;
+        padding:5px;
+        border-radius: 5px;
+        margin-bottom:10px;
+    }
+
+        .template {
+            display:none;
+        }
+    </style>
+{% endblock style %}
+
+{% block content %}
+
+          <label>Suggestion ID for organization classes is <input value="{{related_organizations.pk}}"></label>
+          <label>Suggestion ID for this project is <input value="{{suggestion.pk}}"></label>
+
+<table class="table table-condensed table-bordered" style="font-size:75%">
+	<caption>Requested Changes
+	</caption>
+
+	<thead>
+		<tr>
+            <th scope="col">Description</th>
+            <th scope="col">State</th>
+            <th scope="col">Name / Logged in as</th>
+            <th scope="col">Email</th>
+            <th scope="col">Comment</th>
+            <th scope="col">State</th>
+            <th scope="col">Date</th>
+            <th scope="col">Data</th>
+            <th scope="col">Action</th>
+		</tr>
+	</thead>
+
+	<tbody>{% for s in suggestion.related_changes %}
+
+		<tr class="{% if s.state == 'A' %}info{% elif s.state == 'R' %}warning{% elif s.state == 'X' %}hidden{% elif s.state == 'E' %}danger{% endif %}">
+            <td>{{s.description}}</td>
+            <td>{{s.get_state_display}}</td>
+            <td>{{s.name}} / {{s.user_name}}</td>
+
+            <td>{{s.email_obfs}}</td>
+            <td>{{s.comment}}</td>
+
+            <td>{{s.get_state_display}}</td>
+            <td>{{s.dependent_data}}</td>
+            <td>{{s.data}}</td>
+            <td>{{s.suggestDate}}</td>
+
+            <td>{% for name, value, new, unchanged in s.changes %}
+                    {% if unchanged %}
+                        <span style="color:slategray">{{name}}: {{value}}</span>
+                    {% else %}
+                     {{name}}: <span style="color:red"><del>{{value}}</del></span> <span style="color:#008000">{{new}}</span>
+                {% endif %}
+                {% if not forloop.last %}<br>{% endif %}
+
+                {% endfor %}
+            </td>
+            <td>
+
+                <form class="restInteraction" method="POST" action="{{s.parseurl}}">
+                    {% csrf_token %}
+                    <input type="hidden" name="_method" value="{{s.method}}">
+                    <input type="hidden" name="confirm" value="true">
+                    <input type="hidden" name="_content" value="{{s.data}}">
+                    <input type="hidden" name="_content_type" value="application/json">
+                    <input type="hidden" name="suggest_id" value="{{s.pk}}">
+                    {% if request.user.is_authenticated %}
+                    {% comment %} Depending on the suggested 'method', different button will show {% endcomment %}
+
+                    {% if s.method == 'DELETE' %}
+                        <button type="submit" class='btn btn-block btn-warning btn-xs'>Delete</button>
+                    {% elif s.method == 'POST' %}
+                        <button type="submit" class='btn btn-block btn-info btn-xs'>Create</button>
+                    {% elif s.method == 'PATCH' %}
+                        <button type="submit" class='btn btn-block btn-primary btn-xs'>Update</button>
+                    {% elif s.method == 'PUT' %}
+                        <button type="submit" class='btn btn-block btn-primary btn-xs'>Create</button>
+
+                    {% endif %}
+                    {% endif %}
+                </form>
+
+                <form class="deleteSuggestion" method="POST" action="/rest/suggest/suggest/{{s.pk}}/">
+                    {% csrf_token %}
+                    <input type="hidden" name="_method" value="DELETE">
+                    {% if request.user.is_authenticated %}
+                    <button type="submit" class='btn btn-default btn-xs'>Remove suggestion</button>
+                    {% else %}
+                    {% endif %}
+                </form>
+
+            </td>
+		</tr> {% endfor %}
+	</tbody>
+</table>
+
+
+<div class="container-fluid">
+<div class="row">
+    <div class="col-lg-6 col-sm-6">
+     <div class="alert alert-info alert-dismissible fade in" role="alert">
+            <h4>Add Project page</h4>
+              <p>You can add information about a new project you have on this page. First, we'll collect some of the
+                  basic details. If you don't know them, just leave the field empty - you can update this later.</p>
+          </p>
+        </div>
+
+
+        <div class="alert alert-success alert-dismissible fade in" role="alert">
+            <h4>Suggestion Information</h4>
+            <div class="container-fluid">
+                <div class="row">
+                    <form method="post" class="form form-horizontal personal_details_form">
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"> Submitted by :</label>
+                            <div class="col-sm-9"><input type="text" name="_name" class="textinput textInput form-control"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"> Email :</label>
+                            <div class="col-sm-9"><input type="text" name="_email" class="textinput textInput form-control"></div>
+                        </div>
+
+                         <div class="form-group">
+                            <label class="col-sm-3 control-label"> Comment :</label>
+                            <div class="col-sm-9"><textarea type="textarea" name="_comment" class="textinput textInput form-control"></textarea></div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-success alert-dismissible fade in" role="alert">
+            <h4>Project successfully submitted</h4>
+              <p>Thanks - the information you sent looks good! One of the admin team will review this within a few days, we will contact you if we have any questions and otherwise we'll make it available on the site.
+            <p>If you wish, you may add a few details about the organizations and locations of this project.</p>
+
+        </div>
+
+          <div class="alert alert-danger alert-dismissible fade in" role="alert">
+            <h4>Error in sending that project!</h4>
+              <p>Oops - something went wrong!</p>
+              <p id="submit-error-message">&lt;The error message should be here, if you see this something is VERY wrong&gt;</p>
+        </div>
+
+        {% crispy form %}
+   </div>
+    </div>
+    </div>
+
+
+
+{% endblock %}
+
+

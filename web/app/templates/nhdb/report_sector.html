@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block script %}
+<script language="javascript" type='text/javascript' src="{{ STATIC_URL }}jquery.nhdb.report.js"></script>
+{% endblock script %}
+
+{% block headertext %}NHDB Sector Report: {{sector.description}} {% endblock headertext %}
+
+{% block content %}
+<span data-mainactivitypk={{activity.pk}} style='display:none'></span>
+
+<div class='row'>
+    
+        <div id='graph1' class='col col_5 graph' style='height:280px'>
+        <h4>Projects over Time</h4></div>
+    
+        <div id='graph2' class='col col_5 graph' style='height:280px'>
+        <h4>Flot empty 1</h4></div>
+    
+        <div id='graph3' class='col col_5 graph' style='height:280px'>
+        <h4>Flot empty 2</h4></div>
+        
+
+</div>
+
+
+
+<div class='row'>
+<!--
+    <div class='col col_10'>
+    {% include 'nhdb/crosstable.html' %}
+    </div>
+-->
+
+    <div class='col col_5'>
+        <table id='beneficiaries'>
+        <caption>Beneficiaries</caption>
+            <tr>
+                <th>Beneficiary Group</th>
+                <th>Active Projects</th>
+            </tr>{% for t in targetbeneficiaries %}
+            <tr>
+                <th>{{t.description}}</th>
+                <td>{{t.count}}</td>
+            </tr>{% endfor %}
+        </table>
+    </div>
+    <div class='col col_5'>
+        <table id='mainactivities'>
+        <caption>Main Activities</caption>
+            <tr>
+                <th>Area</th>
+                <th>Active Projects</th>
+            </tr>{% for m in mainactivities %}
+            <tr>
+                <th>{{m.description}}</th>
+                <td>{{m.count}}</td>
+            </tr>{% endfor %}
+        </table>
+    </div>
+    <div class='col col_5'>
+        <table id='districts'>
+        <caption>Places</caption>
+            <tr>
+                <th>Place</th>
+                <th>Population</th>
+                <th>Projects</th>
+                <th>Projects per 10,000 persons</th>
+            </tr>{% for place in place_count %}
+            <tr>
+                <th><a href='?place={{place.path}}'>{{place.name}}</a></th>
+                <td>{{place.persons}}</td>
+                <td>{{place.projects}}</td>
+                <td>{{place.projects_per_10000}}</td>
+            </tr>{% endfor %}
+        </table>
+    </div>
+
+</div>
+
+
+
+
+{% endblock content %}

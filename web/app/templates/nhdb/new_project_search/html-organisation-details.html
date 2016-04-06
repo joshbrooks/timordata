@@ -1,0 +1,48 @@
+{% extends 'nhdb/new_project_search/base.html' %}
+{% load i18n %}
+{% block style %}
+<style>
+.result {
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+  color: #555;
+  display: block;
+  padding: 6px;
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+.result:hover {
+  border-color: #66afe9;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+  outline: 0 none;
+}
+
+</style>
+{% endblock %}
+
+  {% block content %}
+<h3>{{o.name}}</h3>
+<div class="organizationcontact well">
+<h4>{% trans "Contact Details" %}</h4>
+  {% include 'nhdb/new_project_search/div-organization-contact.html' %}
+</div>
+<div class="organizationprojects well" id="organizationprojects">
+<h4>{% trans "Projects" %}</h4>
+  {% if o.project_set.all %}
+  {% include 'nhdb/new_project_search/div-project-details.html' with projects=o.project_set.all %}
+  {% else %} <p>No projects</p> {% endif %}
+  <a href='#' class="btn btn-default">Add Project</a>
+</div>
+
+<div class="well" id="staffdetails">
+<h4>{% trans "Staff" %}</h4>
+  {% for p in o.person_set.all %}
+  <p>{{p.name}} - {{p.title}} </p>
+  {% endfor %}
+  <a href='#' class="btn btn-default">Add Person</a>
+</div>
+{% endblock %}

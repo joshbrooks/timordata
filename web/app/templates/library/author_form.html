@@ -1,0 +1,23 @@
+{% extends "base_modal.html" %}
+{% load crispy_forms_tags %}
+{% block modal-content %}
+  <form class="form-horizontal" role="form" action="{% url 'library:author' %}" method="POST">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Create a new Author</h4>
+      </div>
+      <div class="modal-body">
+        {% crispy form %}
+      </div>
+      <div class="modal-footer">
+        {% block close %}
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        {% endblock %}
+        {% block save %}
+        <button type="button" class="btn btn-primary author-submit-new">Save</button>
+        {% endblock %}
+      </div>
+    </div><!-- /.modal-content -->
+  </form>
+{% endblock %}

@@ -1,0 +1,373 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-28 06:56+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: belun/settings.py:37 belun/settings.py:40 belun/settings_original.py:37
+#: belun/settings_original.py:40 belun/settings_production.py:21
+#: belun/settings_production.py:24
+msgid "Tetun"
+msgstr ""
+
+#: belun/settings.py:41 belun/settings_original.py:41
+#: belun/settings_production.py:25
+msgid "English"
+msgstr ""
+
+#: belun/settings.py:42 belun/settings_original.py:42
+#: belun/settings_production.py:26
+msgid "Portugese"
+msgstr ""
+
+#: belun/settings.py:43 belun/settings_original.py:43
+#: belun/settings_production.py:27
+msgid "Indonesian"
+msgstr ""
+
+#: donormapping/forms.py:31
+msgid "Questions for Recipients"
+msgstr ""
+
+#: donormapping/forms.py:41
+msgid "Questions for Donors"
+msgstr ""
+
+#: donormapping/forms.py:49
+msgid "Technology Access"
+msgstr ""
+
+#: donormapping/forms.py:72
+msgid "Organization"
+msgstr ""
+
+#: donormapping/forms.py:77 library/models.py:51
+msgid "Tags"
+msgstr ""
+
+#: donormapping/forms.py:129 library/forms.py:35
+msgid "Sectors"
+msgstr ""
+
+#: donormapping/forms.py:136 nhdb/forms.py:100 nhdb/forms.py:431
+#: nhdb/partialforms.py:198
+msgid "Beneficiaries"
+msgstr ""
+
+#: donormapping/forms.py:144 nhdb/forms.py:105 nhdb/forms.py:436
+#: nhdb/partialforms.py:203
+msgid "Activities"
+msgstr ""
+
+#: donormapping/forms.py:172 nhdb/forms.py:256
+msgid "Organizations"
+msgstr ""
+
+#: donormapping/forms.py:177
+msgid "District"
+msgstr ""
+
+#: donormapping/models.py:140
+msgid "Organization type"
+msgstr ""
+
+#: donormapping/models.py:142
+msgid "Properties"
+msgstr ""
+
+#: donormapping/models.py:143
+msgid "Has your organization given funding in the past year?"
+msgstr ""
+
+#: donormapping/models.py:145
+msgid "How much (approximately) given in the past year?"
+msgstr ""
+
+#: donormapping/models.py:147
+msgid "Has your organization received funding in the past year?"
+msgstr ""
+
+#: donormapping/models.py:149
+msgid "How much (approximately) received in the past year?"
+msgstr ""
+
+#: donormapping/models.py:154
+msgid "How do you find your recipients?"
+msgstr ""
+
+#: donormapping/models.py:155 donormapping/models.py:159
+msgid "If other, please write:"
+msgstr ""
+
+#: donormapping/models.py:158
+msgid "How do you find your donors?"
+msgstr ""
+
+#: donormapping/models.py:160
+msgid "e.g. Television Advertising, Radio, Newspapers"
+msgstr ""
+
+#: donormapping/models.py:164
+msgid "Donor funding is difficult to find"
+msgstr ""
+
+#: donormapping/models.py:166
+msgid "Recipient organisations are hard to find"
+msgstr ""
+
+#: donormapping/models.py:169
+msgid "Receiving funds is difficult because of transport problems"
+msgstr ""
+
+#: donormapping/models.py:172
+msgid "Applying for funds is very difficult because the process is complicated"
+msgstr ""
+
+#: donormapping/models.py:175
+msgid ""
+"Donor funding is hard to find for the sectors this organization works in"
+msgstr ""
+
+#: donormapping/models.py:180
+msgid "How often do you use Facebook?"
+msgstr ""
+
+#: donormapping/models.py:181
+msgid "How often do you use Gmail?"
+msgstr ""
+
+#: donormapping/models.py:182
+msgid "How often do you use Google Search?"
+msgstr ""
+
+#: donormapping/models.py:185
+msgid "I have access to a computer"
+msgstr ""
+
+#: donormapping/models.py:186
+msgid "I have access to a printer"
+msgstr ""
+
+#: donormapping/models.py:187
+msgid "I have access to a basic mobile phone (calls and SMS) at work"
+msgstr ""
+
+#: donormapping/models.py:188
+msgid "I have access to a smartphone or tablet (with internet access)"
+msgstr ""
+
+#: geo/models.py:9
+msgid "Major town"
+msgstr ""
+
+#: geo/models.py:10
+msgid "Minor town"
+msgstr ""
+
+#: geo/models.py:11
+msgid "Hamlet"
+msgstr ""
+
+#: library/forms.py:27
+msgid "Tag"
+msgstr ""
+
+#: library/forms.py:46
+msgid "Search for Publications"
+msgstr ""
+
+#: library/forms.py:64
+msgid "Year(s)"
+msgstr ""
+
+#: library/forms.py:72
+msgid "Type(s)"
+msgstr ""
+
+#: library/forms.py:80
+msgid "Organization(s)"
+msgstr ""
+
+#: library/forms.py:85
+msgid "Include primary sources"
+msgstr ""
+
+#: library/forms.py:94
+msgid "Language"
+msgstr ""
+
+#: library/models.py:15
+msgid "Year"
+msgstr ""
+
+#: library/models.py:16 nhdb/models.py:93 nhdb/models.py:239
+msgid "name"
+msgstr ""
+
+#: library/models.py:17 nhdb/models.py:94
+msgid "description"
+msgstr ""
+
+#: library/models.py:18
+msgid "Type"
+msgstr ""
+
+#: library/models.py:36
+msgid "Publications"
+msgstr ""
+
+#: library/models.py:105
+msgid "Versions"
+msgstr ""
+
+#: library/models.py:137
+msgid "Authors"
+msgstr ""
+
+#: library/models.py:153
+msgid "Publication Types"
+msgstr ""
+
+#: nhdb/admin.py:19
+msgid "Name"
+msgstr ""
+
+#: nhdb/admin.py:29
+msgid "First Name"
+msgstr ""
+
+#: nhdb/admin.py:39
+msgid "Last Name"
+msgstr ""
+
+#: nhdb/admin.py:48
+msgid "Staff"
+msgstr ""
+
+#: nhdb/admin.py:75
+msgid "No. of Projects"
+msgstr ""
+
+#: nhdb/forms.py:95 nhdb/forms.py:266 nhdb/forms.py:426
+#: nhdb/partialforms.py:193
+msgid "Sector(s)"
+msgstr ""
+
+#: nhdb/forms.py:111
+msgid "Search Organizations"
+msgstr ""
+
+#: nhdb/forms.py:145 nhdb/forms.py:493
+msgid "Place"
+msgstr ""
+
+#: nhdb/forms.py:258
+msgid "Locations"
+msgstr ""
+
+#: nhdb/forms.py:396
+msgid "Your Name"
+msgstr ""
+
+#: nhdb/forms.py:402
+msgid "Email address"
+msgstr ""
+
+#: nhdb/forms.py:407
+msgid "Comments"
+msgstr ""
+
+#: nhdb/forms.py:442
+#, fuzzy
+#| msgid "Projects"
+msgid "Search Projects"
+msgstr "Projects"
+
+#: nhdb/forms.py:552
+msgid "Default"
+msgstr ""
+
+#: nhdb/models.py:95
+msgid "class"
+msgstr ""
+
+#: nhdb/models.py:240
+#, fuzzy
+msgid "Project Description"
+msgstr "Projects"
+
+#: nhdb/models.py:262
+msgid "Full time staff"
+msgstr ""
+
+#: nhdb/models.py:263
+msgid "Part time staff"
+msgstr ""
+
+#, fuzzy
+#~ msgid "Project Sectors"
+#~ msgstr "Projects"
+
+#, fuzzy
+#~ msgid "Project Beneficiaries"
+#~ msgstr "Projects"
+
+#, fuzzy
+#~ msgid "Project Activities"
+#~ msgstr "Projects"
+
+#, fuzzy
+#~| msgid "Projects"
+#~ msgid "Projects"
+#~ msgstr "Projects"
+
+#, fuzzy
+#~| msgid "Projects"
+#~ msgid "Search Publications"
+#~ msgstr "Projects"
+
+#, fuzzy
+#~| msgid "Projects"
+#~ msgid "Add a project"
+#~ msgstr "Projects"
+
+#, fuzzy
+#~| msgid "Projects"
+#~ msgid "Add a publication"
+#~ msgstr "Projects"
+
+#, fuzzy
+#~| msgid "Projects"
+#~ msgid "Project Name"
+#~ msgstr "Projects"
+
+#, fuzzy
+#~ msgid "Description"
+#~ msgstr "Projects"
+
+#, fuzzy
+#~ msgid "Enter Project description"
+#~ msgstr "Projects"
+
+#, fuzzy
+#~| msgid "Projects"
+#~ msgid "Publication types"
+#~ msgstr "Projects"
+
+#, fuzzy
+#~| msgid "Projects"
+#~ msgid "Project"
+#~ msgstr "Projects"

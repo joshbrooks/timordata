@@ -1,0 +1,33 @@
+{% extends "index.html" %}
+{% load i18n %}
+
+{% block text-decoration %}
+<style>
+    .jumbotron {
+        background: url('{{ STATIC_URL }}backgrounds/background2.jpg ') bottom left no-repeat rgb(139, 191, 231);
+        height: 250px;
+    }
+
+    .box_textshadow {
+        color: black;
+        text-shadow: -1px -1px 0 #FFF,
+        1px -1px 0 #FFF,
+        -1px 1px 0 #FFF,
+        1px 1px 0 #FFF;
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+</style>
+{% endblock text-decoration %}
+
+
+
+{% block jumbotron %}
+<div class="jumbotron  box_textshadow">
+    <div class="container">
+        <h1 class="box_textshadow"><strong>{% trans 'Timor-Leste Data Center' %}</strong></h1>
+
+    </div>
+</div>
+{% endblock jumbotron %}

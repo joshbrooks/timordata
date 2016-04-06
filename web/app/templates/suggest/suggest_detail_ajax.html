@@ -1,0 +1,151 @@
+{% load i18n %}
+
+<h3>{{suggest.description}}</h3>
+
+{% if request.user.is_anonymous %}
+    <p class="alert alert-info"> You can't approve or change this request as you are not logged in</p>
+{% elif not permission_granted %}
+    <p  class="alert alert-info"> You can't approve or change this request as you don't have the right permissions. Logged in as {{request.user}}.</p>
+{% else %}
+    <p  class="alert alert-info">Logged in as {{request.user}}. You have the necessary permission to approve or change this request.</p>
+{% endif %}
+
+
+{% if suggest.state == 'A' %}
+<p  class="alert alert-success">Suggestion has already been approved.</p>
+{% endif %}
+
+<table class="table table-condensed">
+    <tbody>
+        <tr><th>Affects</th><td>{{suggest.primary.model_name}}</td></tr>
+        <tr><th>Affects</th><td>
+            {% if suggest.primary.instance.pk and suggest.primary.instance.get_absolute_url %}<a href="{{suggest.primary.instance.get_absolute_url}}">{{suggest.primary.instance}}</a>
+            {% elif suggest.primary.instance.pk %}{{suggest.primary.instance}}
+            {% else %} New or removed object{% endif %}
+        </td></tr>
+
+        <tr><th>Submitted by </th><td>{{suggest.name}}</td></tr>
+        <tr><th>(Email)</th><td>{{suggest.email}}</td></tr>
+        <tr><th>(Comment)</th><td>{{suggest.comment}}</td></tr>
+    </tbody>
+</table>
+
+
+
+
+<p class="{% if s.state == 'A' %}info{% elif s.state == 'R' %}warning{% elif s.state == 'X' %}hidden{% elif s.state == 'E' %}danger{% endif %}">
+    {% if s.primary.instance.pk and s.primary.instance.get_absolute_url %}<br>
+        <a href="{{suggest.primary.instance.get_absolute_url}}">{{suggest.primary.instance}}</a>
+    {% elif s.primary.instance.pk %} <br><p>{{suggest.primary.instance}}</p> {% endif %}
+
+
+<p>State: {{suggest.get_state_display}}</p>
+<p>Date of submission: {{suggest.suggestDate}}</p>
+
+    <hr>
+    <h4>More changes</h4>
+    {% include "suggest/suggestion_toolbar.html" %}
+
+    {% if suggest.parent %}
+{% for p in suggest.parent %}
+        <p>Child of <a href="#object={{p.id}}">{{p}}</a></p>
+    {% endfor %}{% endif %}
+    {% if suggest.children %}<p>Parent of</p>{% for c in suggest.children%}
+        <p><a href="#object={{c.id}}">{{c}}</a></p>
+    {% endfor %}
+    {% endif %}
+
+    <hr>
+
+
+{% if suggest.action == 'CM' or suggest.action == 'UM' %}
+
+<table class="table table-condensed table-bordered">
+    <caption>Properties</caption>
+    <thead>
+        <tr><th>Name</th><th>Value</th></tr>
+    </thead>
+    {% autoescape off %}
+    <tbody>{% for k,v in suggest.changes.items %}
+        {% if v %}
+        <tr>
+            <td>
+                {{k}}
+            </td>
+            <td>
+                {{v}}
+            </td>
+
+        </tr>
+
+    {% endif %}
+    {% endfor %}
+    {% endautoescape %}
+    </tbody>
+</table>
+
+{% elif suggest.action == 'UM' %}
+
+{% with changes as suggest.highlight_changes %}
+{% if changes %}
+<table class="table table-condensed table-bordered">
+    <caption>Properties</caption>
+    <thead>
+        <tr><th>Name</th><th>Value</th><th>New Value</th></tr>
+    </thead>
+
+    <tbody>{% for name, value, new, unchanged in changes %}
+    {% if value or new %}
+        <tr>
+            <td>
+                {{name}}
+            </td>{% if unchanged %}
+            <td>
+                <span style="color:slategray"> {{value}}</span>
+            </td>
+            <td>
+            </td>{% else %}
+            <td>
+                <span style="color:red"><del>{{value}}</del></span>
+            </td>
+            <td>
+                <span style="color:#008000">{{new}}</span>
+            </td>{% endif %}
+        </tr>{% endif %}{% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% if not changes %}
+suggest
+<table class="table table-condensed table-bordered">{% for i,j in suggest.data_jsonify.items %}
+    <tr {% if j == None%} style="color:gray; font-size:50%;" {% else %} style="font-weight:bold;"{% endif %}>
+        <td>{{i}}</td>
+        <td>{{j}}</td>
+    </tr>{% endfor %}
+</table>
+
+{% endif %}
+
+{% endwith %}
+
+
+
+
+{% endif %}
+
+{% if suggest.state != 'A' %}
+{% if suggest.prepare.ready %}
+{% include 'suggest/forms/main.html' with record=suggest %}
+{% else %} {% comment %} There are probably dependent objects {% endcomment %}
+<p> Can't apply changes yet.<br> {{suggest.dependent_url.message}}</p> <p><a href="#object={{suggest.dependent_url.instance.pk}}">{{suggest.dependent_url.instance.description}}</a></p>
+{% endif %}
+{% endif %}
+{% include 'suggest/forms/cancel.html' with record=suggest %}
+{% if suggest.suggestupload_set.all %}
+{% for upload in suggest.suggestupload_set.all %}
+
+<a href="{{upload.upload.url}}"></a>
+
+
+{% endfor %}
+{% endif %}

@@ -1,0 +1,152 @@
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% get_available_languages as LANGUAGES %}
+  
+<!--
+  
+-->
+
+  <div class="well">
+    <h4>Main Properties</h4>
+    <form autocomplete=off class="form" id="projectmain" method="POST" action="{% url 'nhdb:router:project-list' %}"/>
+      <div class="form-group">
+        <label for="name">{% trans "Project Name" %}</label>
+        <input type="text" class="form-control" name="name" placeholder="Enter project name" {% if p.name %} value="{{p.name}}" {% endif %}>
+      </div>
+      
+      <div class="row">
+      
+        <div class="col col-md-6">
+      
+          <div class="form-group">
+            <label for="description">{% trans "Description" %}</label>
+            <textarea class="form-control" name="description" rows="3" placeholder="{% trans 'Enter Project description' %}"{% if p.description %} value="{{p.description}}" {% endif %}></textarea>
+          </div>
+        
+        </div>
+        
+        <div class="col col-md-6">
+        
+          <div class="form-group">
+            <label for="notes">{% trans "Notes" %}</label>
+            <textarea class="form-control" name="notes" rows="3" placeholder="{% trans 'Enter notes about this project' %}" {% if p.notes %} value="{{p.notes}}" {% endif %}></textarea>
+          </div>
+        
+        </div>
+        
+      </div>
+      
+      <div class="row">
+      
+        <div class="col col-md-3">
+          <div class="form-group">
+            <label for="status">Status</label>
+            <select class="form-control" name="status">{% for s in status %}
+              <option value="{{s.pk}}"{% if p.status_id == s.pk %} selected{% endif %}>{{s.description}}</option>{% endfor %}
+            </select>
+          </div>
+        </div>
+        
+        <div class="col col-md-3">
+          <div class="form-group">
+            <label for="startdate">Start date</label>
+            <input class="form-control" type="date" name="startdate" value='{{p.startdate|date:"Y-m-d"}}'>
+          </div>
+        </div>
+        
+        <div class="col col-md-3">
+          <div class="form-group">
+            <label for="enddate">End date</label>
+            <input class="form-control" type="date" name="enddate" value='{{p.startdate|date:"Y-m-d"}}'>
+          </div>
+        </div>
+        
+      </div>
+     
+      <button type="submit" class="btn btn-default">Save</button>
+          
+    </form>
+  </div>
+
+<div class="well">
+  <h4>{% trans 'Organizations' %}</h4>
+  {% include 'nhdb/new_project_search/div-organization-details-table.html' %}
+</div>
+
+<div class="staff well">
+  
+  <h4>{% trans 'Staff' %}</h4>
+ {% include 'nhdb/new_project_search/div-staff.html' %}
+</div>
+
+<div class="well">  
+  <form id="projectpropertiesform">
+    <h4>{% trans "Activities, Beneficiaries and Involvement" %}</h4>
+    {% for root in PropertyTag.get_root_nodes %}
+
+				<div class="control-group">
+					<label for="select-{{root|lower}}">{{root}}</label>
+					<select id="select-{{root}}" name="properties" multiple class="selectize-options" style="width:50%">{% for c in root.get_children %}
+						<option value="{{c.pk}}"{% if c in p.properties.all %} selected{%endif %}>{{c}}</option>{% endfor %}
+					</select>
+				</div>
+ {% endfor %}
+    <button type="submit" class='btn btn-default'>Save project properties</button>
+  </form>
+</div>
+  <div class="well">
+    <h4>Project Author / Editors</h4>
+    <p>Choose who is able to change details of this project.</p>
+    <p>The author can allow other people to edit the project</p>
+    <p>Editors can allow other people to edit the project, except editors may not add / remove authors or other editors.</p>
+    <p><b>Project Author:</b> {{p.author.username}}{% if request.user == p.author %} (You){% endif %}</p>
+<!--
+    Adds a delete button for each editor if the person viewing is the author 
+-->
+{% if request.user == p.author %}
+  <b>Project Editors:</b> {% for editor in p.editors.all %}
+      <form method="POST" action="{% url 'nhdb:projectpermissions' %}">
+        {% csrf_token %}
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="hidden" name="user" value='{{editor.pk}}'>
+        <input type="hidden" name="project" value='{{p.pk}}'> 
+      <label>{{editor.username}}</label>
+      <button class="btn btn-xs">Remove</button>
+    </form>{%endfor %}
+{% else %}
+    <p><b>Project Editors:</b> {% for editor in p.editors.all %}{{editor.username}}{% if request.user == editor %} (You) {% endif %}{% if not forloop.last %}, {%endif%}{%endfor %}</p>
+{% endif %}
+    
+    <form class="user-search" role="form" action="{% url 'nhdb:projectpermissions' %}">
+    {% csrf_token %}
+    <input type="hidden" name="_method" value="POST">
+    <input type="hidden" name="user">
+    <input type="hidden" name="project" value='{{p.pk}}'>
+
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="input-group">
+          
+          <div class="input-group-btn">
+            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" data-searchurl="/myapp/nhdb/usersearch/" data-do="search_users" type="button">Search » 
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul role="menu" class="dropdown-menu dropdown-menu-left user-select-list"></ul>
+          </div>
+          
+          <input type="text" class="fill-user-name form-control">
+          <div class="input-group-btn">
+            <button tabindex="-1" class="btn btn-default dropdown-toggle disabled add-editor" type="button">Add Editor » 
+            </button>
+          </div>
+        </div><!-- /.input-group -->
+      </div><!-- /.col-lg-6 -->
+    </div><!-- /.row -->
+    <button class='btn btn-default'>Save project permissions</button>
+  </form>
+</div>
+
+</div>
+</div>
+  
+

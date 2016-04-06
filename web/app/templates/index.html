@@ -1,0 +1,115 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" type="image/png" href="{{ STATIC_URL }}favicon.png">
+    <link rel="icon" type="image/png" href={{ STATIC_URL }}favicon.png" />
+
+    <title>{% trans "Timor-Leste Data Center" %}</title>
+    <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}django_tables2/themes/paleblu/css/screen.css" rel="stylesheet">
+{% block text-decoration %}
+    <style>
+        .box_textshadow
+     {
+    color: white;
+
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+            margin-top:0px; margin-bottom:0px;
+}
+
+
+    </style>
+          <style>
+        .language-button-image {
+            width: 40px;
+            height: 20px;
+        }
+
+      .btn-language {
+          border-width: 0;
+          padding: 2px;
+      }
+
+      .btn-language on {
+          border-color: forestgreen;
+      }
+
+      </style>
+{% endblock text-decoration %}
+</head>
+
+<body>
+{% block jumbotron %}
+<div class="jumbotron box_textshadow"  style="margin-top: 0px; margin-bottom: 0px; background-color:#586c8f; font-size: 80%; padding-top:10px; background:url('{{ STATIC_URL }}backgrounds/background_min.jpg') bottom left no-repeat #586c8f; height:250px;">
+    <div class="container">
+        <h1 class="box_textshadow" style="font-size:50px";><strong>{% trans 'Timor-Leste Data Center' %}</strong></h1>
+
+    </div>
+</div>
+{% endblock jumbotron %}
+
+{% include "navbar.html" %}
+
+
+
+<div class="container">
+    <!-- Example row of columns -->
+    <div class="row">
+        <div class="col-md-4">
+            <h2>{% trans 'Development' %}
+                {% if request.LANGUAGE_CODE != 'tet' %} <span class="small">Dezenvolvimentu</span> {% endif %}
+            </h2>
+            <p> Search for information about humanitarian projects and NGO's working in Timor-Leste </p>
+
+            <p><a class="btn btn-default" href='{% url "nhdb:project:list" %}'
+                  role="button">{% trans 'Search' %} {% trans 'Projects' %} &raquo;</a></p>
+            <p><a class="btn btn-default" href='{% url "nhdb:organization:list" %}'
+                  role="button">{% trans 'Search' %} {% trans 'Organizations' %}&raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>{% trans 'Library' %}
+                {% if request.LANGUAGE_CODE != 'tet' %} <span class="small">Biblioteka</span> {% endif %}
+            </h2>
+            <p>Search for information on research papers published about Timor-Leste</p>
+
+            <p><a class="btn btn-default" href='{% url "library:publication:list" %}' role="button">{% trans 'View' %} &raquo;</a>
+            </p>
+        </div>
+
+    <div class="col-md-4">
+        <h2>{% trans 'Donor Funding' %}<br>
+                {% if request.LANGUAGE_CODE != 'tet' %} <span class="small">Fundus husi Doadores</span> {% endif %}
+            </h2>
+        <p>The Donor Funding database will help donors and recipients to connect, supporting projects financially in Timor.</p>
+        <p><a class="btn btn-default" href='{% url "donormapping:fundingoffer:list" %}' role="button">{% trans 'View' %} &raquo;</a>
+        </p>
+        <h4>{% trans 'Funding Opportunities Survey' %}</h4>
+        <p>Summary of the funding opportunities survey</p>
+        <p> <a class="btn btn-default" href='{% url "donormapping:survey:list" %}' role="button">{% trans 'View' %} &raquo;</a>
+            <a class="btn btn-default" href='/admin/donormapping/fundingsurvey/add/' role="button">{% trans 'Add' %} &raquo;</a></p>
+    </div>
+</div>
+    <hr>
+
+    <footer>
+        <p>Contents &copy; Belun / FONGTIL / Alola / The Asia Foundation / Oxfam / Fundasaun Mahein 2015. Site designed by <a href="mailto:josh.vdbroek@gmail.com">Joshua Brooks</a>. Artwork &copy; <a href="mailto:aziby.dias216@gmail.com">Gibrael Carocho</a></p>
+    </footer>
+</div>
+<!-- /container -->
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="{{ STATIC_URL }}jquery.js"></script>
+<script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js"></script>
+</body>
+</html>

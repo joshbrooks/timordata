@@ -1,0 +1,13 @@
+{% load mptt_tags %}
+<ul>
+    {% recursetree crsnodes %}
+        <li>
+            {{ node.name|capfirst }}
+            {% if not node.is_leaf_node %}
+                <ul class="children">
+                    {{ children|capfirst }}
+                </ul>
+            {% endif %}
+        </li>
+    {% endrecursetree %}
+</ul>

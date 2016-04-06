@@ -1,0 +1,78 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" type="image/png" href="{{ STATIC_URL }}favicon.png">
+    <link rel="icon" type="image/png" href="{{ STATIC_URL }}favicon.png" />
+    <title>
+
+        {% block title %}Timor Development Data &middot;{% endblock title %}
+
+    </title>
+
+{% block script %}
+      <!--<script src="{{ STATIC_URL }}require.js" data-main="{{ STATIC_URL }}bootstrap_require.js"></script>-->
+    <script src="{{ STATIC_URL}}jquery.js"></script>
+    <script src="{{ STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>
+    <script>
+    $(document).ready(function(){
+        $('form#mysuggestions input[name=name]').val(localStorage.user_name)
+        $('form#mysuggestions input[name=email]').val(localStorage.user_email)
+    })
+    </script>
+    {% if media.js %}{% for script_url in media.js %}
+    <script src="{{ STATIC_URL}}{{script_url}}"></script>
+    {% endfor %}{% endif %}
+    
+  
+{% endblock script %}
+{% block css %}
+    {% if media.css %}{% for css_url in media.css %}
+      <link href="{{ STATIC_URL }}{{ css_url }}" rel="stylesheet">
+    {% endfor %}{% endif %}
+      <link href="{{ STATIC_URL }}bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet">
+      <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <style>
+        .language-button-image {
+            width: 40px;
+            height: 20px;
+        }
+
+      .btn-language {
+          border-width: 0;
+          padding: 2px;
+      }
+
+      .btn-language on {
+          border-color: forestgreen;
+      }
+
+      </style>
+{% endblock css %}
+      {% block style %} {% endblock style %}
+  </head>
+  {% block bodyopen %}  <body> {% endblock %}
+{% block navbar %}{% include "navbar.html" %}
+{% endblock navbar %}
+{% block body %}
+
+    <div class="{% block containerclass %}container{% endblock %}">
+    {% block content %}{% endblock %}
+  </div>
+{% endblock body %}
+  {% block footer %}
+
+<div class="container">
+    <hr>
+    <footer>
+        <p>Contents &copy; Belun / FONGTIL / Alola / The Asia Foundation / Oxfam / Fundasaun Mahein 2015. Site designed by <a href="mailto:josh.vdbroek@gmail.com">Joshua Brooks</a>. Artwork &copy; <a href="mailto:aziby.dias216@gmail.com">Gibrael Carocho</a></p>
+    </footer>
+    </div>
+  {% endblock footer %}
+  </body>
+</html>

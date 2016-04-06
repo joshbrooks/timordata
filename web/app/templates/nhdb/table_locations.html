@@ -1,0 +1,9 @@
+<table id='table_locations'>
+  <caption> Project Locations</caption>
+    <tbody class='placecodes'>
+      <tr><th>Place Name</th></tr>{% for place in proj.place.all %}
+      <tr data-pk={{place.pk}}>
+        <td>{{place.name}} ({{ place.path }})</td>
+      </tr>{% endfor %}
+  </tbody>
+</table>

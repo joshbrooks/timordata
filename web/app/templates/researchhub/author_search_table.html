@@ -1,0 +1,35 @@
+<table class="table table-responsive table-condensed">
+    <caption>Authors</caption>
+    <thead>
+        <tr>
+            <th>Names</th><th>Sort this author as</th>
+        </tr>
+    
+    </thead>
+
+    <tbody>
+        <tr><th colspan="3">Currently in this publication</th></tr>
+        {% for a in object.author.all %}
+        <tr>
+            <td>{{a.name}}</td>
+            <td>{{a.displayname}}</td>
+            <td>
+                <input class="form-control" checked type="hidden" name="author_id" value="{{a.pk}}">
+                <a href="#" class="btn btn-xs btn-warning remove-author">Remove</a>
+            </td>
+        </tr>
+        {% endfor %}
+
+        <tr><th colspan="3">Existing authors to add</th><td></td></tr>
+        
+        <tr class="template existing-author-template" style="display:none">
+            <td><span class="author_name"></span></td>
+            <td><span class="author_displayname"></span></td>
+            <td><input class="form-control" checked type="hidden" name="author_id" value="">
+                <button href="#" class="btn btn-xs btn-warning remove-author">Remove</button>
+            </td>
+        </tr>
+
+    </tbody>
+
+</table>

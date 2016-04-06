@@ -1,0 +1,31 @@
+{% extends 'nhdb/new_project_search/base.html' %}
+{% load i18n %}
+{% block script %}
+ 
+ <script>
+  var keywords = {{keywords}};
+  var pubtypes = {{pubtypes}};
+  var languages = {{languages}};
+  var organizations = {{organizations}};
+  </script>
+   <script src="{{ STATIC_URL }}require.js" data-main="/require.publication.js"></script>
+   
+{% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}datatables/media/css/dataTables.bootstrap.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}/selectize.js/dist/css/selectize.bootstrap3.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}/css/zebra/default.css">
+{% endblock style %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h4>{% trans "Publications" %}</h4>
+            <h5>{% trans "Search for Publications" %} {% trans "in the collection curated by The Asia Foundation" %}</h5>
+        </div>
+    </div>
+  {% include "nhdb/new_project_search/div-publication-search.html" %}
+</div>
+</body>
+{% endblock body %}
+</html>

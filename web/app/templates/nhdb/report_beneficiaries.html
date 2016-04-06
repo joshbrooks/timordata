@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block script %}
+
+<script language="javascript" type="text/javascript">
+$(document).ready(function(){
+    
+    var pk = $('[data-targetbeneficiariespk]').data('targetbeneficiariespk')
+    
+    $.getJSON('../../sectortimeseries?targetbeneficiaries__pk='+pk, function(data){
+
+    $.plot("#timeseries", [data], {
+			xaxis: { mode: "time" },
+            grid: {markings: [{color: "#FAFF9B", xaxis: {from: Date.now()}}]}
+		});
+})
+
+
+
+$.fn.getJsonFromTable = function(opts){
+// Get JSON dictionary from table to plot with flot etc
+
+    var defaults = {
+            type:'dict',
+            threshold:1,
+            maxcategories:null
+            }
+    var options = $.extend(defaults, opts)
+    // maxcategories requires sorted data
+    if (options.maxcategories){options.sort='desc'}
+
+    var data = [];
+    var other = 0;
+    if (options.threshold != 1){
+            var total = 0
+            $(this).find('tr').first().nextAll().each(function(){
+                $(this).find('td').first().next().each(function(){
+                total += parseInt($(this).next('td').text())
+            })
+        })
+    }
+    
+    $(this).find('tr').first().nextAll().each(function(){
+        var label = $(this).children('td').first()
+        
+        var labeltext = label.text().trim()
+        var num = parseInt(label.next('td').text())
+        if (options.threshold != 1 && num/total < options.threshold)
+            {other += num}
+            
+        else {
+            if (options.type == 'dict'){
+                var add = {
+                    'label':labeltext,
+                    'data':num
+                    };
+                }
+            if (options.type == 'list'){
+                var add = [
+                    labeltext,
+                    num
+                    ];
+                }
+                
+            data.push(add);
+            }
+
+        });
+    
+    
+    if (options.sort == 'desc' && options.type =='list'){data.sort(function(a,b){if (a[1] > b[1]) {return -1} if (a[1] < b[1]) {return 1} })};
+    if (options.sort == 'asc' && options.type =='list'){data.sort(function(a,b){if (a[1] < b[1]) {return -1} if (a[1] > b[1]) {return 1} })};
+    if (options.sort == 'desc' && options.type =='dict'){data.sort(function(a,b){if (a.data > b.data) {return -1} if (a.data < b.data) {return 1} })};
+    if (options.sort == 'asc' && options.type =='dict'){data.sort(function(a,b){if (a.data < b.data) {return -1} if (a.data > b.data) {return 1} })};
+    
+    if (options.maxcategories  && options.type == 'list'){
+    var slice = data.slice(options.maxcategories); 
+    data = data.slice(0,options.maxcategories);
+        slice.forEach(function(x){
+            other = other + x[1];
+            }); 
+    };
+    
+    if (options.type == 'dict'){data.push({'label':'Other', 'data':other})}
+    if (options.type == 'list'){data.push(['Other', other])}
+        
+    return data;
+    }
+var plot_opts = {
+	series: {
+		bars: {
+			show: true,
+			barWidth: 0.6,
+			align: "center"
+		}
+	},
+	xaxis: {
+		mode: "categories",
+		tickLength: 0
+	}
+};
+var plot_opts_pie = {
+    series: {
+        pie: { 
+          combine: {
+                color: '#999',
+                threshold: 0.06
+            },
+            show: true,
+            radius: 1,
+            label: {
+                show: true,
+                radius: 4/4,
+                formatter: 	function labelFormatter(label, series) {
+		              return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + label + "<br/>" + Math.round(series.percent) + "%</div>";
+	               },
+                background: { 
+                    opacity: 0.5,
+                    color: '#000'
+                }
+            }
+        }
+    },
+    legend: {
+        show: false
+    }
+};
+var jsonfromtable_opts = {
+    type:'list',  // dict for pie chart
+    sort:'desc',
+    maxcategories:5
+    }
+
+$.plot('#flot1', $('table#districts').getJsonFromTable(), plot_opts_pie);
+$.plot('#flot2', [ $('table#mainactivities').getJsonFromTable(jsonfromtable_opts) ], plot_opts);
+
+});
+</script>
+
+{% endblock script %}
+
+{% block headertext %}<h3>NHDB Sector Report, Beneficiaries: {{target.name}}</h3> {% endblock headertext %}
+
+{% block content %}
+<span data-targetbeneficiariespk={{target.pk}} style='display:none'></span>
+<p>Projects aiming to help {{target.name}}</p>
+<p>There are {{projects.count}} projects</p>
+
+
+<div class='row'>
+    
+        <div id='timeseries' class='col col_5' style='height:240px'>
+        <h4>Projects over Time</h4></div>
+    
+        <div id='flot1' class='col col_5' style='height:240px'>
+        <h4>Flot empty 1</h4></div>
+    
+        <div id='flot2' class='col col_5' style='height:240px'>
+        <h4>Flot empty 2</h4></div>
+</div>
+
+
+<div class='row'>
+    <div class='col col_5'>
+        <table id='mainactivities'>
+        <caption>Cross table with Main Activities</caption>
+            <tr>
+                <th>Main Activity</th>
+                <th>Active Projects</th>
+                <th>Inactive Projects</th>
+            </tr>{% for name, active, inactive in mainactivities %}
+            <tr>
+                <td>{{name}}</th>
+                <td>{{active.count}}</td>
+                <td>{{inactive.count}}</td>
+            </tr>{% endfor %}
+        </table>
+    </div>
+    <div class='col col_5'>
+        <table id='districts'>
+        <caption>Cross table with Districts (trying)</caption>
+            <tr>
+                <th>District</th>
+                <th>Projects</th>
+            </tr>{% for name, count in district_count %}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{count}}</td>
+            </tr>{% endfor %}
+        </table>
+    </div>
+
+    <div class='col col_15'>
+        <table>
+        <caption>Listed Projects</caption>
+            <tr>
+                <th>Project ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+            </tr>{% for p in projects %}
+            <tr>
+                
+                <td>{{p.pk}}</td>
+                <td>{{p.name}}</td>
+                <td>{% if p.description %}{{p.description}}{%else%}{%endif%}</td>
+                <td>{{p.startdate}}</td>
+                <td>{{p.enddate}}</td>
+                <td>{{p.get_status_display}}</td>
+            </tr>{% endfor %}
+        </table>
+    </div>
+</div>
+
+
+
+
+{% endblock content %}

@@ -1,0 +1,30 @@
+{% if not inner %}
+    <div class='option-table' data-param='{{param}}' {% if extraText %} data-extraText={{extraText}} {% endif %} {% if selections %} data-selections={{selections}}{% endif %}>{% endif %}
+        <div class='go right-arrow'>{{title}}</div>
+        <div class='refresh right-arrow'></div>{% if all %}
+        <div class='all'>
+            <div class='option'>
+                <input data-onlyoption='true' name='{{param}}' type='checkbox' value='all' id='{{param}}_all' checked='checked'/>All
+            </div>
+        </div> {% endif %}
+        <div class='checked'> {% for i in selected %}
+            <div class='option'>
+                <input name='{{param}}' type='checkbox' value='{{i.pk}}' id='{{param}}_{{i.pk}}' checked='checked'/>{{i}}{% if extraText %}<input/>{% endif %}{% if selections %} <select>{% for s in selections %}<option>{{s}}</option>{% endfor %}</select>{% endif %}
+            </div>{% endfor %}
+        </div>
+
+        {% if texturl %}
+        <div class='textsearch'>
+            <div class='option'>
+                <input name='{{param}}' id='{{param}}_text' data-url='{% url texturl %}'/>
+                <div id='{{param}}_okgo' class='search'>Search</div>
+            </div>
+        </div>
+        {% endif %}
+        <div class='unchecked' style='display:none'>{% for i in model %}{% if not i in selected %}
+            <div class='option'>
+                <input name='{{param}}' type='checkbox' value='{{i.pk}}' id='{{param}}_{{i.pk}}'/>{{i}}
+            </div>{% endif %}{% endfor %}
+        </div>{% if not inner %}
+    </div>{% endif %}
+

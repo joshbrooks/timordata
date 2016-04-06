@@ -1,0 +1,88 @@
+version: '2'
+services:
+
+  nginx:
+    restart: always
+    build: ./nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /www/static
+    volumes_from:
+      - web
+    links:
+      - web
+      - tilestache
+      - simplewms
+    networks:
+      - front
+
+  web:
+    build: ./web
+    links:
+      - db
+      - memcached
+    ports:
+      - "8000"
+      - "8001"
+      - "8002"
+    volumes:
+      - ./web/app:/home/django/app
+      - /var/www/html/static:/var/www/html/static
+      - /var/www/html/media:/var/www/html/media
+    networks:
+      - front
+
+  db:
+    build: ./server
+    networks:
+      - front
+    ports:
+      - "5432"
+    environment:
+      POSTGRES_PASSWORD:  L1terary20@
+      POSTGRES_USER: belun
+      POSTGRES_DB: timordata.info
+    volumes:
+      - dbstore:/var/lib/postgresql/data
+
+  gis:
+    build: ./postgis
+    networks:
+      - front
+
+  tilestache:
+    build: tilestache
+    ports:
+      - "8080"
+    links:
+      - gis
+    networks:
+      - front
+
+  simplewms:
+    build: ./simplewms
+    ports:
+      - "8080"
+    links:
+      - gis
+      - memcached
+    networks:
+      - front
+    command: ["uwsgi", "/home/simplewms/app/uwsgi.ini"]
+
+  memcached:
+    build: memcached
+    ports:
+      - "11211"
+    networks:
+      - front
+    command: ["memcached"]
+
+networks:
+  front:
+    driver: bridge
+
+volumes:
+  dbstore:

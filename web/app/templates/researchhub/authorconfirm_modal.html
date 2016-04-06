@@ -1,0 +1,39 @@
+{% extends "base_modal.html" %}
+{% block title %}Confirm Authors {% endblock %}
+
+{% block body %}
+
+<form class="author-add">
+<div class="row">
+  {% for c in confirmed %}
+  <div class="col-lg-4">
+  <h4>{{c.search}}</h4>
+    <label><input type="checkbox" checked name="location" value="{{c.match.iso3}}">Add {{c.match.name}}</label>
+  </div><!-- /.col-lg-6 -->
+{% endfor %}
+{% for s in suggested %}
+<div class="col-lg-4">
+    <h4>{{s.search}}</h4>{% if s.similar %}{% for author in s.similar %}
+      <div class="col-lg-12">
+        <label><input type="radio" name="author__{{forloop.parentloop.counter}}" value="{{author.pk}}">{{author.name}} ({{author.sort_name}})</label>
+      </div><!-- /.col-lg-6 -->{% endfor %}{% endif %}
+      <div class="col-lg-12">
+        <label><input type="radio" name="author__{{forloop.counter}}">Don't add any author</label>
+      </div>
+      <div class="col-lg-12">
+        <label><input type="radio" name="newauthor_{{forloop.counter}}" value="create">Create</label>
+        <br/>
+        <input name="newauthor_{{forloop.counter}}_name" value="{{s.search}}">
+        <input name="newauthor_{{forloop.counter}}_sort_name" placeholder="{{s.sortname}}?">
+        
+      </div>
+      
+      
+  </div>{% endfor %}
+</div>
+</form>
+{% endblock %}
+
+{% block save %}
+<button id="author-confirm-modal-save" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+{% endblock %}

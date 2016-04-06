@@ -1,0 +1,77 @@
+{% load i18n %}
+{% load render_table from django_tables2 %}
+
+<form target="_blank" style="font-size: 80%;" autocomplete="off">
+  <div class="well">
+    <div class="row">
+      
+      <div class="col col-md-6">
+        <div class="form-group form-group-sm">
+            <label for="textlist">{% trans "Name / Description contains:" %}</label>
+            <input name="textlist" id="input-tags" class="form-control">
+            <p class="help-block">{% trans "Enter words or phrases separated by a comma. Publications containing any of these words in tht title will be included in the search." %}</p>
+        </div>
+      </div>
+      <div class="col col-md-6">  
+        <div class="form-group form-group-sm">
+            <label for="keyword">{% trans "Tags" %} </label>
+            <input name="keyword" class="form-control">
+            <p class="help-block">{% trans "Enter words or phrases separated by a comma. Publications tagged with any of these words will be included in the search." %}</p>
+        </div>
+      </div>
+      <div class="col col-md-6"> 
+        <div class="form-group form-group-sm">
+            <label for="pubtype">{% trans "Publication types" %} </label>
+            <input name="pubtype" class="form-control">
+        </div>
+      </div>
+      <div class="col col-md-6" >
+       <div class="row">
+          <div class="col col-md-4 col-sm-6">
+            <div class="form-group form-group-sm">
+              <label for="year_gt">{% trans "From year" %}</label>
+              <input class="form-control" type="date" name="year_gt">
+            </div>
+          </div>
+            
+          <div class="col col-md-4 col-sm-6">
+            <div class="form-group form-group-sm">
+              <label for="year_lt">{% trans "To year" %}</label>
+              <input class="form-control" type="date" name="year_lt">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+    {% for root in propertytag_root_nodes %}
+      <div class="col col-md-4 col-xs-6">
+        <div class="form-group form-group-sm">
+          <label for="select-{{root|lower}}">{{root}}</label>
+          <select id="select-{{root}}" name="sector" multiple>{% for c in root.get_children %}
+            <option value="{{c.pk}}">{{c}}</option>{% endfor %}
+          </select>
+        </div>
+      </div>{% endfor %}
+    
+        </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <label for="organization">Organizations</label>
+        <input type="text" name="organization" placeholder="{% trans 'Start typing to search' %}.">
+      </div>
+      <div class="col-md-6">
+        <label for="place">Districts</label>
+        <input id="selectize-place" type="text" name="place" placeholder="{% trans 'Start typing to search' %}.">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col col-lg-6">
+    <input class="btn btn-primary" type="submit" value="Search"></input>
+    </div>
+    </div>
+  </div>
+  </div>
+</form>

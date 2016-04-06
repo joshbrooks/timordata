@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block style %}
+<style>
+.row{
+border-bottom: 1px solid black;}
+h6 {
+    margin-top:5px; margin-bottom: 5px;
+}
+</style>
+{% endblock style %}
+{% block content %}
+<div class="container">
+    <h3>International NGO Projects and Partners</h3>
+    <div class="row">
+        <div class="col-lg-4 col-sm-4">Organization</div>
+        <div class="col-lg-4 col-sm-4"">Project Name</div>
+        <div class="col-lg-4 col-sm-4"">Partners</div>
+
+    </div>
+
+    {% for primary in organizations %}
+    <div class="row">
+        <div class="col-lg-4 col-sm-4"bg-info"><h5>{{primary.name}} <span class="small">{{primary.id}}</span></h5></div>
+        <div class="col-lg-8 col-sm-8" >{% for project in primary.projectorganization_set.all %}{% if project.project.status_id == 'A' %}
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <h6>{{project.project.name}} <span class="small">{{project.project.id}}</span></h6>
+                    <h6><em>{{project.project.description}}</em></h6>
+                </div>
+                <div class="col-lg-6 col-sm-6">{% if project.project.organization.count > 1 %}{% for partner in project.project.projectorganization_set.all %}{% if partner.organization != primary %}
+                    <h6>{{partner.organization}}<span class="small">{{partner.organization.id}}</span></h6>{% endif %}{% endfor %} {% endif %}
+                </div>
+            </div>{% endif %}{% endfor %}
+        </div>
+    </div>{% endfor %}
+</div>
+
+{% endblock content %}

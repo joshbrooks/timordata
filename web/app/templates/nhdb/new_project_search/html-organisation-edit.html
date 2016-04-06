@@ -1,0 +1,59 @@
+{% extends 'nhdb/new_project_search/base.html' %}
+{% load i18n %}
+
+
+{% block body %}
+
+  <div class="container">
+    <form  class="form-horizontal" method="post" action="{% url 'nhdb:organization:organization' o.pk %}">
+      <input type='hidden' name='csrfmiddlewaretoken' value='u4i2MeYfZ9ZkUNKHxoNVT2vmy48WBULu' /> 
+        <input name="organization" readonly="true" type="hidden" value="{{o.pk}}">
+
+        
+        <div class="form-group">
+          <label for="phoneprimary" class="control-label col-lg-2">Main phone</label>
+          <div class="controls col-lg-6">
+            <input class="form-control" maxlength="64" name="phoneprimary" type="text" value="{{o.contact.phoneprimary}}">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="phonesecondary" class="control-label col-lg-2">Other phone</label>
+          <div class="controls col-lg-6">
+            <input class="form-control" maxlength="64" name="phoneprimary" type="text" value="{{o.contact.phonesecondary}}">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="email" class="control-label col-lg-2">Email</label>
+          <div class="controls col-lg-6">
+            <input class="form-control" maxlength="64" name="email" type="email" value="{{o.contact.email}}">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="web" class="control-label col-lg-2">web</label>
+          <div class="controls col-lg-6">
+            <input class="form-control" maxlength="64" name="web" type="text" value="{{o.contact.web}}">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="fax" class="control-label col-lg-2">fax</label>
+          <div class="controls col-lg-6">
+            <input class="form-control" maxlength="64" name="fax" type="text" value="{{o.contact.fax}}">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="Verified" class="control-label col-lg-2">Verified</label>
+          <div class="controls col-lg-6">
+            <input class="form-control" maxlength="64" name="verified" type="text" value="{{o.contact.verified|date:'Y-m-d'}}">
+          </div>
+        </div>
+        
+        <input type="submit" class="btn btn-primary" value="Submit" name="_method">
+
+
+{% endblock %}
+

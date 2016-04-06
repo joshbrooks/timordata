@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block script %}
+      <script src="{{ STATIC_URL }}require.js" data-main="{{ STATIC_URL }}selectize_require.js"></script>
+{% endblock script %}
+ {% block style %} 
+	<link href="{{ STATIC_URL }}selectize/css/selectize.bootstrap3.css" rel="stylesheet">
+{% endblock style %}
+
+{% block content %}
+<h4>Change this Project</h4>
+{% crispy form %}
+
+{% endblock %}
+

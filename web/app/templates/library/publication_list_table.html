@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+
+{% block script %}
+    {{block.super}}
+        <link href="{{ STATIC_URL }}select2/css/select2.min.css" rel="stylesheet" />
+        <script src="{{ STATIC_URL }}select2/js/select2.min.js"></script>
+        <script src="{{ STATIC_URL }}js/bootstrap-multiselect.js"></script>
+        <script src="{{ STATIC_URL }}js/bootstrap-multiselect-collapsible-groups.js"></script>
+
+
+<script>
+
+    $(document).ready(function(){
+        $('.selecttwo').select2()
+          $('[data-selecturl]').each(function () {
+            var url = $(this).data('selecturl');
+            var ajaxdefault = {url: url, dataType: 'json', delay: 250};
+            var name = $(this).prop('name');
+            switch(name) {
+
+                case 'q.tag':
+                    $(this).select2({ajax: ajaxdefault, minimumInputLength: 3});break;
+
+                case 'org':
+                    $(this).select2({ajax: ajaxdefault, minimumInputLength: 3});break;
+
+                case 'person':
+                    $(this).select2({ajax: ajaxdefault, minimumInputLength: 3});break;
+                    $(this).on("select2:select", function (e) {
+                        var data = {'project':'getSuggestionId', 'person': $(this).val()};
+                        $('<p>').text($(this).find(':selected').text()).insertBefore($(this))});
+                    break;
+
+                case 'place':
+                    $(this).select2({ajax: ajaxdefault,
+                        processResults: processPlaceResults,
+                        escapeMarkup: function (markup) {return markup;}
+            });
+                    break;
+            }
+        });
+
+    })
+</script>
+
+{% endblock script %}
+ {% block style %} 
+    <link href="{{ STATIC_URL }}django_tables2/themes/paleblu/css/screen.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}selectize/css/selectize.bootstrap3.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/bootstrap-multiselect.css" rel="stylesheet">
+    <style>
+    ul.pagination {
+        border-radius: 0px;
+        display: block;
+    }
+    .datacenter-search-form {
+        background-color:#FFD;
+        padding:5px;
+        border-radius: 5px;
+        margin-bottom:10px;
+    }
+        .like-table { display: table; }
+.like-table>* { display: table-row; }
+
+.like-table .row {
+    height: 25px;}
+
+.like-table>*>* { display: table-cell; border:1px solid #d3d3d3;}
+            .small-flag {width:25px; margin-right:5px; top:5px; left:5px;}
+
+
+#rightpane, .sidebar {
+    max-height:100%;
+}
+
+
+    </style>
+<style>
+    /*Stop "jump" when showing hidden select box*/
+    select[multiple],select[size]{ height:20px;}
+</style>
+
+<style>
+
+    #search {
+        height:auto;
+    }
+
+
+</style>
+{% endblock style %}
+
+{% block resources %}
+    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}jquery.dataTables.min.js"></script>
+{% endblock resources%}
+
+{% block containerclass %}"container-fluid"{% endblock %}>
+
+{% comment %}
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-4">
+        {% crispy form %}
+        <div class='alert alert-info'>
+            <p>To protect this list from spam robots, email addresses are encoded. <button class="btn btn-primary showliame">Show email addresses</button></p>
+        </div>
+        <a href='{% url "nhdb:project:list" %}'>Search for Projects instead &raquo</a>
+    </div>
+
+</div>
+<div class="col-lg-12">
+    <!--{% render_table table %}-->
+    <b>{{object_list.count}} Organizations</b>
+
+    <a href='#' class="btn btn-primary">Print view</a>
+    <ul>
+
+    {% for i in object_list %}
+    <li>{{i}}</li>{% endfor %}
+</ul>
+</div>
+{% endblock content %}
+
+{% endcomment %}
+{% block content %}
+
+<div class="row">
+
+    <div class="col col-lg-12">
+        <form class="form-inline">
+
+            <div class="form-group">
+                <label class="advanced-option">Tag
+                <select class="selecttwo" multiple="multiple" name="tag__id">{% for a in filters.tag__id %}
+                    <option {% if a.id in activefilters.tag__id %}selected=selected{% endif %} value="{{a.id}}">{{a.name}}</option> {%endfor %}
+                </select>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label class="advanced-option">Sector
+                    <select data-role="multiselect" multiple="multiple" name="sector__path">{% for a in filters.sector__path %}
+                        <option {% if a.path in activefilters.sector__path %}selected=selected{% endif %} value="{{a.path}}">{{a}}</option> {%endfor %}
+                    </select>
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="advanced-option">Languages
+                    <select data-role="multiselect" multiple="multiple" name="language_id">{% for a in filters.language_id %}
+                        <option {% if a.value in activefilters.language_id %}selected=selected{% endif %} value="{{a.value}}">{{a.label}}</option> {%endfor %}
+                    </select>
+                </label>
+            </div>
+            <div class="form-group">
+                <label>Type
+                    <select data-role="multiselect" multiple="multiple" name="pubtype">{% for a in filters.pubtype %}
+                        <option {% if a.value in activefilters.pubtype %}selected=selected{% endif %} value="{{a.value}}">{{a.label}}</option> {%endfor %}
+                    </select>
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <div class="col col-lg-12"><h3>{{object_list.count}} Publications</h3>
+
+        <div class="col col-lg-12 col-xs-12" id="actions-container">
+            <a href="../?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">Details view</a>
+            <a href="../xls/?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">Excel download</a>
+        </div>
+
+    <div class="col col-lg-12 col-xs-12" id="object-list-container">
+        <table class="table table-bordered table-condensed">
+            <tr>
+                <th>Name</th>
+                <th>Year</th>
+                <th>Type</th>
+                <th>Organization(s)</th>
+                <th>Author(s)</th>
+            </tr>
+
+            {% for object in object_list %}
+            <tr>
+                <td><a href="../?{{ request.GET.urlencode }}#object={{object.pk}}">{{object.name}}</a><br><p class="small">{% if object.description %}<br>{{object.description}}{% endif %}</p></td>
+                <td>{% if object.year %}{{object.year}}{% endif %}</td>
+                <td>{{ object.pubtype}}</td>
+                <td>{% for organization in object.organization.all %}<p  style="white-space: nowrap;">{{organization}}</p>{% endfor %}</td>
+                <td>{% for a in object.author.all %}{{a}}<br>{% endfor %}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+    </div>
+
+</div>
+
+
+    {% if debug %}
+<div id="debug">
+  <h2>Queries</h2>
+  <p>
+    {{ sql_queries|length }} Quer{{ sql_queries|pluralize:"y,ies" }}
+    {% ifnotequal sql_queries|length 0 %}
+    (<span style="cursor: pointer;" onclick="var s=document.getElementById('debugQueryTable').style;s.display=s.display=='none'?'':'none';this.innerHTML=this.innerHTML=='Show'?'Hide':'Show';">Show</span>)
+    {% endifnotequal %}
+  </p>
+  <table class="table table-bordered table-condensed" id="debugQueryTable" style="display: none;">
+    <col width="1"></col>
+    <col></col>
+    <col width="1"></col>
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">SQL</th>
+      <th scope="col">Time</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for query in sql_queries %}<tr class="{% cycle odd,even %}">
+      <td>{{ forloop.counter }}</td>
+      <td>{{ query.sql|escape }}</td>
+      <td>{{ query.time }}</td>
+    </tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+<footer class="footer"><hr>
+      <div class="container">
+        <p class="text-muted">Footer</p>
+      </div>
+    </footer>
+{% endblock content %}

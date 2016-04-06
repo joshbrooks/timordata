@@ -1,0 +1,291 @@
+{% load i18n %}
+
+<div class="container-fluid"><div class="row small-alerts">
+
+        <button class="object-last btn btn-sm btn-default"><span class="glyphicon glyphicon-chevron-left"></span>Last organization</button>
+    <button class="object-next btn btn-sm btn-default"><span class="glyphicon glyphicon-chevron-right"></span>Next organization</button>
+
+     <button class="btn btn-sm btn-default glyphicon glyphicon-edit" type="button"  data-toggle="offcanvas" data-target="#myNavmenu" data-canvas="#myNavmenuCanvas" data-placement="left">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </button>
+
+     <div class="col-lg-12 col-sm-12">
+        <div class="bs-example bs-navmenu-offcanvas-example">
+      <div id="myNavmenuCanvas" class="" style="">
+        <nav id="myNavmenu" class="navmenu navmenu-default navmenu-fixed-left offcanvas" role="navigation">
+          <a class="navmenu-brand" href="#">Edit Project</a>
+          <ul class="nav navmenu-nav">
+
+              <li role="presentation" class="dropdown">
+                <a id="drop4" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                  Descriptions
+                  <span class="caret"></span>
+                </a>
+                <ul id="menu1" class="dropdown-menu" aria-labelledby="drop4">
+                  <li><a data-modalurl="{% url 'nhdb:form' model='organization' form='description'%}?lang=en&organization={{object.pk}}"  data-reload="true" data-modaltitle="Descriptions" data-toggle="modal" href="#">English</a></li>
+                  <li><a data-modalurl="{% url 'nhdb:form' model='organization' form='description'%}?lang=tet&organization={{object.pk}}"  data-reload="true" data-modaltitle="Descriptions" data-toggle="modal" href="#">Tetun</a></li>
+                  <li><a data-modalurl="{% url 'nhdb:form' model='organization' form='description'%}?lang=pt&organization={{object.pk}}"  data-reload="true" data-modaltitle="Descriptions" data-toggle="modal" href="#">Portugese</a></li>
+                  <li><a data-modalurl="{% url 'nhdb:form' model='organization' form='description'%}?lang=id&organization={{object.pk}}"  data-reload="true" data-modaltitle="Descriptions" data-toggle="modal" href="#">Bahasa</a></li>
+                </ul>
+              </li>
+              <li role="presentation">
+                <a data-modalurl="{% url 'nhdb:form' model='organization' form='contact'%}?organization={{object.pk}}"  data-reload="true" data-modaltitle="Contact Details" data-toggle="modal" href="#">Contact Details</a>
+              </li>
+
+      <li role="presentation" class="warning">
+            <a class="bg-warning" data-modalurl="{% url 'nhdb:form' model='organization' form='delete'%}?organization={{object.pk}}" data-modalselector="#modaldeleteform" data-modaltitle="Drop this Organization" data-toggle="modal" href="#">Drop organization</a>
+      </li>
+
+
+      <li>
+          <a href="{% url 'nhdb:form' model='organizationplace' form='main'%}?organization={{object.pk}}" data-modaltitle="Add an office location" data-modalurl="{% url 'nhdb:form' model='organizationplace' form='main'%}?organization={{object.pk}}" data-modalcallback="loadOrganizationMap">&raquo; Add another place</a></li>
+
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+
+ <h3>{{organization.name}} - {{organization.orgtype}}<span class="small"> Organization Profile</span></h3>
+    <h4>Description</h4>{% autoescape off %}
+    <div class="alert {% if not object.description_en %}alert-warning{%else%}alert-info{%endif%}">
+        <img class="language-button-image" src="{{ STATIC_URL }}locales/en{% if not object.description_en %}_bw{%endif%}.png">
+        {{object.description_en|default:"No description in English"}}
+    </div>
+
+    <div class="alert {% if not object.description_tet %}alert-warning{%else%}alert-info{%endif%}">
+        <img class="language-button-image" src="{{ STATIC_URL }}locales/tet{% if not object.description_tet %}_bw{%endif%}.png">
+        {{object.description_tet|default:"La iha deskripsaun iha Tetun"}}
+    </div>
+
+    <div class="alert {% if not object.description_pt %}alert-warning{%else%}alert-info{%endif%}">
+        <img class="language-button-image" src="{{ STATIC_URL }}locales/pt{% if not object.description_pt %}_bw{%endif%}.png">
+        {{object.description_pt|default:"No description in Portugese"}}
+    </div>
+
+    <div class="alert {% if not object.description_id %}alert-warning{%else%}alert-info{%endif%}">
+        <img class="language-button-image" src="{{ STATIC_URL }}locales/id{% if not object.description_id %}_bw{%endif%}.png">
+
+        {{object.description_id|default:"No description in Indonesian"}}</div>
+        {% endautoescape %}
+
+
+    {% if not object.active %}
+    <h4>
+        This organization is inactive
+    </h4>
+
+    {% endif %}
+
+
+{% with object.contact as contact %}
+    
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th>
+            </th>
+            <th>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+        <th>Website</th>
+        <td>{% if object.web %}<a href="http://{{object.web}}">{{object.web}}</a>{% else %}{{None}}{% endif %}
+        </td>
+    </tr>
+
+        <tr>
+
+
+
+            <th>Personnel</th>
+            <td>{{object.stafffulltime|default:'?'}} full time staff,{{object.staffparttime|default:'?'}} part time staff </td>
+            </tr>
+
+        <tr><th>Phone</th>
+            <td>{% if object.phoneprimary %}{{object.phoneprimary}}
+                {% if object.phonesecondary %} / {{object.phonesecondary}} {% endif %}{% else %} <em>Not known</em> {%endif %}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{% if object.email %}{{object.email}}{% else %}<em>Not known</em> {%endif %}</td>
+        </tr>
+        <tr><th>Address(es)</th>
+            <td>
+            {% if object.organizationplace_set.all %}
+                {% for address in object.organizationplace_set.all %}
+                <table class="table table-bordered table-condensed">
+                    <tr>
+                        <td>
+                            {% if address.description %} {{address.description}}, {% endif %}{{address.locationstring}}
+                            <button data-modaltitle="Change an office location" data-modalurl="{% url 'nhdb:form' model='organizationplace' form='main'%}?organizationplace={{address.pk}}" data-modalcallback="createOrganizationMap">
+                                <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{address.phone|default:"No phone"}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{address.email|default:"No email"}}
+                        </td>
+                    </tr>
+                </table>{% if not forloop.last %}<br>{%endif%}
+
+                {% endfor %}</td>
+
+                {% else %}
+            <td><em>No addresses known</em></td>
+
+            {% endif %}
+
+        </tr>
+        <tr><th>Publications / Files</th>
+            <td>
+            {% for k,j in object.filecounts.items %}
+            <img class="small-flag" src="{{ STATIC_URL }}locales/{{k}}.png" alt="{{k}}">{{j}}
+            {% endfor %}
+            </td>
+        </tr>
+        </tbody>
+
+    </table>{% endwith %}
+            <div class="col-lg-9 col-sm-9">
+                <div id="map">
+                </div>
+            </div>
+    <div class="col-lg-12 col-sm-12">
+
+        {% if object.project_set.all %}
+
+    <h4> {% trans "Activities" %} </h4>
+
+    <div class="like-table">
+
+        <div>
+            <div>Project Name
+            </div>{% for label_id, label in project_act.labels.items %}
+            <div style="max-width:20px; height: 210px;"><span class="vertical">{{label.name}}</span></div> {% endfor %}
+        </div>
+
+        {% for pk, item in project_act.data %}
+        <form>
+            <div>{{item.object}}</div>{% for tf in item.data %}
+            <div>{% if tf %} <span style="font-size:150%;">&#10003;</span>{% endif %}</div>{% endfor %}
+        </form>{% endfor %}
+
+    </div>
+
+
+<h4> {% trans "Beneficiaries" %} </h4>
+
+    <div class="like-table">
+
+        <div>
+            <div>Project Name
+            </div>{% for label_id, label in project_ben.labels.items %}
+            <div style="max-width:20px; height: 210px;"><span class="vertical">{{label.name}}</span></div> {% endfor %}
+        </div>
+
+        {% for pk, item in project_ben.data %}
+        <form>
+            <div>{{item.object}}</div>{% for tf in item.data %}
+            <div>{% if tf %} <span style="font-size:150%;">&#10003;</span>{% endif %}</div>{% endfor %}
+        </form>{% endfor %}
+
+
+
+    </div>
+<h4> {% trans "Sectors" %} </h4>
+    <div class="like-table">
+
+        <div>
+            <div>Project Name
+            </div>{% for label_id, label in project_inv.labels.items %}
+            <div style="max-width:20px; height: 300px;"><span class="vertical">{{label.name}}</span></div> {% endfor %}
+        </div>
+
+        {% for pk, item in project_inv.data %}
+        <form>
+            <div>{{item.object}}</div>{% for tf in item.data %}
+            <div>{% if tf %} <span style="font-size:150%;">&#10003;</span>{% endif %}</div>{% endfor %}
+        </form>{% endfor %}
+
+    </div>
+
+        {% endif %}
+
+
+    <h4>
+{% trans "Active Projects" %}
+</h4>
+        {% if not object.project_set.all %}<p class='bg-warning'>No projects.</p> {% endif %}
+
+    {% for status, projects in projectsets.items %}
+        <div id="projects_{{status|lower}}">
+            <div class="container-fluid">
+                <div class="row">
+                    {% for project in projects %}
+                    {% if project.status_id == 'A'%}
+                    <div style="min-height: 270px;" class="col col-xl-4 col-lg-6 col-sm-12">
+                        <h4><a href="{% url 'nhdb:project:list'%}?org={{object.pk}}#object={{project.pk}}">{{project}}</a><span class="small">{{project.status}}</span></h4> {% if project.description %}
+                        <h5>{{project.description|striptags}}</h5>{% else %}
+                        <h5><em>{% trans "No project description" %}</em></h5>{% endif %}
+                        <p><strong>{% trans "Organizations" %}:</strong>{% for o in project.projectorganization_set.all%}
+                            <a href="#object={{o.organization.pk}}" data-detail="{{o.organization.pk}}">{% if o.organizationclass == 'P' %}
+                                <strong>{{o.organization.name}}</strong>{%else%}{{o.organization.name}}{% endif %}
+                            </a>{% if not forloop.last %}; {% endif %}{% endfor %}
+                        </p>
+
+
+
+                        <div>
+                            <img height="150" width="300" src="{{project.image_overlay_url}}&WIDTH=300&HEIGHT=150">
+                        </div>
+
+                        <div class="image-container">{% for i in project.projectimage_set.all %}{% if i.image %}
+                            <img alt="{{i.description}}" data-largeimage="{{i.thumbnailurl_large}}" height="50" width="50" src="{{i.thumbnailurl_tiny}}">{% endif %}{% endfor %}
+                        </div>
+                    </div>{% endif %}{% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+            <h4>
+{% trans "Planned or Completed Projects" %}
+</h4>
+
+    {% for project in object.project_set.all %}{% if project.status_id != 'A' %}
+
+        <p><a href="{% url 'nhdb:project:list'%}?org={{object.pk}}#object={{project.pk}}">{{project.name}}</a> - {% with project.status.code as s  %}<span class="{% if s == 'X' %}text-danger{% elif s == 'C' %}text-success{% elif s == 'A'%}text-primary{%endif%}">{% endwith %}{{project.status}}</span> {% if project.startdate %}{{project.startdate}}{% else %}??{% endif %} - {% if project.enddate %}{{project.enddate}}{% else %}??{% endif %} </p>
+        
+        
+        {% endif %}{% endfor %}
+        {% comment %}
+        Code for showing publication details : this generates thumbnails for EVERY publication, so is slow for organizations with lots
+        Where publications > 5, do 'See all publications' instead
+        {% endcomment %}
+        <h4>Publications</h4>
+        <div id="publications">{% if object.publication_set.count == 0 %}
+            <p>Sorry, no publications on record</p>{% else %}
+            <div class="row"  style="border:1px solid gray; border-radius: 5px; padding: 5px;">{% for i in object.publication_set.all %}
+                <div class="col col-lg-6 col-sm-12">
+                <h5>{{i}}</h5>{% for v in i.versions.all %}
+                    {% if v.title_en %}<p><img class="small-flag" src="{{ STATIC_URL }}locales/en.png" alt="en">{{v.title_en}}{{v.description_en|default:""}} {% if v.upload_en %}<a href="{{v.upload_en.url}}">Download</a>{%endif %} {% if v.url_en %}<a href="{{v.url_en}}">Link</a>{%endif %}</p>{% endif %}
+                    {% if v.title_pt %}<p><img class="small-flag" src="{{ STATIC_URL }}locales/pt.png" alt="pt">{{v.title_pt}}{{v.description_pt|default:""}} {% if v.upload_pt %}<a href="{{v.upload_pt.url}}">Download</a>{%endif %} {% if v.url_pt %}<a href="{{v.url_pt}}">Link</a>{% endif %}</p>{% endif %}
+                    {% if v.title_tet %}<p><img class="small-flag" src="{{ STATIC_URL }}locales/tet.png" alt="tet">{{v.title_tet}}{{v.description_tet|default:""}}{% if v.upload_tet %}<a href="{{v.upload_tet.url}}">Download</a>{%endif %} {% if v.url_tet %}<a href="{{v.url_tet}}">Link</a>{% endif %}</p>{% endif %}
+                    {% if v.title_id %}<p><img class="small-flag" src="{{ STATIC_URL }}locales/id.png" alt="id">{{v.title_id}}{{v.description_id|default:""}} {% if v.upload_id %}<a href="{{v.upload_id.url}}">Download</a>{%endif %} {% if v.url_id %}<a href="{{v.url_id}}">Link</a>{% endif %}</p>{% endif %}
+                <hr>{% endfor %}
+                </div>{% endfor %}
+            </div>{% endif %}
+        </div>
+</div></div></div>

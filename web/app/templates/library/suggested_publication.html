@@ -1,0 +1,57 @@
+{% extends "object_list.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block containerclass %}"container"{% endblock %}
+
+{% block content %}
+
+{% block modals %}
+{{block.super}}
+{% endblock %}
+
+<div class="row">
+    <div class="col col-lg-12">
+    <h3>New Publication</h3>
+
+        This is a suggested publication.
+        {% for name, value, new, unchanged in suggestion.changes %}
+        <p>{{name}} : {{ value }} {{ new }}</p>
+        {% endfor %}
+
+        <br>
+        <h5>Related Changes:</h5>
+           <hr>
+        {% for rel in suggestion.related_changes %}
+            <em>{{rel.description}}</em>
+        {% for name, value, new, unchanged in rel.changes %}
+        <p>
+                    {% if unchanged %}
+                        <span style="color:slategray">{{name}}: {% if value.get_absolute_url %}<a href="{{value.get_absolute_url}}">{{value}}</a>{% else %}{{value}}{% endif %}</span>
+                    {% else %}
+                     {{name}}: <span style="color:red"><del>{% if value.get_absolute_url %}<a href="{{value.get_absolute_url}}">{{value}}</a>{% else %}{{value}}{% endif %}</del></span> <span style="color:#008000">{% if new.get_absolute_url %}<a href="{{new.get_absolute_url}}">{{new}}</a>{% else %}{{new}}{% endif %}</span>
+
+                    {% endif %}
+            </p>
+
+        {% endfor %}
+
+        <hr>
+        {% endfor %}
+
+
+    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+            {% if suggestion.state == 'W' %}
+        <a class="btn btn-default" href="/library/form/publication/main/?suggestion={{suggestion.pk}}"  data-modaltitle="Set properties" data-modalurl="/library/form/publication/main/?suggestion={{suggestion.pk}}">&raquo; Properties</a>
+        <a class="btn btn-default" href="/library/form/publication/organizations/?suggestion={{suggestion.pk}}"  data-modaltitle="Set organizations" data-modalurl="/library/form/publication/organizations/?suggestion={{suggestion.pk}}">&raquo; Organizations</a>
+        <a class="btn btn-default" href="/library/form/publication/authors/?suggestion={{suggestion.pk}}"  data-modaltitle="Set authors" data-modalurl="/library/form/publication/authors/?suggestion={{suggestion.pk}}">&raquo; Authors</a>
+        <a class="btn btn-default" href="/library/form/publication/version/?suggestion={{suggestion.pk}}"  data-modaltitle="Add a File" data-modalurl="/library/form/publication/version/?suggestion={{suggestion.pk}}">&raquo; File</a>
+            {% else %}
+        <a class="btn btn-default" href="/library/form/publication/main/?publication={{i.primary.instance.pk}}"  data-modaltitle="Set properties" data-modalurl="/library/form/publication/main/?publication={{i.primary.instance.pk}}">&raquo; Properties</a>
+        <a class="btn btn-default" href="/library/form/publication/organizations/?publication={{i.primary.instance.pk}}"  data-modaltitle="Set organizations" data-modalurl="/library/form/publication/organizations/?publication={{i.primary.instance.pk}}">&raquo; Organizations</a>
+        <a class="btn btn-default" href="/library/form/publication/authors/?publication={{i.primary.instance.pk}}"  data-modaltitle="Set authors" data-modalurl="/library/form/publication/authors/?publication={{i.primary.instance.pk}}">&raquo; Authors</a>
+
+          {% endif%}
+    </div>
+    </div>
+
+{% endblock content %}

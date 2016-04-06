@@ -1,0 +1,12 @@
+{% load mptt_tags %}
+
+<div id="placecodemenu" class="placecodemenu tree_menu model-{{change.name}} pk-{{change.pk}}" style='display:none'>
+<span class='identifier' id='ProjectAddress-project-{{change.pk}}-place'></span>
+<div class='caption'><p>Project Locations</p></div>
+<p id="button-hide-unused" class='select button-hide-unused'>Hide unused</p>
+    
+<ul>{% recursetree nodes %}
+  <li class= 'pk_{{node.pk}} {% if node.is_leaf_node %} leaf {% if node.pk in projectaddressset%} select {% endif %}{% if not node.allowsiblings%} nosiblings {% endif %}{% endif %}{% if not node.is_leaf_node %} branch {% endif %}'> {{ node.name }}
+    {% if not node.is_leaf_node %}<ul>{{ children }}</ul>{% endif %}</li>{% endrecursetree %}
+</ul>
+</div>

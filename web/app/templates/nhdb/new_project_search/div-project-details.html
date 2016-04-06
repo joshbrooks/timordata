@@ -1,0 +1,40 @@
+{% load i18n %}
+
+<p id="queries" style="display:none">
+{{ sql_queries|length }} queries
+{% for qdict in sql_queries %}
+{{ qdict.sql }} ({{ qdict.time }} seconds)
+{% endfor %}
+</p>
+
+{% if not projects %}
+<div class="result">
+     <h4 class='project-name' >No projects found</h4>
+     <h5 class='project-description'>Sorry, no projects matching those criteria were found</h5>
+</div>
+{% endif %}
+{% for p in projects %}
+<div class="result" data-sortname={{p.name}} data-projectpk={{p.pk}} data-sortstartdate={{p.startdate|date:"Ymd"}} data-sortenddate={{p.enddate|date:"Ymd"}}>
+     <h4 class='project-name' >{{p.name}} ({% if p.startdate %}{{p.startdate}}{%else%}?{% endif%} - {% if p.enddate %}{{p.enddate}}{%else%}?{% endif%}) <span class="small" style="float:right"> {{p.status.description}} </span></h4>{% if p.description %}
+     <h5 class='project-description'>{{p.description}}</h5>{% else %}<h5 class="project-template-description empty"><em>{% trans 'No description provided' %}</em></h5>{% endif %}
+     <table class="table table-condensed">
+          <tbody>
+     <tr><th style="width:120px;">{% trans "Organizations" %}:</th><td>{% for o in p.projectorganization_set.all %}<a href="{% url 'nhdb:organization:organization' o.organization.pk%}">{% if o.organizationclass == 'P' %}<strong>{{o.organization.name}}</strong>{%else%}{{o.organization.name}}{% endif %}</a>{% if not forloop.last %}; {% endif %}{% endfor %}</td></tr>
+     {% if p.author %}<tr class="startshidden"><th style="width:120px;">{% trans "Author" %}:</th><td>{{p.author}}</td></tr>{% endif %}
+     {% if p.editors.all %}<tr class="startshidden"><th style="width:120px;">{% trans "Editors" %}:</th><td>{% for e in p.editors.all %}{{e}}{% if not forloop.last %}; {% endif %}{% endfor %}</td></tr>{% endif %}
+     {% for label, props in p.propertiesdict.items %}
+     <tr class="startshidden"><th style="width:120px;">{% trans label %}:</th><td>{% for prop in props %}{{prop.name}}{% if not forloop.last %}; {% endif %}{% endfor %}</td></tr>
+     {% endfor %}
+          </tbody>
+     </table>
+
+<p><a href="{% url 'nhdb:project:project' p.id %}" data-project-url="{% url 'nhdb:project:project' p.id %}"class="btn btn-default btn-sm">View details »</a>
+{% if request.user == p.author or request.user in p.editors.all or request.user.is_superuser %}
+<a class="btn btn-primary btn-sm" href="{% url 'nhdb:project:edit' p.id%}"> Edit Project »</a></p>
+{% else %}
+<!--
+<a class="btn btn-primary" disabled> Edit Project »</a>
+-->
+{% endif %}
+
+</div>{% endfor %}

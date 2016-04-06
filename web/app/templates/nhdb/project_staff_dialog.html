@@ -1,0 +1,35 @@
+<span id='project_id' style='display:none'>{{proj.pk}}</span>
+<span id='postchange' style='display:none'>ProjectContact-project-{{proj.pk}}-contact</span>
+<div style='display:none'>
+<div id='staff_selector'>
+{% for o in proj.organizations.all %}
+<h2><a href='#'>{{o.name}}</a></h2>
+<div id='staff_{{o.pk}}'>
+<table class='staff_selector'> 
+    <tbody>
+		<tr>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Title</th>
+			<th>Phone</th>
+			<th>Email</th>
+            <th>Status</th>
+		</tr>	
+    
+        {% for staff in o.contact_set.all %}
+
+        <tr class='editing'>
+            <td>{{ staff.firstname }}</td>
+            <td>{{ staff.lastname }}</td>
+            <td>{{ staff.title }}</td>
+            <td>{{ staff.phone }}</td>
+            <td>{% if staff.email %}<a href='mailto:{{ staff.email }}'>{{ staff.email }}</a>{% endif %}</td>
+            <td class = {% if staff in contact.proj %} 'editing select pk_{{staff.pk}}' {% else %} 'editing deselect pk_{{staff.pk}}'{% endif %}></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endfor %}
+</div>
+</div>

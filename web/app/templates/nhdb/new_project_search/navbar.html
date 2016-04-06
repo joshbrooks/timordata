@@ -1,0 +1,48 @@
+{% load i18n %}
+<div role="navigation" class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button data-target="#login-bar" data-toggle="collapse" class="navbar-toggle" type="button">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">{% trans "Timor-Leste Data Center" %} </a>
+    </div>
+    <div class="navbar-collapse collapse" id="login-bar">
+{% if request.user.is_anonymous %}
+      <form autocomplete="off" class="navbar-form navbar-left" role="form" action="{% url 'nhdb:login' %}" method="POST">{% csrf_token %}
+        <ul class="nav navbar-nav">
+          <li>
+            <input placeholder='{% trans "User name" %}' class="form-control" type="text" name="username">
+          </li>
+          <li>
+            <input placeholder='{% trans "Password" %}' class="form-control" type="password" name="password">
+          </li>
+          <li>
+            <button type="submit" class="btn btn-success">Sign in</button>
+          </li>
+        </ul>
+      </form>
+{% else %}
+    <form class="navbar-form navbar-left" role="form" action="{% url 'nhdb:logout' %}" method="POST">{% csrf_token %}
+      <ul class="nav navbar-nav">
+        <li><button type="submit" class="btn btn-success">Sign out (as {{request.user}})</button>
+        </li>
+      </ul>
+    </form>
+{% endif %}
+        <form id="changelanguage" class="navbar-form navbar-right" role="form" action="{% url 'set_language' %}" method="post" autocomplete="off" style="margin-top: 0px;"><a href="#"  class="navbar-brand">Languages / Lian / Lingua</a>{% csrf_token %}{% get_language_info_list for LANGUAGES as languages %}{% for language in languages %}
+
+          <label for="lang_{{ language.code }}" style="margin-top:15px;">
+            <input id="lang_{{ language.code }}" type="radio" name="language" value="{{ language.code }}" {% if language.code == request.LANGUAGE_CODE %}checked selected{% endif %}>
+            <img style="width:40px; height:20px;" src="{{ STATIC_URL }}locales/{{language.code}}.png" alt="Change to {{language.code}}">
+          </label>{% endfor %}
+
+          <button class="btn btn-primary btn-xs">Change</button>
+        </form>
+      </div>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container-fluid -->
+

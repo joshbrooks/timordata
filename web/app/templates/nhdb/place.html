@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+
+{% block extra_css %}
+	<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/css/leaflet.css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/markercluster/dist/MarkerCluster.css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/fullscreen/Control.FullScreen.css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/markercluster/dist/MarkerCluster.Default.css" />
+{% endblock extra_css %}
+
+{% block resources %}
+    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}jquery.dataTables.min.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/js/leaflet.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/js/proj4-compressed.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/js/proj4leaflet.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/markercluster/dist/leaflet.markercluster.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/fullscreen/Control.FullScreen.js"></script>
+    <script src="{{ STATIC_URL }}placemap.js"></script>
+    
+{% endblock resources%}
+
+{% block headertext %}{{pretitle}} Projects In {{place }} {% endblock %}
+
+{% block content %}
+<div class='row'>
+{% for m in messages %}
+<p>{{m}}</p>
+{% endfor %}
+<div class='col col_16' style='width:95%' data-placepk={{place.pk}}>{% if place.get_parent %}
+    <p>
+        <a href="{%url 'nhdb:place' place.get_parent.pk %}">Up to {{place.get_parent.name}}</a></p>{% endif %}{% if place.get_children %}
+    <h4>Places inside this place</h4>
+    <ul>{% for child in place.get_children %}
+        <li
+            ><a href="{% url 'nhdb:place' child.path_display %}">{{child.name}} {{child.path}}</a>
+        </li>{%endfor%}
+    </ul>{% endif %}
+</div>
+<div class='col col_8'>
+	<h3>Map</h3>
+	<div id='mapcontainer' style='width:95%; height:400px; border: 1px solid #FFA92A'></div>
+</div>
+
+<div class='col col_4'>
+    {% for class, children in counts.items %}
+    <table>
+        <caption>{{class}}</caption>
+        <thead>
+            <tr>
+                <th>Classification</th>
+                <th>Project count</th>
+            </tr>
+        </thead>
+        <tbody>{% for class, count in children.items %}
+            <tr>
+                <td>
+                    {{ class }}
+                </td>
+                <td>
+                    {{ count }}
+                </td>
+            </tr>{% endfor %}
+        </tbody>
+    </table>
+    {% endfor %}
+</div>
+
+
+<div class='col col_4'>
+    <table>
+        <caption>Projects</caption>
+        <thead>
+            <tr>
+                <th>Project</th>
+            </tr>
+        </thead>
+        <tbody>{% for proj in projects %}
+            <tr>
+                <td>
+                    <a data-projpk={{proj.pk}} href="{%url 'nhdb:project' proj.pk %}">{{ proj.name }}</a>
+                </td>
+            </tr>{% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class='col col_4'>
+    <table>
+        <caption>Organizations</caption>
+        <thead>
+            <tr>
+                <th>Organization</th>
+            </tr>
+        </thead>
+        <tbody>{% for org in organizations %}
+            <tr>
+                <td>
+                    <a data-orgpk={{org.pk}} href="{%url 'nhdb:organization:organization' org.pk %}">{{ org.name }}</a>
+                </td>
+            </tr>{% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div id='map' style='height:400px; width:600px;'></div>
+</div>
+</div>
+{% endblock content %}

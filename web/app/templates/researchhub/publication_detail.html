@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load thumbnail %}
+
+
+{% block content %}
+    <h4>{{object.name}}</h4>
+    <table class="table table-condensed table-bordered">
+        <tr><th>ID:</th><td>{{object.pk}}</td></tr>
+        <tr><th>Title:</th><td>{{version.title}}</td></tr>
+        <tr><th>Description:</th><td>{{version.description}}</td></tr>
+        <tr><th>Year:</th><td>{{object.year}}</td></tr>
+        <tr><th>Type:</th><td>{{object.pubtype}}</td></tr>
+        <tr><th>organizations:</th><td>
+        {% for o in object.organization.all %}
+            {{o}}{% if not forloop.last %},{% endif %}
+        {% endfor %}</td></tr>
+        <tr><th>Authors</th><td>
+        {% for o in object.author.all %}
+            {{o}}{% if not forloop.last %},{% endif %}
+        {% endfor %}</td></tr>
+        <tr><th>Locations</th><td>
+        {% for l in object.location.all %}
+            {{l}}{% if not forloop.last %},{% endif %}
+        {% endfor %}</td></tr>
+        <tr><th>Sectors</th><td>
+        {% for s in object.sector.all %}
+            {{s}}{% if not forloop.last %},{% endif %}
+        {% endfor %}</td></tr>
+        <tr><th>Tags</th><td>
+        {% for t in object.tags.all %}
+            {{t}}{% if not forloop.last %},{% endif %}
+        {% endfor %}</td></tr>
+        
+        <tr>
+            <th>Versions</th>
+        <td>
+            <table class="table table-condensed">
+                <tbody>{% for v in object.versions.all %}
+                    <tr>
+                        <td style="display:none">{{v.pk}}</td>
+                        <td><strong>{{v.title}}</strong><em> ({{v.language.name}})</em><br>
+                            {{v.description}}
+                        <td>
+                            <a href="{{v.upload.url}}">
+                                <div style="padding:3px; border-radius: 5px; background:#00FFCD">{% if v.cover  %}{% thumbnail v.cover "150x150" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}{% else %} 
+                                    <img src="no-picture.png" width="150px" height="150px">{% endif %}
+                                </div>
+                            </a>
+                        </td>
+                        </tr>{% endfor %}
+                    </tbody>
+   
+            </table>
+    </table>
+
+
+
+{% endblock content %}

@@ -1,0 +1,31 @@
+<!--
+Editable District Map
+-->
+
+<div id='district-map' class='map' style='background-color:#E4FFC0; width:100%; height: 300px;'>Map Here</div>
+<button data-toggle='#place-table-container'>Show / hide table</button>
+<div style='display:none' id='place-table-container'>
+  <table id='places-table' class="table-responsive"><caption>Project Locations <span class='add'></span></caption>
+    <tbody>
+        <tr class='table-header'><th>Place</th><th>Place Code</th><th>Description</th><th class='editable'>Include?</th></tr>
+        <tr>
+          <td><input placeholder="Search by Name / Path"/><button>Search</button></td><td></td><td class='editable' ></td>
+        </tr>
+        <tr class='template' data-path='template' >
+          <td data-prop="name"></td>
+          <td data-prop="path"></td>
+          <td>
+            <input placeholder="Add a description..." name="description">
+            <input name="project" value={{proj.id}}>
+            <input name="projectplace">
+            <input name="place" value>
+          </td>
+            <td class='editable' ><button class="btn btn-warning btn-xs remove" type="button">Remove</button>
+          </td>
+        </tr>
+      </tbody>
+  </table>
+</div>
+<!--
+End of District Mapping
+-->

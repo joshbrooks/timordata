@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load render_table from django_tables2 %}
+{% load thumbnail %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}webwidget_vertical_menu.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}staffselect.css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/css/leaflet.css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/markercluster/dist/MarkerCluster.css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/markercluster/dist/MarkerCluster.Default.css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/fullscreen/Control.FullScreen.css" />
+    {% endblock extra_css %}
+{% block resources %}
+
+    <script src="{{ STATIC_URL }}jqueryui/jquery-1.9.1.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/js/leaflet.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/js/proj4-compressed.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/js/proj4leaflet.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/markercluster/dist/leaflet.markercluster.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/fullscreen/Control.FullScreen.js"></script>
+    <script src="{{ STATIC_URL }}nhdb/project.place.edit.map.js"></script>
+
+    {{linksform.media}}
+    {{organizationformset.media}}
+
+{% endblock resources %}
+{% block headertext%}Project Profile{% endblock %}
+{% block content %}
+
+<span style='display:none' id='projectid'>{{instance.pk}}</span>
+
+<form action="" target="" method='post' id='option-filters'>
+    <input type='hidden' value='{{instance.pk}}' name='id'/>
+    <div class='row'>
+    <div class='col col_6'>
+        {% csrf_token %}
+        
+        <table><caption>Main Details</caption>
+        <tbody>
+        {{mainform.as_table}}
+        </tbody>
+        </table>
+    
+   
+        <div style='border:1px solid black;'>
+            <p class='like-caption'>Organizations <span class='add'></span></p><br/>{% for form in organizationformset %}
+            <table>
+                <tbody>
+                    {{ form }}
+                </tbody>
+            </table>{% endfor %}
+        </div>
+        
+        <div style='border:1px solid black;'>
+            <p class='like-caption'>Staff <span class='add'></span></p><br/>{% for form in staffformset %}
+            <table>
+                <tbody>
+                        {{ form }}
+                </tbody>
+            </table>{% endfor %}
+        </div>
+        
+    </div>
+    
+
+    
+   
+    <div class='col col_7' style='border:1px solid black;'>
+        <table id='places-table'><caption>Project Locations <span class='add'></span></caption>
+            <tbody>
+                <tr><td colspan=4><div id='district-map' style='height:200px;'></div></td></tr>
+                <tr class='table-header'><th>Place</th><th>Place Code</th><th>Description</th><th>Include?</th><th>(Hide me)</th></tr>
+                {% for place in instance.projectplace_set.all %}
+                    <tr data-rownumber={{forloop.counter0}} data-place="{{place.place.path}}"><td>{{ place.place.name }}</td><td>{{ place.place.path }}</td><td><input id='place-'+{{forloop.counter0}}+'description' value="{{ place.description }}"></td><td><input type='checkbox' checked='checked'/></td><td><input name='place' value="{{place.place.pcode}}"/>{{forloop.counter0}}</td></tr>
+                {% endfor %}
+                    <tr><td><input value="Search by Name"/></td><td><input value="Search by Path"/></td><td><button>Search</button></td><td>Add</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+   
+
+
+
+    <div class='col col_5 project-properties-lists'>
+        {{linksform.as_p}}
+    </div>
+</div>
+<input type="submit" id='okgo' value="GO! This should post"/>
+</form>
+
+<span id='projectid' style='display:none'>{{proj.pk}}</span>
+
+<div id = 'location_table_container' style='display:none'>
+</div>
+
+
+{% endblock content %}
+

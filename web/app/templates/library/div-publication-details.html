@@ -1,0 +1,66 @@
+{% load i18n %}
+{% if not publications %}
+<div class="result">
+     <h4>No publications found</h4>
+     <h5>Sorry, no publications matching those criteria were found</h5>
+</div>{% endif %}
+     <table id="publications" class="table table-condensed table-bordered" cellspacing="0" width="100%" style="text-size:80%">
+        <thead>
+            <tr>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Author(s)" %}</th>
+                <th>{% trans "Year" %}</th>
+                <th>{% trans "organization(s)" %}</th>
+            </tr>
+        </thead>
+ 
+         <tbody>{% for p in publications %}
+            <tr data-publicationpk={{p.pk}}>
+                <td>{{p.name}}{% if p.description %}<br><em>{{p.description}}</em>{% endif %}
+                    <span class="tags"> {% if  p.sector.all %}
+                         <br>{% for s in p.sector.all %}
+                         <span class="sector">{{s}}</span>{% endfor %}{% endif %}{% if p.tags.all %}
+                         <br>{% for t in p.tags.all %}
+                         <span class="tag">{{t}}</span>{% endfor %}{% endif %}
+                    </span>
+                </td>
+                <td>{% for o in p.author.all %}{{o.name}}{% if not forloop.last %}; {% endif %}{% endfor %}</td>
+                <td>{{p.year}}</td>
+                <td>{% for o in p.organization.all %}<a href="{% url 'nhdb:organization:organization' o.pk%}">{{o.name}}</a>{% if not forloop.last %}; {% endif %}{% endfor %}</td>
+            </tr>{% endfor %}
+        </tbody>
+ 
+        <tfoot>
+            <tr>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Author(s)" %}</th>
+                <th>{% trans "Year" %}</th>
+                <th>{% trans "organization(s)" %}</th>
+            </tr>
+        </tfoot>
+    </table>
+
+
+
+
+<!--
+<div class="result">
+     <h4>{{p.name}}<span class="small">  Published in {{p.year}} </span></h4>{% if p.description %}
+     <h5 class='publication-description'>{{p.description}}</h5>{% else %}<h5><em>{% trans 'No description provided' %}</em></h5>{% endif %}
+     <p><em>#{{p.id}} </em></p>
+     <table class="table table-condensed">
+          <tbody>
+               <tr>
+                    <th style="width:120px;">{% trans "organizations" %}:</th>{% if p.organization.all %}
+                    <td>{% for o in p.organization.all %}<a href="{% url 'nhdb:organization:organization' o.pk%}">{{o.name}}</a>{% if not forloop.last %}; {% endif %}{% endfor %}</td></tr>{% else %}
+                    <td><em>{% trans "No organizations" %}</em></td>{% endif %}
+               <tr class="startshidden">
+                    <th style="width:120px;">{% trans "Author(s)" %}:</th>{% if p.author.all %}
+                    <td>{% for a in p.author.all %} {{a}} {% if not forloop.last %}; {% endif %}{% endfor %}</td>{% else %}
+                    <td><em>{% trans "No authors" %}</em></td>{% endif %}
+               </tr>
+          </tbody>
+     </table>
+     <p class="bg-warning">{% for version in p.versions.all %}{{version}}{% endfor %}</p>
+</div>
+-->

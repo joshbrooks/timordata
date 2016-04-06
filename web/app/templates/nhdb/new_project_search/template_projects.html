@@ -1,0 +1,270 @@
+{% extends 'nhdb/new_project_search/base.html' %}
+{% load i18n %}
+{% block script %}
+
+<script src="{{ STATIC_URL }}require.js" data-main="{{ STATIC_URL }}projects.require.js"></script>
+
+
+{% endblock script %}
+{% block style %}
+<style>
+
+.context-menu-pane a{
+  text-size: 30%;
+  padding: 2px;
+
+}
+
+#articles img.loading {
+    display: none;
+    height: 50px;
+    margin-bottom: -50px;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+.context-menu-pane{
+  min-height: 100px;
+  overflow-x:hidden;
+  overflow-y:auto;
+}
+.context-menu-pane input{
+  display: none;
+}
+
+.result {
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+  color: #555;
+  display: block;
+  padding: 6px;
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+.result:hover {
+  border-color: #66afe9;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+  outline: 0 none;
+}
+
+.jumbotron {
+  width:100%
+  height: auto;
+  padding: 0px;
+  margin-bottom: 0px;
+  overflow-x: auto;
+  overflow-y:auto;
+}
+
+.dropdown-menu {
+  font-size: 12px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.dropdown-menu-wide {
+  font-size: 12px;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 300px;
+}
+
+
+.dropdown-menu input {
+  display: none;
+}
+
+.jumbotron li {
+    display: inline;
+    float: left;
+    width:25%;
+    cursor: pointer;
+}
+.jumbotron ul {
+    display: none;
+}
+.jumbotron li.selected{
+    background-color: #EEEEEE;
+    text-shadow: 0px 1px 1px #4d4d4d;
+}
+
+
+path {
+    fill: #00cc00;
+    stroke: #006600;
+}
+
+path:hover {
+  fill: #f9ff7f;
+  stroke: #008000;
+  fill-opacity:0.50;
+}
+
+path.selected, path.selected:hover {
+    fill: #f9ff7f;
+    stroke: #661600;
+}
+
+path.background, path.background.selected, path.background:hover, path.background.selected:hover {
+    fill: #E6E6FA;
+    stroke: #9F9F9F;
+    }
+    
+text {
+    font-size: 16px;
+    fill: #f9ff7f;
+    stroke: #008000;
+    text-anchor:middle;
+  }
+  
+.place-list-item {
+    float: left;
+    font-size: 16px;
+    height: 50px;
+    line-height: 20px;
+    padding: 15px;
+}
+
+object#alphasvg {
+  width:100%;
+  height:100%;
+  min-height: 100px;
+  min-width: 500px;
+  }
+  
+.modal-dialog {
+  width: 90%;
+}
+
+.modal-body {
+  overflow-x:auto;
+}
+
+</style>
+{% endblock style %}
+</head>
+{% block content %}
+ <form autocomplete="off" id="project-search">
+  <div class="row">
+  <div class="col-sm-12">
+
+    <div id="context-menu-main-pane">
+      <ul class="nav nav-tabs" rolw="tablist">{% for r in tags.get_root_nodes %}
+        <li>
+          <a href="#{{r.path|lower}}" role="tab" data-toggle="tab">
+            {{r.name}}
+          </a>{% endfor %}
+        </li>
+        <li>
+          <a href="#nav-orgtype" role="tab" data-toggle="tab">
+            Project / organization type
+          </a>
+        </li>
+        <li>
+          <a href="#nav-location" role="tab" data-toggle="tab">
+            Location
+          </a>
+        </li>
+        <li>
+          <a href="#nav-gosearch" role="tab" data-toggle="tab">
+            Search
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="tab-content context-menu-pane">{% for r in tags.get_root_nodes %}
+    
+      <div class="tab-pane {% if forloop.first %}active{%endif%}" id="{{r.path|lower}}">
+        <h4>{{r.description}}</h4>
+        <div class="row">{% for child in r.get_children %}
+          <div class="col-xs-6 col-sm-4 col-md-3">
+            <input type="checkbox" name="{{r.pathstring}}" id="{{child.pathstring}}" value='{{child.pathstring}}'/><button data-toggle="#{{child.pathstring}}" class="btn btn-sm btn-block btn-default">{{child.name}}</button>
+          </div>{% endfor %}
+        </div>
+      </div>{% endfor %}
+      
+      <div id="nav-projectstatus" class="tab-pane">
+ 
+      </div>
+      
+      <div class="tab-pane"  id="nav-orgtype">
+        <h4>Project / Organization Types</h4>
+        <div class="row">
+          <div class="col-xs-6 col-sm-4 col-md-3">
+            <button data-fields-on=".only-for-project" data-fields-off=".only-for-organization" class="btn btn-sm btn-block btn-primary active">show Projects</button>
+          </div>
+          <div class="col-xs-6 col-sm-4 col-md-3">
+            <button data-fields-on=".only-for-organization" data-fields-off=".only-for-project" class="btn btn-sm btn-block btn-default" name="type" value="project">show Organizations</button>
+          </div>
+        </div>
+        
+        <h4>Search for projects</h4>
+        <p>Project status</p>
+       <div class="row only-for-project">{% for child in projectstatus %}
+          <div class="col-xs-6 col-sm-4 col-md-3">{% if child.code != "A" %}
+            <input type="checkbox" name="projectstatus" id="status_{{child.code}}" value='{{child.code}}'/><button data-toggle="#status_{{child.code}}" class="btn btn-sm btn-block btn-default">{{child.description}}</button>{% else %}
+            <input type="checkbox" checked="checked" name="projectstatus" id="status_{{child.code}}" value='{{child.code}}'/><button data-toggle="#status_{{child.code}}" class="btn btn-sm btn-block btn-primary active">{{child.description}}</button>{% endif %}
+          </div>{% endfor %}
+          </div>
+        <p>Project type</p>
+        <div class="row only-for-project">{% for child in projecttype %}
+          <div class="col-xs-6 col-sm-4 col-md-3">
+            <input type="checkbox" name="orgtype" id="ptype_{{child.pk}}" value='{{child.pk}}'/><button data-toggle="#ptype_{{child.pk}}" class="btn btn-sm btn-block btn-default">{{child.description}}</button>
+          </div>{% endfor %}
+        </div>
+        <h4>Search for Organizations</h4>
+        <p>Organization types</p>
+        
+        <div class="row only-for-organization">
+          <input type="hidden" name="type" value="org">{% for child in organizationclass %}
+          <div class="col-xs-6 col-sm-4 col-md-3">
+            <input type="checkbox" name="orgtype" id="status_{{child.code}}" value='{{child.code}}' disabled="disabled"/><button disabled="disabled" data-toggle="#status_{{child.code}}" class="btn btn-sm btn-block btn-default">{{child.orgtype}}</button>
+          </div>{% endfor %}
+        </div>
+      </div>
+      
+      <div class="tab-pane" id="nav-location">
+        <div class="svgplaceselect" style="overflow:auto;"></div>
+      </div>
+      
+      <div class="tab-pane" id="nav-gosearch" style="height:auto;">
+        <table class="table table-bordered table-condensed" id="search-properties-summary-table">
+          <thead>
+            <tr><th  style="width: 190px">Property / tag</th><th>Choices</th></tr>
+          </thead>
+          <tbody>
+            {% for r in tags.get_root_nodes %}
+            <tr><th>{{r.name}}</th><td data-name="{{r.pathstring}}"></td></tr>
+            {% endfor %}
+            <tr><th>Project status</th><td data-name="projectstatus"></td></tr>
+            <tr><th>Organization types</th><td data-name="orgtype"></td></tr>
+            <tr><th>Locations</th><td><span class="placenames"></span></td></tr>
+            </tbody>
+        </table>
+          
+        
+        <button class="btn btn-xl btn-primary">Search</button>
+      </div>
+    </div>
+  </div>
+  </div>
+  </form>
+
+  <span id="results-container">
+    <div class="result" style="height:300px; display:none;">
+      <img src="{{ STATIC_URL }}default.svg" class="loading">
+    </div>
+  </span>
+
+    <footer>
+      <p>© Belun 2014</p>
+    </footer>
+{% endblock content %}
+</body>
+</html>

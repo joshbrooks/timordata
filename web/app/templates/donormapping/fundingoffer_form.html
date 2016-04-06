@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load django_select2_tags %}
+
+{% block script %}
+    {{block.super}}
+    {% import_django_select2_js_css %}
+{% endblock script %}
+
+
+{% block css %}
+    {{block.super}}
+{% endblock css %}
+
+{% block content %}
+<div class="row">
+        {{ form.media }}
+
+{% crispy form %}
+</div>
+
+<br>
+
+
+{% endblock %}
+
+

@@ -1,0 +1,47 @@
+{% extends "nhdb/organization_detail.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load django_select2_tags %}
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block script %}
+{{block.super}}
+<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}organizationdescription.js"></script>
+
+{% endblock %}
+{% block content %}
+{{form.media}}
+
+
+
+<div class="row">
+    {{pk}}
+    <a href="{% url 'nhdb:organization:detail' pk=pk %}">Return</a>
+        <div class="col-lg-6 alerts">
+                <div role="alert" class="alert alert-success alert-dismissible fade in hidden">
+                    <button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button>
+                    <p class="header">You suggested this change:</p>
+                    <p class="message"></p>
+                </div>
+            <div role="alert" class="alert alert-dismissible fade in alert-warning hidden">
+                    <button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button>
+                    <p class="message"></p>
+                </div>
+        </div>
+    <div class="col col-lg-12 col-md-12">
+
+<form id="global-suggest-data" style="display:none">
+    <input name="pk" value="{{object.id}}"/>
+    <input name="model_name" value="{{object}}"/>
+    <input name="model" value="nhdb_project"/>
+    <input name="user_id" value="{{request.user.id}}"/>
+    <input name="user_name" value="{{request.user}}"/>
+    {% csrf_token %}
+</form>
+
+        {% crispy basesuggestionform %}
+        {% crispy form %}
+
+</div></div>
+
+{% endblock content %}

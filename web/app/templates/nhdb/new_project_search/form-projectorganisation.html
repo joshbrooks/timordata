@@ -1,0 +1,35 @@
+<form role="form" class="organization-search" action="{% url 'nhdb:projectorganizations' %}">
+  {% csrf_token %}
+  <input type="hidden" name="project" {% if project %}value="{{project.pk}}"{% endif %}>
+  <input type="hidden" name="_method" value="POST">
+
+  <div class="row">
+  <div class="col-lg-3">
+      <div class="input-group">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button" data-searchurl="/myapp/nhdb/orgsearch" data-searchupdate="[name=organization]" data-searchlabelproperty="name">Search</button>
+        </span>
+        <input type="text" class="form-control">
+      </div><!-- /input-group -->
+    </div><!-- /.col-lg-4 -->
+    <div class="col-lg-3">
+      <select name="organization" disabled class="form-control" role="menu">
+        <option value="1">Too many to display. Search with the form above.</option>
+      </select>
+    </div><!-- /.col-lg-4 -->
+    <div class="col-lg-3">
+      <select class="form-control" name="organizationclass" role="menu">{% for short, long in OPTION_PROJECT_ORGANIZATION %}
+        <option value={{short}}>{{long}}</option>{% endfor %}
+      </select>
+    </div><!-- /.col-lg-4 -->
+    <div class="col-lg-3">
+      <input class="form-control" name="notes" placeholder="Notes about this relationship" style="width:100%">
+      
+    </div><!-- /.col-lg-4 -->
+  </div><!-- /.row -->
+  <br>
+  <div class="row">
+    <div class="col-sm-3"><button class="btn btn-primary">Save</button>
+    <button class="btn btn-warning" disabled>Delete</button></div>
+  </div>
+</form>

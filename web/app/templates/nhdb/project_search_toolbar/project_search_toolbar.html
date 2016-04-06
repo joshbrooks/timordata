@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="leaflet/css/leaflet.css">
+    <link rel="stylesheet" href="place_select_widget.css">
+    <title>National Humanitarian / Development Project Database</title>
+    <!-- Bootstrap core CSS -->
+    <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    
+    <script src="{{ STATIC_URL }}jqueryui/js/jquery-1.10.2.js"></script>
+    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
+    <script src="{{ STATIC_URL }}require.js" data-main="{{ STATIC_URL }}searchbar_require.js"></script>
+    
+    
+  </head>
+  
+  <body>
+    <form action="/myapp/nhdb/projects/search/">
+<nav role="navigation" class="navbar navbar-default navbar-static" id="navbar-example">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Properties</a>
+       
+        </div>
+        
+        
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+
+            <li class="dropdown" data-toggle="tooltip" data-placement="top" title="Sector (area of involvement)">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" ><span class='cat-label'>All sectors...</span><b class="caret"></b></a>
+              <ul class="dropdown-menu" style='font-size:12px;'>
+               <li><label for="inv_all"><input autocomplete="off" checked id="inv_all"style='display:none;' value="all" name="inv" type="radio">All sectors</label></li>{% for a in inv %}
+               <li><label for="inv_{{a.id}}"><input autocomplete="off" id="inv_{{a.id}}"style='display:none;' value="{{a.id}}" name="inv" type="radio">{{a.description}}</label></li>{% endfor %}
+              </ul>
+            </li>
+
+            <li class="dropdown"  data-toggle="tooltip" data-placement="top" title="Beneficiaries">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class='cat-label'>All beneficiaries... </span> <b class="caret"></b></a>
+              <ul class="dropdown-menu" style='font-size:12px;'>
+                <li><label for="ben_all"><input autocomplete="off" checked id="ben_all"style='display:none;' value="all" name="ben" type="radio">All beneficiaries</label></li>{% for b in ben %}
+                <li><label for="ben_{{b.id}}"><input autocomplete="off" id="ben_{{b.id}}"style='display:none;' value="{{b.id}}" name="ben" type="radio">{{b.description}}</label></li>{% endfor %}
+              </ul>
+            </li>
+            
+            <li class="dropdown"  data-toggle="tooltip" data-placement="top" title="Activities">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class='cat-label'>All activities... </span><b class="caret"></b></a>
+              <ul class="dropdown-menu" style='font-size:12px;'>
+                 <li><label for="act_all"><input autocomplete="off" checked id="act_all"style='display:none;' value="all" name="act" type="radio">All activities</label></li>{% for c in act %}
+                <li><label for="act_{{c.id}}"><input autocomplete="off" id="act_{{c.id}}"style='display:none;' value="{{c.id}}" name="act" type="radio">{{c.description}}</label></li>{% endfor %}
+              </ul>
+            </li>
+            
+            <li class="dropdown"  data-toggle="tooltip" data-placement="top" title="Activities">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class='cat-label'>Active projects only </span><b class="caret"></b></a>
+              <ul class="dropdown-menu" style='font-size:12px;'>
+                
+                <li><label for="inactive_show"><input autocomplete="off" id="inactive_show"style='display:none;' value="true" name="inactive" type="radio">Show inactive projects</label></li>
+                <li><label for="inactive_hide"><input autocomplete="off" checked id="inactive_hide"style='display:none;' value="false" name="inactive" type="radio">Active projects only</label></li>
+
+              </ul>
+            </li>
+            
+          </ul>
+          <button type="submit" style='margin-top:8px' class="btn btn-default">Search</button>
+        </div><!--/.nav-collapse -->
+      </div>
+      </nav>
+      
+      </form>
+      <hr>
+      
+      <footer>
+        <p>© Company 2014</p>
+      </footer>
+
+
+</body>
+</html>

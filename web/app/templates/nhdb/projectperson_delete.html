@@ -1,0 +1,7 @@
+
+{% load crispy_forms_tags %}
+
+<p>Delete {{object.person}} from {{object.project}}?</p>
+<!--<form action="/suggest/suggest/" method="post" enctype="multipart/form-data">-->
+    {% crispy deleteform %}
+<!--</form>-->

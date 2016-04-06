@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block script %}
+<script language="javascript" type='text/javascript' src="{% url 'allsectorsjs' %}{% if place %}?place={{place.path}}{%endif%}"></script>
+{% endblock script %}
+
+{% block headertext %}NHDB Sector Report: {{sector.classification}} {% endblock headertext %}
+
+{% block content %}
+<div class='row'>
+<div id="chart" style='height:2000px; width: 95%'></div>
+</div>
+{% endblock content %}

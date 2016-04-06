@@ -1,0 +1,19 @@
+<table id='organization_project_places' data-orgpk={{org.pk}}>
+        <caption>Projects</caption>
+        <tbody>
+                <tr>
+                        <th>Project Name</th>
+                        <th>Organization Involvement</th>
+                        <th>Project Status</th>
+                        <th>Project Locations</th>
+        </tr>{% for p in org.projectorganization_set.all %}
+        <tr data-projectpk={{p.project.pk}}>
+            <td><a href='{% url "nhdb:project" p.project.id %}'>{{p.project.name}}</a></td>
+            <td data-organizationclass='{{p.organizationclass}}'>{{p.organizationclass}}</td>
+            <td data-projectstatus={{p.project.status}}>{% if p.project.status %} Active {% else %} Inactive {% endif %}</td>
+            <td>{% for link in p.project.projectplace_set.all %}<p>{{ link.place.name.title }}</p> {% endfor %}</td>
+        </tr>{% endfor %}
+        </tbody>
+</table> 
+
+

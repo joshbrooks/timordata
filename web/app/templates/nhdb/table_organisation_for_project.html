@@ -1,0 +1,50 @@
+
+<div class="organization_container {% if template %}template{% endif%}" data-organization="{{org.pk}}" data-project="{{proj.pk}}" data-projectorganization="{{projorg.pk}}" style='margin: 5px; border: 1px solid #A4D7FF;'>
+  <table>
+  <caption data-name>{{org.name}}                  
+    <span class='editable' style="float:right;">
+            <button type="button" class="btn btn-default btn-xs triggerStaffModal" data-orgpk={% if template %}""{% else %}{{org.pk}}{% endif%} data-projectpk={% if template %}""{% else %}{{proj.pk}}{% endif%}><span class='glyphicon glyphicon-user'></span></button>
+            <button type="button" class="btn btn-default btn-xs triggerOrganizationRemove" data-projectorganization="{{projorg.pk}}"><span class='glyphicon glyphicon-remove'></span></button>
+            <button type="button" class="btn btn-default btn-xs triggerOrganizationNotes" data-orgpk={% if template %}""{% else %}{{org.pk}}{% endif%}><span class='glyphicon glyphicon-pencil'></span></button>
+        </span></caption>
+    <tbody>
+    <tr>
+      <th>Involvement</th>
+      <td data-organizationclass= >{{projorg.get_organizationclass_display}}</td>
+    </tr>
+    <tr>
+      <th>Notes</th>
+      <td data-notes>{{projorg.notes}}</td>
+    </tr>
+    <tr>
+      <td colspan=2>
+      <!--
+      Nested table of staff on the project
+      -->
+        <table class='person'>
+          <caption style="background-color: #B2B2B2">Staff
+          </caption>
+            <tbody>
+              <tr>
+                
+              {% if template %}
+              <tr class="template person">
+                <td class='name'></td>
+                <td class='staffclass'></td>
+              </tr> 
+              {% endif %}
+              
+              </tr>{% for projperson in proj.projectperson_set.all %}{% if projperson.person in org.person_set.all %}
+              <tr class='person' data-person={{projperson.person.pk}}>
+                <td class='name'>{{projperson.person}}</td>
+                <td class='staffclass'>{{projperson.get_staffclass_display}}</td>
+              </tr> {% endif %}{%endfor %}
+
+            </tbody>
+          </table>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>

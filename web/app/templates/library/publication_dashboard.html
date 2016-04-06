@@ -1,0 +1,12 @@
+<p>Hi</p>
+
+<p>{{suggestion}}</p>
+<p>{{publication}}</p>
+
+{% if suggestion %}
+<p><a href="/library/form/publication/authors/?suggestion={{suggestion.pk}}" data-modalurl="/library/form/publication/authors/?suggestion={{suggestion.pk}}" data-modalselector="#stack2">!</a></p>
+<p><a href="/library/form/publication/organizations/?suggestion={{suggestion.pk}}" data-modalurl="/library/form/publication/authors/?suggestion={{suggestion.pk}}" data-modalselector="#stack2">!</a></p>
+{% elif publication %}
+<p><a href="/library/form/publication/authors/?publication={{publication.pk}}" data-modalurl="/library/form/publication/authors/?publication={{publication.pk}}" data-modalselector="#stack2">!</a></p>
+<p><a href="/library/form/publication/organizations/?publication={{publication.pk}}" data-modalurl="/library/form/publication/organizations/?publication={{publication.pk}}" data-modalselector="#stack2">!</a></p>
+{% endif %}

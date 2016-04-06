@@ -1,0 +1,22 @@
+
+<div class="person">
+     <p>
+     <strong class='person-name' >{{p.name}} </strong><br>
+     <span class='person-organization' >{{p.organization.name}}</span><br>
+     <strong>T </strong> {% if p.contact.phoneprimary %}{{p.contact.phoneprimary}}{% if p.contact.mobilephone%} / {{p.contact.mobilephone }}{%endif%}{% else %} None<br>{%endif%}
+     {% if p.contact.email %}<strong>E </strong> {{p.contact.email}}<br>{%endif%}
+     {% if p.contact.web %}<strong>W </strong> <a href='http://{{p.contact.web}}'>{{p.contact.web}}</a><br>{%endif%}
+     {% if p.contact.fax %}<strong>F </strong> {{p.contact.fax}}<br>{%endif%}
+
+     </p>
+     <span class="dropdown">
+        <a href="#" data-toggle="dropdown" role="button" data-fill="person_role"><span class="caret"></span></a>
+        <ul aria-labelledby="drop-{{p.id}}" role="menu" class="dropdown-menu" id="menu1">
+          <li role="presentation"><a href='#' data-person={{p.id}} data-role='P'>Primary</a></li>
+          <li role="presentation"><a href='#' data-person={{p.id}} data-role='S'>Secondary</a></li>
+          <li role="presentation"><a href='#' data-person={{p.id}} data-role='A'>Staff</a></li>
+          <li class="divider" role="presentation"></li>
+          <li role="presentation"><a href="#" tabindex="-1" role="menuitem">Not in this project</a></li>
+        </ul>
+     </span>
+</div>

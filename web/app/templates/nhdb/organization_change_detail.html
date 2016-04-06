@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load django_select2_tags %}
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block script %}
+     {{block.super}}
+    <script src="{{ STATIC_URL }}leaflet/leaflet.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/leaflet.utfgrid.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/leaflet.ajax.min.js"></script>
+    <script src="{{ STATIC_URL }}organizationplace.js"></script>
+    <script src="{{ STATIC_URL }}placeenvelopes.js"></script>
+    <script src="{{ STATIC_URL }}organizationsuggestion.js"></script>
+    <script src="{{ STATIC_URL }}simply-toast/simply-toast.min.js"></script>
+    <script>
+        {% autoescape off %}
+        window.initialFeatures = {{initialFeatures}}
+        window.initialset = []
+        {% if object.initialsetbounds %}
+        window.initialset.bounds = {{object.initialsetbounds}} {% endif %}
+        window.rest_data = {model_pk: {{object.pk}}, model_repr: "{{object|escapejs}}"}
+        {% endautoescape %}
+        $(document).ready(function() {
+            var m = $('#modal-get-name-email');
+            m.on('show.bs.modal', function () {
+                $('.form.personal_details_form [name=name]').val(localStorage['personal_details_name']);
+                $('.form.personal_details_form [name=email]').val(localStorage['personal_details_email']);
+            });
+            m.on('hide.bs.modal', function () {
+                localStorage['personal_details_name'] = $('.form.personal_details_form [name=name]').val();
+                localStorage['personal_details_email'] = $('.form.personal_details_form [name=email]').val();
+            });
+            m.modal()
+        })
+        </script>
+
+
+    <script>
+        $(document).ready(function(){
+
+            // Playin' with map gotopoint
+            // leaflet_map is defined in organizationplace.js
+
+            // Click a button '.
+            $(document).on('click', '[data-leaflet_layer]', function(e){
+                l = leaflet_map._layers[$(this).data('leaflet_layer')]
+                leaflet_map.setView(l._latlng)
+            })
+
+
+
+        })
+
+
+
+    </script>
+
+{% endblock script %}
+
+{% block style %}
+{{block.super}}
+<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/leaflet.css" />
+<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/Control.SimpleMarkers.css" />
+<style>
+#map {
+    height:256px;
+    background-color:white;
+    border: 1px solid gray;
+    width:100%;
+}
+
+    .add_marker_control, .del_marker_control{
+        box-sizing: content-box;
+    }
+    .hovering-over{
+
+        background-color:white;
+        margin:5px;
+        padding:5px;
+        border-radius:3px;
+    }
+</style>
+{% endblock style %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-6 col-sm-6">
+         <div class="alert alert-info alert-dismissible fade in" role="alert">
+             <a href="../" class="btn btn-info">Go back to the main page</a>
+             <a href="/suggest/?model_name=nhdb_organization&amp;model_pk={{object.pk}}&amp;return_url=/nhdb/organization/{{object.pk}}/update/" class="btn btn-info">See changes already requested</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1>{{object}}</h1>
+        {{object.initialview}}
+
+    <div class="col-lg-4 col-sm-6 col-xs-12">
+        <h3>Properties</h3>
+        {% crispy form %}
+    </div>
+
+    <div class="col-lg-12">
+        <h3>Places</h3>
+
+{% for places_form in places_forms %}
+    {% with places_form.edit_form as change_form%}{% with places_form.delete_form as delete_form %}
+        <p style="float:left;"><strong>{{change_form.instance.location.suco}}, {{change_form.instance.location.subdistrict}}, {{change_form.instance.location.district}}</strong></p>
+            <form class="inline" action="/suggest/suggest/" method="post" style="display:inline-block">
+                {% crispy delete_form delete_form.helper %}
+            </form>
+            <form class="inline" action="/suggest/suggest/" method="post">
+
+                {% crispy change_form change_form.helper %}
+                <input type="hidden" name="organization" value="{{object.pk}}">
+            </form>
+    {% endwith %}
+    {% endwith %}
+
+{% endfor %}
+        <form class="inline" action="/suggest/suggest/" method="post">
+        <div class="add-place-form" style="display: none">
+            <p><strong>Add a new location</strong></p>
+
+            {% crispy new_place_form %}
+                <input type="hidden" name="organization" value="{{object.pk}}">
+                <input type="hidden" name="_affected_instance" value="nhdb_organization {{object.pk}}">
+        </div>
+        </form>
+
+
+    </div>
+</div>
+</div>
+
+<div class="row">
+
+    <input name="organization_id" type="hidden" value="{{object.id}}">
+   <div class="col-lg-3 col-sm-12">
+    <div id="map" class="col-lg-9 col-sm-12" style="width:400px;"></div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <hr>
+        <h4>Organization Descriptions</h4>
+            <p>Suggest an addition or change to the organization's description in one of the supported site languages here.
+            Visitors choosing that language will see that description only. English is shown as the default if a visitor chooses a language with no translation.</p>
+
+        {% autoescape off %}
+        <div class="well col-lg-6 col-sm-6 col-xs-12">
+            <h4>English</h4>     {% if object.description_en %}
+                {{object.description_en}}
+                <a class="btn btn-primary" href="../description_en">Change description</a> {% else %}
+                <p>No description in English yet</p>
+                <a class="btn btn-primary" href="../description_en">Add description</a>{% endif %}
+        </div>
+        <div class="well col-lg-6 col-sm-6 col-xs-12">
+            <h4>Tetun</h4>     {% if object.description_tet %}
+                {{object.description_tet}}
+                <a class="btn btn-primary" href="../description_tet">Change description</a> {% else %}
+                <p>No description in Tetun yet</p>
+                <a class="btn btn-primary" href="../description_tet">Add description</a>{% endif %}
+        </div>
+        <div class="well col-lg-6 col-sm-6 col-xs-12">
+            <h4>Portugese</h4>     {% if object.description_pt %}
+                {{object.description_pt}}
+                <a class="btn btn-primary" href="../description_pt">Change description</a> {% else %}
+                <p>No description in Portugese yet</p>
+                <a class="btn btn-primary" href="../description_pt">Add description</a>{% endif %}
+        </div>
+        <div class="well col-lg-6 col-sm-6 col-xs-12">
+            <h4>Indonesian</h4>     {% if object.description_id %}
+                {{object.description_id}}
+                <a class="btn btn-primary" href="../description_id">Change description</a> {% else %}
+                <p>No description in Indonesian yet</p>
+                <a class="btn btn-primary" href="../description_id">Add description</a>{% endif %}
+        </div>
+
+        {% endautoescape %}
+        </div>
+</div>
+
+{% include "nhdb/personal-details-form-modal.html" %}
+
+<div class="modal modal-json fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Location Information</h4>
+      </div>
+      <div class="modal-body">
+        <pre class='json'></pre>
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" name="continue" class="btn btn-default" data-dismiss="modal">Continue</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div><!-- /.modal -->
+
+
+{% endblock content %}

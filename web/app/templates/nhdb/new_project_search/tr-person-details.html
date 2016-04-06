@@ -1,0 +1,21 @@
+
+<div class="row person" data-personid={{pers.id}} data-orgid={{pers.organization.id}}>
+     <div class="col-md-2">{% if projpers %}
+          <select name="projectperson-{{projpers.id}}" data-original-value={{class}} class="form-control input-sm"> {% else %}
+          <select name="project-{{p.id}}-person-{{pers.id}}" data-original-value={{class}} class="form-control input-sm">{% endif %}
+            <option value="P" {% if class == "P" %}selected{%endif%}>Primary contact</option>
+            <option value="S" {% if class == "S" %}selected{%endif%}>Secondary contact</option>
+            <option value="T" {% if class == "T" %}selected{%endif%}>Staff</option>
+            <option value="X" {% if class == "X" %}selected{%endif%}>Not in this project</option>
+          </select>
+     </div>
+     <div class="col-md-2">{{pers.name}}</div>
+     <div class="col-md-2">{{pers.title}}</div>
+     <div class="col-md-2">{{pers.organization.name}}</div>
+     <div class="col-md-2">
+     {% if pers.contact.phoneprimary or pers.contact.mobilephone %}<strong>T </strong> {% if pers.contact.phoneprimary %}{{pers.contact.phoneprimary}}{% if pers.contact.mobilephone%} / {{pers.contact.mobilephone }}{%endif%}{% else %} None<br>{%endif%}{%endif%}
+     {% if pers.contact.email %}<strong>E </strong> {{pers.contact.email}}<br>{%endif%}
+     {% if pers.contact.web %}<strong>W </strong> <a href='http://{{pers.contact.web}}'>{{pers.contact.web}}</a><br>{%endif%}
+     {% if pers.contact.fax %}<strong>F </strong> {{pers.contact.fax}}<br>{%endif%}
+     </div>
+</div>

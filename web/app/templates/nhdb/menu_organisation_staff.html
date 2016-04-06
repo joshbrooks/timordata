@@ -1,0 +1,14 @@
+<li id='staff_menu' data-orgpk={{org.pk}}>
+    Staff
+    <ul class='contacts'>{% for c in org.contact_set.all %}
+        <li class='parent' class='contact' data-contactpk={{c.pk}}>
+                <a href='#'>{{c.firstname}} {{c.lastname}}, {{c.title}}</a>
+<!--
+            <ul style='width:250px;'>
+                <li class='drop' >Remove from this project</li>
+            </ul>
+-->
+        </li>{% endfor %}
+        <li class='staff_add'><button>Add a new staff member</button></li>
+    </ul>
+</li>

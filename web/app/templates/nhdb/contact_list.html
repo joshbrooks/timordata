@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+
+<form action="." method="get">
+    <button>Go</button>
+</form>
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Organization Type</th>
+            <th>Name</th>
+            <th>Location(s)</th>
+            <th>Contact Person</th>
+            <th>Contact Email (Organization)</th>
+            <th>Contact Email (Person)</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>{% for o in organizations %}
+            <td>{{o.orgtype}}</td>
+            <td>{{o.name}}</td>
+            <td>
+                {% for place in organizationplace_set.all %}
+                {{place.description}}<br>
+                {{place.locationstring}}<br>
+            </td>
+            <td>Contact Person</td>
+            <td>Contact Email (Organization)</td>
+            <td>Contact Email (Person)</td>
+            <td>Status</td>{% endfor %}
+        </tr>
+    </tbody>
+</table>

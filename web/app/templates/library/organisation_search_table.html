@@ -1,0 +1,34 @@
+<table class="table table-responsive table-condensed">
+    <caption>organizations</caption>
+    <thead>
+        <tr>
+            <th>Names</th>
+        </tr>
+    
+    </thead>
+
+    <tbody>
+        <tr><th colspan="3">Currently in this publication</th></tr>
+        {% for a in object.organization.all %}
+        <tr>
+            <td>{{a.name}}</td>
+
+            <td>
+                <input class="form-control" checked type="hidden" name="organization_id" value="{{a.pk}}">
+                <a href="#" class="btn btn-xs btn-warning remove-organization">Remove</a>
+            </td>
+        </tr>
+        {% endfor %}
+
+        <tr><th colspan="3">Existing organizations to add</th><td></td></tr>
+        
+        <tr class="template existing-organization-template" style="display:none">
+            <td><span class="organization_name"></span></td>
+            <td><input class="form-control" checked type="hidden" name="organization_id" value="">
+                <a href="#" class="btn btn-xs btn-warning remove-organization">Remove</a>
+            </td>
+        </tr>
+
+    </tbody>
+
+</table>

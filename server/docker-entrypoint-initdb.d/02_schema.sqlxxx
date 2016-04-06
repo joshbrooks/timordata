@@ -1,0 +1,3011 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.1
+-- Dumped by pg_dump version 9.5.1
+
+-- Started on 2016-03-17 12:38:28 TLT
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 4367 (class 1262 OID 19703)
+-- Name: timordata.info; Type: DATABASE; Schema: -; Owner: belun
+--
+
+-- CREATE DATABASE IF NOT EXISTS "timordata.info" WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'en_US.utf8' LC_CTYPE = 'en_US.utf8';
+
+
+ALTER DATABASE "timordata.info" OWNER TO belun;
+
+\connect "timordata.info"
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 1 (class 3079 OID 12361)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 4370 (class 0 OID 0)
+-- Dependencies: 1
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- TOC entry 2 (class 3079 OID 19704)
+-- Name: postgis; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS postgis WITH SCHEMA public;
+
+
+--
+-- TOC entry 4371 (class 0 OID 0)
+-- Dependencies: 2
+-- Name: EXTENSION postgis; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION postgis IS 'PostGIS geometry, geography, and raster spatial types and functions';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 308 (class 1259 OID 22031)
+-- Name: auth_group; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE auth_group (
+    id integer NOT NULL,
+    name character varying(80) NOT NULL
+);
+
+
+ALTER TABLE auth_group OWNER TO django;
+
+--
+-- TOC entry 307 (class 1259 OID 22029)
+-- Name: auth_group_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE auth_group_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE auth_group_id_seq OWNER TO django;
+
+--
+-- TOC entry 4372 (class 0 OID 0)
+-- Dependencies: 307
+-- Name: auth_group_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE auth_group_id_seq OWNED BY auth_group.id;
+
+
+--
+-- TOC entry 310 (class 1259 OID 22041)
+-- Name: auth_group_permissions; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE auth_group_permissions (
+    id integer NOT NULL,
+    group_id integer NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE auth_group_permissions OWNER TO django;
+
+--
+-- TOC entry 309 (class 1259 OID 22039)
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE auth_group_permissions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE auth_group_permissions_id_seq OWNER TO django;
+
+--
+-- TOC entry 4373 (class 0 OID 0)
+-- Dependencies: 309
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE auth_group_permissions_id_seq OWNED BY auth_group_permissions.id;
+
+
+--
+-- TOC entry 306 (class 1259 OID 22023)
+-- Name: auth_permission; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE auth_permission (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    content_type_id integer NOT NULL,
+    codename character varying(100) NOT NULL
+);
+
+
+ALTER TABLE auth_permission OWNER TO django;
+
+--
+-- TOC entry 305 (class 1259 OID 22021)
+-- Name: auth_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE auth_permission_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE auth_permission_id_seq OWNER TO django;
+
+--
+-- TOC entry 4374 (class 0 OID 0)
+-- Dependencies: 305
+-- Name: auth_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE auth_permission_id_seq OWNED BY auth_permission.id;
+
+
+--
+-- TOC entry 312 (class 1259 OID 22049)
+-- Name: auth_user; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE auth_user (
+    id integer NOT NULL,
+    password character varying(128) NOT NULL,
+    last_login timestamp with time zone,
+    is_superuser boolean NOT NULL,
+    username character varying(30) NOT NULL,
+    first_name character varying(30) NOT NULL,
+    last_name character varying(30) NOT NULL,
+    email character varying(254) NOT NULL,
+    is_staff boolean NOT NULL,
+    is_active boolean NOT NULL,
+    date_joined timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE auth_user OWNER TO django;
+
+--
+-- TOC entry 314 (class 1259 OID 22059)
+-- Name: auth_user_groups; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE auth_user_groups (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    group_id integer NOT NULL
+);
+
+
+ALTER TABLE auth_user_groups OWNER TO django;
+
+--
+-- TOC entry 313 (class 1259 OID 22057)
+-- Name: auth_user_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE auth_user_groups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE auth_user_groups_id_seq OWNER TO django;
+
+--
+-- TOC entry 4375 (class 0 OID 0)
+-- Dependencies: 313
+-- Name: auth_user_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE auth_user_groups_id_seq OWNED BY auth_user_groups.id;
+
+
+--
+-- TOC entry 311 (class 1259 OID 22047)
+-- Name: auth_user_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE auth_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE auth_user_id_seq OWNER TO django;
+
+--
+-- TOC entry 4376 (class 0 OID 0)
+-- Dependencies: 311
+-- Name: auth_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE auth_user_id_seq OWNED BY auth_user.id;
+
+
+--
+-- TOC entry 316 (class 1259 OID 22067)
+-- Name: auth_user_user_permissions; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE auth_user_user_permissions (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE auth_user_user_permissions OWNER TO django;
+
+--
+-- TOC entry 315 (class 1259 OID 22065)
+-- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE auth_user_user_permissions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE auth_user_user_permissions_id_seq OWNER TO django;
+
+--
+-- TOC entry 4377 (class 0 OID 0)
+-- Dependencies: 315
+-- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE auth_user_user_permissions_id_seq OWNED BY auth_user_user_permissions.id;
+
+
+--
+-- TOC entry 318 (class 1259 OID 22127)
+-- Name: django_admin_log; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE django_admin_log (
+    id integer NOT NULL,
+    action_time timestamp with time zone NOT NULL,
+    object_id text,
+    object_repr character varying(200) NOT NULL,
+    action_flag smallint NOT NULL,
+    change_message text NOT NULL,
+    content_type_id integer,
+    user_id integer NOT NULL,
+    CONSTRAINT django_admin_log_action_flag_check CHECK ((action_flag >= 0))
+);
+
+
+ALTER TABLE django_admin_log OWNER TO django;
+
+--
+-- TOC entry 317 (class 1259 OID 22125)
+-- Name: django_admin_log_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE django_admin_log_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE django_admin_log_id_seq OWNER TO django;
+
+--
+-- TOC entry 4378 (class 0 OID 0)
+-- Dependencies: 317
+-- Name: django_admin_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE django_admin_log_id_seq OWNED BY django_admin_log.id;
+
+
+--
+-- TOC entry 304 (class 1259 OID 22013)
+-- Name: django_content_type; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE django_content_type (
+    id integer NOT NULL,
+    app_label character varying(100) NOT NULL,
+    model character varying(100) NOT NULL
+);
+
+
+ALTER TABLE django_content_type OWNER TO django;
+
+--
+-- TOC entry 303 (class 1259 OID 22011)
+-- Name: django_content_type_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE django_content_type_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE django_content_type_id_seq OWNER TO django;
+
+--
+-- TOC entry 4379 (class 0 OID 0)
+-- Dependencies: 303
+-- Name: django_content_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE django_content_type_id_seq OWNED BY django_content_type.id;
+
+
+--
+-- TOC entry 198 (class 1259 OID 21072)
+-- Name: django_migrations; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE django_migrations (
+    id integer NOT NULL,
+    app character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    applied timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE django_migrations OWNER TO django;
+
+--
+-- TOC entry 197 (class 1259 OID 21070)
+-- Name: django_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE django_migrations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE django_migrations_id_seq OWNER TO django;
+
+--
+-- TOC entry 4380 (class 0 OID 0)
+-- Dependencies: 197
+-- Name: django_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE django_migrations_id_seq OWNED BY django_migrations.id;
+
+
+--
+-- TOC entry 319 (class 1259 OID 22150)
+-- Name: django_session; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE django_session (
+    session_key character varying(40) NOT NULL,
+    session_data text NOT NULL,
+    expire_date timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE django_session OWNER TO django;
+
+--
+-- TOC entry 212 (class 1259 OID 21134)
+-- Name: donormapping_donorannouncement; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE donormapping_donorannouncement (
+    id integer NOT NULL,
+    date date NOT NULL,
+    source_id integer,
+    title character varying(256) NOT NULL,
+    summary text NOT NULL,
+    content text NOT NULL
+);
+
+
+ALTER TABLE donormapping_donorannouncement OWNER TO django;
+
+--
+-- TOC entry 211 (class 1259 OID 21132)
+-- Name: donormapping_donorannouncement_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE donormapping_donorannouncement_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE donormapping_donorannouncement_id_seq OWNER TO django;
+
+--
+-- TOC entry 4381 (class 0 OID 0)
+-- Dependencies: 211
+-- Name: donormapping_donorannouncement_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE donormapping_donorannouncement_id_seq OWNED BY donormapping_donorannouncement.id;
+
+
+--
+-- TOC entry 214 (class 1259 OID 21145)
+-- Name: donormapping_donorsurveyresponse; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE donormapping_donorsurveyresponse (
+    id integer NOT NULL,
+    organization_id integer,
+    organizationname text,
+    survey_date date NOT NULL,
+    response_date date,
+    response character varying(2) NOT NULL
+);
+
+
+ALTER TABLE donormapping_donorsurveyresponse OWNER TO django;
+
+--
+-- TOC entry 213 (class 1259 OID 21143)
+-- Name: donormapping_donorsurveyresponse_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE donormapping_donorsurveyresponse_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE donormapping_donorsurveyresponse_id_seq OWNER TO django;
+
+--
+-- TOC entry 4382 (class 0 OID 0)
+-- Dependencies: 213
+-- Name: donormapping_donorsurveyresponse_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE donormapping_donorsurveyresponse_id_seq OWNED BY donormapping_donorsurveyresponse.id;
+
+
+--
+-- TOC entry 200 (class 1259 OID 21083)
+-- Name: donormapping_fundingoffer; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE donormapping_fundingoffer (
+    id integer NOT NULL,
+    title character varying(256) NOT NULL,
+    description text NOT NULL,
+    summary text,
+    organization_id integer NOT NULL,
+    amount integer,
+    conditions text,
+    application_end_date date,
+    all_districts boolean NOT NULL
+);
+
+
+ALTER TABLE donormapping_fundingoffer OWNER TO django;
+
+--
+-- TOC entry 206 (class 1259 OID 21110)
+-- Name: donormapping_fundingoffer_activity; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE donormapping_fundingoffer_activity (
+    id integer NOT NULL,
+    fundingoffer_id integer NOT NULL,
+    propertytag_id integer NOT NULL
+);
+
+
+ALTER TABLE donormapping_fundingoffer_activity OWNER TO django;
+
+--
+-- TOC entry 205 (class 1259 OID 21108)
+-- Name: donormapping_fundingoffer_activity_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE donormapping_fundingoffer_activity_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE donormapping_fundingoffer_activity_id_seq OWNER TO django;
+
+--
+-- TOC entry 4383 (class 0 OID 0)
+-- Dependencies: 205
+-- Name: donormapping_fundingoffer_activity_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE donormapping_fundingoffer_activity_id_seq OWNED BY donormapping_fundingoffer_activity.id;
+
+
+--
+-- TOC entry 208 (class 1259 OID 21118)
+-- Name: donormapping_fundingoffer_beneficiary; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE donormapping_fundingoffer_beneficiary (
+    id integer NOT NULL,
+    fundingoffer_id integer NOT NULL,
+    propertytag_id integer NOT NULL
+);
+
+
+ALTER TABLE donormapping_fundingoffer_beneficiary OWNER TO django;
+
+--
+-- TOC entry 207 (class 1259 OID 21116)
+-- Name: donormapping_fundingoffer_beneficiary_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE donormapping_fundingoffer_beneficiary_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE donormapping_fundingoffer_beneficiary_id_seq OWNER TO django;
+
+--
+-- TOC entry 4384 (class 0 OID 0)
+-- Dependencies: 207
+-- Name: donormapping_fundingoffer_beneficiary_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE donormapping_fundingoffer_beneficiary_id_seq OWNED BY donormapping_fundingoffer_beneficiary.id;
+
+
+--
+-- TOC entry 202 (class 1259 OID 21094)
+-- Name: donormapping_fundingoffer_district; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE donormapping_fundingoffer_district (
+    id integer NOT NULL,
+    fundingoffer_id integer NOT NULL,
+    district_id integer NOT NULL
+);
+
+
+ALTER TABLE donormapping_fundingoffer_district OWNER TO django;
+
+--
+-- TOC entry 201 (class 1259 OID 21092)
+-- Name: donormapping_fundingoffer_district_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE donormapping_fundingoffer_district_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE donormapping_fundingoffer_district_id_seq OWNER TO django;
+
+--
+-- TOC entry 4385 (class 0 OID 0)
+-- Dependencies: 201
+-- Name: donormapping_fundingoffer_district_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE donormapping_fundingoffer_district_id_seq OWNED BY donormapping_fundingoffer_district.id;
+
+
+--
+-- TOC entry 199 (class 1259 OID 21081)
+-- Name: donormapping_fundingoffer_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE donormapping_fundingoffer_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE donormapping_fundingoffer_id_seq OWNER TO django;
+
+--
+-- TOC entry 4386 (class 0 OID 0)
+-- Dependencies: 199
+-- Name: donormapping_fundingoffer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE donormapping_fundingoffer_id_seq OWNED BY donormapping_fundingoffer.id;
+
+
+--
+-- TOC entry 204 (class 1259 OID 21102)
+-- Name: donormapping_fundingoffer_sector; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE donormapping_fundingoffer_sector (
+    id integer NOT NULL,
+    fundingoffer_id integer NOT NULL,
+    propertytag_id integer NOT NULL
+);
+
+
+ALTER TABLE donormapping_fundingoffer_sector OWNER TO django;
+
+--
+-- TOC entry 203 (class 1259 OID 21100)
+-- Name: donormapping_fundingoffer_sector_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE donormapping_fundingoffer_sector_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE donormapping_fundingoffer_sector_id_seq OWNER TO django;
+
+--
+-- TOC entry 4387 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: donormapping_fundingoffer_sector_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE donormapping_fundingoffer_sector_id_seq OWNED BY donormapping_fundingoffer_sector.id;
+
+
+--
+-- TOC entry 210 (class 1259 OID 21126)
+-- Name: donormapping_fundingofferdocument; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE donormapping_fundingofferdocument (
+    id integer NOT NULL,
+    offer_id integer NOT NULL,
+    file character varying(256),
+    description character varying(128) NOT NULL
+);
+
+
+ALTER TABLE donormapping_fundingofferdocument OWNER TO django;
+
+--
+-- TOC entry 209 (class 1259 OID 21124)
+-- Name: donormapping_fundingofferdocument_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE donormapping_fundingofferdocument_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE donormapping_fundingofferdocument_id_seq OWNER TO django;
+
+--
+-- TOC entry 4388 (class 0 OID 0)
+-- Dependencies: 209
+-- Name: donormapping_fundingofferdocument_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE donormapping_fundingofferdocument_id_seq OWNED BY donormapping_fundingofferdocument.id;
+
+
+--
+-- TOC entry 218 (class 1259 OID 21164)
+-- Name: donormapping_fundingsurvey; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE donormapping_fundingsurvey (
+    id integer NOT NULL,
+    organizationname character varying(100) NOT NULL,
+    organizationtype_id character varying(5) NOT NULL,
+    fundinggiven boolean,
+    fundinggiveamt integer,
+    fundingreceived boolean,
+    fundingrecvamt integer,
+    fundinggivemethod character varying(128) NOT NULL,
+    fundingrecvmethod character varying(128),
+    qfunding integer,
+    qrecipients integer,
+    qtransport integer,
+    qprocess integer,
+    qdonorsector integer,
+    usefacebook character varying(2) NOT NULL,
+    usegmail character varying(2) NOT NULL,
+    usegoogle character varying(2) NOT NULL,
+    hascomputer boolean NOT NULL,
+    hasprinter boolean NOT NULL,
+    hasmobile boolean NOT NULL,
+    hassmartphone boolean NOT NULL
+);
+
+
+ALTER TABLE donormapping_fundingsurvey OWNER TO django;
+
+--
+-- TOC entry 222 (class 1259 OID 21180)
+-- Name: donormapping_fundingsurvey_fundinggiverel; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE donormapping_fundingsurvey_fundinggiverel (
+    id integer NOT NULL,
+    fundingsurvey_id integer NOT NULL,
+    fundingsurveyinfomethods_id integer NOT NULL
+);
+
+
+ALTER TABLE donormapping_fundingsurvey_fundinggiverel OWNER TO django;
+
+--
+-- TOC entry 221 (class 1259 OID 21178)
+-- Name: donormapping_fundingsurvey_fundinggiverel_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE donormapping_fundingsurvey_fundinggiverel_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE donormapping_fundingsurvey_fundinggiverel_id_seq OWNER TO django;
+
+--
+-- TOC entry 4389 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: donormapping_fundingsurvey_fundinggiverel_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE donormapping_fundingsurvey_fundinggiverel_id_seq OWNED BY donormapping_fundingsurvey_fundinggiverel.id;
+
+
+--
+-- TOC entry 224 (class 1259 OID 21188)
+-- Name: donormapping_fundingsurvey_fundingrecvrel; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE donormapping_fundingsurvey_fundingrecvrel (
+    id integer NOT NULL,
+    fundingsurvey_id integer NOT NULL,
+    fundingsurveyinfomethods_id integer NOT NULL
+);
+
+
+ALTER TABLE donormapping_fundingsurvey_fundingrecvrel OWNER TO django;
+
+--
+-- TOC entry 223 (class 1259 OID 21186)
+-- Name: donormapping_fundingsurvey_fundingrecvrel_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE donormapping_fundingsurvey_fundingrecvrel_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE donormapping_fundingsurvey_fundingrecvrel_id_seq OWNER TO django;
+
+--
+-- TOC entry 4390 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: donormapping_fundingsurvey_fundingrecvrel_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE donormapping_fundingsurvey_fundingrecvrel_id_seq OWNED BY donormapping_fundingsurvey_fundingrecvrel.id;
+
+
+--
+-- TOC entry 217 (class 1259 OID 21162)
+-- Name: donormapping_fundingsurvey_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE donormapping_fundingsurvey_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE donormapping_fundingsurvey_id_seq OWNER TO django;
+
+--
+-- TOC entry 4391 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: donormapping_fundingsurvey_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE donormapping_fundingsurvey_id_seq OWNED BY donormapping_fundingsurvey.id;
+
+
+--
+-- TOC entry 220 (class 1259 OID 21172)
+-- Name: donormapping_fundingsurvey_properties; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE donormapping_fundingsurvey_properties (
+    id integer NOT NULL,
+    fundingsurvey_id integer NOT NULL,
+    propertytag_id integer NOT NULL
+);
+
+
+ALTER TABLE donormapping_fundingsurvey_properties OWNER TO django;
+
+--
+-- TOC entry 219 (class 1259 OID 21170)
+-- Name: donormapping_fundingsurvey_properties_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE donormapping_fundingsurvey_properties_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE donormapping_fundingsurvey_properties_id_seq OWNER TO django;
+
+--
+-- TOC entry 4392 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: donormapping_fundingsurvey_properties_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE donormapping_fundingsurvey_properties_id_seq OWNED BY donormapping_fundingsurvey_properties.id;
+
+
+--
+-- TOC entry 216 (class 1259 OID 21156)
+-- Name: donormapping_fundingsurveyinfomethods; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE donormapping_fundingsurveyinfomethods (
+    id integer NOT NULL,
+    description character varying(200) NOT NULL
+);
+
+
+ALTER TABLE donormapping_fundingsurveyinfomethods OWNER TO django;
+
+--
+-- TOC entry 215 (class 1259 OID 21154)
+-- Name: donormapping_fundingsurveyinfomethods_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE donormapping_fundingsurveyinfomethods_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE donormapping_fundingsurveyinfomethods_id_seq OWNER TO django;
+
+--
+-- TOC entry 4393 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: donormapping_fundingsurveyinfomethods_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE donormapping_fundingsurveyinfomethods_id_seq OWNED BY donormapping_fundingsurveyinfomethods.id;
+
+
+--
+-- TOC entry 285 (class 1259 OID 21482)
+-- Name: geo_adminarea; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE geo_adminarea (
+    path character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    pcode integer NOT NULL,
+    geom geometry(MultiPolygon,4326),
+    envelope geometry(Polygon,4326),
+    leafletextent text
+);
+
+
+ALTER TABLE geo_adminarea OWNER TO django;
+
+--
+-- TOC entry 288 (class 1259 OID 21504)
+-- Name: geo_district; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE geo_district (
+    adminarea_ptr_id integer NOT NULL
+);
+
+
+ALTER TABLE geo_district OWNER TO django;
+
+--
+-- TOC entry 296 (class 1259 OID 21549)
+-- Name: geo_placealternate; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE geo_placealternate (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL,
+    geom geometry(MultiPolygon,32751) NOT NULL
+);
+
+
+ALTER TABLE geo_placealternate OWNER TO django;
+
+--
+-- TOC entry 295 (class 1259 OID 21547)
+-- Name: geo_placealternate_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE geo_placealternate_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE geo_placealternate_id_seq OWNER TO django;
+
+--
+-- TOC entry 4394 (class 0 OID 0)
+-- Dependencies: 295
+-- Name: geo_placealternate_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE geo_placealternate_id_seq OWNED BY geo_placealternate.id;
+
+
+--
+-- TOC entry 290 (class 1259 OID 21511)
+-- Name: geo_road; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE geo_road (
+    id integer NOT NULL,
+    geom geometry(MultiLineString,32751) NOT NULL,
+    osm_id character varying(100),
+    name character varying(255),
+    highway character varying(255),
+    route character varying(255)
+);
+
+
+ALTER TABLE geo_road OWNER TO django;
+
+--
+-- TOC entry 289 (class 1259 OID 21509)
+-- Name: geo_road_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE geo_road_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE geo_road_id_seq OWNER TO django;
+
+--
+-- TOC entry 4395 (class 0 OID 0)
+-- Dependencies: 289
+-- Name: geo_road_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE geo_road_id_seq OWNED BY geo_road.id;
+
+
+--
+-- TOC entry 287 (class 1259 OID 21499)
+-- Name: geo_subdistrict; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE geo_subdistrict (
+    adminarea_ptr_id integer NOT NULL
+);
+
+
+ALTER TABLE geo_subdistrict OWNER TO django;
+
+--
+-- TOC entry 286 (class 1259 OID 21494)
+-- Name: geo_suco; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE geo_suco (
+    adminarea_ptr_id integer NOT NULL
+);
+
+
+ALTER TABLE geo_suco OWNER TO django;
+
+--
+-- TOC entry 284 (class 1259 OID 21472)
+-- Name: geo_town; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE geo_town (
+    id integer NOT NULL,
+    geom geometry(MultiPolygon,32751) NOT NULL,
+    name text NOT NULL,
+    size integer NOT NULL
+);
+
+
+ALTER TABLE geo_town OWNER TO django;
+
+--
+-- TOC entry 283 (class 1259 OID 21470)
+-- Name: geo_town_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE geo_town_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE geo_town_id_seq OWNER TO django;
+
+--
+-- TOC entry 4396 (class 0 OID 0)
+-- Dependencies: 283
+-- Name: geo_town_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE geo_town_id_seq OWNED BY geo_town.id;
+
+
+--
+-- TOC entry 292 (class 1259 OID 21523)
+-- Name: geo_world; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE geo_world (
+    id integer NOT NULL,
+    iso3 character varying(3) NOT NULL,
+    name character varying(100) NOT NULL,
+    geom geometry(MultiPolygon,4326)
+);
+
+
+ALTER TABLE geo_world OWNER TO django;
+
+--
+-- TOC entry 291 (class 1259 OID 21521)
+-- Name: geo_world_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE geo_world_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE geo_world_id_seq OWNER TO django;
+
+--
+-- TOC entry 4397 (class 0 OID 0)
+-- Dependencies: 291
+-- Name: geo_world_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE geo_world_id_seq OWNED BY geo_world.id;
+
+
+--
+-- TOC entry 294 (class 1259 OID 21537)
+-- Name: geo_worldsimple; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE geo_worldsimple (
+    id integer NOT NULL,
+    iso3 character varying(3) NOT NULL,
+    name character varying(100) NOT NULL,
+    geom geometry(Polygon,4326) NOT NULL
+);
+
+
+ALTER TABLE geo_worldsimple OWNER TO django;
+
+--
+-- TOC entry 293 (class 1259 OID 21535)
+-- Name: geo_worldsimple_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE geo_worldsimple_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE geo_worldsimple_id_seq OWNER TO django;
+
+--
+-- TOC entry 4398 (class 0 OID 0)
+-- Dependencies: 293
+-- Name: geo_worldsimple_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE geo_worldsimple_id_seq OWNED BY geo_worldsimple.id;
+
+
+--
+-- TOC entry 250 (class 1259 OID 21311)
+-- Name: library_author; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE library_author (
+    id integer NOT NULL,
+    name character varying(128) NOT NULL,
+    displayname character varying(128) NOT NULL
+);
+
+
+ALTER TABLE library_author OWNER TO django;
+
+--
+-- TOC entry 249 (class 1259 OID 21309)
+-- Name: library_author_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE library_author_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE library_author_id_seq OWNER TO django;
+
+--
+-- TOC entry 4399 (class 0 OID 0)
+-- Dependencies: 249
+-- Name: library_author_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE library_author_id_seq OWNED BY library_author.id;
+
+
+--
+-- TOC entry 226 (class 1259 OID 21196)
+-- Name: library_publication; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE library_publication (
+    id integer NOT NULL,
+    year integer,
+    name text,
+    name_tet text,
+    name_en text,
+    name_pt text,
+    name_ind text,
+    description text,
+    description_tet text,
+    description_en text,
+    description_pt text,
+    description_ind text,
+    pubtype_id character varying(3) NOT NULL
+);
+
+
+ALTER TABLE library_publication OWNER TO django;
+
+--
+-- TOC entry 230 (class 1259 OID 21215)
+-- Name: library_publication_author; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE library_publication_author (
+    id integer NOT NULL,
+    publication_id integer NOT NULL,
+    author_id integer NOT NULL
+);
+
+
+ALTER TABLE library_publication_author OWNER TO django;
+
+--
+-- TOC entry 229 (class 1259 OID 21213)
+-- Name: library_publication_author_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE library_publication_author_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE library_publication_author_id_seq OWNER TO django;
+
+--
+-- TOC entry 4400 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: library_publication_author_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE library_publication_author_id_seq OWNED BY library_publication_author.id;
+
+
+--
+-- TOC entry 232 (class 1259 OID 21223)
+-- Name: library_publication_country; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE library_publication_country (
+    id integer NOT NULL,
+    publication_id integer NOT NULL,
+    world_id integer NOT NULL
+);
+
+
+ALTER TABLE library_publication_country OWNER TO django;
+
+--
+-- TOC entry 231 (class 1259 OID 21221)
+-- Name: library_publication_country_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE library_publication_country_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE library_publication_country_id_seq OWNER TO django;
+
+--
+-- TOC entry 4401 (class 0 OID 0)
+-- Dependencies: 231
+-- Name: library_publication_country_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE library_publication_country_id_seq OWNED BY library_publication_country.id;
+
+
+--
+-- TOC entry 225 (class 1259 OID 21194)
+-- Name: library_publication_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE library_publication_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE library_publication_id_seq OWNER TO django;
+
+--
+-- TOC entry 4402 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: library_publication_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE library_publication_id_seq OWNED BY library_publication.id;
+
+
+--
+-- TOC entry 234 (class 1259 OID 21231)
+-- Name: library_publication_location; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE library_publication_location (
+    id integer NOT NULL,
+    publication_id integer NOT NULL,
+    adminarea_id integer NOT NULL
+);
+
+
+ALTER TABLE library_publication_location OWNER TO django;
+
+--
+-- TOC entry 233 (class 1259 OID 21229)
+-- Name: library_publication_location_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE library_publication_location_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE library_publication_location_id_seq OWNER TO django;
+
+--
+-- TOC entry 4403 (class 0 OID 0)
+-- Dependencies: 233
+-- Name: library_publication_location_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE library_publication_location_id_seq OWNED BY library_publication_location.id;
+
+
+--
+-- TOC entry 228 (class 1259 OID 21207)
+-- Name: library_publication_organization; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE library_publication_organization (
+    id integer NOT NULL,
+    publication_id integer NOT NULL,
+    organization_id integer NOT NULL
+);
+
+
+ALTER TABLE library_publication_organization OWNER TO django;
+
+--
+-- TOC entry 227 (class 1259 OID 21205)
+-- Name: library_publication_organization_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE library_publication_organization_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE library_publication_organization_id_seq OWNER TO django;
+
+--
+-- TOC entry 4404 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: library_publication_organization_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE library_publication_organization_id_seq OWNED BY library_publication_organization.id;
+
+
+--
+-- TOC entry 251 (class 1259 OID 21317)
+-- Name: library_pubtype; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE library_pubtype (
+    code character varying(3) NOT NULL,
+    name character varying(128) NOT NULL,
+    name_tet character varying(128),
+    name_en character varying(128),
+    name_pt character varying(128),
+    name_ind character varying(128)
+);
+
+
+ALTER TABLE library_pubtype OWNER TO django;
+
+--
+-- TOC entry 236 (class 1259 OID 21239)
+-- Name: library_tag; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE library_tag (
+    id integer NOT NULL,
+    name character varying(64) NOT NULL,
+    name_tet character varying(64),
+    name_en character varying(64),
+    name_pt character varying(64),
+    name_ind character varying(64)
+);
+
+
+ALTER TABLE library_tag OWNER TO django;
+
+--
+-- TOC entry 235 (class 1259 OID 21237)
+-- Name: library_tag_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE library_tag_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE library_tag_id_seq OWNER TO django;
+
+--
+-- TOC entry 4405 (class 0 OID 0)
+-- Dependencies: 235
+-- Name: library_tag_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE library_tag_id_seq OWNED BY library_tag.id;
+
+
+--
+-- TOC entry 238 (class 1259 OID 21257)
+-- Name: library_thumbnail; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE library_thumbnail (
+    id integer NOT NULL,
+    app_name character varying(256),
+    model_name character varying(256),
+    model_field character varying(256),
+    model_pk character varying(256),
+    resolution integer NOT NULL,
+    file_name character varying(256),
+    file_page integer,
+    "thumbnailPath" character varying(256)
+);
+
+
+ALTER TABLE library_thumbnail OWNER TO django;
+
+--
+-- TOC entry 237 (class 1259 OID 21255)
+-- Name: library_thumbnail_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE library_thumbnail_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE library_thumbnail_id_seq OWNER TO django;
+
+--
+-- TOC entry 4406 (class 0 OID 0)
+-- Dependencies: 237
+-- Name: library_thumbnail_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE library_thumbnail_id_seq OWNED BY library_thumbnail.id;
+
+
+--
+-- TOC entry 240 (class 1259 OID 21268)
+-- Name: library_version; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE library_version (
+    id integer NOT NULL,
+    publication_id integer NOT NULL,
+    description character varying(256),
+    description_tet character varying(256),
+    description_en character varying(256),
+    description_pt character varying(256),
+    description_ind character varying(256),
+    title character varying(256),
+    title_tet character varying(256),
+    title_en character varying(256),
+    title_pt character varying(256),
+    title_ind character varying(256),
+    upload character varying(256),
+    upload_tet character varying(256),
+    upload_en character varying(256),
+    upload_pt character varying(256),
+    upload_ind character varying(256),
+    cover character varying(256),
+    cover_tet character varying(256),
+    cover_en character varying(256),
+    cover_pt character varying(256),
+    cover_ind character varying(256),
+    url character varying(256),
+    url_tet character varying(256),
+    url_en character varying(256),
+    url_pt character varying(256),
+    url_ind character varying(256),
+    journal character varying(128),
+    volume character varying(5),
+    issue integer,
+    page_start integer,
+    page_end integer
+);
+
+
+ALTER TABLE library_version OWNER TO django;
+
+--
+-- TOC entry 246 (class 1259 OID 21295)
+-- Name: library_version_activity; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE library_version_activity (
+    id integer NOT NULL,
+    version_id integer NOT NULL,
+    propertytag_id integer NOT NULL
+);
+
+
+ALTER TABLE library_version_activity OWNER TO django;
+
+--
+-- TOC entry 245 (class 1259 OID 21293)
+-- Name: library_version_activity_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE library_version_activity_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE library_version_activity_id_seq OWNER TO django;
+
+--
+-- TOC entry 4407 (class 0 OID 0)
+-- Dependencies: 245
+-- Name: library_version_activity_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE library_version_activity_id_seq OWNED BY library_version_activity.id;
+
+
+--
+-- TOC entry 248 (class 1259 OID 21303)
+-- Name: library_version_beneficiary; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE library_version_beneficiary (
+    id integer NOT NULL,
+    version_id integer NOT NULL,
+    propertytag_id integer NOT NULL
+);
+
+
+ALTER TABLE library_version_beneficiary OWNER TO django;
+
+--
+-- TOC entry 247 (class 1259 OID 21301)
+-- Name: library_version_beneficiary_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE library_version_beneficiary_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE library_version_beneficiary_id_seq OWNER TO django;
+
+--
+-- TOC entry 4408 (class 0 OID 0)
+-- Dependencies: 247
+-- Name: library_version_beneficiary_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE library_version_beneficiary_id_seq OWNED BY library_version_beneficiary.id;
+
+
+--
+-- TOC entry 239 (class 1259 OID 21266)
+-- Name: library_version_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE library_version_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE library_version_id_seq OWNER TO django;
+
+--
+-- TOC entry 4409 (class 0 OID 0)
+-- Dependencies: 239
+-- Name: library_version_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE library_version_id_seq OWNED BY library_version.id;
+
+
+--
+-- TOC entry 244 (class 1259 OID 21287)
+-- Name: library_version_sector; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE library_version_sector (
+    id integer NOT NULL,
+    version_id integer NOT NULL,
+    propertytag_id integer NOT NULL
+);
+
+
+ALTER TABLE library_version_sector OWNER TO django;
+
+--
+-- TOC entry 243 (class 1259 OID 21285)
+-- Name: library_version_sector_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE library_version_sector_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE library_version_sector_id_seq OWNER TO django;
+
+--
+-- TOC entry 4410 (class 0 OID 0)
+-- Dependencies: 243
+-- Name: library_version_sector_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE library_version_sector_id_seq OWNED BY library_version_sector.id;
+
+
+--
+-- TOC entry 242 (class 1259 OID 21279)
+-- Name: library_version_tag; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE library_version_tag (
+    id integer NOT NULL,
+    version_id integer NOT NULL,
+    tag_id integer NOT NULL
+);
+
+
+ALTER TABLE library_version_tag OWNER TO django;
+
+--
+-- TOC entry 241 (class 1259 OID 21277)
+-- Name: library_version_tag_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE library_version_tag_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE library_version_tag_id_seq OWNER TO django;
+
+--
+-- TOC entry 4411 (class 0 OID 0)
+-- Dependencies: 241
+-- Name: library_version_tag_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE library_version_tag_id_seq OWNED BY library_version_tag.id;
+
+
+--
+-- TOC entry 253 (class 1259 OID 21327)
+-- Name: nhdb_organization; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE nhdb_organization (
+    id integer NOT NULL,
+    name character varying(150) NOT NULL,
+    description text,
+    description_tet text,
+    description_en text,
+    description_pt text,
+    description_ind text,
+    orgtype_id character varying(5) NOT NULL,
+    active boolean NOT NULL,
+    fongtilid integer,
+    justiceid integer,
+    stafffulltime integer,
+    staffparttime integer,
+    verified date,
+    phoneprimary character varying(64),
+    phonesecondary character varying(64),
+    email character varying(128),
+    fax character varying(64),
+    web character varying(64),
+    facebook character varying(64)
+);
+
+
+ALTER TABLE nhdb_organization OWNER TO django;
+
+--
+-- TOC entry 252 (class 1259 OID 21325)
+-- Name: nhdb_organization_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE nhdb_organization_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE nhdb_organization_id_seq OWNER TO django;
+
+--
+-- TOC entry 4412 (class 0 OID 0)
+-- Dependencies: 252
+-- Name: nhdb_organization_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE nhdb_organization_id_seq OWNED BY nhdb_organization.id;
+
+
+--
+-- TOC entry 254 (class 1259 OID 21336)
+-- Name: nhdb_organizationclass; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE nhdb_organizationclass (
+    code character varying(5) NOT NULL,
+    orgtype character varying(150) NOT NULL
+);
+
+
+ALTER TABLE nhdb_organizationclass OWNER TO django;
+
+--
+-- TOC entry 282 (class 1259 OID 21460)
+-- Name: nhdb_organizationplace; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE nhdb_organizationplace (
+    id integer NOT NULL,
+    organization_id integer,
+    description character varying(256),
+    point geometry(Point,4326),
+    phone character varying(256),
+    email character varying(256)
+);
+
+
+ALTER TABLE nhdb_organizationplace OWNER TO django;
+
+--
+-- TOC entry 281 (class 1259 OID 21458)
+-- Name: nhdb_organizationplace_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE nhdb_organizationplace_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE nhdb_organizationplace_id_seq OWNER TO django;
+
+--
+-- TOC entry 4413 (class 0 OID 0)
+-- Dependencies: 281
+-- Name: nhdb_organizationplace_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE nhdb_organizationplace_id_seq OWNED BY nhdb_organizationplace.id;
+
+
+--
+-- TOC entry 256 (class 1259 OID 21343)
+-- Name: nhdb_person; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE nhdb_person (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL,
+    title character varying(100),
+    organization_id integer,
+    phone character varying(64),
+    email character varying(64),
+    verified date
+);
+
+
+ALTER TABLE nhdb_person OWNER TO django;
+
+--
+-- TOC entry 255 (class 1259 OID 21341)
+-- Name: nhdb_person_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE nhdb_person_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE nhdb_person_id_seq OWNER TO django;
+
+--
+-- TOC entry 4414 (class 0 OID 0)
+-- Dependencies: 255
+-- Name: nhdb_person_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE nhdb_person_id_seq OWNED BY nhdb_person.id;
+
+
+--
+-- TOC entry 266 (class 1259 OID 21388)
+-- Name: nhdb_project; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE nhdb_project (
+    id integer NOT NULL,
+    name character varying(256),
+    name_tet character varying(256),
+    name_en character varying(256),
+    name_pt character varying(256),
+    name_ind character varying(256),
+    description text,
+    description_tet text,
+    description_en text,
+    description_pt text,
+    description_ind text,
+    startdate date,
+    enddate date,
+    verified date,
+    notes text,
+    notes_tet text,
+    notes_en text,
+    notes_pt text,
+    notes_ind text,
+    status_id character varying(2),
+    projecttype_id integer,
+    stafffulltime integer,
+    staffparttime integer
+);
+
+
+ALTER TABLE nhdb_project OWNER TO django;
+
+--
+-- TOC entry 270 (class 1259 OID 21407)
+-- Name: nhdb_project_activity; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE nhdb_project_activity (
+    id integer NOT NULL,
+    project_id integer NOT NULL,
+    propertytag_id integer NOT NULL
+);
+
+
+ALTER TABLE nhdb_project_activity OWNER TO django;
+
+--
+-- TOC entry 269 (class 1259 OID 21405)
+-- Name: nhdb_project_activity_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE nhdb_project_activity_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE nhdb_project_activity_id_seq OWNER TO django;
+
+--
+-- TOC entry 4415 (class 0 OID 0)
+-- Dependencies: 269
+-- Name: nhdb_project_activity_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE nhdb_project_activity_id_seq OWNED BY nhdb_project_activity.id;
+
+
+--
+-- TOC entry 272 (class 1259 OID 21415)
+-- Name: nhdb_project_beneficiary; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE nhdb_project_beneficiary (
+    id integer NOT NULL,
+    project_id integer NOT NULL,
+    propertytag_id integer NOT NULL
+);
+
+
+ALTER TABLE nhdb_project_beneficiary OWNER TO django;
+
+--
+-- TOC entry 271 (class 1259 OID 21413)
+-- Name: nhdb_project_beneficiary_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE nhdb_project_beneficiary_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE nhdb_project_beneficiary_id_seq OWNER TO django;
+
+--
+-- TOC entry 4416 (class 0 OID 0)
+-- Dependencies: 271
+-- Name: nhdb_project_beneficiary_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE nhdb_project_beneficiary_id_seq OWNED BY nhdb_project_beneficiary.id;
+
+
+--
+-- TOC entry 265 (class 1259 OID 21386)
+-- Name: nhdb_project_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE nhdb_project_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE nhdb_project_id_seq OWNER TO django;
+
+--
+-- TOC entry 4417 (class 0 OID 0)
+-- Dependencies: 265
+-- Name: nhdb_project_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE nhdb_project_id_seq OWNED BY nhdb_project.id;
+
+
+--
+-- TOC entry 268 (class 1259 OID 21399)
+-- Name: nhdb_project_sector; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE nhdb_project_sector (
+    id integer NOT NULL,
+    project_id integer NOT NULL,
+    propertytag_id integer NOT NULL
+);
+
+
+ALTER TABLE nhdb_project_sector OWNER TO django;
+
+--
+-- TOC entry 267 (class 1259 OID 21397)
+-- Name: nhdb_project_sector_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE nhdb_project_sector_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE nhdb_project_sector_id_seq OWNER TO django;
+
+--
+-- TOC entry 4418 (class 0 OID 0)
+-- Dependencies: 267
+-- Name: nhdb_project_sector_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE nhdb_project_sector_id_seq OWNED BY nhdb_project_sector.id;
+
+
+--
+-- TOC entry 264 (class 1259 OID 21380)
+-- Name: nhdb_projectimage; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE nhdb_projectimage (
+    id integer NOT NULL,
+    description character varying(100),
+    image character varying(100),
+    project_id integer NOT NULL
+);
+
+
+ALTER TABLE nhdb_projectimage OWNER TO django;
+
+--
+-- TOC entry 263 (class 1259 OID 21378)
+-- Name: nhdb_projectimage_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE nhdb_projectimage_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE nhdb_projectimage_id_seq OWNER TO django;
+
+--
+-- TOC entry 4419 (class 0 OID 0)
+-- Dependencies: 263
+-- Name: nhdb_projectimage_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE nhdb_projectimage_id_seq OWNED BY nhdb_projectimage.id;
+
+
+--
+-- TOC entry 275 (class 1259 OID 21428)
+-- Name: nhdb_projectorganization; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE nhdb_projectorganization (
+    id integer NOT NULL,
+    project_id integer NOT NULL,
+    organization_id integer,
+    organizationclass_id character varying(3) NOT NULL,
+    notes character varying(256)
+);
+
+
+ALTER TABLE nhdb_projectorganization OWNER TO django;
+
+--
+-- TOC entry 274 (class 1259 OID 21426)
+-- Name: nhdb_projectorganization_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE nhdb_projectorganization_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE nhdb_projectorganization_id_seq OWNER TO django;
+
+--
+-- TOC entry 4420 (class 0 OID 0)
+-- Dependencies: 274
+-- Name: nhdb_projectorganization_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE nhdb_projectorganization_id_seq OWNED BY nhdb_projectorganization.id;
+
+
+--
+-- TOC entry 276 (class 1259 OID 21434)
+-- Name: nhdb_projectorganizationclass; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE nhdb_projectorganizationclass (
+    code character varying(3) NOT NULL,
+    description text NOT NULL
+);
+
+
+ALTER TABLE nhdb_projectorganizationclass OWNER TO django;
+
+--
+-- TOC entry 278 (class 1259 OID 21444)
+-- Name: nhdb_projectperson; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE nhdb_projectperson (
+    id integer NOT NULL,
+    project_id integer NOT NULL,
+    person_id integer NOT NULL,
+    is_primary boolean NOT NULL,
+    verified date
+);
+
+
+ALTER TABLE nhdb_projectperson OWNER TO django;
+
+--
+-- TOC entry 277 (class 1259 OID 21442)
+-- Name: nhdb_projectperson_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE nhdb_projectperson_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE nhdb_projectperson_id_seq OWNER TO django;
+
+--
+-- TOC entry 4421 (class 0 OID 0)
+-- Dependencies: 277
+-- Name: nhdb_projectperson_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE nhdb_projectperson_id_seq OWNED BY nhdb_projectperson.id;
+
+
+--
+-- TOC entry 280 (class 1259 OID 21452)
+-- Name: nhdb_projectplace; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE nhdb_projectplace (
+    id integer NOT NULL,
+    project_id integer NOT NULL,
+    place_id integer NOT NULL,
+    description character varying(256)
+);
+
+
+ALTER TABLE nhdb_projectplace OWNER TO django;
+
+--
+-- TOC entry 279 (class 1259 OID 21450)
+-- Name: nhdb_projectplace_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE nhdb_projectplace_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE nhdb_projectplace_id_seq OWNER TO django;
+
+--
+-- TOC entry 4422 (class 0 OID 0)
+-- Dependencies: 279
+-- Name: nhdb_projectplace_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE nhdb_projectplace_id_seq OWNED BY nhdb_projectplace.id;
+
+
+--
+-- TOC entry 273 (class 1259 OID 21421)
+-- Name: nhdb_projectstatus; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE nhdb_projectstatus (
+    code character varying(2) NOT NULL,
+    description character varying(256) NOT NULL
+);
+
+
+ALTER TABLE nhdb_projectstatus OWNER TO django;
+
+--
+-- TOC entry 260 (class 1259 OID 21364)
+-- Name: nhdb_projecttype; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE nhdb_projecttype (
+    id integer NOT NULL,
+    description character varying(255) NOT NULL
+);
+
+
+ALTER TABLE nhdb_projecttype OWNER TO django;
+
+--
+-- TOC entry 259 (class 1259 OID 21362)
+-- Name: nhdb_projecttype_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE nhdb_projecttype_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE nhdb_projecttype_id_seq OWNER TO django;
+
+--
+-- TOC entry 4423 (class 0 OID 0)
+-- Dependencies: 259
+-- Name: nhdb_projecttype_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE nhdb_projecttype_id_seq OWNED BY nhdb_projecttype.id;
+
+
+--
+-- TOC entry 258 (class 1259 OID 21351)
+-- Name: nhdb_propertytag; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE nhdb_propertytag (
+    id integer NOT NULL,
+    path character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    name_tet character varying(255),
+    name_en character varying(255),
+    name_pt character varying(255),
+    name_ind character varying(255),
+    description character varying(255) NOT NULL,
+    description_tet character varying(255),
+    description_en character varying(255),
+    description_pt character varying(255),
+    description_ind character varying(255)
+);
+
+
+ALTER TABLE nhdb_propertytag OWNER TO django;
+
+--
+-- TOC entry 257 (class 1259 OID 21349)
+-- Name: nhdb_propertytag_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE nhdb_propertytag_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE nhdb_propertytag_id_seq OWNER TO django;
+
+--
+-- TOC entry 4424 (class 0 OID 0)
+-- Dependencies: 257
+-- Name: nhdb_propertytag_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE nhdb_propertytag_id_seq OWNED BY nhdb_propertytag.id;
+
+
+--
+-- TOC entry 262 (class 1259 OID 21372)
+-- Name: nhdb_recordowner; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE nhdb_recordowner (
+    id integer NOT NULL,
+    description character varying(255) NOT NULL
+);
+
+
+ALTER TABLE nhdb_recordowner OWNER TO django;
+
+--
+-- TOC entry 261 (class 1259 OID 21370)
+-- Name: nhdb_recordowner_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE nhdb_recordowner_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE nhdb_recordowner_id_seq OWNER TO django;
+
+--
+-- TOC entry 4425 (class 0 OID 0)
+-- Dependencies: 261
+-- Name: nhdb_recordowner_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE nhdb_recordowner_id_seq OWNED BY nhdb_recordowner.id;
+
+
+--
+-- TOC entry 298 (class 1259 OID 21561)
+-- Name: suggest_affectedinstance; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE suggest_affectedinstance (
+    id integer NOT NULL,
+    model_name character varying(128) NOT NULL,
+    suggestion_id integer NOT NULL,
+    model_pk character varying(128),
+    "primary" boolean NOT NULL
+);
+
+
+ALTER TABLE suggest_affectedinstance OWNER TO django;
+
+--
+-- TOC entry 297 (class 1259 OID 21559)
+-- Name: suggest_affectedinstance_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE suggest_affectedinstance_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE suggest_affectedinstance_id_seq OWNER TO django;
+
+--
+-- TOC entry 4426 (class 0 OID 0)
+-- Dependencies: 297
+-- Name: suggest_affectedinstance_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE suggest_affectedinstance_id_seq OWNED BY suggest_affectedinstance.id;
+
+
+--
+-- TOC entry 302 (class 1259 OID 21580)
+-- Name: suggest_suggest; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE suggest_suggest (
+    id integer NOT NULL,
+    name character varying(128),
+    email character varying(254),
+    comment text,
+    description text,
+    state character varying(2) NOT NULL,
+    action character varying(128) NOT NULL,
+    is_hidden boolean NOT NULL,
+    user_name character varying(128),
+    user_id integer,
+    method character varying(128) NOT NULL,
+    data text,
+    "suggestDate" date NOT NULL,
+    "approvalDate" date,
+    url character varying(128) NOT NULL
+);
+
+
+ALTER TABLE suggest_suggest OWNER TO django;
+
+--
+-- TOC entry 301 (class 1259 OID 21578)
+-- Name: suggest_suggest_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE suggest_suggest_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE suggest_suggest_id_seq OWNER TO django;
+
+--
+-- TOC entry 4427 (class 0 OID 0)
+-- Dependencies: 301
+-- Name: suggest_suggest_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE suggest_suggest_id_seq OWNED BY suggest_suggest.id;
+
+
+--
+-- TOC entry 300 (class 1259 OID 21569)
+-- Name: suggest_suggestupload; Type: TABLE; Schema: public; Owner: django
+--
+
+CREATE TABLE suggest_suggestupload (
+    id integer NOT NULL,
+    suggestion_id integer NOT NULL,
+    field_name character varying(256) NOT NULL,
+    upload character varying(256)
+);
+
+
+ALTER TABLE suggest_suggestupload OWNER TO django;
+
+--
+-- TOC entry 299 (class 1259 OID 21567)
+-- Name: suggest_suggestupload_id_seq; Type: SEQUENCE; Schema: public; Owner: django
+--
+
+CREATE SEQUENCE suggest_suggestupload_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE suggest_suggestupload_id_seq OWNER TO django;
+
+--
+-- TOC entry 4428 (class 0 OID 0)
+-- Dependencies: 299
+-- Name: suggest_suggestupload_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: django
+--
+
+ALTER SEQUENCE suggest_suggestupload_id_seq OWNED BY suggest_suggestupload.id;
+
+
+--
+-- TOC entry 3742 (class 2604 OID 22034)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY auth_group ALTER COLUMN id SET DEFAULT nextval('auth_group_id_seq'::regclass);
+
+
+--
+-- TOC entry 3743 (class 2604 OID 22044)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY auth_group_permissions ALTER COLUMN id SET DEFAULT nextval('auth_group_permissions_id_seq'::regclass);
+
+
+--
+-- TOC entry 3741 (class 2604 OID 22026)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY auth_permission ALTER COLUMN id SET DEFAULT nextval('auth_permission_id_seq'::regclass);
+
+
+--
+-- TOC entry 3744 (class 2604 OID 22052)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY auth_user ALTER COLUMN id SET DEFAULT nextval('auth_user_id_seq'::regclass);
+
+
+--
+-- TOC entry 3745 (class 2604 OID 22062)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY auth_user_groups ALTER COLUMN id SET DEFAULT nextval('auth_user_groups_id_seq'::regclass);
+
+
+--
+-- TOC entry 3746 (class 2604 OID 22070)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY auth_user_user_permissions ALTER COLUMN id SET DEFAULT nextval('auth_user_user_permissions_id_seq'::regclass);
+
+
+--
+-- TOC entry 3747 (class 2604 OID 22130)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY django_admin_log ALTER COLUMN id SET DEFAULT nextval('django_admin_log_id_seq'::regclass);
+
+
+--
+-- TOC entry 3740 (class 2604 OID 22016)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY django_content_type ALTER COLUMN id SET DEFAULT nextval('django_content_type_id_seq'::regclass);
+
+
+--
+-- TOC entry 3691 (class 2604 OID 21075)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY django_migrations ALTER COLUMN id SET DEFAULT nextval('django_migrations_id_seq'::regclass);
+
+
+--
+-- TOC entry 3698 (class 2604 OID 21137)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY donormapping_donorannouncement ALTER COLUMN id SET DEFAULT nextval('donormapping_donorannouncement_id_seq'::regclass);
+
+
+--
+-- TOC entry 3699 (class 2604 OID 21148)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY donormapping_donorsurveyresponse ALTER COLUMN id SET DEFAULT nextval('donormapping_donorsurveyresponse_id_seq'::regclass);
+
+
+--
+-- TOC entry 3692 (class 2604 OID 21086)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY donormapping_fundingoffer ALTER COLUMN id SET DEFAULT nextval('donormapping_fundingoffer_id_seq'::regclass);
+
+
+--
+-- TOC entry 3695 (class 2604 OID 21113)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY donormapping_fundingoffer_activity ALTER COLUMN id SET DEFAULT nextval('donormapping_fundingoffer_activity_id_seq'::regclass);
+
+
+--
+-- TOC entry 3696 (class 2604 OID 21121)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY donormapping_fundingoffer_beneficiary ALTER COLUMN id SET DEFAULT nextval('donormapping_fundingoffer_beneficiary_id_seq'::regclass);
+
+
+--
+-- TOC entry 3693 (class 2604 OID 21097)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY donormapping_fundingoffer_district ALTER COLUMN id SET DEFAULT nextval('donormapping_fundingoffer_district_id_seq'::regclass);
+
+
+--
+-- TOC entry 3694 (class 2604 OID 21105)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY donormapping_fundingoffer_sector ALTER COLUMN id SET DEFAULT nextval('donormapping_fundingoffer_sector_id_seq'::regclass);
+
+
+--
+-- TOC entry 3697 (class 2604 OID 21129)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY donormapping_fundingofferdocument ALTER COLUMN id SET DEFAULT nextval('donormapping_fundingofferdocument_id_seq'::regclass);
+
+
+--
+-- TOC entry 3701 (class 2604 OID 21167)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY donormapping_fundingsurvey ALTER COLUMN id SET DEFAULT nextval('donormapping_fundingsurvey_id_seq'::regclass);
+
+
+--
+-- TOC entry 3703 (class 2604 OID 21183)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY donormapping_fundingsurvey_fundinggiverel ALTER COLUMN id SET DEFAULT nextval('donormapping_fundingsurvey_fundinggiverel_id_seq'::regclass);
+
+
+--
+-- TOC entry 3704 (class 2604 OID 21191)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY donormapping_fundingsurvey_fundingrecvrel ALTER COLUMN id SET DEFAULT nextval('donormapping_fundingsurvey_fundingrecvrel_id_seq'::regclass);
+
+
+--
+-- TOC entry 3702 (class 2604 OID 21175)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY donormapping_fundingsurvey_properties ALTER COLUMN id SET DEFAULT nextval('donormapping_fundingsurvey_properties_id_seq'::regclass);
+
+
+--
+-- TOC entry 3700 (class 2604 OID 21159)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY donormapping_fundingsurveyinfomethods ALTER COLUMN id SET DEFAULT nextval('donormapping_fundingsurveyinfomethods_id_seq'::regclass);
+
+
+--
+-- TOC entry 3736 (class 2604 OID 21552)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY geo_placealternate ALTER COLUMN id SET DEFAULT nextval('geo_placealternate_id_seq'::regclass);
+
+
+--
+-- TOC entry 3733 (class 2604 OID 21514)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY geo_road ALTER COLUMN id SET DEFAULT nextval('geo_road_id_seq'::regclass);
+
+
+--
+-- TOC entry 3732 (class 2604 OID 21475)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY geo_town ALTER COLUMN id SET DEFAULT nextval('geo_town_id_seq'::regclass);
+
+
+--
+-- TOC entry 3734 (class 2604 OID 21526)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY geo_world ALTER COLUMN id SET DEFAULT nextval('geo_world_id_seq'::regclass);
+
+
+--
+-- TOC entry 3735 (class 2604 OID 21540)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY geo_worldsimple ALTER COLUMN id SET DEFAULT nextval('geo_worldsimple_id_seq'::regclass);
+
+
+--
+-- TOC entry 3717 (class 2604 OID 21314)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY library_author ALTER COLUMN id SET DEFAULT nextval('library_author_id_seq'::regclass);
+
+
+--
+-- TOC entry 3705 (class 2604 OID 21199)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY library_publication ALTER COLUMN id SET DEFAULT nextval('library_publication_id_seq'::regclass);
+
+
+--
+-- TOC entry 3707 (class 2604 OID 21218)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY library_publication_author ALTER COLUMN id SET DEFAULT nextval('library_publication_author_id_seq'::regclass);
+
+
+--
+-- TOC entry 3708 (class 2604 OID 21226)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY library_publication_country ALTER COLUMN id SET DEFAULT nextval('library_publication_country_id_seq'::regclass);
+
+
+--
+-- TOC entry 3709 (class 2604 OID 21234)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY library_publication_location ALTER COLUMN id SET DEFAULT nextval('library_publication_location_id_seq'::regclass);
+
+
+--
+-- TOC entry 3706 (class 2604 OID 21210)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY library_publication_organization ALTER COLUMN id SET DEFAULT nextval('library_publication_organization_id_seq'::regclass);
+
+
+--
+-- TOC entry 3710 (class 2604 OID 21242)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY library_tag ALTER COLUMN id SET DEFAULT nextval('library_tag_id_seq'::regclass);
+
+
+--
+-- TOC entry 3711 (class 2604 OID 21260)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY library_thumbnail ALTER COLUMN id SET DEFAULT nextval('library_thumbnail_id_seq'::regclass);
+
+
+--
+-- TOC entry 3712 (class 2604 OID 21271)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY library_version ALTER COLUMN id SET DEFAULT nextval('library_version_id_seq'::regclass);
+
+
+--
+-- TOC entry 3715 (class 2604 OID 21298)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY library_version_activity ALTER COLUMN id SET DEFAULT nextval('library_version_activity_id_seq'::regclass);
+
+
+--
+-- TOC entry 3716 (class 2604 OID 21306)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY library_version_beneficiary ALTER COLUMN id SET DEFAULT nextval('library_version_beneficiary_id_seq'::regclass);
+
+
+--
+-- TOC entry 3714 (class 2604 OID 21290)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY library_version_sector ALTER COLUMN id SET DEFAULT nextval('library_version_sector_id_seq'::regclass);
+
+
+--
+-- TOC entry 3713 (class 2604 OID 21282)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY library_version_tag ALTER COLUMN id SET DEFAULT nextval('library_version_tag_id_seq'::regclass);
+
+
+--
+-- TOC entry 3718 (class 2604 OID 21330)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY nhdb_organization ALTER COLUMN id SET DEFAULT nextval('nhdb_organization_id_seq'::regclass);
+
+
+--
+-- TOC entry 3731 (class 2604 OID 21463)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY nhdb_organizationplace ALTER COLUMN id SET DEFAULT nextval('nhdb_organizationplace_id_seq'::regclass);
+
+
+--
+-- TOC entry 3719 (class 2604 OID 21346)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY nhdb_person ALTER COLUMN id SET DEFAULT nextval('nhdb_person_id_seq'::regclass);
+
+
+--
+-- TOC entry 3724 (class 2604 OID 21391)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY nhdb_project ALTER COLUMN id SET DEFAULT nextval('nhdb_project_id_seq'::regclass);
+
+
+--
+-- TOC entry 3726 (class 2604 OID 21410)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY nhdb_project_activity ALTER COLUMN id SET DEFAULT nextval('nhdb_project_activity_id_seq'::regclass);
+
+
+--
+-- TOC entry 3727 (class 2604 OID 21418)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY nhdb_project_beneficiary ALTER COLUMN id SET DEFAULT nextval('nhdb_project_beneficiary_id_seq'::regclass);
+
+
+--
+-- TOC entry 3725 (class 2604 OID 21402)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY nhdb_project_sector ALTER COLUMN id SET DEFAULT nextval('nhdb_project_sector_id_seq'::regclass);
+
+
+--
+-- TOC entry 3723 (class 2604 OID 21383)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY nhdb_projectimage ALTER COLUMN id SET DEFAULT nextval('nhdb_projectimage_id_seq'::regclass);
+
+
+--
+-- TOC entry 3728 (class 2604 OID 21431)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY nhdb_projectorganization ALTER COLUMN id SET DEFAULT nextval('nhdb_projectorganization_id_seq'::regclass);
+
+
+--
+-- TOC entry 3729 (class 2604 OID 21447)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY nhdb_projectperson ALTER COLUMN id SET DEFAULT nextval('nhdb_projectperson_id_seq'::regclass);
+
+
+--
+-- TOC entry 3730 (class 2604 OID 21455)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY nhdb_projectplace ALTER COLUMN id SET DEFAULT nextval('nhdb_projectplace_id_seq'::regclass);
+
+
+--
+-- TOC entry 3721 (class 2604 OID 21367)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY nhdb_projecttype ALTER COLUMN id SET DEFAULT nextval('nhdb_projecttype_id_seq'::regclass);
+
+
+--
+-- TOC entry 3720 (class 2604 OID 21354)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY nhdb_propertytag ALTER COLUMN id SET DEFAULT nextval('nhdb_propertytag_id_seq'::regclass);
+
+
+--
+-- TOC entry 3722 (class 2604 OID 21375)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY nhdb_recordowner ALTER COLUMN id SET DEFAULT nextval('nhdb_recordowner_id_seq'::regclass);
+
+
+--
+-- TOC entry 3737 (class 2604 OID 21564)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY suggest_affectedinstance ALTER COLUMN id SET DEFAULT nextval('suggest_affectedinstance_id_seq'::regclass);
+
+
+--
+-- TOC entry 3739 (class 2604 OID 21583)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY suggest_suggest ALTER COLUMN id SET DEFAULT nextval('suggest_suggest_id_seq'::regclass);
+
+
+--
+-- TOC entry 3738 (class 2604 OID 21572)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: django
+--
+
+ALTER TABLE ONLY suggest_suggestupload ALTER COLUMN id SET DEFAULT nextval('suggest_suggestupload_id_seq'::regclass);
+
+
+--
+-- TOC entry 4369 (class 0 OID 0)
+-- Dependencies: 7
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+-- Completed on 2016-03-17 12:38:29 TLT
+
+--
+-- PostgreSQL database dump complete
+--
+

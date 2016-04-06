@@ -1,0 +1,361 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+
+{% block script %}
+    {{block.super}}
+        <link href="{{ STATIC_URL }}select2/css/select2.min.css" rel="stylesheet" />
+        <script src="{{ STATIC_URL }}select2/js/select2.min.js"></script>
+        <script src="{{ STATIC_URL }}js/bootstrap-multiselect.js"></script>
+        <script src="{{ STATIC_URL }}js/bootstrap-multiselect-collapsible-groups.js"></script>
+<script>
+    // {% comment %}
+    // Function has been obfuscated for slightly better protection
+    // through http://javascriptobfuscator.com/Javascript-Obfuscator.aspx
+    // Email addresses are reversed, rot13 encoded  and have 'dot' and 'at' replaced
+
+    String.prototype.reverse = function () {
+        return this.split("").reverse().join("");
+    };
+    String.prototype.dotat = function () {
+        return this.replace(/ at /gi, '@').replace(/ dot /gi ,'.')};
+
+    String.prototype.rot13 = function () {
+        return this.replace(/[a-zA-Z]/gi, function (c) {
+            return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
+        });
+    };
+    $(document).ready(function(){
+        // Decode emails in any column with 'email' class when a 'button.showliame' is clicked
+        // Click an encoded email address to show it
+        $('button.showliame').on('click', function(){
+            var table = $('.email').parents('table:first')
+            var index = $('.email').parent().children().index( $('.email') )
+            $(this).addClass('disabled')
+            table.find('tbody tr').each(function(){
+                var i = $(this).children('td')[index];
+                $(i).css({color:'green'});
+                $(i).text($(i).text().reverse().rot13().dotat())
+            })
+        });
+
+    });
+    // The equivalent code, obfuscated, is shoen below
+    // {% endcomment %}
+
+    var _0xeeb1=["\x72\x65\x76\x65\x72\x73\x65","\x70\x72\x6F\x74\x6F\x74\x79\x70\x65","","\x6A\x6F\x69\x6E","\x73\x70\x6C\x69\x74","\x64\x6F\x74\x61\x74","\x2E","\x72\x65\x70\x6C\x61\x63\x65","\x40","\x72\x6F\x74\x31\x33","\x5A","\x63\x68\x61\x72\x43\x6F\x64\x65\x41\x74","\x66\x72\x6F\x6D\x43\x68\x61\x72\x43\x6F\x64\x65","\x63\x6C\x69\x63\x6B","\x74\x61\x62\x6C\x65\x3A\x66\x69\x72\x73\x74","\x70\x61\x72\x65\x6E\x74\x73","\x2E\x65\x6D\x61\x69\x6C","\x69\x6E\x64\x65\x78","\x63\x68\x69\x6C\x64\x72\x65\x6E","\x70\x61\x72\x65\x6E\x74","\x64\x69\x73\x61\x62\x6C\x65\x64","\x61\x64\x64\x43\x6C\x61\x73\x73","\x74\x64","\x67\x72\x65\x65\x6E","\x63\x73\x73","\x74\x65\x78\x74","\x65\x61\x63\x68","\x74\x62\x6F\x64\x79\x20\x74\x72","\x66\x69\x6E\x64","\x6F\x6E","\x62\x75\x74\x74\x6F\x6E\x2E\x73\x68\x6F\x77\x6C\x69\x61\x6D\x65","\x72\x65\x61\x64\x79"];String[_0xeeb1[1]][_0xeeb1[0]]=function(){return this[_0xeeb1[4]](_0xeeb1[2])[_0xeeb1[0]]()[_0xeeb1[3]](_0xeeb1[2])};String[_0xeeb1[1]][_0xeeb1[5]]=function(){return this[_0xeeb1[7]](/ at /gi,_0xeeb1[8])[_0xeeb1[7]](/ dot /gi,_0xeeb1[6])};String[_0xeeb1[1]][_0xeeb1[9]]=function(){return this[_0xeeb1[7]](/[a-zA-Z]/gi,function(_0x3e4cx1){return String[_0xeeb1[12]]((_0x3e4cx1<=_0xeeb1[10]?90:122)>=(_0x3e4cx1=_0x3e4cx1[_0xeeb1[11]](0)+13)?_0x3e4cx1:_0x3e4cx1-26)})};$(document)[_0xeeb1[31]](function(){$(_0xeeb1[30])[_0xeeb1[29]](_0xeeb1[13],function(){var _0x3e4cx2=$(_0xeeb1[16])[_0xeeb1[15]](_0xeeb1[14]);var _0x3e4cx3=$(_0xeeb1[16])[_0xeeb1[19]]()[_0xeeb1[18]]()[_0xeeb1[17]]($(_0xeeb1[16]));$(this)[_0xeeb1[21]](_0xeeb1[20]);_0x3e4cx2[_0xeeb1[28]](_0xeeb1[27])[_0xeeb1[26]](function(){var _0x3e4cx4=$(this)[_0xeeb1[18]](_0xeeb1[22])[_0x3e4cx3];$(_0x3e4cx4)[_0xeeb1[24]]({color:_0xeeb1[23]});$(_0x3e4cx4)[_0xeeb1[25]]($(_0x3e4cx4)[_0xeeb1[25]]()[_0xeeb1[0]]()[_0xeeb1[9]]()[_0xeeb1[5]]());});})});
+
+</script>
+
+<script>
+
+
+
+    $(document).ready(function(){
+        selects = $('#id_orgtype, #id_act, #id_inv, #id_ben, #id_pcode')
+        selects.select2()
+        selects.each(function(){
+
+            $(this).next().css({'width':'95%', 'max-height':'40px;'})
+
+            if($(this).val()){
+                var id = $(this).attr('id');
+                console.log(id);
+                var s = '[href=#div_'+id+']'
+                console.log(s);
+                $(s).trigger('click');
+
+            }
+        });
+        if($('#id_name').val()){
+                $('[href=#div_id_name]').trigger('click')
+            }
+            // On collapsing any selection, remove any choices / typing made
+
+        $(document).on('click', '[data-toggle=collapse]', function(){
+            $($(this). attr('href')).find('input').val('')
+            $($(this). attr('href')).find('select').val(null).trigger("change")
+        })
+    })
+$(document).ready(function(){
+     var l = $('.list-group')
+
+    var navheight = $('.navbar').outerHeight(true);
+
+    var loadDetail = function(detail_id){
+        return $.get('./'+detail_id+'/ajax/', function(data){$('#detail').html(data)})
+    };
+//        $(document).on('click','[data-detail]', function(e){
+//            p = $(this).data( 'detail' );
+//            var jqxhr = $(this).data('detail'); loadDetail(p);
+//            $("#collapseOne").collapse('hide');
+//            $("#collapseTwo").collapse('show')});
+});
+
+    $(document).ready(function(){
+        var hash = location.hash.replace(/^.*?#/, '');
+        var pairs = hash.split('&');
+        var lVal = pairs[0].split('=')[0];
+        var vVal = pairs[0].split('=')[1];
+        if (lVal == "object"){$.get('./'+vVal+'/ajax/', function(data){$('#detail').html(data)})};
+
+    });
+
+//    Paginate results
+    $(document).ready(function(){
+
+        var groupNumber=15;
+        var  l = $('.list-group');
+        var i = 0;
+        while (l.children('.list-group-item').size() > 0){
+            i += 1;
+            var text = groupNumber*i+' to '+(groupNumber*i+groupNumber);
+            l.children('li').slice(0, groupNumber).wrapAll('<span data-page="'+i+'" data-text="'+text+'">')
+
+        }
+        $('span[data-page]').hide();
+        $('.pagination [data-pages]').text(i)
+        $('span[data-page=1]').show();
+        $('.pagination').data('page',1)
+
+        var new_page;
+        var page_info = $('.pagination [data-currentpage]')
+        page_info.text('1')
+        page_info.data('currentpage', 1)
+        $('a[data-page]').on('click', function() {
+            var current_page = page_info.data('currentpage')
+            console.log(current_page)
+            var action = $(this).data('page');
+
+            if (action == '+1') {new_page = current_page + 1}
+            else if (action == '-1') { new_page = current_page - 1}
+            if (new_page == 0){return};
+            if (new_page > i){return};
+            page_info.text(new_page)
+            page_info.data('currentpage', new_page)
+            $('span[data-page=' + current_page + ']').hide();
+            $('span[data-page=' + new_page + ']').show();
+        })
+
+        $('#organizationSelect').multiselect({
+//            includeSelectAllOption: true,
+//            enableCaseInsensitiveFiltering: true,
+            enableCollapsibleOptGroups: true
+        });
+        $('#inactiveOrganizationSelect').multiselect({});
+
+
+        // $('#organizationSelect').next().find('.multiselect-group input').remove();
+    })
+
+
+</script>
+
+{% endblock script %}
+ {% block style %} 
+    <link href="{{ STATIC_URL }}django_tables2/themes/paleblu/css/screen.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}selectize/css/selectize.bootstrap3.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/bootstrap-multiselect.css" rel="stylesheet">
+    <style>
+    ul.pagination {
+        border-radius: 0px;
+        display: block;
+    }
+    .datacenter-search-form {
+        background-color:#FFD;
+        padding:5px;
+        border-radius: 5px;
+        margin-bottom:10px;
+    }
+        .like-table { display: table; }
+.like-table>* { display: table-row; }
+
+.like-table .row {
+    height: 25px;}
+
+.like-table>*>* { display: table-cell; border:1px solid #d3d3d3;}
+            .small-flag {width:25px; margin-right:5px; top:5px; left:5px;}
+
+
+#rightpane, .sidebar {
+    max-height:100%;
+}
+
+
+    </style>
+<style>
+    /*Stop "jump" when showing hidden select box*/
+    select[multiple],select[size]{ height:20px;}
+</style>
+
+<style>
+
+    #search {
+        height:auto;
+    }
+
+
+</style>
+{% endblock style %}
+
+{% block resources %}
+    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}jquery.dataTables.min.js"></script>
+{% endblock resources%}
+
+{% block containerclass %}"container-fluid"{% endblock %}>
+
+{% comment %}
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-4">
+        {% crispy form %}
+        <div class='alert alert-info'>
+            <p>To protect this list from spam robots, email addresses are encoded. <button class="btn btn-primary showliame">Show email addresses</button></p>
+        </div>
+        <a href='{% url "nhdb:project:list" %}'>Search for Projects instead &raquo</a>
+    </div>
+
+</div>
+<div class="col-lg-12">
+    <!--{% render_table table %}-->
+    <b>{{object_list.count}} Organizations</b>
+
+    <a href='#' class="btn btn-primary">Print view</a>
+    <ul>
+
+    {% for i in object_list %}
+    <li>{{i}}</li>{% endfor %}
+</ul>
+</div>
+{% endblock content %}
+
+{% endcomment %}
+{% block content %}
+
+<div class="row">
+    <div class="col col-lg-12">
+        <form class="form-inline">
+            <div class="form-group">
+                <label class="advanced-option">Activities
+                    <select class="form-control" data-role="multiselect" multiple="multiple" name="q">{% for a in filters.act %}
+                        <option {% if a.path in activefilters %}selected=selected{% endif %} value="{{a.path}}">{{a}}</option> {%endfor %}
+                    </select>
+                </label>
+            </div>
+            <div class="form-group">
+            <label class="advanced-option">Beneficiary
+                <select class="form-control" data-role="multiselect" multiple="multiple" name="q">{% for a in filters.ben %}
+                    <option {% if a.path in activefilters %}selected=selected{% endif %} value="{{a.path}}">{{a}}</option> {%endfor %}
+                </select>
+            </label>
+                            </div>
+            <div class="form-group">
+            <label>Sector
+                <select class="form-control"data-role="multiselect" multiple="multiple" name="q">{% for a in filters.inv %}
+                    <option {% if a.path in activefilters %}selected=selected{% endif %} value="{{a.path}}">{{a}}</option> {%endfor %}
+                </select>
+            </label class="advanced-option">
+                            </div>
+            <div class="form-group">
+            <label>Organization Type
+                <select class="form-control" data-role="multiselect" multiple="multiple" name="q">{% for a in filters.type %}
+                    <option {% if a.value in activefilters %}selected=selected{% endif %} value="{{a.value}}">Type: {{a.label}}</option> {%endfor %}
+                </select>
+            </label>
+                            </div>
+            <div class="form-group">
+            <label>Projects in
+                <select class="form-control" data-role="multiselect" multiple="multiple" name="q">{% for a in filters.district %}
+                    <option {% if a.value in activefilters %}selected=selected{% endif %} value="{{a.value}}">{{a.label}}</option> {%endfor %}
+                </select>
+            </label>
+            </div>
+            <div class="form-group">
+            <label class="sr-only advanced-option">Organization type
+                  <select class="form-control" id="inactiveOrganizationSelect" name="q">
+                        <option {% if 'active.true' in activefilters %}selected=selected{% endif %} value="active.true">Only active organizations</option>
+                        <option {% if 'active.any' in activefilters %}selected=selected{% endif %} value="active.any">All organizations (active + past)</option>
+                        <option {% if 'active.false' in activefilters %}selected=selected{% endif %} value="active.false">Only inactive organizations</option>
+                    </select>
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <div class="col col-lg-12"><h3>{{object_list.count}} Organizations</h3>
+            <div class="col col-lg-12 col-xs-12" id="actions-container">
+
+        <a href="../?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">Organization Details</a>
+        <a href="../xls/?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">Contact list as Excel download</a>
+
+{% comment %}
+            {% render_table table %}
+{% endcomment %}
+
+            </div>
+        <div class="col col-lg-12 col-xs-12" id="object-list-container">
+            <table class="table table-bordered table-condensed">
+                <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Main Address</th>
+                    <th>Class</th>
+                    <th>Verified</th>
+                </tr>
+
+                {% for object in object_list %}
+                <tr>
+                    <td><a href="../?{{ request.GET.urlencode }}#object={{object.pk}}">{{object.name}}{% if object.description %}<br>{{object.description}}{% endif %}</a></td>
+                    <td style="white-space: nowrap;">{{object.phoneprimary}}{% if object.phonesecondary %}<br>{{object.phonesecondary}}{% endif %}</td>
+                    <td>{% if object.email %}{{object.email}}{% endif %}</td>
+                    <td>{% for organizationplace in object.organizationplace_set.all %}{{organizationplace.description}}{% endfor %}</td>
+                    <td  style="white-space: nowrap;">{{object.orgtype}}</td>
+                    <td>{{object.verified}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            </div>
+        </div>
+
+</div>
+
+
+    {% if debug %}
+<div id="debug">
+  <h2>Queries</h2>
+  <p>
+    {{ sql_queries|length }} Quer{{ sql_queries|pluralize:"y,ies" }}
+    {% ifnotequal sql_queries|length 0 %}
+    (<span style="cursor: pointer;" onclick="var s=document.getElementById('debugQueryTable').style;s.display=s.display=='none'?'':'none';this.innerHTML=this.innerHTML=='Show'?'Hide':'Show';">Show</span>)
+    {% endifnotequal %}
+  </p>
+  <table class="table table-bordered table-condensed" id="debugQueryTable" style="display: none;">
+    <col width="1"></col>
+    <col></col>
+    <col width="1"></col>
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">SQL</th>
+      <th scope="col">Time</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for query in sql_queries %}<tr class="{% cycle odd,even %}">
+      <td>{{ forloop.counter }}</td>
+      <td>{{ query.sql|escape }}</td>
+      <td>{{ query.time }}</td>
+    </tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+<footer class="footer"><hr>
+      <div class="container">
+        <p class="text-muted">Footer</p>
+      </div>
+    </footer>
+{% endblock content %}

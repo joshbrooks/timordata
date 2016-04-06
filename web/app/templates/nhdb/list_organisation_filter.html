@@ -1,0 +1,5 @@
+
+{% for o in orgs %}
+
+<p><input type='radio' id='{{o.pk}}_org' class='orgid_radio' name='orgid'/><label for='{{o.pk}}_org'>{{o.name}}</label></p>
+{% endfor %}

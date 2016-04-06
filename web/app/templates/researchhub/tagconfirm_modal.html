@@ -1,0 +1,51 @@
+{% extends "base_modal.html" %}
+{% block title %}Confirm Tags {% endblock %}
+{% block body %}
+<p>Create new tags or use existing tags?</p>
+<div class="row">
+  
+  {% for c in sectors %}
+  <div class="col-lg-4">
+    <p><strong>"{{c}}"</strong></p>
+    <p>Already exists as an Activity, Beneficiary or Sector.</p>
+    <div class="col-lg-12"><label><input type="radio" name="radio_{{c.search}}" value="{{c}}">{{c.match.name}}</label></div>
+    <div class="col-lg-12"><label><input type="radio" name="radio_{{c.search}}" value="nothing">(Do nothing)</label></div>
+  </div>
+  {% endfor %}
+  
+  {% for c in confirmed %}
+  <div class="col-lg-4">
+    <p><strong>"{{c.search}}" exists already</strong></p>
+    <div class="col-lg-12"><label><input type="radio" name="radio_{{c.search}}" value="{{c.match.id}}">{{c.match.name}}</label></div>
+    <div class="col-lg-12"><label><input type="radio" name="radio_{{c.search}}" value="nothing">(Do nothing)</label></div>
+  </div>
+  {% endfor %}
+  
+  {% for s in suggested %}
+  <div class="col-lg-4">
+    <p><strong>"{{s.search}}" has not been used yet</strong></p>
+    <div class="row">
+
+      <span class="create create_{{s.search}}">
+        <div class="col-lg-4"><label><input type="radio" checked name="radio_{{s.search}}" value="create">New </label></div>
+        <div class="col-lg-4"><input class="form-control" name="{{s.search}}_tagname" value="{{s.search}}"></div>
+      </span>
+      
+      {% if s.contains %}{% for org in s.contains %}
+      <div class="col-lg-12">
+        <label><input type="radio" name="radio_{{s.search}}" value="{{org.id}}">{{org.name}}</label>
+      </div>{% endfor %}{% endif %}{% if s.similar %}{% for org in s.similar %}
+      <div class="col-lg-12">
+        <label><input type="radio" name="radio_{{s.search}}" value="{{org.id}}">{{org.name}}</label>
+      </div>{% endfor %}{% endif %}
+      
+      <div class="col-lg-12">
+        <label><input type="radio" name="radio_{{s.search}}" value="nothing">(Do nothing)</label>
+      </div>
+
+  </div>
+</div>{% endfor %}
+{% endblock %}
+{% block save %}
+<button id="organization-confirm-modal-save" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+{% endblock %}

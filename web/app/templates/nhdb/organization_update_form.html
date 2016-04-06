@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+{% crispy form %}
+
+
+<br>
+
+<script type="text/javascript">
+  $('select').select2();
+</script>
+
+{% endblock %}
+
+

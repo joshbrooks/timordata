@@ -1,0 +1,33 @@
+{% extends "base_row.html" %}
+{% block body %}
+
+<form class="organization-add">
+  <div class="row">
+{% for s in search %}
+<div class="col-lg-6 well well-sm organization">
+  <div class="clearfix visible-xs-block"></div>
+    <h4>{{s.search}}</h4><p>Similar To:</p>
+      {% if s.similar %}{% for organization in s.similar %}
+        {% if organization in object.organization.all %}
+          <button type="button" disabled class="btn btn-xs btn-primary btn-block">{{organization.name}} (Already)</button>
+        {% else %}
+          <button type="button" class="btn btn-xs btn-primary btn-block" data-addexistingorganization="true" data-organization-name="{{organization.name}}" data-organization-pk="{{organization.pk}}">{{organization.name}} (Add)</button>
+        {% endif %}
+      {% endfor %}
+      {% else %}
+      <button type="button" disabled class="btn btn-xs btn-warning btn-block">No similar organizations</button>
+      {% endif %}
+        <button type="button" class="btn btn-xs btn-default btn-block" data-addneworganization="true" data-organization-name="{{s.search}}">This is a new organization</button>
+        <button type="button" class="btn btn-xs btn-default" data-addexistingorganization="false">Cancel</button>
+  </div>
+ 
+  {% if forloop.counter|divisibleby:"4" %}
+</div>
+<div class="row">
+{% endif %}
+
+  {% endfor %}
+  </div>
+
+</form>
+{% endblock %}

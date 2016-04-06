@@ -1,0 +1,74 @@
+
+{% extends "object_list.html" %}
+{% load i18n %}
+
+{% block content %}
+
+{% block modals %}
+    {{block.super}}
+{% endblock modals %}
+
+<ul class="nav nav-pills" role="tablist">
+      <li role="presentation"><a data-modalurl="/nhdb/organization/form/main/?suggestion={{suggestion.pk}}"  data-reload="true" data-modaltitle="Change this suggestion" data-toggle="modal" href="#stack1">Change this</a></li>
+      <li role="presentation" class="dropdown">
+        <a id="drop4" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+          Descriptions
+          <span class="caret"></span>
+        </a>
+        <ul id="menu1" class="dropdown-menu" aria-labelledby="drop4">
+          <li><a data-modalurl="/nhdb/organization/form/description/?language=en&suggestion={{suggestion.pk}}"  data-reload="true" data-modaltitle="Descriptions" data-toggle="modal" href="#">English</a></li>
+          <li><a data-modalurl="/nhdb/organization/form/description/?language=tet&suggestion={{suggestion.pk}}"  data-reload="true" data-modaltitle="Descriptions" data-toggle="modal" href="#">Tetun</a></li>
+          <li><a data-modalurl="/nhdb/organization/form/description/?language=pt&suggestion={{suggestion.pk}}"  data-reload="true" data-modaltitle="Descriptions" data-toggle="modal" href="#">Portugese</a></li>
+          <li><a data-modalurl="/nhdb/organization/form/description/?language=id&suggestion={{suggestion.pk}}"  data-reload="true" data-modaltitle="Descriptions" data-toggle="modal" href="#">Bahasa</a></li>
+        </ul>
+      </li>
+
+      <li role="presentation">
+            <a data-modalurl="/nhdb/organization/form/contact/?suggestion={{suggestion.pk}}"  data-reload="true" data-modaltitle="Contact Details" data-toggle="modal" href="#">Contact Details</a>
+      </li>
+      {% if suggestion.primary.instance.pk %}
+      <li role="presentation" class="warning">
+            <a data-modalurl="/nhdb/organization/form/delete/?organization={{suggestion.primary.instance.pk}}" data-modalselector="#modaldeleteform" data-modaltitle="Drop this Organization" data-toggle="modal" href="#">Drop organization</a>
+      </li>
+      {% endif %}
+
+      {% if suggestion.primary.instance.pk %}
+      <li role="presentation" class="warning">
+            <a data-modalurl="/nhdb/organization/form/delete/?organization={{suggestion.primary.instance.pk}}" data-modalselector="#modaldeleteform" data-modaltitle="Drop this Organization" data-toggle="modal" href="#">Drop organization</a>
+      </li>
+      {% endif %}
+    </ul>
+
+
+
+
+
+
+{{suggestion}}
+
+{% for name, value, new, unchanged in suggestion.changes %}
+                    {% if unchanged %}
+                        <span style="color:slategray">{{name}}: {{value}}</span>
+                    {% else %}
+                     {{name}}: <span style="color:red"><del>{{value}}</del></span> <span style="color:#008000">{{new}}</span>
+                {% endif %}
+                {% if not forloop.last %}<br>{% endif %}
+
+                {% endfor %}
+
+<h3>Related changes</h3>
+
+{% for related in suggestion.related_changes %}
+{% for name, value, new, unchanged in related.changes %}
+    {% if unchanged %}{% if value %}
+        <span style="color:slategray">{{name}}: {{value}}</span>
+    {% endif %}{% else %}
+     {{name}}: <span style="color:red"><del>{{value}}</del></span> <span style="color:#008000">{{new}}</span>
+{% endif %}
+{% if not forloop.last %}<br>{% endif %}
+
+{% endfor %}<hr>
+{% endfor %}
+
+
+{% endblock content %}

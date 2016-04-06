@@ -1,0 +1,57 @@
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+
+
+  <div class="well">
+    <h4>Main Properties</h4>{% trans "Main Properties" %}</h4>
+      <p><b>Organization Link:</b> <a href='{% url "nhdb:organization:organization" o.id %}'>{% url "nhdb:organization:organization" o.id %}</a> <br></p>
+
+    <form method="POST" autocomplete="off">
+  {% csrf_token %}
+  {{oform|crispy}}
+  <button class='btn btn-default'> Save changes »</button>
+</form>
+
+</div>
+
+<div class="well">
+    {% for proj in o.project_set.all %}
+    <p><b>Project Notes:</b>{% if not proj.notes %}<em> None</em>{% else %} {{proj.notes}}</p>{% endif %}
+    <p><b>Project Locations:</b>
+
+<div class="row">
+  
+  <div class="col-sm-3" style="height:128px;">
+      {% if proj.place.count > 0 %}
+      <span style="position:absolute; position-x:0; position-y:0;">
+          <img src='{%url "nhdb:projectoverlaywidth" 0 256%}' alt="Overlay">
+      </span>
+      <span style="position:absolute; position-x:0; position-y:0;">
+          <img src='{%url "nhdb:projectoverlaywidth" proj.id 256%}' alt="Overlay">
+      </span>
+      {% endif %}
+  </div>
+  
+  <div class="col-sm-9">
+    <div class="row">
+      <div class="col-sm-12"><strong>{{proj.name}}</strong><a href='{% url "nhdb:project" proj.id %}'> ( #{{proj.id}} )</a></div>
+      <div class="col-sm-12">{% for place in proj.place.all %}{{place.name}} ({{place.pcode}}), {% endfor %}</div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+</div>
+<div class="staff well">
+  <h4>Staff</h4>
+      {% for person in o.person_set.all %}
+    <div class="row" style='border-top: 1px solid #BFBFBF;'>
+       <div class="col-md-3">{{person.name}}</div>
+       <div class="col-md-3">{{person.title}}</div>
+       
+    </div>
+       {% endfor %}
+</div>
+
+
+

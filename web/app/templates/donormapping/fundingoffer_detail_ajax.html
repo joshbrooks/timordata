@@ -1,0 +1,70 @@
+{% load i18n %}
+
+<div class="container-fluid">
+<div class="row">
+    <div class="col-lg-12 col-md-12" style="border-top:1px solid #ddd;">
+        <h1>{{object.title}}<br>
+            <span class="small">{{object.organization}}</span><br>
+            {% if object.application_end_date %}<span class="small">Applications due before {{object.application_end_date}}</span>{% endif %}
+        </h1>
+
+           <p><strong>{% trans "Sectors" %}:</strong> {{ object.sector.all|join:', ' }}</p>
+            <p><strong>{% trans "Activities" %}:</strong> {{ object.activity.all|join:', ' }}</p>
+            <p><strong>{% trans "Beneficiaries" %}:</strong> {{ object.beneficiary.all|join:', ' }}</p>
+    </div>
+    {% autoescape off %}
+    <div class="col-lg-8 col-md-8" style="border-top:1px solid #ddd; border-bottom:1px solid #ddd; padding-top:20px;">
+        {{object.description}}
+    </div>
+    {% endautoescape %}
+
+
+
+<div class="col-lg-4 col-md-4" style="border-top:1px solid #ddd; border-bottom:1px solid #ddd;">
+
+    <h3>Contact <strong>{{object.organization}}</strong>:</h3>
+
+    {% with object.organization.contact as contact %}
+    <p><strong>{% trans "Phone" %}:</strong> {{contact.phoneprimary}}
+        {% if contact.phonesecondary %}<em> {% trans "or" %} </em>{{contact.phonesecondary}}</p>{% endif %}
+    <p><strong>{% trans "Email" %}:</strong> {{contact.email}}</p>
+
+    <p><strong>{% trans "Website" %}:</strong> {% if contact.web %}
+        <a href="{{contact.web}}">{{contact.web}}</a> {%else %} - {% endif %}</p>
+
+    <p><strong>{% trans "Fax" %}:</strong> {{contact.fax}}</p>
+    {% endwith %}
+    <p><strong>{% trans "Address(es)" %}:</strong>
+    {% for place in object.organization.organizationplace_set.all %}
+    <br/><strong>{{place.place}}: </strong>{{place}} </p>
+    {% endfor %}
+</div>
+</div>
+
+    <div class="col-lg-8 col-md-8" style="border-top:1px solid #ddd; border-bottom:1px solid #ddd; padding-top:20px;">
+        <p><strong>{% trans "Conditions" %}:</strong></p>
+
+            {% autoescape off %}
+            {{object.conditions}}
+        {% endautoescape %}
+    </div>
+    <div class="col-lg-8 col-md-8" style="border-top:1px solid #ddd; border-bottom:1px solid #ddd; padding-top:20px;">
+        <p><strong>{% trans "Attachments" %}:</strong></p>
+            {% for doc in object.fundingofferdocument_set.all %}
+        {% if doc.file %}
+            <p>
+                <a href="{{doc.file.url}}">{{doc.description}}</a>
+                <a class="btn btn-sm btn-primary" data-modalurl="/donormapping/form/fundingofferdocument/main?fundingofferdocument={{doc.pk}}"  data-modaltitle="Update document" data-toggle="modal" href="#">Change document</a>
+
+            </p>
+        {% endif %}
+            {% endfor %}
+        <a class="btn btn-sm btn-primary" data-modalurl="/donormapping/form/fundingofferdocument/main?fundingoffer={{object.pk}}"  data-modaltitle="Add document" data-toggle="modal" href="#">Add another document</a>
+
+
+    </div>
+
+    <a data-modalurl="/donormapping/form/fundingoffer/main?fundingoffer={{object.pk}}"  data-modaltitle="Change Funding Offer" data-toggle="modal" href="#">Change funding offer</a>
+
+</div>
+

@@ -1,0 +1,45 @@
+  <table class='organization_table {% if template%}template{% endif%}' {% if template%}style='display:none'{% endif%}>
+      <caption>{% if formname %}{{formname }} {% else %}Add an organization {% endif %}</caption>
+    <tbody>
+        <input id='organization_id_field' type='hidden' name='org_{{oid}}[id]' value={{oid}}></td><td></td></tr>
+        <tr class='organization_name'>
+            <th>
+                <label for="org-{{formnumber}}-name">Name:</label>
+            </th>
+            <td>{% if formname %}
+                <p>{{formname}}</p>
+                {% else %}
+                <input id="org-{{formnumber}}-name" type="text"><button type="button" class="btn btn-info btn-xs" data-dropdown='#dropdown-org'>Search</button>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Organization class:
+            </th>
+            <td>
+                <div class="btn-group" data-toggle="buttons">{% for v, label in OPTION_PROJECT_ORGANIZATION %}
+                    <label class="btn btn-default btn-xs" for="org-{{formnumber}}-oc-{{v}}">{{label}}
+                        <input id="org-{{formnumber}}-oc-{{v}}" name="org_{{oid}}[organizationclass]" type="radio" {% if orgclass = v %}class='active' checked='checked'{% endif %} value="{{v}}">
+                    </label>{% endfor %}
+                </div>
+            </td>
+        </tr>
+    
+        <tr>
+            <th>
+                <label for="org_{{oid}}[notes]">Notes:</label>
+            </th>
+            <td>
+                <textarea  id="org_{{oid}}[notes]" name="org_{{oid}}[notes]" rows="2">{{notes}}</textarea>
+            </td>
+        </tr>
+        <tr class='remove'>
+            <th>
+            </th>
+            <td>
+                <button class="btn btn-warning btn-xs">Remove</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>

@@ -1,0 +1,8 @@
+
+<form name="beneficiaries_menu" id="beneficiaries_menu" action="" method="post">
+{% csrf_token %}
+{% for ma in beneficiaries %}
+<input name='pk_{{ma.pk}}' class="check-box" type="checkbox" {% if ma in checked %} checked="checked" {% endif %}value="{{ma.pk}}">{{ma}}
+{% endfor %}
+<input type="submit" value="Submit">
+</form>

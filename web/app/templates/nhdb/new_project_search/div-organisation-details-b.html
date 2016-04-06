@@ -1,0 +1,21 @@
+<!--
+Takes a List of Project Organization objects
+-->
+{% for projorg in projorgs %}{% with projorg.organization as o %}
+  <div class="row project-organization" data-orgclass="{{ projorg.organizationclass }}" data-orgpk="{{ o.pk }}" data-projectpk="{{ projorg.project.pk }}">
+    <div class="col-md-3">
+      <p data-content="name">{{o.name}}</p>
+    </div>
+    <div class="col-md-5">
+      <strong>T </strong> {{o.contact.phoneprimary}}{% if o.contact.phonesecondary%} / {{o.contact.phonesecondary }}{%endif%}<br>{% if o.contact.email %}
+      <strong>E </strong> {{o.contact.email}}<br>{%endif%}{% if o.contact.web %}
+      <strong>W </strong> <a href='http://{{o.contact.web}}'>{{o.contact.web}}</a><br>{%endif%}{% if o.contact.fax %}
+      <strong>F </strong> {{o.contact.fax}}<br>{%endif%}
+    </div>
+    <div class="col-md-3">
+      <p>{{ projorg.get_organizationclass_display }}</p>{% if projorg.notes %}
+      <p><strong>Notes: </strong><span data-content="notes">{{ projorg.notes }}</span></p>{%else%}
+      <p><em>No notes</em></p>{% endif %}
+    </div>{% endwith %}
+  </div>
+{% endfor %}

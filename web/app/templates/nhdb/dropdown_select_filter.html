@@ -1,0 +1,60 @@
+<form class='ajax' target='/' method='get' id='option-filters'>
+    {% csrf_token %}
+<input type="hidden" name='table' value='true'>
+<div class='row'>
+    <div class='col col_5'>
+        <div class='option-table'>
+            <div class='go right-arrow'>Areas of Interest</div>
+                <div class='all'>
+                    <div class='option'>
+                        <input data-onlyoption='true' name='inv' type='checkbox' value='all' id='inv_all' checked='checked'/><label for='inv_all'>All</label>
+                    </div>
+                </div>
+                <div class='checked'>
+                </div>
+                <div class='unchecked' style='display:none'>{% for i in Inv %}
+                    <div class='option'>
+                        <input name='inv' type='checkbox' value='{{i.pk}}' id='inv_{{i.pk}}'/><label for='inv_{{i.pk}}'>{{i}}</label>
+                    </div>{% endfor %}
+                </div>
+        </div>
+    </div>
+    <div class='col col_5'>
+        <div class='option-table'>
+            <div class='go right-arrow'>Activities</div>
+                <div class='all'>
+                    <div class='option'>
+                        <input data-onlyoption='true' name='act' type='checkbox' value='all' id='act_all' checked='checked'/><label for='act_all'>All</label>
+                    </div>
+                </div>
+                <div class='checked'>
+                </div>
+                <div class='unchecked'  style='display:none'>{% for i in Act %}
+                    <div class='option'>
+                        <input name='act' type='checkbox' value='{{i.pk}}' id='act_{{i.pk}}'/><label for='act_{{i.pk}}'>{{i}}</label>
+                    </div>{% endfor %}
+                </div>
+
+        </div>
+    </div>
+    <div class='col col_5'>
+        <div class='option-table'>
+            <div class='go right-arrow'>Districts <span class='go'>...</span></div>
+                <div class='all'>
+                    <div class='option'>
+                        <input data-onlyoption='true' name='pcode' type='checkbox' value='all' id='pcode_all' checked='checked'/><label for='pcode_all'>All</label>
+                    </div>
+                </div>
+                <div class='checked'>
+                </div>
+                <div class='unchecked'  style='display:none'>{% for i in places %}
+                    <div class='option'>
+                        <input name='pcode' class='pcode' type='checkbox' value='{{i.pk}}' id='pcode_{{i.pk}}'/><label for='pcode_{{i.pk}}'>{{i}}</label>
+                    </div>{% endfor %}
+                </div>
+            </div>
+    </div>
+</div>
+<br/>
+<input type="submit" id='okgo' value="Submit"></input>
+</form>

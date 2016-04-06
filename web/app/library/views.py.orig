@@ -1,0 +1,142 @@
+from django.core.urlresolvers import reverse
+from django.shortcuts import render
+from tables import PublicationTable
+from models import Author, Language, Publication, Pubtype, Tag, Version
+from django_tables2 import SingleTableView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from forms import *
+
+def index(request):
+    return render(request, 'library/index.html')
+
+
+class PublicationList(SingleTableView):
+
+    model = Publication
+    table_class = PublicationTable
+
+    def get_context_data(self, **kwargs):
+        context = super(PublicationList, self).get_context_data(**kwargs)
+
+        context['lang'] = self.request.LANGUAGE_CODE
+
+        if self.request.GET.values() == []:
+            context['form'] = PublicationSearchForm()
+        else:
+            context['form'] = PublicationSearchForm(self.request.GET)
+        return context
+
+    def get_queryset(self):
+
+        params = ('organisation', 'year', 'pubtype', 'tags', 'versions__language__id', 'location__pk', 'country__pk')
+        filters = {}
+
+        for param in params:
+            if param not in self.request.GET:
+                continue
+            filters[param+'__in'] = self.request.GET.getlist(param)
+        #~ raise AssertionError, filters
+
+        return Publication.objects.filter(**filters).distinct().prefetch_related('versions__language')
+
+
+class PublicationDetail(DetailView):
+
+    model = Publication
+
+    def get_context_data(self, **kwargs):
+        context = super(PublicationDetail, self).get_context_data(**kwargs)
+        # Pick the main version to show based on the
+        # language of the request
+        context['version'] = context['object'].preferred_version(
+            lang=self.request.LANGUAGE_CODE)
+        context['lang'] = self.request.LANGUAGE_CODE
+
+        return context
+
+
+class PublicationCreate(CreateView):
+
+    model = Publication
+    form_class = PublicationCreateForm
+
+    def get_success_url(self):
+        from django.core.urlresolvers import reverse
+        return reverse('library:publication:detail', args=[str(self.object.pk)])
+
+    def get_context_data(self, **kwargs):
+        context = super(PublicationCreate, self).get_context_data(**kwargs)
+        context['hello'] = 'hi'
+        return context
+
+
+class PublicationUpdate(UpdateView):
+
+    model = Publication
+
+    def get_context_data(self, **kwargs):
+        context = super(PublicationUpdate, self).get_context_data(**kwargs)
+
+        return context
+
+    def get_success_url(self):
+
+        return reverse('library:publication:detail', kwargs={'pk': self.object.pk})
+
+
+class AuthorCreate (CreateView):
+    model = Author
+
+
+class PublicationDelete(DeleteView):
+
+    model = Publication
+
+
+class VersionDetail(DetailView):
+
+    model = Version
+
+    def get_context_data(self, **kwargs):
+        context = super(VersionDetail, self).get_context_data(**kwargs)
+        return context
+
+class VersionCreate(CreateView):
+
+    model = Version
+    form_class = VersionCreateForm
+
+    def get_success_url(self):
+        from django.core.urlresolvers import reverse
+        return reverse('library:version:detail', args=[str(self.object.pk)])
+
+    def get_context_data(self, **kwargs):
+        context = super(VersionCreate, self).get_context_data(**kwargs)
+        context['hello'] = 'hi'
+        return context
+
+class VersionDelete(DeleteView):
+
+    model = Version
+
+
+class VersionUpdate(UpdateView):
+
+    model = Version
+    form_class = VersionUpdateForm
+
+    def get_success_url(self):
+        from django.core.urlresolvers import reverse
+        return reverse('library:version:detail', args=[str(self.object.pk)])
+
+    def get_context_data(self, **kwargs):
+        context = super(VersionUpdate, self).get_context_data(**kwargs)
+        context['hello'] = 'hi'
+        return context
+
+
+class VersionList(SingleTableView):
+
+    model = Version
+

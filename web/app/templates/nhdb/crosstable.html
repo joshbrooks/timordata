@@ -1,0 +1,13 @@
+<table class='crosstable'>
+	<caption>{{title.text}}</caption>
+	<tbody>
+		<tr>
+            <th>Category</th>{% for c in xAxis.categories %}
+			<th>{{c}}</th>{% endfor %}
+		</tr>{% for s in series %}
+			<tr>
+				<td>{{s.name}}</td>{% for d in s.data %}
+				<td>{{ d }}</td>{% endfor %}
+			</tr>{% endfor %}
+	</tbody>
+</table> 

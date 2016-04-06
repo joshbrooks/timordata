@@ -1,0 +1,9 @@
+<ul class='searchlist'>
+{% for r in search %}
+<li>{{r.name}}</li>
+{% endfor %}
+{% if extra %}
+<li><i>+ {{extra}} more results</i></li>
+{% endif %}
+</ul>
+

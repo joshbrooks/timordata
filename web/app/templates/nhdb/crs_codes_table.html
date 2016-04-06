@@ -1,0 +1,10 @@
+<table id='crscodes'>
+<caption> Project CRS Codes</caption>
+<tbody>
+    {% for c in crscodes %}
+    <tr data-pk={{c.pk}}>
+        <td>{{ c.name }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>

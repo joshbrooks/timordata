@@ -1,0 +1,144 @@
+{% extends "object_list.html" %}
+{% load i18n %}
+{% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+
+ {% block style %}
+{{block.super}}
+
+        <!--<link rel="stylesheet" href="{{ STATIC_URL }}trumbowyg/ui/trumbowyg.css">-->
+        <!--<link rel="stylesheet" href="{{ STATIC_URL }}trumbowyg/plugins/colors/ui/trumbowyg.colors.css">-->
+        <!--<link rel="stylesheet" href="{{ STATIC_URL }}trumbowyg/plugins/preformatted/ui/trumbowyg.preformatted.css">-->
+
+        <!--Loaded from fundingoffer_list for summernote integration-->
+        <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">-->
+        <link rel="stylesheet" href="{{ STATIC_URL }}font-awesome.min.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}summernote/dist/summernote.css">
+
+
+
+
+
+{% endblock style %}
+
+{% block script %}
+
+    {{block.super}}
+
+        <!--Loaded from fundingoffer_list for trumbowyg integration-->
+        <!--<script src="{{ STATIC_URL }}trumbowyg/trumbowyg.js"></script>-->
+        <!--<script src="{{ STATIC_URL }}trumbowyg/plugins/editlink/trumbowyg.editlink.js"></script>-->
+        <!--Loaded from fundingoffer_list for summernote integration-->
+        <script src="{{ STATIC_URL }}summernote/dist/summernote.min.js"></script>
+
+
+{% endblock %}
+
+{% block dashboard %}
+<div class="row">
+    <div class="col-lg-12 col-sm-12" >
+        {% include "donormapping/alert-welcome-donormapping-list.html" %}
+    </div>
+    <div class="col-lg-12 col-sm-12" >
+        <img width="20%" src="{{ STATIC_URL }}logo/oxfam_logo_trans.png">
+        <img width="50%" src="{{ STATIC_URL }}logo/belun_en.png">
+    </div>
+</div>
+{% endblock dashboard %}
+{% block leftsidelist %}
+
+<form class="search-form form-horizontal">
+    <div class="container-fluid">
+        <div class="row">
+            <!--<div class="col-sm-12">-->
+                <!--<a href="#"><strong><i class="glyphicon glyphicon-wrench"></i> Filter Projects</strong></a>-->
+            <!--</div>-->
+
+
+<div class="form-group">
+    <label for="search-form-activities" class="col-sm-3 control-label">Activities</label>
+    <div class="col-sm-9">
+        <select style="width:100%;" id="search-form-activities" class="auto-select2" name="q" multiple=multiple>{% for a in filters.act %}
+            <option value="{{a.path}}" {% if a.path in activefilters %}selected{%endif%}>{{a}}</option> {% endfor %}
+        </select>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="search-form-beneficiaries" class="col-sm-3 control-label">Beneficiaries</label>
+    <div class="col-sm-9">
+        <select style="width:100%;" id="search-form-beneficiaries" class="auto-select2" name="q" multiple=multiple>{% for a in filters.ben %}
+            <option value="{{a.path}}" {% if a.path in activefilters %}selected{%endif%}>{{a}}</option> {% endfor %}
+        </select>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="search-form-sectors" class="col-sm-3 control-label">Sectors</label>
+    <div class="col-sm-9">
+        <select style="width:100%;" id="search-form-sectors" class="auto-select2" name="q" multiple=multiple>{% for a in filters.inv %}
+            <option value="{{a.path}}" {% if a.path in activefilters %}selected{%endif%}>{{a}}</option> {% endfor %}
+        </select>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="search-form-district" class="col-sm-3 control-label">District</label>
+    <div class="col-sm-9">
+        <select style="width:100%;" id="search-form-district" class="auto-select2" name="q" multiple=multiple>{% for a in filters.district %}
+            <option value="{{a.value}}" {% if a.value in activefilters %}selected{%endif%}>{{a.label}}</option> {% endfor %}
+        </select>
+    </div>
+</div>
+    <div class="clearfix"></div>
+<div class="col-sm-12">
+<label class="radio-inline">
+<input type="checkbox" name="expired" id="inlineRadio1" value="True" {% if "active.true" in activefilters %} checked=checked {%endif %}> Include expired offers
+</label>
+</div>
+
+<button class="btn btn-block">Search</button>
+
+</div>
+</div>
+</form>
+{% endblock %}
+
+<!--{% block list %}-->
+<!--<p>-->
+<!--{{object_list.count}} results {% if org %}from {{org}}{% endif %}-->
+<!--</p>-->
+
+
+
+<!--<div id="pagination-container" style="width:100%">-->
+  <!--<ul class="pagination pagination-sm">-->
+    <!--<li><a href="#" data-page="previous" aria-label="Previous"><span aria-hidden="true">«</span></a></li>-->
+    <!--<li><a href="#" aria-label="CurrentPage">Page <span data-currentpage="">1</span> of <span data-pages="">y</span></a></li>-->
+      <!--<li><a href="#" data-page='next' aria-label="Next"><span aria-hidden="true">»</span></a></li>-->
+  <!--</ul>-->
+    <!--<span style="float:right;">-->
+        <!--<a href="table/?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">List view</a>-->
+    <!--<a href="xls/?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">Excel</a>-->
+        <!--</span>-->
+<!--</div>-->
+<!--<div class="clearfix"></div>-->
+<!--<div id="object-list-container" style="max-height:1000px;">-->
+    <!--<ul class="list-group" id="object_list" style="position:relative;">{% for object in object_list %}-->
+        <!--<li class="object list-group-item"><p><a href="#object={{object.pk}}">{{object}}  </a><span class="small"> {{object.pubtype}}</span></p></li>{% endfor %}-->
+    <!--</ul>-->
+<!--</div>-->
+
+  <!--{% endblock %}-->
+
+
+
+{% block objectlist %}
+<div id="object-list" class="collapse in">
+    <div>
+        <a href="table/?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">Show as Table</a>
+        <a href="xls/?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">Download Table (Excel)</a>
+        {% render_table table %}
+    </div>
+</div>
+{% endblock %}

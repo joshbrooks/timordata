@@ -1,0 +1,119 @@
+{% comment %}
+
+This file provides custom links to adjust this suggestion or add related suggestions
+
+{% endcomment %}
+
+
+
+{% if suggest.primary.model_name == 'nhdb_organization' %}
+<div class="btn-group" role="group" aria-label="add a new suggestion">
+
+  <a class="btn btn-primary" data-modalurl="{% url 'nhdb:form' model='organization' form='main'%}?_organization={{suggest.pk}}"  data-modaltitle="Organization properties" data-toggle="modal" href="#">Main</a>
+  <a class="btn btn-primary" data-modalurl="{% url 'nhdb:form' model='organization' form='contact'%}?_organization={{suggest.pk}}"  data-modaltitle="Contact details" data-toggle="modal" href="#">Contact details</a>
+  <!--<a class="btn btn-default">People</a>-->
+  <!--<a class="btn btn-default">Locations</a>-->
+
+  <!--<div class="btn-group" role="group">-->
+    <!--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+      <!--Dropdown-->
+      <!--<span class="caret"></span>-->
+    <!--</button>-->
+    <!--<ul class="dropdown-menu">-->
+      <!--<li><a href="#">Dropdown link</a></li>-->
+      <!--<li><a href="#">Dropdown link</a></li>-->
+    <!--</ul>-->
+  <!--</div>-->
+</div>
+{% endif %}
+
+
+{% if suggest.primary.model_name == 'nhdb_project' %}
+
+{% if suggest.primary.instance.pk %}
+
+<div class="btn-group" role="group" aria-label="add a new suggestion">
+  <a class="btn btn-default" data-modalurl="{% url 'nhdb:form' model='project' form='main'%}?project={{suggest.primary.instance.pk}}"  data-modaltitle="Main project properties" data-toggle="modal" href="#">Main</a>
+  <a class="btn btn-default" data-modalurl="{% url 'nhdb:form' model='project' form='properties'%}?project={{suggest.primary.instance.pk}}"  data-modaltitle="Beneficiaries" data-toggle="modal" href="#">Tags</a>
+  <a class="btn btn-default" data-modalurl="{% url 'nhdb:form' model='project' form='organization'%}?project={{suggest.primary.instance.pk}}"  data-modaltitle="Beneficiaries" data-toggle="modal" href="#">Tags</a>
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Description
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a data-modalurl="{% url 'nhdb:form' model='project' form='description'%}?language=en&project={{suggest.primary.instance.pk}}"  data-modaltitle="Contact details" data-toggle="modal" href="#">English</a></li>
+        <li><a data-modalurl="{% url 'nhdb:form' model='project' form='description'%}?language=te&project={{suggest.primary.instance.pk}}"  data-modaltitle="Contact details" data-toggle="modal" href="#">Tetun</a></li>
+        <li><a data-modalurl="{% url 'nhdb:form' model='project' form='description'%}?language=pt&project={{suggest.primary.instance.pk}}" data-modaltitle="Contact details" data-toggle="modal" href="#">Portugese</a></li>
+        <li><a data-modalurl="{% url 'nhdb:form' model='project' form='description'%}?language=id&project={{suggest.primary.instance.pk}}"  data-modaltitle="Contact details" data-toggle="modal" href="#">Bahasa</a></li>
+    </ul>
+       <a class="btn btn-warning" data-modalurl="/nhdb/project/form/delete/?project={{suggest.primary.instance.pk}}" data-modalselector="#modaldeleteform" data-modaltitle="Drop this Project" data-toggle="modal" href="#">Drop project</a>
+  </div>
+</div>
+
+{% else %}
+
+<div class="btn-group" role="group" aria-label="add a new suggestion">
+  <a class="btn btn-default" data-modalurl="/nhdb/form/project/main?suggest={{suggest.pk}}"  data-modaltitle="Main project properties" data-toggle="modal" href="#">Main</a>
+  <a class="btn btn-default" data-modalurl="/nhdb/form/project/properties?_project={{suggest.pk}}"  data-modaltitle="Beneficiaries" data-toggle="modal" href="#">Tags</a>
+  <a class="btn btn-default" data-modalurl="{% url 'nhdb:form' model='project' form='organization'%}?_project={{suggest.pk}}"  data-modaltitle="Organizations" data-toggle="modal" href="#">Organizations</a>
+
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Description
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a data-modalurl="{% url 'nhdb:form' model='project' form='description'%}?language=en&_project={{suggest.pk}}"  data-modaltitle="Contact details" data-toggle="modal" href="#">English</a></li>
+        <li><a data-modalurl="{% url 'nhdb:form' model='project' form='description'%}?language=tet&_project={{suggest.pk}}"  data-modaltitle="Contact details" data-toggle="modal" href="#">Tetun</a></li>
+        <li><a data-modalurl="{% url 'nhdb:form' model='project' form='description'%}?language=pt&_project={{suggest.pk}}"  data-modaltitle="Contact details" data-toggle="modal" href="#">Portugese</a></li>
+        <li><a data-modalurl="{% url 'nhdb:form' model='project' form='description'%}?language=id&_project={{suggest.pk}}"  data-modaltitle="Contact details" data-toggle="modal" href="#">Bahasa</a></li>
+    </ul>
+  </div>
+
+</div>
+
+
+
+
+{% endif %}
+{% endif %}
+
+
+
+
+{% if suggest.primary.model_name == 'library_publication' %}
+
+<div class="btn-group" role="group" aria-label="Edit publication">
+    <a data-modalurl="{% url 'library:form' model='publication' form='organization'%}?_publication={{suggest.pk}}">Click Me</a>
+    <a class="btn btn-default" href="{% url 'library:form' model='publication' form='organization'%}?_publication={{suggest.pk}}" data-modalurl="{% url 'library:form' model='publication' form='organization'%}?_publication={{suggest.pk}}"  data-modaltitle="Organizations">Organizations</a>
+    <a class="btn btn-default" href="{% url 'library:form' model='publication' form='author'%}?_publication={{suggest.pk}}" data-modalurl="{% url 'library:form' model='publication' form='author'%}?_publication={{suggest.pk}}"  data-modaltitle="Publication Authors">Publication Authors</a>
+    <a class="btn btn-default" href="{% url 'library:form' model='publication' form='version'%}?_publication={{suggest.pk}}" data-modalurl="{% url 'library:form' model='publication' form='version'%}?_publication={{suggest.pk}}"  data-modaltitle="Add a Version">Add a Version</a>
+
+
+</div>
+
+{% endif %}
+
+
+{% if suggest.primary.model_name == 'donormapping_fundingoffer' %}
+
+<div class="btn-group" role="group" aria-label="Edit funding offer">
+
+  <a class="btn btn-default" data-modalurl="{% url 'donormapping:form' model='fundingoffer' form='main'%}?_fundingoffer={{suggest.pk}}"  data-modaltitle="Organizations" data-toggle="modal" href="#">Funding offer</a>
+  <a class="btn btn-default" data-modalurl="{% url 'donormapping:form' model='fundingofferdocument' form='main'%}?_fundingoffer={{suggest.pk}}"  data-modaltitle="Organizations" data-toggle="modal" href="#">Add a funding offer document</a>
+
+
+</div>
+
+{% endif %}
+{% if suggest.primary.model_name == 'library_version' and suggest.state == 'A'%}
+
+<div class="btn-group" role="group" aria-label="Edit version">
+
+  <a class="btn btn-default" data-modalurl="/library/form/publication/version?version={{suggest.primary.model_pk}}"  data-modaltitle="Version properties" data-toggle="modal" href="#">Main</a>
+
+</div>
+
+{% endif %}
+

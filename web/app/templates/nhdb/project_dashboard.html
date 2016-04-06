@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Dashboard Tests</title>
+    <script class="include" type="text/javascript" src="{{ STATIC_URL }}jquery.js"></script>
+    <link class="include" rel="stylesheet" type="text/css" href="{{ STATIC_URL }}jqplot/jquery.jqplot.min.css" />
+    <script class="include" type="text/javascript" src="{{ STATIC_URL }}jqplot/jquery.jqplot.min.js"></script>
+
+    <script type="text/javascript" src="{{ STATIC_URL }}jqplot/plugins/jqplot.barRenderer.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}jqplot/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}jqplot/plugins/jqplot.pointLabels.min.js"></script>
+
+    <script type="text/javascript" src="{{ STATIC_URL }}jqplot/plugins/jqplot.canvasTextRenderer.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}jqplot/plugins/jqplot.canvasAxisLabelRenderer.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}jqplot/plugins/jqplot.canvasAxisTickRenderer.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}leaflet-location-setter.js"></script>
+
+
+    <script>
+            json = {% autoescape off %}{{json}}{% endautoescape %}
+
+            max_projects = {{max_projects}}
+            json_polygons = {"type":"FeatureCollection",
+                "features": [{% for place in places %}
+                  {
+                    "type": "Feature",
+                    "properties": {"id":{{place.id}}, "pcode": {{place.pcode}}, "name": "{{place.name}}", "path": "{{place.path}}", "popupContent": "{{place.name}}", "count": "{{place.count}}"},{% autoescape off %}
+                    "geometry":  {{place.geom_low_res.json}}{% endautoescape %}}{% if not forloop.last %},{% endif %}{% endfor %}
+                ]}
+    </script>
+
+
+       <script type="text/javascript" src="{{ STATIC_URL }}leaflet/leaflet.js"></script>
+
+
+<script>
+$(document).ready(function(){
+        $.jqplot.config.enablePlugins = true;
+
+        //
+
+        function val(category, property){
+            return json.tags[category].map(function(item, i){
+              return item[property];
+            });
+
+        }
+
+        function index_val(category, property, index){
+            return json.tags[category][index].map(function(item, i){
+              return item[property];
+            });
+        }
+        var plot, id;
+
+        plot = "Beneficiaries"
+        id = "chart1"
+        plot1 = $.jqplot(id, [val(plot, 'count')], {
+            seriesDefaults:{
+                renderer:$.jqplot.BarRenderer,
+                pointLabels: { show: true }
+            },
+            axes: {
+                xaxis: {
+                    ticks: val(plot, 'name'),
+                    label: plot,
+                    renderer: $.jqplot.CategoryAxisRenderer,
+                    labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                    tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+                    tickOptions: {
+                        // labelPosition: 'middle',
+                        angle:45
+                    }
+                }
+            },
+            highlighter: { show: false }
+        });
+
+        $('#'+id).bind('jqplotDataClick', function(ev, seriesIndex, pointIndex, data) {
+            var plot = "Beneficiaries"
+            var q  = json.tags[plot][pointIndex].path
+            window.location.search = "?"+$.param({q:q})+'&'+ window.location.search.replace('?','')
+        });
+
+        plot = "Activities"
+        id = "chart2"
+        plot1 = $.jqplot(id, [val(plot, 'count')], {
+            seriesDefaults:{
+                renderer:$.jqplot.BarRenderer,
+                pointLabels: { show: true }
+            },
+            axes: {
+                xaxis: {
+                    ticks: val(plot, 'name'),
+                    label: plot,
+                    renderer: $.jqplot.CategoryAxisRenderer,
+                    labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                    tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+                    tickOptions: {
+                        // labelPosition: 'middle',
+                        angle:45
+                    }
+                }
+            },
+            highlighter: { show: false }
+        });
+
+        $('#'+id).bind('jqplotDataClick', function(ev, seriesIndex, pointIndex, data) {
+            var plot = "Activities"
+            var q  = json.tags[plot][pointIndex].path
+            window.location.search = "?"+$.param({q:q})+'&'+ window.location.search.replace('?','')
+        });
+
+        plot = "Sector"
+        id = "chart3"
+        plot1 = $.jqplot(id, [val(plot, 'count')], {
+            seriesDefaults:{
+                renderer:$.jqplot.BarRenderer,
+                pointLabels: { show: true }
+            },
+            axes: {
+                xaxis: {
+                    ticks: val(plot, 'name'),
+                    label: plot,
+                    renderer: $.jqplot.CategoryAxisRenderer,
+                    labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                    tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+                    tickOptions: {
+                        // labelPosition: 'middle',
+                        angle:45
+                    }
+                }
+            },
+            highlighter: { show: false }
+        });
+
+        $('#'+id).bind('jqplotDataClick', function(ev, seriesIndex, pointIndex, data) {
+            var plot = "Sector"
+            var q  = json.tags[plot][pointIndex].path
+            window.location.search = "?"+$.param({q:q})+'&'+ window.location.search.replace('?','')
+        });
+
+
+    });
+</script>
+
+    <script>
+
+
+
+    </script>
+
+
+    <link rel="stylesheet" href="{{ STATIC_URL }}leaflet/leaflet.css">
+
+    <style>
+.leaflet-div-icon {
+	background: transparent;
+	border: none;
+}
+
+.leaflet-marker-icon .number{
+	position: relative;
+	top: -37px;
+	font-size: 12px;
+	width: 25px;
+	text-align: center;
+}
+    </style>
+
+
+</head>
+<body>
+
+    <h3>Project Dashboard</h3>
+    <h4>Beneficiaries</h4>
+    <ul>
+
+    {% for i,j in beneficiaries %}
+        <li>{{i}} : {{j}}</li>
+    {% endfor %}
+    </ul>
+        <div id="chart1" style="width: 600px; height: 250px; position: relative;border:1px solid black;" class="jqplot-target"></div>
+
+
+    <h4>Activities</h4>
+            <div id="chart2" style="width: 600px; height: 250px; position: relative;border:1px solid black;" class="jqplot-target"></div>
+
+
+    <ul>
+
+    {% for i,j in activities %}
+        <li>{{i}} : {{j}}</li>
+    {% endfor %}
+    </ul>
+
+    <h4>Sectors</h4>
+            <div id="chart3" style="width: 900px; height: 500px; position: relative;border:1px solid black;" class="jqplot-target"></div>
+
+
+    <ul>
+
+    {% for i,j in sectors %}
+        <li>{{i}} : {{j}}</li>
+    {% endfor %}
+    </ul>
+
+    <ul>
+
+    {% for i,j in places %}
+        <li>{{i}} : {{j}}</li>
+    {% endfor %}
+    </ul>
+    <div id="map" style="width: 900px; height: 500px; position: relative;border:1px solid black;"></div>
+
+
+{% for i in projects %}
+<p>{{i.pk}}  {{i.name}}</p>
+{% endfor %}
+</body>
+</html>

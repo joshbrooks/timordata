@@ -1,0 +1,566 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block script %}
+    {{block.super}}
+
+
+    <script src="{{ STATIC_URL }}zebra/javascript/zebra_datepicker.js"></script>
+    <script src="{{ STATIC_URL }}simply-toast/simply-toast.js"></script>
+    <script src="{{ STATIC_URL }}select2/js/select2.min.js"></script>
+    <script src="{{ STATIC_URL }}moment.min.js"></script>
+    {% comment %} Leaflet integration (testing)
+    {% endcomment %}
+    <script src="{{ STATIC_URL }}leaflet/leaflet.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/leaflet.utfgrid.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/leaflet.ajax.min.js"></script>
+
+
+    {% if suggestion.pk %}
+    <script>
+    window.object_pk = parseInt("{{suggestion.pk}}")
+    window.language="{{ LANGUAGE_CODE }}"
+        // Manipulate the properties of an object not yet created: change "affectedinstance"
+    </script>
+    {% else %}
+<script>
+    window.object_pk = undefined
+    window.language="{{ LANGUAGE_CODE }}"
+    </script>
+    {% endif %}
+
+
+    <script>
+
+
+
+    // Set the map width
+
+    $(document).ready(function () {
+
+        callMap = function(){
+
+        // call to prev necessary because map starts off hidden
+        var map_id = 'map';
+
+        var m = '#'+map_id;
+        var $m = $(m);
+        $m  .css('width', $m.parent().prev().width()+'px')
+            .css('border', '1px solid blue');
+
+        // Map initialization gets confused when it starts off hidden - show it briefly
+        $m.parent().toggleClass('collapse')
+
+        Lmap = L.map(map_id).setView([-8.5887, 125.6379], 13);
+        $m.parent().toggleClass('collapse')
+        L.tileLayer('/tileserver/testing/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            maxZoom: 18
+        }).addTo(Lmap);
+
+        // var
+        utfGrid = new L.UtfGrid('/tileserver/utfgrid/{z}/{x}/{y}.json?callback={cb}', {
+            resolution: 4
+        });
+        Lmap.addLayer(utfGrid);
+
+        // Create an index of bounding box layers to indicate which areas are being shown/selected
+        layerIndex = {};
+        places = new L.GeoJSON.AJAX("/geo/placeenvelopes.json", {
+            onEachFeature: function(e, l){
+                layerIndex[e.properties.pcode] = l}});
+        placesIndicated = new L.layerGroup().addTo(Lmap);
+
+
+        var s = $('form#new-projectplace-form select[name=place]');
+        var hoveringOver;
+        var showPlace = function(pcode){
+            placesIndicated.clearLayers();
+            placesIndicated.addLayer(layerIndex[pcode]);
+        };
+
+        var setPlace = function(pcode){
+            // Make the selected pcode the only layer in placesIndicated
+            // and set the 'place' in s
+            s.children('option').remove();
+            placesIndicated.clearLayers();
+
+            placesIndicated.addLayer(layerIndex[pcode]);
+            var setLayer = layerIndex[pcode];
+            s.append(makeoption(setLayer.feature.properties.pcode, setLayer.feature.properties.name).prop('selected','selected'))
+
+        };
+
+        s.on('mouseover', 'option', function(e){showPlace($(e.target).prop('value'))});
+
+
+        function makeoption(pcode, name){return $('<option>').text(name).val(pcode);}
+        function _d(pcode){return parseInt((pcode/10000).toFixed(0))}
+        function _sd(pcode){return parseInt((pcode/100).toFixed(0))}
+
+        utfGrid.on('click', function (e) {console.log(e);
+            if (e.data !== null) {
+                setPlace(_d(e.data.pcode));
+            }
+        });
+
+
+        places.on('click', function(e){
+                 console.log(e);
+                 // Activate the place which was hovered over
+                var selectedpcode = parseInt(e.layer.feature.properties.pcode);
+                var pcode = hoveringOver;
+                console.log (selectedpcode);
+                console.log (pcode);
+                if (selectedpcode === _d(pcode)){console.log('Select '+_sd(pcode));setPlace(_sd(pcode));}
+                else if (selectedpcode === _sd(pcode)){setPlace(pcode);}
+                else setPlace(_d(pcode));
+                })
+
+
+            var info = L.control({
+              position: 'bottomleft'
+            });
+            info.onAdd = function(map) {
+              var el, header, hovering;
+              this._div = L.DomUtil.create('div', 'info');
+              el = $(this._div);
+              header = $('<h4>').text('Hovering over');
+              hovering = $('<b class="hovering-over"></b>').text('Nothing yet');
+              el.append(header);
+              el.append(hovering);
+              return this._div;
+            };
+            info.update = function(props) {
+              var header;
+              header = $('<h4>').text('Hovering over');
+              if (props) {
+                  hoveringOver = props.data.pcode;
+                  var place = props.data.suco + '/ ' + props.data.sd + '/ ' + props.data.district
+
+                  if  ($(this._div).find('.hovering-over').text() != place)
+                  {
+                        $(this._div).find('.hovering-over').text(props.data.suco + ', ' + props.data.sd + ', ' + props.data.district);
+                      }
+              }
+            };
+            info.addTo(Lmap);
+            utfGrid.on('mouseover', function(e) {
+              if (e.data) {
+                info.update(e);
+              }
+            });
+            }
+        });
+
+
+    </script>
+
+
+<script>
+
+    $(document).ready(function() {
+        $('input[name=startdate]').Zebra_DatePicker({view:'years'});
+        $('input[name=enddate]').Zebra_DatePicker({view:'years'});
+        $('input[name=verified]').Zebra_DatePicker({view:'years'}).val(moment().format('YYYY-MM-DD'));
+    });
+
+    $(document).ready(function(){
+        // Populate the personal details for a suggestion submission
+        $('.form.personal_details_form [name="_name"]').val(localStorage['personal_details_name']);
+        $('.form.personal_details_form [name="_email"]').val(localStorage['personal_details_email']);
+
+    });
+
+    $(document).ready(function(){
+           $('.selecttwo').select2({closeOnSelect:false});
+    });
+
+    $(document).ready(function(){
+
+        var processPlaceResults = function (data) {
+            var pcodes = [];
+            var type = undefined;
+
+            for (var i in data.results) {
+                if (data.results[i].id > 10000) {
+                    type = 'suco'
+                }
+                if (data.results[i].id < 10000) {
+                    type = 'Postu administrativo'
+                }
+                if (data.results[i].id < 100) {
+                    type = 'Munisipio'
+                }
+
+                data.results[i]['text'] = '<div style="width:100%" data-pcode=' + data.results[i].id + '>' + data.results[i].text + ' <span class="small">' + type + '</span></div>';
+                pcodes.push(data.results[i]['id'])
+            }
+            highlightFeaturesFromSelect(pcodes);
+            return data
+        };
+            $('[data-selecttwo]').select2({closeOnSelect:false});
+
+           $('[data-selecturl]').each(function () {
+            var url = $(this).data('selecturl');
+            var ajaxdefault = {url: url, dataType: 'json', delay: 250};
+            var name = $(this).prop('name');
+            switch(name) {
+
+                case 'project':
+                    $(this).select2({ajax: ajaxdefault, minimumInputLength: 3});break;
+
+                case 'organization':
+                    $(this).select2({ajax: ajaxdefault, minimumInputLength: 3});break;
+
+                case 'person':
+                    $(this).select2({ajax: ajaxdefault, minimumInputLength: 3});break;
+                    $(this).on("select2:select", function (e) {
+                        var data = {'project':'getSuggestionId', 'person': $(this).val()};
+                        $('<p>').text($(this).find(':selected').text()).insertBefore($(this))});
+                    break;
+
+                case 'place':
+                    $(this).select2({ajax: ajaxdefault,
+                        processResults: processPlaceResults,
+                        escapeMarkup: function (markup) {return markup;}
+
+            });
+                    break;
+
+            }
+        });
+    });
+
+
+    $(document).ready(function () {
+
+        function setProjectId(id){
+            var suggestion =  '_' + id + '_'
+            $('input[name="project"]').val(suggestion).attr('value', suggestion)
+            // Remove options for any SELECT PROJECT dropdown, replace with the current project
+            s = $('select[name=project]')
+            s.children('option').remove()
+            s.append($('<option selected="selected">').text(name).val(suggestion))
+            s.parents('.form-group:first').hide()
+
+            // Set the correct URL for the projectproperties form
+            var url = $('#update-projectproperties-form').find('[name="_url"]')
+            var current = url.val()
+            var newurl = current.replace('projectid', suggestion)
+            url.val(newurl)
+            url.attr('value', newurl)
+
+        }
+
+        if (window.object_pk !== undefined){setProjectId(window.object_pk)}
+
+
+        function raise_noproject(){$.simplyToast('First you need to submit the project information', 'warning')}
+        function raise_noplace(){$.simplyToast('First you need to set the Place from the map', 'warning')}
+        function raise_noorg(){$.simplyToast('First you need to choose an organization', 'warning')}
+        function raise_noperson(){$.simplyToast('First you need to choose a person', 'warning')}
+
+        function isInt(value) {
+            return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value))
+        }
+
+        $.fn.hasInputSet = function(name){
+            // Test whether a form will return a valid person id or suggestion id in the form '_'+suggestion+'_'
+            val = $(this).find('[name='+name+']').val()
+            console.log(val)
+            if (val === null){return false}
+            if (val === undefined){return false}
+            if (isInt(val)){return true}
+            else if (isInt(val.substring(1,val.length-1)) && val[0] === '_' && val[val.length - 1] == '_' ){return true}
+            else {return false}
+        };
+
+        var postSuggestion = function(data){
+             data = data.concat($('.personal_details_form').serializeArray());
+             return $.post('/suggest/suggest/', data)
+                 .done(function (){$.simplyToast('Your request has been added and database staff will check it soon', 'success')})
+                 .error(function () {$.simplyToast('There was a problem with your request!', 'danger')});
+             }
+
+
+        $('form').on('submit', function (e) {
+
+            var form_id = $(this).attr('id');
+            var jqxhr;
+
+            switch (form_id) {
+
+                case 'project-form':
+                    e.preventDefault();
+
+                    jqxhr = postSuggestion($(this).serializeArray());
+                    jqxhr.always(function () {
+                        if (jqxhr.status == 201) {
+                            // Success response from the Suggestions API, so now we can set other properties with the returned id
+                            var id = jqxhr.responseJSON.id;
+                            RESPONSEJSON = jqxhr.responseJSON;
+                            var name = JSON.parse(RESPONSEJSON.data).name_en || JSON.parse(RESPONSEJSON.data).name_tet
+                            //Debugging for troubleshooting: show the new "project" ID (actually _suggestionid_)
+                            $.simplyToast('DEBUG: Project suggestion created with ID '+id, 'success');
+                            setProjectId(id);
+                            $('.more-details').removeClass('hidden')
+                            callMap()
+                        }
+                    });
+                    break;
+
+                case 'new-person-form':
+                    e.preventDefault();
+
+                    if (! $('form#create-projectperson').hasInputSet('project')){raise_noproject(); return;}
+                    else {var project = $('form#create-projectperson [name="project"]').val()}
+
+                    jqxhr = postSuggestion($(this).serializeArray());
+                    jqxhr.always(function () {
+
+                        // If the person loaded successfully, add them to the project
+                        if (jqxhr.status == 201) {
+                            var data = [
+                                {name: 'project', value: project },
+                                {name: 'person', value: '_' + jqxhr.responseJSON.id + '_'},
+                                {name: 'is_primary', value: $('[name=added_person_is_primary]:checked').val()},
+                                {name: '_url', value: '/rest/nhdb/projectperson/'}
+                            ];
+                            postSuggestion(data);
+                        }
+                    });
+                    break;
+
+                case 'new-organization-form':
+                    e.preventDefault();
+
+                    if (! $('form#create-projectorganization').hasInputSet('project')){raise_noproject(); return;}
+                    else {var project = $('form#create-projectperson [name="project"]').val()}
+
+                    jqxhr = postSuggestion($(this).serializeArray());
+                    jqxhr.always(function () {
+
+                        // If the person loaded successfully, add them to the project
+                        if (jqxhr.status == 201) {
+                            var data = [
+                                {name: 'project', value: project},
+                                {name: 'person', value: '_' + jqxhr.responseJSON.id + '_'},
+                                {name: 'is_primary', value: $('[name=added_person_is_primary]:checked').val()},
+                                {name: '_url', value: '/rest/nhdb/projectperson/'}
+                            ];
+                            postSuggestion(data);
+                        }
+                    });
+                    break;
+
+                case 'create-projectperson':
+                    e.preventDefault();
+                    if ($(this).find('[name=person]').val() === null){raise_noperson(); return;}
+                    if (! $(this).hasInputSet('project')){raise_noproject(); return;}
+                    jqxhr = postSuggestion($(this).serializeArray());
+                    break;
+
+
+                case 'create-projectorganization':
+                    e.preventDefault();
+                    // Ensure that the project and organization are corrently set
+                    if ($(this).find('[name=organization]').val() === null){raise_noorg(); return;}
+                    if (! $(this).hasInputSet('project')){raise_noproject(); return;}
+                    jqxhr = postSuggestion($(this).serializeArray());
+                    break;
+
+                case 'new-projectplace-form':
+                    e.preventDefault();
+                    if ($(this).find('[name=place]').val() === null){raise_noplace(); return;}
+                    if (! $(this).hasInputSet('project')){raise_noproject(); return;}
+                    jqxhr = postSuggestion($(this).serializeArray());
+                    break;
+
+                case 'update-projectproperties-form':
+                    e.preventDefault();
+                    // Necessary to add blank values for Activity etc if not defined
+                    var data = $(this).serializeArray();
+                    if ($(this).find('[name=activity]') === null) {data.push({name:'activity',value:[]})}
+                    if ($(this).find('[name=sector]') === null) {data.push({name:'sector',value:[]})}
+                    if ($(this).find('[name=beneficiary]') === null) {data.push({name:'beneficiary',value:[]})}
+
+
+                    jqxhr = postSuggestion(data);
+                    break;
+
+            }
+        })
+    });
+
+</script>
+
+    <!--<script src="{{ STATIC_URL }}project_edit.js"></script>-->
+{% endblock script %}
+ {% block style %}
+    <link href="{{ STATIC_URL }}django_tables2/themes/paleblu/css/screen.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}selectize/css/selectize.bootstrap3.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ STATIC_URL }}leaflet/leaflet.css" />
+    <link href="{{ STATIC_URL }}select2/css/select2.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ STATIC_URL }}zebra/css/bootstrap.css" />
+    <style>
+
+    .select2_auto{
+        width:90%;
+    }
+    ul.pagination {
+        border-radius: 0px;
+        display: block;
+    }
+
+
+        #map {
+            height:300px;
+            width: 600px;
+        }
+
+    </style>
+{% endblock style %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+
+            <div class="alert alert-success alert-dismissible fade in" role="alert">
+                <h4>Suggestion Information</h4>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col col-lg-12">
+                            <p>Please enter your name and email - if the database team has any questions about your submission, they can contact you.</p>
+                            <form method="post" class="form form-inline personal_details_form">
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label"> Submitted by:</label>
+                                    <div class="col-sm-9"><input type="text" name="_name" class="textinput textInput form-control"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label"> Email:</label>
+                                    <div class="col-sm-9"><input type="text" name="_email" class="textinput textInput form-control"></div>
+                                </div>
+
+                                 <div class="form-group">
+                                    <label class="col-sm-3 control-label"> Comment:</label>
+                                    <div class="col-sm-9"><textarea name="_comment" class="textinput textInput form-control" placeholder="Not required"></textarea></div>
+                                </div>
+
+                        </form></div>
+                    </div>
+                </div>
+            </div>
+
+       </div>
+       </div>
+        <div class="row">
+            <div class="col col-lg-6 people">
+                <h4>Project Information</h4>
+                <p><em>Fill this section in first. You can add organizations and places later.</em></p>
+{% crispy form %}
+        </div>
+
+        <div class="col col-lg-6 more-details">
+            {% if related %}
+            <h4>Already Suggested</h4>
+            {% for i in related %}
+            <p>{{i.description}}</p>
+
+            {% endfor %}
+
+            {% endif %}
+            <h4><a href="#collapseAddPerson" data-toggle="collapse">Add an existing person</a></h4>
+            <div class="collapse" id="collapseAddPerson">
+            {% crispy projectpersonform %}
+            </div>
+            <hr>
+            <h4>
+                <a href="#collapseCreatePerson" data-toggle="collapse">Create a new Person and add them to the project</a>
+            </h4>
+            <div class="collapse" id="collapseCreatePerson">
+                {% comment %}
+                Since we're looking for a one-click solution to suggest adding a Person and a PersonProject object
+                simultaneously, we need to indicate the extra 'Is primary contact?' field for the person here.
+                {% endcomment %}
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="added_person_is_primary"value="True" checked>
+                    This person is a primary contact
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="added_person_is_primary" value="False">
+                    This person is not a primary contact
+                  </label>
+                </div>
+            {% crispy personform %}
+                </div>
+            <hr>
+            <h4><a href="#collapseAddOrganization" data-toggle="collapse">Add an existing organization</a></h4>
+            <div class="collapse" id="collapseAddOrganization">
+            {% crispy projectorganizationform %}
+            </div>
+            <hr>
+            <h4><a href="#collapseCreateOrganization" data-toggle="collapse">Create a new organization and add it to the project</a></h4>
+
+            <div class="collapse" id="collapseCreateOrganization">
+            <div class="form-group">
+                <label for="id_organizationclass" class="control-label  requiredField">
+                    Organization class<span class="asteriskField">*</span>
+                </label>
+
+                <div class="controls ">
+                    <select class="select form-control" id="id_organizationclass" name="organizationclass">
+                    <option value="A">Partner</option>
+                    <option value="F">Funding</option>
+                    <option value="O">Other</option>
+                    <option value="P" selected="selected">Primary</option>
+                </select></div>
+            </div>
+            <div id="div_id_notes" class="form-group"><label for="id_notes" class="control-label ">
+                Notes about this relationship
+            </label>
+
+                <div class="controls ">
+                    <input class="textinput textInput form-control" id="id_notes" maxlength="256" name="notes" type="text"></div>
+            </div>
+            <input type="hidden" name="project" value="">
+
+            {% crispy organizationform %}
+
+         </div>
+            <hr>
+            <h4><a href="#collapseAddPlace" data-toggle="collapse">Add a place to the project</a></h4>
+            <div class="collapse" id="collapseAddPlace">
+
+                {% crispy projectplaceform %}
+
+                <hr>
+                <div id="map"></div>
+            </div>
+            <hr>
+            <h4><a href="#collapseProperties" data-toggle="collapse">Set project properties</a></h4>
+            <div class="collapse" id="collapseProperties">
+                {% crispy projectpropertiesform %}
+            </div>
+
+
+        </div>
+    </div>
+</div>
+    
+    
+
+
+
+
+{% endblock %}
+
+

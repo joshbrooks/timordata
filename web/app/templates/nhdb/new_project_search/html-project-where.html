@@ -1,0 +1,37 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <link rel="stylesheet" href="{{ STATIC_URL }}leaflet/css/leaflet.css">
+      <link rel="stylesheet" href="/place_select_widget/place_select_widget.css">
+      <title>National Humanitarian / Development Project Database</title>
+      <link href="{{ STATIC_URL }}/jqueryui/css/ui-lightness/jquery-ui-1.10.4.min.css" rel="stylesheet">
+      <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<style>
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+</style>
+  </head>
+  <body>
+    <div class="container">
+      <p data-mapdata="{% url 'nhdb:json' p.pk %}">"{% url 'nhdb:json' p.pk %}"</p>
+      <div class="map_container" style="width:600px; height:400px">
+        <div id="map" class="map"></div>
+      </div>
+    </div>
+    <input name="proj-pk" value="{{p.pk}}">
+    <button id="save-project-places" class="btn btn-lg btn-primary">Save</button>
+    
+    {% csrf_token %}
+    <script src="{{ STATIC_URL }}require.js" data-main="/place_select_widget/require.project.js"></script>
+    <script src="{{ STATIC_URL }}require.js" data-main="/place_select_widget/require.project.where.js"></script>
+</body>
+</html>

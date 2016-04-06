@@ -1,0 +1,8 @@
+{% for root in OptionForProject.get_root_nodes %}
+    <li class='parent'><a href='#'>{{root.classification}}</a>
+        <ul data-rootoptionpk={{root.pk}} style='width:250px'>{% for child in root.get_children %}
+            <li data-optionpk={{child.pk}} class='selectable {% if child in proj.option.all %}selected{% endif %}'>
+                <a href='#'>{{child.classification}}</a></li>{% endfor %}
+        </ul>
+    </li>
+{% endfor %}

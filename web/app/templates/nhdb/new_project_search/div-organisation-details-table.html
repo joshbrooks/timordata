@@ -1,0 +1,84 @@
+<!--
+Takes a List of Project Organization objects and creates an editable DataTable object
+Hooks into the Django REST API
+-->
+
+{% with projorgs=p.projectorganization_set.all %}
+<table id="projectorgs" class="table table-condensed table-bordered" cellspacing="0" width="100%" style="font-size: 80%">
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>Organization</th>
+      <th>Organization class</th>
+      <th>Notes</th>
+      <th>Action?</th>
+    </tr>
+  </thead>
+  
+  <tbody>
+    <tr class="template" style="display:none;">
+      <td data-field="pk">0</td>
+      <td data-field="name">name</td>
+      <td>
+        <select class="form-control input-sm" size="1" name="organizationclass">{% for c in ProjectOrganizationClasses %}
+          <option value="{{c.pk}}"{% if c.pk == projorg.organizationclass.pk%} selected="selected"{%endif%}>{{c}}</option>{% endfor %}
+        </select>
+      </td>
+      <td><input class="form-control input-sm"  name="notes" placeholder="Notes"></td>
+        <td>
+          <button type="button" class="btn btn-default delete" aria-label="Left Align">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn btn-default patch" aria-label="Left Align">
+            <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+          </button>
+        </td>
+    </tr>
+
+    {% for projorg in projorgs %}
+    <tr data-pk={{projorg.pk}}>
+      <td>{{projorg.pk}}</td>
+      <td>{{projorg.organization}}</td>
+      <td>
+        <select  class="form-control input-sm"  size="1" name="organizationclass">{% for c in ProjectOrganizationClasses %}
+          <option value="{{c.pk}}"{% if c.pk == projorg.organizationclass.pk%} selected="selected"{%endif%}>{{c}}</option>{% endfor %}
+        </select>
+      </td>
+      <td><input class="form-control input-sm"  name="notes" {% if projorg.notes %}value="{{projorg.notes}}"{%endif %} placeholder="Notes"></td>
+        <td>
+          <button type="button" class="btn btn-default delete" aria-label="Left Align">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn btn-default patch" aria-label="Left Align">
+            <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+          </button>
+        </td>
+    
+    </tr>{% endfor %}
+      <tr>
+        <td>New</td>
+        <td><input id="selectize-organization" type="text" placeholder="Start typing to search."></td>
+        <td>
+          <select class="form-control input-sm"  size="1" name="organizationclass">{% for c in ProjectOrganizationClasses %}
+            <option value="{{c.pk}}"{% if c.pk == projorg.organizationclass.pk%} selected="selected"{%endif%}>{{c}}</option>{% endfor %}
+          </select>
+        </td>
+        <td><input class="form-control input-sm"  name="notes" {% if projorg.notes %}value="{{projorg.notes}}"{%endif %} placeholder="Notes"></td>
+        <td>
+          <button type="button" class="btn btn-default post" aria-label="Left Align">
+            <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+          </button>
+        </td>
+      </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th>id</th>
+      <th>Organization</th>
+      <th>Organization class</th>
+      <th>Notes</th>
+      <th>Action?</th>
+    </tr>
+  </tfoot>
+</table>
+{% endwith %}

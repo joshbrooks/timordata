@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load django_select2_tags %}
+{% get_current_language as LANGUAGE_CODE %}
+
+
+{% block script %}
+{{block.super}}
+<script>
+    // {% comment %}
+    // Function has been obfuscated for slightly better protection
+    // through http://javascriptobfuscator.com/Javascript-Obfuscator.aspx
+    // Email addresses are reversed, rot13 encoded  and have 'dot' and 'at' replaced
+
+    String.prototype.reverse = function () {
+        return this.split("").reverse().join("");
+    };
+    String.prototype.dotat = function () {
+        return this.replace(/ at /gi, '@').replace(/ dot /gi ,'.')};
+
+    String.prototype.rot13 = function () {
+        return this.replace(/[a-zA-Z]/gi, function (c) {
+            return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
+        });
+    };
+    $(document).ready(function(){
+        // Decode emails in any column with 'email' class when a 'button.showliame' is clicked
+        // Click an encoded email address to show it
+        $('button.showliame').on('click', function(){
+            var table = $('.email').parents('table:first')
+            var index = $('.email').parent().children().index( $('.email') )
+            $(this).addClass('disabled')
+            table.find('tbody tr').each(function(){
+                var i = $(this).children('td')[index];
+                $(i).css({color:'green'});
+                $(i).text($(i).text().reverse().rot13().dotat())
+            })
+        });
+    });
+    // The equivalent code, obfuscated, is shoen below
+    // {% endcomment %}
+
+    var _0xeeb1=["\x72\x65\x76\x65\x72\x73\x65","\x70\x72\x6F\x74\x6F\x74\x79\x70\x65","","\x6A\x6F\x69\x6E","\x73\x70\x6C\x69\x74","\x64\x6F\x74\x61\x74","\x2E","\x72\x65\x70\x6C\x61\x63\x65","\x40","\x72\x6F\x74\x31\x33","\x5A","\x63\x68\x61\x72\x43\x6F\x64\x65\x41\x74","\x66\x72\x6F\x6D\x43\x68\x61\x72\x43\x6F\x64\x65","\x63\x6C\x69\x63\x6B","\x74\x61\x62\x6C\x65\x3A\x66\x69\x72\x73\x74","\x70\x61\x72\x65\x6E\x74\x73","\x2E\x65\x6D\x61\x69\x6C","\x69\x6E\x64\x65\x78","\x63\x68\x69\x6C\x64\x72\x65\x6E","\x70\x61\x72\x65\x6E\x74","\x64\x69\x73\x61\x62\x6C\x65\x64","\x61\x64\x64\x43\x6C\x61\x73\x73","\x74\x64","\x67\x72\x65\x65\x6E","\x63\x73\x73","\x74\x65\x78\x74","\x65\x61\x63\x68","\x74\x62\x6F\x64\x79\x20\x74\x72","\x66\x69\x6E\x64","\x6F\x6E","\x62\x75\x74\x74\x6F\x6E\x2E\x73\x68\x6F\x77\x6C\x69\x61\x6D\x65","\x72\x65\x61\x64\x79"];String[_0xeeb1[1]][_0xeeb1[0]]=function(){return this[_0xeeb1[4]](_0xeeb1[2])[_0xeeb1[0]]()[_0xeeb1[3]](_0xeeb1[2])};String[_0xeeb1[1]][_0xeeb1[5]]=function(){return this[_0xeeb1[7]](/ at /gi,_0xeeb1[8])[_0xeeb1[7]](/ dot /gi,_0xeeb1[6])};String[_0xeeb1[1]][_0xeeb1[9]]=function(){return this[_0xeeb1[7]](/[a-zA-Z]/gi,function(_0x3e4cx1){return String[_0xeeb1[12]]((_0x3e4cx1<=_0xeeb1[10]?90:122)>=(_0x3e4cx1=_0x3e4cx1[_0xeeb1[11]](0)+13)?_0x3e4cx1:_0x3e4cx1-26)})};$(document)[_0xeeb1[31]](function(){$(_0xeeb1[30])[_0xeeb1[29]](_0xeeb1[13],function(){var _0x3e4cx2=$(_0xeeb1[16])[_0xeeb1[15]](_0xeeb1[14]);var _0x3e4cx3=$(_0xeeb1[16])[_0xeeb1[19]]()[_0xeeb1[18]]()[_0xeeb1[17]]($(_0xeeb1[16]));$(this)[_0xeeb1[21]](_0xeeb1[20]);_0x3e4cx2[_0xeeb1[28]](_0xeeb1[27])[_0xeeb1[26]](function(){var _0x3e4cx4=$(this)[_0xeeb1[18]](_0xeeb1[22])[_0x3e4cx3];$(_0x3e4cx4)[_0xeeb1[24]]({color:_0xeeb1[23]});$(_0x3e4cx4)[_0xeeb1[25]]($(_0x3e4cx4)[_0xeeb1[25]]()[_0xeeb1[0]]()[_0xeeb1[9]]()[_0xeeb1[5]]());});})});
+
+    $(document).ready(function() {
+        // Show hidden inputs for troubleshoot
+        //$('input[type=hidden]').attr('type','text').prop('type','text')
+
+        $('#new-person-form').on('submit', function (e) {
+            e.preventDefault();
+            jqxhr = $.post('/suggest/suggest/', $(this).serializeArray())
+
+            jqxhr.done(function () {
+                if (jqxhr.status === 201) {
+                    $('#new-person-form').trigger('reset');
+                }
+            })
+        });
+
+
+        $.fn.editable = function(name, value){
+
+            value = value || $(this).text();
+
+            if ($(this).hasClass('editing')){
+                $(this).removeClass('editing')
+                        .text($(this).attr('data-saved') || $(this).attr('data-initial'))
+            }
+
+            else {
+                var editor = $('<input type="text" name="' + name + '">').attr('value', $.trim(value));
+                $(this).addClass('editing')
+                        .attr('data-initial', $.trim(value))
+                        .text('').append(editor)
+            }
+        };
+
+        $(document).on('click','[data-deleteperson]', function(){
+            var form = $('form.delete-person-form')
+            var person_pk = $(this).data('deleteperson')
+            var r = $(this).parents('tr:first')
+            form.find('[name=_url]').val('/rest/nhdb/person/'+person_pk+'/');
+            form.find('[name=_affected_instance_primary]').val('nhdb_person ' +person_pk);
+            form.find('[name=_affected_instance]').val('nhdb_person ' +person_pk);
+            $.post('/suggest/suggest/', $(form).serializeArray())
+                    .success(function(){r.addClass('warning')});
+
+        });
+
+        $(document).off('click', 'tr button.edit-person').on('click', 'tr button.edit-person:not(.editing)', function(){
+            $(this).siblings().removeClass('disabled');
+            $(this).addClass('disabled');
+            var r = $(this).parents('tr:first')
+
+
+            $(r.children()[0]).editable('name')
+            $(r.children()[1]).editable('title')
+            // Unhide email if editing
+            if (! $('button.showliame').hasClass('disabled')){$('button.showliame').trigger('click')}
+            $(r.children()[2]).editable('email')
+            $(r.children()[3]).editable('phone')
+
+        }).on('click', 'tr button.save-edits', function(){
+            $(this).siblings('button.edit-person').removeClass('disabled');
+            $(this).siblings('button.drop-edits').addClass('disabled');
+            $(this).addClass('disabled');
+            var person_pk = $(this).data('person')
+            var r = $(this).parents('tr:first')
+            var re = /person.pk/gi;
+
+            $(r.find('input')).each(function(){
+                // Update REST form with table data
+                var val = $(this).val();
+                $('.change-person-form')
+                        .find('input[name='+$(this).attr('name')+']')
+                        .val(val);
+                $(this).parent().attr('data-saved', val).editable()});
+
+            $('.change-person-form [name=_url]').val('/rest/nhdb/person/'+person_pk+'/');
+            $('.change-person-form [name=_affected_instance_primary]').val('nhdb_person ' +person_pk);
+            $('.change-person-form [name=id]').val(person_pk);
+
+            $.post('/suggest/suggest/', $('.change-person-form').serializeArray())
+                    .success(r.addClass('info'))
+
+
+        }).on('click', 'tr button.drop-edits', function() {
+            $(this).siblings('button.edit-person').removeClass('disabled');
+            $(this).siblings('button.save-edits').addClass('disabled');
+            $(this).addClass('disabled');
+            $(this).parents('tr:first')
+                    .find('input').each(function () {
+                        $(this).parent().editable()});
+        })
+    });
+</script>
+{% endblock script %}
+
+{% block style %}
+<style>
+@media print
+{
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
+</style>
+{% endblock style %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1> Personnel List: {{organization.name}}</h1>
+    </div>
+    <div class="col-lg-6 no-print">
+        <a class="btn btn-primary" role="button" data-toggle="collapse" href="#addPersonForm" aria-expanded="false" aria-controls="collapseExample">Add a person to the database</a>
+        <div class="collapse" id="addPersonForm">
+            <div class="well">
+                {% crispy form %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12 hidden">
+        <form class="change-person-form" action="/suggest/suggest/" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="_description" value="Change details for a person">
+            <input type="hidden" name="_method" value="PATCH">
+            <input type="hidden" name="_action" value="UM">
+            <input type="hidden" name="_url" value="/rest/nhdb/person/person.pk">
+            <input type="hidden" name="_affected_instance_primary" value="nhdb_person person.pk">
+            <input type="hidden" name="_affected_instance" value="nhdb_organization {{organization.pk}}">
+            <input type="hidden" name="organization" value="{{organization.pk}}">
+            <input type="hidden" name="id" value="person.pk">
+            <input type="hidden" name="phone" value="person.phone">
+            <input type="hidden" name="title" value="person.title">
+            <input type="hidden" name="email" value="person.email">
+        </form>
+
+        <form class="delete-person-form">
+            {% csrf_token %}
+            <input type="hidden" name="_description" value="Remove a person's details from the database">
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="hidden" name="_action" value="DM">
+            <input type="hidden" name="_url" value="/rest/person/person.pk">
+            <input type="hidden" name="_affected_instance_primary" value="nhdb_person person.pk">
+            <input type="hidden" name="_affected_instance" vvalue="{{organization.pk}}">
+        </form>
+    </div>
+    <div class="col-lg-12">
+        <div class='alert alert-info'>
+            <p class="no-print">To protect this list from spam robots, email addresses are encoded. <button class="btn btn-primary showliame">Show email addresses</button></p>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+            <tr><th>Name</th><th>Title</th><th class="email">Email</th><th>Phone</th><th class="no-print" style="min-width:170px;">(actions)</th></tr>
+            </thead>
+            <tbody>{% for person in persons %}
+            <tr><td>{{person}}</td><td>{{person.title}}</td>
+                <td>{% if person.email %}
+                    <a href='#'>{{person.email_rot.rot}}</a>
+                    {% endif %}
+
+                </td>
+                <td>
+                    {{person.phone}}
+                </td>
+                <td  class="no-print">
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-default edit-person" data-person="{{person.pk}}" aria-label="Edit"><span class="glyphicon glyphicon-edit"></span></button>
+                            <button type="button" class="btn btn-sm btn-default save-edits disabled" data-person="{{person.pk}}" aria-label="Edit"><span class="glyphicon glyphicon-ok-circle"></span></button>
+                            <button type="button" class="btn btn-sm btn-default drop-edits disabled" data-person="{{person.pk}}" aria-label="Edit"><span class="glyphicon glyphicon-remove-circle"></span></button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-default" data-deleteperson="{{person.pk}}" aria-label="Delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                        </div>
+                    </div>
+                </td>
+            </tr>{% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock content %}

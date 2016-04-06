@@ -1,0 +1,52 @@
+{% load i18n %}
+{% load thumbnail %}
+{% if not publications %}
+
+<div class="result">
+     <h4>No publications found</h4>
+     <h5>Sorry, no publications matching those criteria were found</h5>
+</div>{% endif %}
+     <table id="publications" class="table table-condensed table-bordered" cellspacing="0" width="100%" style="text-size:80%">
+        <thead>
+            <tr>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Author(s)" %}</th>
+                <th>{% trans "Year" %}</th>
+                <th>{% trans "organization(s)" %}</th>
+                <th></th>
+            </tr>
+        </thead>
+ 
+         <tbody>{% for p in publications %}
+            <tr data-publicationpk={{p.pk}}>
+                <td>{{p.name}}<br><em>{{p.description}}</em><br>
+                    <span class="tags">
+{% for s in p.sector.all %}   <span class="sector">{{s}}</span>{% endfor %}<br>
+{% for t in p.tags.all %}     <span class="tag">{{t}}</span>{% endfor %}
+                    </span>
+                </td>
+                <td>{% for o in p.author.all %}{{o.name}}{% if not forloop.last %}; {% endif %}{% endfor %}</td>
+                <td>{{p.year}}</td>
+                <td>{% for o in p.organization.all %}<a href="{% url 'nhdb:organization:organization' o.pk%}">{{o.name}}</a>{% if not forloop.last %}; {% endif %}{% endfor %}</td>
+                <td>
+                    {% for v in p.versions.all %}
+                    <div>
+                        <a href="{{v.upload.url}}">{% thumbnail v.cover "150x150" as im %}
+                            <img src="{{ im.url }}" class="img-thumbnail" alt="download" width="auto" height="auto">{% endthumbnail %}
+                        </a>
+                    </div>
+                    {% endfor %}
+                </td>
+            </tr>{% endfor %}
+        </tbody>
+ 
+        <tfoot>
+            <tr>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Author(s)" %}</th>
+                <th>{% trans "Year" %}</th>
+                <th>{% trans "organization(s)" %}</th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>

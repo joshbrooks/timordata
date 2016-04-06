@@ -1,0 +1,6 @@
+<table id='Project-{{proj.id}}-mainactivities'>
+    <caption>Activities</caption>
+    <tbody>{% for object in mainactivities %}
+        <tr class='activity' data={{objects.pk}} {% if object not in proj.mainactivities.all %}display=none {% endif %}><td>{{ object.description }}</td></tr>{% endfor %}
+    </tbody>
+</table>

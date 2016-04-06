@@ -1,0 +1,28 @@
+<li id='staff_menu' class='project parent'data-projectpk={{proj.pk}}>
+    Staff
+    <ul class='organizations'  style='width:350px;'>
+        <li class='parent'>
+        Currently on this Project 
+            <ul class='persons' style='width:350px;'>{% for projectperson in proj.projectperson_set.all %}
+                <li class='selectable selected person' data-projectpersonpk={{projectperson.pk}}>
+                    <a href='#'>{{projectperson.person.name}}, {{projectperson.person.organization.name}}</a>
+                </li>{% endfor %}
+            </ul>
+        </li>{% for link in proj.projectorganization_set.all %}
+
+        <li class='organization parent' data-organizationpk={{link.organization.pk}}>
+            {{ link.organization.name }}{% if link.organization.person_set.count > 0 %}
+            <ul class='persons' style='width:350px;'>{% for person in link.organization.person_set.all %}
+                <li class='parent person' data-personpk={{person.pk}}>
+                    <a href='#'>{{person.name}}</a>
+                    <ul style='width:250px;'>
+                        <li data-personpk={{person.pk}} data-staffclass='NONE' class='selectable selectone {% if person not in proj.person.all %}selected{%endif%}'><a href='#'>Not in this project</a></li>
+                        {% for code, desc in proj.projectperson_set.model.OPTION_STAFFCLASS %}
+                        <li data-personpk={{person.pk}} class='selectable selectone' data-staffclass={{code}}><a href='#'>{{desc}}</a></li>{% endfor %}
+                    </ul>
+                </li>{% endfor %}
+            </ul>{% else %}
+            <ul  style='width:350px;'><li>No staff for this organization</li></ul>{% endif %}
+        </li>{% endfor %}
+    </ul>
+</li>

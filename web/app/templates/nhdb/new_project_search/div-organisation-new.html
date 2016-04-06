@@ -1,0 +1,14 @@
+{% load i18n %}
+{% load crispy_forms_tags %}
+    <div class="well">
+                    <label> Hello
+            <input name="author_id" value="{{ request.user.id }}">
+            </label>
+        <h4>Main Properties</h4>{% trans "Main Properties" %}</h4>
+        <form method="POST" class="uniForm" autocomplete="off">
+            {% csrf_token %}
+
+            {{ oform|crispy }}
+            <button class='btn btn-default'> Save changes »</button>
+        </form>
+    </div>

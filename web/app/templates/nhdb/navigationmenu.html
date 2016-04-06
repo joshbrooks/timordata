@@ -1,0 +1,52 @@
+<nav>
+    <ul id='contextsidemenu'>
+        <li class='parent'><a href="/myapp/nhdb/organizations/">Organizations</a>
+            <ul class='jqsubmenu'>{% for short, name in ORGTYPE_OPTIONS %}
+                <li class='menu-item'><a href='/myapp/nhdb/organizations?orgtype={{short}}'>{{name}}</a></li>
+{% endfor %}</ul>
+        </li>
+        <li class='parent' ><a href="/myapp/nhdb/projects/">Projects</a>
+            <ul style='width:250px' class='scroll'>
+                {% for sector in sectors %}
+                <li><a href='{%url "nhdb:projects"%}?inv={{sector.pk}}'>{{sector.description}}</a></li>
+                {% endfor %}
+            </ul>
+        </li>
+        
+        <li class='parent' ><a href="#">Census (Persons)</a>
+            <ul style='width:250px' class='scroll'>
+                {% for param in CensusPerson %}
+                <li><a href='{%url "census:placedata" "person" "TLS" param.path %}'>{{ param.path }}</a></li>
+                {% endfor %}
+            </ul>
+        </li>
+        
+        
+        <li class='parent' ><a href="#">Census (Households)</a>
+            <ul style='width:250px' class='scroll'>
+                {% for param in CensusHousehold.all %}
+                <li><a href='{%url "census:placedata" "household" "TLS" param.path %}'>{{ param.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </li>
+        
+        <li class='parent'><a href="/myapp/nhdb/places/">Places</a>
+        <ul style='width:180px'>{% for place in places%}
+          <li><a href='{% url "nhdb:place" place.path_display %}'> {{ place.name }}</a>
+          </li>{% endfor %}
+        </ul>
+        </li>
+        <li class='parent'><a href="/myapp/nhdb/reports/">Reports</a>
+            <ul style='width:150px'>
+
+            {% for name, link, children in OptionForProject %}
+                <li class='parent'><a href='#'>{{name}}</a>
+                    <ul style='width:250px'>{% for child in children %}
+                        <li><a href='{% url "nhdb:reports" link child.pk %}'>{{child.description}}</a></li>{% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+            </ul>
+        </li>
+    </ul>
+</nav>

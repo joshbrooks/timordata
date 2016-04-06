@@ -1,0 +1,11 @@
+{% load mptt_tags %}
+
+<div id="crscodesmenu" class="crscodesmenu tree_menu model-{{change.name}} pk-{{change.pk}}" style='display:none'>
+<span class='identifier' id='Project-{{change.pk}}-crspurposecodes'></span>
+<p id="button-hide-unused" class='select button-hide-unused'>Hide unused</p>
+    
+<ul>{% recursetree crsnodes %}
+  <li class= 'pk_{{node.pk}} {% if node.is_leaf_node %} leaf {% if node in proj.crspurposecodes.all %} select {% endif %}{% endif %}{% if not node.is_leaf_node %} branch {% endif %}'> {{ node.name|title }}
+    {% if not node.is_leaf_node %}<ul>{{ children|capfirst }}</ul>{% endif %}</li>{% endrecursetree %}
+</ul>
+</div>

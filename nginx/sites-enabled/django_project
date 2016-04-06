@@ -1,0 +1,52 @@
+server {
+
+    listen 80;
+    listen 443 ssl;
+    client_max_body_size 10M;
+    server_name timordata.info;
+    charset utf-8;
+
+
+    ssl_certificate    /etc/letsencrypt/live/timordata.info/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/timordata.info/privkey.pem;
+
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+    ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
+    ssl_ecdh_curve secp384r1; # Requires nginx >= 1.1.0
+    ssl_session_cache shared:SSL:10m;
+    # ssl_session_tickets off; # Requires nginx >= 1.5.9
+    ssl_stapling on; # Requires nginx >= 1.3.7
+    ssl_stapling_verify on; # Requires nginx => 1.3.7
+    # resolver $DNS-IP-1 $DNS-IP-2 valid=300s;
+    # resolver_timeout 5s;
+    add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
+    add_header X-Frame-Options DENY;
+    add_header X-Content-Type-Options nosniff;
+
+
+    location /static {
+        alias /var/www/html/static;
+    }
+
+    location /media {
+        alias /var/www/html/media;
+    }
+
+    location /tileserver {
+	rewrite    /tileserver/(.+) /$1 break;
+    	include    uwsgi_params;
+    	uwsgi_pass tilestache:8080;
+    }
+
+    location /wms {
+	rewrite    /wms/(.+) /$1 break;
+    	include    uwsgi_params;
+    	uwsgi_pass simplewms:8080;
+
+    }
+    location / {
+    	include    uwsgi_params;
+    	uwsgi_pass web:8002;
+    }
+}

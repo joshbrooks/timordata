@@ -1,0 +1,162 @@
+{% extends "object_list.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block script %}
+    {{block.super}}
+    <script src="{{ STATIC_URL }}simply-toast/simply-toast.js"></script>
+    <script src="{{ STATIC_URL }}select2/js/select2.min.js"></script>
+    <link href="{{ STATIC_URL }}select2/css/select2.css" rel="stylesheet">
+    <script>
+
+        //Since we're looking for a one-click solution to suggest adding a Organization and a ProjectOrganization object
+        //simultaneously, we need to specify the organization class for a new organization.
+        $(document).ready(function() {
+            var clone = $('#div_id_organizationclass').clone() // Copy the select box
+            clone.attr('id','neworg_div_id_organizationclass')
+            clone.find('label').attr('for','neworg_organizationclass')
+            clone.find('#id_organizationclass').attr('id','neworg_organizationclass')
+            $('#orgclass_placeholder').append(clone)
+
+        })
+
+
+        function getUrlVars()
+        {
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for(var i = 0; i < hashes.length; i++)
+            {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
+        window.project = function(){
+            return getUrlVars()['project']
+        };
+
+        var postSuggestion = function(data){
+             data = data.concat($('.personal_details_form').serializeArray());
+             return $.post('/suggest/suggest/', data)
+                 .done(function (){$.simplyToast('Your request has been added and database staff will check it soon', 'success')})
+                 .error(function () {$.simplyToast('There was a problem with your request!', 'danger')});
+             };
+
+        $(document).ready(function(){
+            $('[name=project]').val(project())
+            $(document).on('submit','form.delete-organization, form#create-projectorganization, form#new-organization-form',function(e) {
+
+                e.preventDefault();
+                form = $(this);
+                data = $(this).serializeArray();
+                if ($(this).attr('id') == 'create-projectorganization') {data.push({'name':'_affected_instance', 'value':'nhdb_project '+project() })}
+                if ($(this).attr('id') == 'new-organization-form') {data.push({'name':'_affected_instance', 'value':'nhdb_project '+project() })}
+                request = postSuggestion(data);
+
+                if ($(this).hasClass('delete-organization')) {
+                    organization_div = $(this).parents('.organization:first');
+                    request.done(function () {
+                        organization_div.remove();
+                        $.simplyToast('You requested to remove ' + $(organization_div).data('name') + ' from this project', 'success')
+                    })
+                }
+
+                if ($(this).attr('id') == 'create-projectorganization') {
+                    request.done(function () {
+                        name = form.find('[name=organization]').val();
+                        $.simplyToast('You requested to add ' + name + ' to this project', 'success');
+                        form.trigger('reset');
+                    })
+                }
+
+                if ($(this).attr('id') == 'new-organization-form') {
+                    request.done(function () {
+                        name = form.find('[name=organization]').val();
+                        $.simplyToast('You requested to add ' + name + ' to this project', 'success');
+                        form.trigger('reset');
+                        // If the organization loaded successfully, add them to the project
+                        if (request.status == 201) {
+                            var data = [
+                                {'name':'_affected_instance', 'value':'nhdb_project '+project() },
+                                {name: 'project', value: project()},
+                                {name: 'organization', value: '_' + request.responseJSON.id + '_'},
+                                {name: 'organizationclass', value: $('#neworg_organizationclass').val()},
+                                {name: '_url', value: '/rest/nhdb/projectorganization/'}
+                            ];
+                            postSuggestion(data);
+                        }
+                    });
+                }
+            });
+
+           $('[data-selecturl]').each(function () {
+                var url = $(this).data('selecturl');
+                var ajaxdefault = {url: url, dataType: 'json', delay: 250};
+                var name = $(this).prop('name');
+                switch(name) {
+
+                    case 'project':
+                        $(this).select2({ajax: ajaxdefault, minimumInputLength: 3});break;
+
+                    case 'organization':
+                        $(this).select2({ajax: ajaxdefault, minimumInputLength: 3});break;
+
+                    case 'person':
+                        $(this).select2({ajax: ajaxdefault, minimumInputLength: 3});break;
+                        break;
+                }
+            });
+
+        })
+
+
+
+    </script>
+{% endblock script %}
+
+{% block content %}
+<a href="/nhdb/project/?q=status.A#object={{project.pk}}">Return</a>
+{{project}}
+ {% for o in object_list %}
+<div class="row">
+
+    <div class="col col-lg-12 organization" data-name="{{o.organization}}">
+        <b>{{o.organization}}</b>
+
+        <form action="/suggest/suggest/" method="post" class="delete-organization">
+            {% csrf_token %}
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="hidden" name="_url" value="/rest/nhdb/projectorganization/{{o.pk}}/">
+            <input type="hidden" name="_action" value="DM">
+            <input type="hidden" name="_description" value="Remove {{o.organization.name}} from {{o.project.name}}">
+            <input type="hidden" name="_affected_instance_primary" value="nhdb_projectorganization {{o.pk}}">
+            <input type="hidden" name="_affected_instance" value="nhdb_project {{o.project.pk}}">
+            <input type="hidden" name="_affected_instance" value="nhdb_organization {{o.organization.pk}}">
+            <div class="form-actions">
+                <input type="submit" name="__action" value="X" class="btn btn-default btn-sm">
+            </div>
+        </form>
+
+    </div>
+</div>
+
+{% endfor %}
+<h4>Add</h4>
+<form action="/suggest/suggest/" method="post" class="add-organization">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="search-form-organization"  class="col-sm-3 control-label">Org(s)</label>
+                <div class="col-sm-9">
+                    <select style="width:100%" name="org" id="search-form-organization" data-selecturl="/selecttwo/nhdb/organization/name/icontains/" multiple="multiple">
+                        {% for i in organization %}
+                        <option value="{{i.pk}}" selected>{{i}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </form>
+
+{% endblock content %}

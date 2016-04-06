@@ -1,0 +1,25 @@
+<form class="restInteraction form-horizontal" action="{{record.url}}" method="POST" data-suggestion="{{record.pk}}" data-method="{{record.method}}">
+    <fieldset>
+
+    <div class="form-group">
+        <label for="id__content_type" class="col-sm-2 control-label hidden">Media type:</label>
+        <div class="col-sm-10 hidden">
+            <select data-override="content-type" id="id__content_type" name="_content_type" class="form-control hidden">
+                <option value="application/json" selected="selected">application/json</option>
+            </select>
+
+            <div class="form-group hidden">
+                <label for="id__content" class="col-sm-2 control-label hidden">Content:</label>
+                <div class="col-sm-10 hidden">
+                    <textarea cols="40" data-override="content" id="id__content" name="_content" rows="10" class="form-control hidden">
+                        {{record.data}}
+                    </textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    </fieldset>
+            <div class="form-actions">
+            <button data-method="{{record.method}}" class="btn btn-primary" title="Make a {{record.method}}">Accept</button>
+        </div>
+</form>

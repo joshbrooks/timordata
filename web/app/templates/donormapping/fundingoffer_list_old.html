@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+{% load django_select2_tags %}
+
+{% block script %}
+    {{block.super}}
+        <link href="{{ STATIC_URL }}select2/css/select2.min.css" rel="stylesheet" />
+        <script src="{{ STATIC_URL }}select2/js/select2.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                    $('select').select2();
+                })
+        </script>
+
+{% endblock script %}
+
+{% block containerclass %}container{% endblock %}
+{% block style %}
+
+
+
+    <link href="{{ STATIC_URL }}django_tables2/themes/paleblu/css/screen.css" rel="stylesheet">
+    <style>
+        ul.pagination {
+            border-radius: 0px;
+            display: block;
+        }
+        .like-table { display: table; font-size:75%;}
+.like-table>* { display: table-row; }
+.like-table .row {height:25px;}
+
+.like-table>*>* { display: table-cell; border:1px solid #d3d3d3;}
+.like-table .vertical-header {max-width:20px; height: 210px;}
+
+.vertical {
+  padding: 0 .5em;
+  -webkit-transform:rotate(90deg);
+  -moz-transform:rotate(90deg);
+  white-space:nowrap;
+  display:block;
+}
+
+    </style>
+{% endblock style %}
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-6" >
+        {% include "donormapping/alert-welcome-donormapping-list.html" %}
+    </div>
+    <div class="col-lg-6" >
+        <img width="20%" src="{{ STATIC_URL }}logo/oxfam_logo_trans.png">
+        <img width="50%" src="{{ STATIC_URL }}logo/belun_en.png">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+    <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#activities" aria-controls="home" role="tab" data-toggle="tab">{% trans "Activities" %}</a></li>
+    <li role="presentation"><a href="#sectors" aria-controls="home" role="tab" data-toggle="tab">{% trans "Sectors" %}</a></li>
+    <li role="presentation"><a href="#beneficiaries" aria-controls="home" role="tab" data-toggle="tab">{% trans "Beneficiaries" %}</a></li>
+  </ul>
+<div class="tab-content">
+    <div id="activities" class="like-table tab-pane active">
+        <div>
+            <div>Offer Name
+            </div>{% for label_id, label in offers_act.labels.items %}
+            <div class="vertical-header"><span class=" vertical">{{label.name}}</span></div> {% endfor %}
+        </div>
+        {% for pk, item in offers_act.data %}
+        <form>
+            <div class="row"><a href="#offer_{{item.object.pk}}">{{item.object}}</a></div>{% for tf in item.data %}
+            <div>{% if tf %} <span style="font-size:150%;">&#10003;</span>{% endif %}</div>{% endfor %}
+        </form>{% endfor %}
+    </div>
+
+        <div id="beneficiaries" class="like-table tab-pane">
+            <div>
+                <div>Offer Name
+                </div>{% for label_id, label in offers_ben.labels.items %}
+                <div class="vertical-header"><span class=" vertical">{{label.name}}</span></div> {% endfor %}
+                <div></div>
+            </div>
+
+            {% for pk, item in offers_ben.data %}
+            <form>
+                <div class="row"><a href="#offer_{{item.object.pk}}">{{item.object}}</a></div>{% for tf in item.data %}
+                <div>{% if tf %} <span style="font-size:150%;">&#10003;</span>{% endif %}</div>{% endfor %}
+            </form>{% endfor %}
+
+    </div>
+
+    <div id="sectors" class="like-table tab-pane">
+        <div>
+            <div>Offer Name
+            </div>{% for label_id, label in offers_inv.labels.items %}
+            <div class="vertical-header"><span class=" vertical">{{label.name}}</span></div> {% endfor %}
+        </div>
+
+        {% for pk, item in offers_inv.data %}
+        <form>
+            <div class="row"><a href="#offer_{{item.object.pk}}">{{item.object}}</a></div>{% for tf in item.data %}
+            <div>{% if tf %} <span style="font-size:150%;">&#10003;</span>{% endif %}</div>{% endfor %}
+        </form>{% endfor %}
+    </div>
+    </div>
+    {% for offer in object_list %}
+     <div class="col-lg-12 col-sm-12" style="border-top:1px solid blue;" id="offer_{{offer.pk}}">
+        <h4>{{offer}} <span class="small">{{offer.organization}}</span></h4>
+
+             {% if offer.application_end_date %}<p>Applications due before {{offer.application_end_date}}</p>{% endif %}
+             {% if offer.amount %}<p>Approximate value of funding available: $ {{offer.amount}}</p>{% endif %}
+             <p><strong>Place(s): </strong>{% if offer.all_districts %} All districts
+             {% elif offer.district.all %} {{offer.district.all|join:", "}}{% endif %}</p>
+             <strong>Funding Targets: </strong><br>
+                {% if offer.beneficiary.all %}<p style="margin-left: 30px">Beneficiaries: {{ offer.beneficiary.all|join:", "}}</p>{% endif %}
+                {% if offer.sector.all %}<p style="margin-left: 30px">Sectors: {{ offer.sector.all|join:", "}}</p>{% endif %}
+                {% if offer.activity.all %}<p style="margin-left: 30px">Activities: {{ offer.activity.all|join:", "}}</p>{% endif %}
+
+
+             {% if offer.summary %}
+             <strong>Summary: </strong><br><p>{{offer.summary}}</p> {% endif %}
+            <br/>
+             <a href="{% url 'donormapping:fundingoffer:detail' pk=offer.id %}" class="btn btn-default btn-sm">More information &raquo;</a>
+
+
+             </div>
+
+    {% endfor %}
+
+</div>
+{% endblock content %}

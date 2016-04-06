@@ -1,0 +1,67 @@
+{% extends "object_list.html" %}
+{% load i18n %}
+{% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+
+
+{% block script %}
+{{block.super}}
+
+{% comment %}
+The "create / update / delete" buttons are rendered in django-tables2. This doesn't have the context for the CSRF token so we need to set this manually.
+{% endcomment %}
+<script>
+// using jQuery
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+$(document).ready(function(){
+    var csrftoken = getCookie('csrftoken');
+    $('input[name="csrfmiddlewaretoken"]').each(function(){
+        if ($(this).val() != csrftoken){$(this).val(csrftoken)}
+    })
+})
+
+</script>
+
+
+
+<script src="{{ STATIC_URL }}suggestionlist.js"></script>
+{% endblock %}
+
+{% if not request.user.is_authenticated %}
+
+<h4> You're not logged in</h4>
+<p> Apologies - you need to have a login name and password to change projects here. This is to make sure that Data Center staff are able to verify changes which would affect the database. </p>
+    <a href="/admin/login/?next={{request.get_full_path|urlencode}}">Login</a>
+{% endif %}
+
+ {% block leftsidelist %}
+<div class="col col-xl-3 col-lg-4 col-md-4 col-sm-12 col-xs-12">
+<div>
+Your suggestions
+        </div></div>
+{% endblock %}
+
+{% block objectlist %}
+<div id="object-list" class="collapse in">
+    <div>
+        <a href="table/?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">Show as Table</a>
+        <a href="xls/?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">Download Table (Excel)</a>
+        {% render_table table %}
+    </div>
+</div>
+{% endblock %}

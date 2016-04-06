@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load render_table from django_tables2 %}
+{% load thumbnail %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}webwidget_vertical_menu.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}staffselect.css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/css/leaflet.css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/markercluster/dist/MarkerCluster.css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/markercluster/dist/MarkerCluster.Default.css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/fullscreen/Control.FullScreen.css" />
+{% endblock extra_css %}
+
+{% block resources %}
+    <script src="{{ STATIC_URL }}leaflet/js/leaflet.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/js/proj4-compressed.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/js/proj4leaflet.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/markercluster/dist/leaflet.markercluster.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/fullscreen/Control.FullScreen.js"></script>
+    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}organizationmap.js"></script>
+    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}jquery.optiontable.js"></script>
+{% endblock resources %}
+
+{% block script %}
+<script language="javascript" type="text/javascript">
+$(document).ready(function(){
+    $('#organizationmap').createMap()
+});
+</script> 
+{% endblock script %}
+
+{% block headertext%}Project Profile{% endblock %}
+
+{% block content %}
+<form action="" target="" method='post' id='option-filters'>
+    {% csrf_token %}
+<p data-projpk={{proj.pk}}> <strong>Project Number: </strong>{{proj.pk}}</p>
+<p><strong>Project Name:</strong><input name='proj_name' value="{{ proj.name }}"/></p>
+<p><strong>ProjectDescription:</strong><br/><textarea rows="5" cols="40" name="proj_description">{{ proj.description }}</textarea>
+<p><strong>Notes:</strong><br/><textarea rows="5" cols="40" name="proj_notes">{{ proj.notes }}</textarea></p>
+
+<input type="submit" id='okgo' value="GO! This should post"/>
+<div class='row'>
+    <div class='col col_4'>
+        {% csrf_token %}
+        {% include 'nhdb/option_table.html' with model=act selected=proj.activity.all title="Main Activities" param="act" all=False %}
+        {% include 'nhdb/option_table.html' with model=inv selected=proj.involvement.all title="Involvement" param="inv" all=False %}
+        {% include 'nhdb/option_table.html' with model=ben selected=proj.beneficiary.all title="Beneficiaries" param="ben" all=False %}
+        <table>
+            <caption>Main Activities</caption>
+            <tbody class='activities'>{% for a in proj.activity.all %}
+                <tr data-activitypk={{a.pk}}><td>{{ a.description }}</td></tr>{% endfor %}
+            </tbody>
+        </table>
+        <table>
+            <caption>Target Beneficiaries</caption>
+            <tbody class='beneficiaries'>{% for a in proj.beneficiary.all %}
+                <tr data-beneficiarypk={{a.pk}}><td>{{ a.description }}</td></tr>{% endfor %}
+            </tbody>
+        </table>
+        <table>
+            <caption>Areas of Involvement</caption>
+            <tbody class='activities'>{% for a in proj.involvement.all %}
+                <tr data-involvementpk={{a.pk}}><td>{{ a.description }}</td></tr>{% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+    <div class='col col_9'>
+        {% include 'nhdb/option_table.html' with selected=proj.organization.all title="Organizations" param="org" all=False texturl="nhdb:orgnamesearch" extraText=True selections="PS" %}
+        {% include 'nhdb/option_table.html' with model=availablestaff selected=staff title="Staff" param="person" all=False %}
+
+        {% include 'nhdb/table_staff.html' %}
+        {% include 'nhdb/table_projectorganizations.html' with project_org_links=proj.projectorganization_set.all%}
+    </div>
+    <div class='col col_6'>
+        {% include 'nhdb/table_projectcontact.html' %}
+    </div>
+    
+</div>
+</form>
+<div class='row'>
+    
+
+<div class='col col_4 width_4' style='overflow:visible'>
+{% include 'nhdb/table_locations.html' %}
+
+</div>
+
+<div id='organizationmap' class='col col_11 width_11' style='height:400px;'>
+</div>  
+
+<input name='placenamesearch' id='placenamesearch'>
+<select name="level">
+    <option value="">All</option>
+    <option value="1">Districts</option>
+    <option value="2">Subdistricts</option>
+    <option value="3">Sucos</option>
+    <option value="4">Aldeias</option>
+</select> 
+<button name='placenamesearchbutton' id='placenamesearchbutton'>Search</button>
+
+<span id='projectid' style='display:none'>{{proj.pk}}</span>
+
+<div id = 'location_table_container' style='display:none'>
+</div>
+</div>
+
+
+{% endblock content %}

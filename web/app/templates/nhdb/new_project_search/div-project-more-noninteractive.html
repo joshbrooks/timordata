@@ -1,0 +1,84 @@
+{% load i18n %}
+<div class="well">
+  <h4>Main Properties</h4>
+    <p><b>Project Notes:</b>{% if not p.notes %}<em> None</em>{% else %} {{p.notes}}</p>{% endif %}
+    <p><b>Project Locations:</b>
+    <p><b>Project Link:</b> <a href='{% url "nhdb:project:project" p.id %}'>{% url "nhdb:project:project" p.id %}</a> <br></p>
+  <div class="row">
+    <div class="col-sm-6" style="height:128px;">
+      <span style="position:absolute; position-x:0; position-y:0;">
+          <img src='{%url "nhdb:projectoverlaywidth" 0 256%}' alt="Project overlay 0"/>
+      </span>
+      <span style="position:absolute; position-x:0; position-y:0;">
+          <img src='{%url "nhdb:projectoverlaywidth" p.id 256%}' alt="Project overlay {{p.id}}"/>
+      </span>
+    </div>
+    <div class="col-sm-6 table-responsive">
+      <table class="table table-condensed">
+        <thead>
+          <tr><th>Name</th><th>Pcode</th><th>Path</th><th>Description</th></tr>
+        </thead>
+        <tbody>{% for place in p.projectplace_set.all %}
+          <tr style='border-top: 1px solid #BFBFBF;'>
+            <td>{{place.place.name}}</td>
+            <td>{{place.place.pcode}}</td>
+            <td>{{place.place.path}}</td>{% if place.description %}
+            <td>{{place.description}}</td>{% else %}
+            <td><span style='color:BFBFBF;'><em>-</em></span></td>{% endif %}
+          </tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+  
+<div class="staff well">
+  <h4>Staff</h4>
+      {% for pp in p.projectperson_set.all %}
+    <div class="row" style='border-top: 1px solid #BFBFBF;'>
+       <div class="col-md-3">{{pp.get_staffclass_display}}</div>
+       <div class="col-md-3">{{pp.person.name}}</div>
+       <div class="col-md-3">{{pp.person.title}}</div>
+       <div class="col-md-3">{{pp.person.organization.name}}</div>
+    </div>{% endfor %}
+</div>
+
+<div class="well">
+  <h4>{% trans 'Organizations' %}</h4>{% for projorg in p.projectorganization_set.all %}{% with projorg.organization as o %}
+  <div class="row org" style='border-top: 1px solid #BFBFBF;'>
+     <div class="col-md-3">
+        <p>{{o.name}}</p>
+     </div>
+     <div class="col-md-5">
+       <strong>T </strong> {{o.contact.phoneprimary}}{% if o.contact.phonesecondary%} / {{o.contact.phonesecondary }}{%endif%}<br>{% if o.contact.email %}
+       <strong>E </strong> {{o.contact.email}}<br>{%endif%}{% if o.contact.web %}
+       <strong>W </strong> <a href='http://{{o.contact.web}}'>{{o.contact.web}}</a><br>{%endif%}{% if o.contact.fax %}
+       <strong>F </strong> {{o.contact.fax}}<br>{%endif%}
+     </div>
+     <div class="col-md-3">
+      {{o.get_orgtype_display}}
+    </div>
+  </div>{% endwith %}{% endfor%}
+</div>
+
+<div class="well">
+  <h4>{% trans 'Activities, Beneficiaries and Involvement' %}</h4>
+  <div class="row">{% for k,v in opts.items %}
+    <div class="col-md-4">
+      <div class="well">
+        <h4>{% trans k %}</h4>
+          <ul> {% for i in v %} {% if i in p.beneficiary.all or i in p.activity.all or i in p.involvement.all%}
+            <div><p>{% trans i.description %}</p></div>{% endif %}{% endfor %}
+          </ul> 
+        </div>
+      </div> {% endfor %}
+    </div>
+</div>
+
+<div class="well">
+  <h4>Project Author / Editors</h4>
+  <p><b>Project Author:</b> {{p.author.username}}{% if request.user == p.author %} (You){% endif %}</p>
+  <p><b>Project Editors:</b> {% for editor in p.editors.all %}{{editor.username}}{% if request.user == editor %} (You) {% endif %}{% if not forloop.last %}, {%endif%}{%endfor %}</p>
+</div>
+
+

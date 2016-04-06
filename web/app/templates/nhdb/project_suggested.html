@@ -1,0 +1,61 @@
+{% extends "object_list.html" %}
+{% load i18n %}
+{% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+{% block containerclass %}container-fluid{% endblock %}>
+
+{% block content %}
+
+{% block modals %}
+{{block.super}}
+{% endblock %}
+
+<div class="row">
+
+<div class="col col-lg-6">{% if suggestions %}
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+{% for i in suggestions %}
+
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_{{i.pk}}">
+          {{i.description}}
+        </a><span class="small">{{i.pk}}</span>
+      </h4>
+    </div>
+    <div id="collapse_{{i.pk}}" class="panel-collapse collapse" role="tabpanel">
+      <div class="panel-body">
+          <p>Suggested by {{i.user_name}}</p>
+          <p>{{i.get_state_display}}</p>
+          <p>{{i.get_action_display}}</p>
+        <p>{{i.data}}</p>
+          {% if i.related_changes %}
+          <h4>Related Changes</h4>
+          {% for c in i.related_changes %}
+
+        <p>{{c.description}}</p>
+        <p class="small">{{c.data}}</p>
+
+          {% endfor %}
+          {% endif %}
+          <p><a href="properties/" data-modaltitle="Set properties" data-modalurl="/nhdb/form/project/properties/?suggestion={{i.pk}}">&raquo; Properties</a></p>
+          <p><a href="translations/" data-modaltitle="Set translations" data-modalurl="/nhdb/form/project/translations/?suggestion={{i.pk}}">&raquo; Translations</a></p>
+      </div>
+    </div>
+  </div>
+
+{% endfor %}{% else %}
+No suggested projects yet{% endif %}
+
+</div>
+
+</div>
+<div class="col col-lg-6">
+    My project is not suggested yet...
+
+
+<p><a href="/nhdb/form/project/main/" data-modaltitle="Create a new project" data-modalurl="/nhdb/form/project/main/">&raquo; Edit</a></p>
+</div>
+</div>
+{% endblock %}

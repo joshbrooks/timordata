@@ -1,0 +1,39 @@
+{% load i18n %}
+<form class="form-horizontal" role="form">{% with form.person as field %}
+  <input id="{{field.auto_id}}" type="hidden" {% if field.value %}value="{{field.value}}"{% else %}placeholder="Person id"{% endif %}>{% endwith %}
+  <div class="form-group">{% with form.title as field %}
+    <label class="col-sm-2 control-label" for="{{field.auto_id}}">{% trans field.label %}</label>
+    <input id="{{field.auto_id}}" {% if field.value %}value="{{field.value}}"{% else %}placeholder="placeholder"{% endif %}>{% endwith %}
+  </div>
+  <div class="form-group">{% with form.first as field %}
+    <label class="col-sm-2 control-label" for="{{field.auto_id}}">{% trans field.label %}</label>
+    <input id="{{field.auto_id}}" {% if field.value %}value="{{field.value}}"{% else %}placeholder="First name"{% endif %}>{% endwith %}
+  </div>
+  <div class="form-group">{% with form.last as field %}
+    <label class="col-sm-2 control-label" for="{{field.auto_id}}">{% trans field.label %}</label>
+    <input id="{{field.auto_id}}" {% if field.value %}value="{{field.value}}"{% else %}placeholder="Last name"{% endif %}>{% endwith %}
+  </div>
+  <div class="form-group">{% with form.phoneprimary as field %}
+    <label class="col-sm-2 control-label" for="{{field.auto_id}}">{% trans field.label %}</label>
+    <input id="{{field.auto_id}}" {% if field.value %}value="{{field.value}}"{% else %}placeholder="Primary phone number"{% endif %}>{% endwith %}
+  </div>
+  <div class="form-group">{% with form.mobilephone as field %}
+    <label class="col-sm-2 control-label" for="{{field.auto_id}}">{% trans field.label %}</label>
+    <input id="{{field.auto_id}}" {% if field.value %}value="{{field.value}}"{% else %}placeholder="Mobile phone"{% endif %}>{% endwith %}
+  </div>
+  <div class="form-group">{% with form.email as field %}
+    <label class="col-sm-2 control-label" for="{{field.auto_id}}">{% trans field.label %}</label>
+    <input id="{{field.auto_id}}" {% if field.value %}value="{{field.value}}"{% else %}placeholder="Email"{% endif %}>{% endwith %}
+  </div>
+  <div class="form-group">{% with form.fax as field %}
+    <label class="col-sm-2 control-label" for="{{field.auto_id}}">{% trans field.label %}</label>
+    <input id="{{field.auto_id}}" {% if field.value %}value="{{field.value}}"{% else %}placeholder="placeholder"{% endif %}>{% endwith %}
+  </div>
+  <div class="form-group">{% with form.web as field %}
+    <label class="col-sm-2 control-label" for="{{field.auto_id}}">{% trans field.label %}</label>
+    <input id="{{field.auto_id}}" {% if field.value %}value="{{field.value}}"{% else %}placeholder="Web"{% endif %}>{% endwith %}
+  </div>
+  <div class="form-group">{% with form.verified as field %}
+    <label class="col-sm-2 control-label" for="{{field.auto_id}}">{% trans field.label %}</label>
+    <input id="{{field.auto_id}}" {% if field.value %}value="{{field.value}}"{% else %}placeholder="Date Verified"{% endif %}>{% endwith %}
+  </div>

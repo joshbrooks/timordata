@@ -1,0 +1,14 @@
+
+    <div class='option-table'>
+            <div class='go right-arrow'>{{title}}</div>
+                <div class='checked'> {% for i in selected %}
+                    <div class='option'>
+                        <input name='{{param}}' type='checkbox' value='{{i.pk}}' id='inv_{{i.pk}}' checked='checked'/>{{i}}
+                    </div>{% endfor %}
+                </div>
+                <div class='unchecked' style='display:none'>{% for i in model %}{% if not i in selected %}
+                    <div class='option'>
+                        <input name='{{param}}' type='checkbox' value='{{i.pk}}' id='inv_{{i.pk}}'/>{{i}}
+                    </div>{% endif %}{% endfor %}
+                </div>
+        </div>

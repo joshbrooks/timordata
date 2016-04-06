@@ -1,0 +1,7 @@
+{% load crispy_forms_tags %}
+{% if organization == 'none' %}
+    {% crispy organizationform %}
+{% else %}
+    {% crispy projectorganizationform %}
+<p><a href="/nhdb/projectorganization/new/?project={{project}}&organization=none" data-modalurl="/nhdb/projectorganization/new/?project={{project}}&organization=none" data-modaltitle="Add a new organization">&raquo; Create a new organization</a></p>
+{% endif %}

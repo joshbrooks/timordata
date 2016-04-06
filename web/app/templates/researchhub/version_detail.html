@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h3>{{object.name}}</h3>
+    <h4>{{object.description}}</h4>
+    {% if object.resources.count == 0  %}
+    <p>No downloads available</p>
+    {% else %}
+    {% for r in object.resources.all %}
+    {{r}}
+    {% endfor %}
+    {% endif %}
+
+{% endblock content %}
+

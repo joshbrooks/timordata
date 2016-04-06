@@ -1,0 +1,14 @@
+    <caption id="edit-locations">Project Locations</caption>
+    <tbody>
+		<tr>
+			<th>Place ID</th>
+			<th>Place Name</th>
+		</tr>
+        {% for p in places %}
+        <tr>
+            <td>{{ p.place.pcode }}</td>
+            <td>{{ p.place }}</td>
+        </tr>
+        {% endfor %}
+    
+	</tbody>

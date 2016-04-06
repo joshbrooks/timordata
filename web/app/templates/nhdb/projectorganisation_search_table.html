@@ -1,0 +1,48 @@
+
+<table id='table-orgsearch-results'>
+  <caption>Search Results</caption>
+  <thead>
+    <tr>
+      <th>Organization</th>
+      <th>Organization Involvement</th>
+    </tr>
+    </thead>
+    <tbody>
+        
+    {% for po in project.projectorganization_set.all %}{% with org as po.organization %}{% if org in orgs %}
+    <tr>
+      <td>{{org.name}}</td>
+        <div class='form-group'>
+          <input name="id" value="{po.pk}">
+          <input name="project" value="{proj.pk}">
+          <input name="organization" value="{org.pk}">
+          <div class='form-group'>
+          <select class="search_organization_type" name='organizationclass' class="form-control">
+            <option value='-'>-</option>{% for short, long in OPTION_PROJECT_ORGANIZATION %}
+            <option value='{{short}}' {% if po.organizationclass = short %} selected {% endif %}>{{long}}</option>{% endfor %}
+          </select>
+        </div>
+      </td>
+    </tr>
+     {% endif %} {% endwith %} {% endfor %}
+    
+    {% for org in orgs %}{% if org not in project.projectorganization_set.all %}
+    <tr>
+      <td>{{org.name}}</td>
+      <td>
+        <div class='form-group'>
+          <input type='hidden' name="id">
+          <input type='hidden' name="project" value="{{project.pk}}">
+          <input type='hidden' name="organization" value="{{org.pk}}">
+          
+          <select class="search_organization_type" name='organizationclass' class="form-control">
+            <option value='-' selected>-</option>{% for short, long in OPTION_PROJECT_ORGANIZATION %}
+            <option value='{{short}}'>{{long}}</option>{% endfor %}
+          </select>
+        </div>
+      </td>
+    </tr>
+    {% endif %} {% endfor %}
+    
+  </tbody>
+</table>

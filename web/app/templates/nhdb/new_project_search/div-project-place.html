@@ -1,0 +1,44 @@
+{% load i18n %}
+<h4> div-project-place.html </h4>
+
+
+<h4>Places</h4>
+<div class="inage_container" style="height:128px">
+<img style="position:absolute" src="{% url 'nhdb:places_overlay' %}">
+<img style="position:absolute" src="{% url 'nhdb:places_overlay' %}?{% for i in p.projectplace_set.all %}pcode={{i.place.pk}}{% if not forloop.last %}&amp;{%endif%}{%endfor%}">
+</div>
+{% if p.id %}
+<form autocomplete="off" method="POST" action='{% url "nhdb:projectplace" %}'>
+    <span class="select_place_form">
+        
+    {% csrf_token %}
+        <input name="project" value="{{p.id}}">
+        <input id="places_place_holder" placeholder="Place Pcode"><br>
+        <table class="places table table-striped table-bordered table-condensed">
+            <caption>Selected:</caption>
+            <thead>
+                <th>Place Name</th>
+                <th>Place Pcode</th>
+                <th></th>
+            </thead>
+            <tbody>
+            
+            {% for pp in p.projectplace_set.all %}
+            <tr class="place-container">
+                <td class="placename">{{pp.place.name}}</td>
+                <td><span class="placepcode">{{pp.place.pk}}</span><input type="hidden" name="pcode" value="{{pp.place.pk}}"></td>
+                <td><button type="button" class="btn btn-default btn-xs remove">-</button></td>
+              </tr>
+            {% endfor %}
+            
+              <tr class="template place-container" style="display:none">
+                <td class="placename">Name</td>
+                <td><span class="placepcode">Pcode</span><input type="hidden" name="pcode"></td>
+                <td><button type="button" class="btn btn-default btn-xs remove">-</button></td>
+              </tr>
+            </tbody>
+        </table>
+    </span>
+    <button class="btn btn-primary">Save project places</button>
+</form>
+{% endif %}

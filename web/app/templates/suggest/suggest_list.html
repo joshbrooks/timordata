@@ -1,0 +1,174 @@
+{% extends "object_list.html" %}
+{% load i18n %}
+{% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+
+
+{% block script %}
+{{block.super}}
+    <!--<script src="{{ STATIC_URL }}rest_framework_333/js/ajax-form.js"> </script>-->
+    <!--<script src="{{ STATIC_URL }}rest_framework_333/js/csrf.js"> </script>-->
+
+{% comment %}
+The "create / update / delete" buttons are rendered in django-tables2. This doesn't have the context for the CSRF token so we need to set this manually.
+{% endcomment %}
+
+
+{% if not user.is_authenticated %}
+    <script type="text/javascript">
+        $(document).ready(function(){$('#object-list table th.url, #object-list table td.url').hide()})
+     </script>
+{% endif %}
+
+
+
+<script src="{{ STATIC_URL }}suggestionlist.js"></script>
+<script>
+
+
+    function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+function sameOrigin(url) {
+    // test that a given url is a same-origin URL
+    // url could be relative or scheme relative or absolute
+    var host = document.location.host; // host + port
+    var protocol = document.location.protocol;
+    var sr_origin = '//' + host;
+    var origin = protocol + sr_origin;
+    // Allow absolute or scheme relative URLs to same origin
+    return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+        (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+        // or any other URL that isn't scheme relative or absolute i.e relative.
+        !(/^(\/\/|http:|https:).*/.test(url));
+}
+
+var csrftoken = getCookie('csrftoken');
+
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+            // Send the token to same-origin, relative URLs only.
+            // Send the token only if the method warrants CSRF protection
+            // Using the CSRFToken value acquired earlier
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+</script>
+
+{% endblock %}
+
+{% block style %}
+{{block.super}}
+<style>
+    span.unchanged{color:gray}
+    span.added{color:green}
+    span.removed{color:red}
+</style>
+
+{% endblock %}
+
+{% if not request.user.is_authenticated %}
+
+<h4> You're not logged in</h4>
+<p> Apologies - you need to have a login name and password to change projects here. This is to make sure that Data Center staff are able to verify changes which would affect the database. </p>
+    <a href="/admin/login/?next={{request.get_full_path|urlencode}}">Login</a>
+{% endif %}
+
+ {% block leftsidelist %}
+
+<div>
+
+<form class="form-horizontal search-form">
+
+    {% if email %}
+    <div class="col-sm-12">
+        <em> The last email address used from this computer was {{email}}</em>
+    </div>
+    <div class="col-sm-12">
+        <label class="radio-inline">
+            <input type="radio" name="email" value="{{email}}" checked=checked> Suggestions from <strong>{{email}}</strong> only
+        </label>
+    </div>
+
+    <div class="col-sm-12">
+        <label class="radio-inline">
+            <input type="radio" name="email" value=""> All suggestions
+        </label>
+    </div>
+
+    {% endif %}
+
+    <div class="form-group">
+        <label for="search-form-modelname" class="col-sm-3 control-label">Model Name</label>
+        <div class="col-sm-9">
+            <select style="width:100%;" id="search-form-modelname" class="auto-select2" name="model_name" multiple=multiple>{% for m in filters.model_name %}
+                    <option value="{{m}}" {% if m in activefilters.model_name %}selected="selected"{%endif%}>{{m}}</option> {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="search-form-action" class="col-sm-3 control-label">Action</label>
+        <div class="col-sm-9">
+            <select style="width:100%;" id="search-form-action" class="auto-select2" name="action" multiple=multiple>{% for value, label in filters.action %}
+                    <option value="{{value}}" {% if value in activefilters.action %}selected="selected"{%endif%}>{{label}}</option> {% endfor %}
+            </select>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label for="search-form-state" class="col-sm-3 control-label">State</label>
+        <div class="col-sm-9">
+            <select style="width:100%;" id="search-form-state" class="auto-select2" name="state" multiple=multiple>{% for value, label in filters.state %}
+                    <option value="{{value}}" {% if value in activefilters.state %}selected="selected"{%endif%}>{{label}}</option> {% endfor %}
+            </select>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="search-form-user_name" class="col-sm-3 control-label">User_name</label>
+        <div class="col-sm-9">
+            <select style="width:100%;" id="search-form-user_name" class="auto-select2" name="user_name" multiple=multiple>{% for value in filters.user_name %}
+                    <option value="{{value}}" {% if value in activefilters.user_name %}selected="selected"{%endif%}>{{value}}</option> {% endfor %}
+            </select>
+        </div>
+    </div>
+    
+    
+    <button type="submit" class="btn btn-block">Search</button>
+</form>
+        </div>
+{% endblock %}
+
+{% block objectlist %}
+<div id="object-list" class="collapse in">
+    <div>
+        <!--<a href="table/?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">Show as Table</a>-->
+        <!--<a href="xls/?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">Download Table (Excel)</a>-->
+        <!--<a href="clear/?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">Reject all</a>-->
+        <br>
+        {% render_table table %}
+    </div>
+</div>
+{% endblock %}

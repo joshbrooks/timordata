@@ -1,0 +1,25 @@
+{% extends 'nhdb/new_project_search/base.html' %}
+{% load i18n %}
+
+
+{% block script %}
+  <script src="{{ STATIC_URL }}require.js" data-main="/require.project.js"></script>
+{% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}datatables/media/css/dataTables.bootstrap.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}/selectize.js/dist/css/selectize.bootstrap3.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}/css/zebra/default.css">
+
+{% endblock style %}
+{% block body %}
+{% csrf_token %}
+<input type="hidden" name="project" value="{{p.pk}}">
+    
+    <div class="container">
+      {% include "nhdb/new_project_search/div-project-details.html" %}
+    </div>
+
+
+</body>
+{% endblock body %}
+</html>

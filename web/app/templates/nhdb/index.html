@@ -1,0 +1,86 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+    <title>{% trans "Timor-Leste Data Center" %}</title>
+    <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}bootstrap/css/jumbotron.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">{% trans "Timor-Leste Data Center" %}</a>
+        </div>
+        <div id = "navbar-collapse" class="collapse">
+          <form class="navbar-form navbar-right" role="form">
+            <div class="form-group">
+              <input type="text" placeholder="{% trans 'Email' %}" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="password" placeholder="{% trans 'Password' %}" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-success">Sign in</button>
+          </form>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1 style="font-size:50px;">{% trans 'Timor-Leste Data Center' %}</h1>
+        <p>{% trans 'A joint project of Belun, Alola Foundation, Fongtil, The Asia Foundation and Fundasaun Mahein' %}</p>
+        <p><a class="btn btn-primary btn-lg" role="button">{% trans 'Search' %} &raquo;</a></p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-4">
+          <h2>{% trans 'Development' %}</h2>
+          <p> Search for information about humanitarian projects and NGO's working in Timor-Leste </p>
+          <p><a class="btn btn-default" href='{% url "nhdb:index" %}' role="button">{% trans 'View' %} &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+          <h2>{% trans 'Research' %}</h2>
+          <p>Search for information on research papers published about Timor-Leste</p>
+          <p><a class="btn btn-default" href='{% url "library:index" %}' role="button">{% trans 'View' %} &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+          <h2>{% trans 'Donor Funding' %}</h2>
+          <p>Access the Donor Funding database to find who is supporting projects financially in Timor</p>
+          <p><a class="btn btn-default" href='{% url "donormapping:index" %}' role="button">{% trans 'View' %} &raquo;</a></p>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>Contents &copy; Belun / The Asia Foundation / Oxfam / Fundasaun Mahein 2015</p>
+      </footer>
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

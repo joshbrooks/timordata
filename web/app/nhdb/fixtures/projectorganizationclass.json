@@ -1,0 +1,1 @@
+[{"fields": {"description": "Partner"}, "model": "nhdb.projectorganizationclass", "pk": "A"}, {"fields": {"description": "Funding"}, "model": "nhdb.projectorganizationclass", "pk": "F"}, {"fields": {"description": "Other"}, "model": "nhdb.projectorganizationclass", "pk": "O"}, {"fields": {"description": "Primary"}, "model": "nhdb.projectorganizationclass", "pk": "P"}]

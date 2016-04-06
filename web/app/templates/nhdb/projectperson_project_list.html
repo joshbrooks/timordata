@@ -1,0 +1,36 @@
+{% load crispy_forms_tags %}
+
+<h4>{{project}}</h4>
+
+<form id="createNewProjectPerson">
+
+    <h4><a href="#collapseAddPerson" data-toggle="collapse">Add an existing person</a></h4>
+    <div class="collapse" id="collapseAddPerson">
+        {% crispy projectpersonform %}
+    </div>
+    <hr>
+    <h4><a href="#collapseCreatePerson" data-toggle="collapse">Create a new Person and add them to the project</a>
+    </h4>
+    <div class="collapse" id="collapseCreatePerson">
+
+        <!--{% comment %}-->
+        <!--Since we're looking for a one-click solution to suggest adding a Person and a PersonProject object-->
+        <!--simultaneously, we need to indicate the extra 'Is primary contact?' field for the person here.-->
+        <!--{% endcomment %}-->
+
+        <div class="radio">
+            <label>
+                <input type="radio" name="added_person_is_primary" value="True" checked>
+                This person is a primary contact
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="added_person_is_primary" value="False">
+                This person is not a primary contact
+            </label>
+        </div>
+        {% crispy personform %}
+    </div>
+
+</form>

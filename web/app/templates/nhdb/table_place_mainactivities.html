@@ -1,0 +1,19 @@
+    <table>
+        <caption>Main Activities</caption>
+        <thead>
+            <tr>
+                <th>MA</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+        <tbody>{% for m in ma %}
+            <tr>
+                <td>
+                    <a data-mainactivitypk={{m.pk}} href='#'>{{ m.description }}</a>
+                </td>
+                <td>
+                    {{ m.project__count }}
+                </td>
+            </tr>{% endfor %}
+        </tbody>
+    </table>

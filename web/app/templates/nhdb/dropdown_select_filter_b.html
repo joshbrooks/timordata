@@ -1,0 +1,20 @@
+
+<div class='option-list col col_5'>
+    <div class='go right-arrow'>{{title}}
+    </div>
+    <ul class='all'>
+        <li class='option'>
+        <input data-onlyoption='true' name='{{prefix}}' type='checkbox' value='all' id='{{prefix}}_all' checked='checked'/><label for='{{prefix}}_all'>All</label>
+        </li>
+    </ul>
+    <ul class='checked'>
+    </ul>
+    
+    <ul class='unchecked' style='display:none'>{% for i in items %}
+        <li class='option'>
+        <input name='{{prefix}}' type='checkbox' value='{{i.pk}}' id='{{prefix}}_{{i.pk}}'/><label for='{{prefix}}_{{i.pk}}'>{{i}}</label><br/>{% endfor %}
+        </li>
+    </ul>
+</div>
+ 
+   

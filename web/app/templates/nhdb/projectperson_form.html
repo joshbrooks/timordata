@@ -1,0 +1,11 @@
+{% load crispy_forms_tags %}
+{% if person == 'none' %}
+    {% crispy personform %}
+{% else %}
+    {% crispy projectpersonform %}
+    <p><a data-modalurl="/nhdb/projectperson/new/?project={{project}}&person=none" data-modaltitle="Add a new person" data-modalselector="#new-person-modal">&raquo;Add a new person to the database</a></p>
+{% endif %}
+
+
+
+

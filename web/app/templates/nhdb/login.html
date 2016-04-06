@@ -1,0 +1,52 @@
+{% load i18n %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="{%block metadescription%} {%endblock%}">
+      <meta name="author" content="Joshua Brooks">
+      <title>{%block title%} National Humanitarian / Development Project Database {%endblock title%}</title>
+{% block script %}
+      <script src="{{ STATIC_URL }}require.js" data-main="{{ STATIC_URL }}bootstrap_require.js"></script>
+{% endblock script %}
+      <link href="{{ STATIC_URL }}/jqueryui/css/ui-lightness/jquery-ui-1.10.4.min.css" rel="stylesheet">
+      <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <style>
+        form#changelanguage label > input{ /* HIDE RADIO */
+          display:none;
+        }
+        form#changelanguage label > input + img{ /* IMAGE STYLES */
+          cursor:pointer;
+          border:2px solid transparent;
+        }
+        form#changelanguage label > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
+          border:2px solid #FFA500;
+          border-radius:1px;
+        }
+        
+      </style>
+      {% block style %} {% endblock style %}
+  </head>
+  <body>
+{% block body %}
+<div class="container">
+    <form role="form" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="_next" value="{{ next }}">
+      <div class="form-group">
+        <label for="loginFormUsername">User name</label>
+        <input name="username" class="form-control" id="loginFormUsername" placeholder="User name">
+      </div>
+      <div class="form-group">
+        <label for="loginFormPass">Password</label>
+        <input name="password" type="password" class="form-control" id="loginFormPass" placeholder="Password">
+      </div>
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+</div>
+{% endblock body %}
+  </body>
+</html>

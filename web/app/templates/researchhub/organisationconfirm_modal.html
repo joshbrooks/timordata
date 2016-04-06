@@ -1,0 +1,29 @@
+{% extends "base_modal.html" %}
+{% block title %}Confirm organizations {% endblock %}
+{% block body %}
+
+<p>Choose the organization to select or the name and type of a new organization</p>
+<div class="row">{% for s in suggested %}
+  <div class="col-xs-6 col-sm-4 col-lg-3">
+    <p><strong>{{s.search}}</strong></p>
+    <div class="row">{% if s.contains %}{% for org in s.contains %}
+      <div class="col-lg-12">
+        <label><input type="radio" name="radio_{{s.search}}" value="{{org.id}}">{{org.name}}</label>
+      </div>{% endfor %}{% endif %}{% if s.similar %}{% for org in s.similar %}
+      <div class="col-lg-12">
+        <label><input type="radio" name="radio_{{s.search}}" value="{{org.id}}">{{org.name}}</label>
+      </div>{% endfor %}{% endif %}
+      
+      <div class="col-lg-12">
+        <label><input type="radio" name="radio_{{s.search}}" value="nothing">(Do nothing)</label>
+      </div>
+      
+
+      </div>
+    
+  </div>{% endfor %}
+</div>
+{% endblock %}
+{% block save %}
+<button id="organization-confirm-modal-save" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+{% endblock %}

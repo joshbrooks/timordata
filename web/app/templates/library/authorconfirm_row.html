@@ -1,0 +1,35 @@
+{% extends "base_row.html" %}
+{% block body %}
+{{confirmed}}
+{{suggested}}
+{{exclude}}
+<form class="author-add">
+  <div class="row">
+{% for s in search %}
+<div class="col-lg-6 well well-sm author">
+  <div class="clearfix visible-xs-block"></div>
+    <h4>{{s.search}}</h4><p>Similar To:</p>
+      {% if s.similar %}{% for author in s.similar %}
+        {% if author in exclude %}
+          <button type="button" disabled class="btn btn-xs btn-primary btn-block">{{author.name}} (Already)</button>
+        {% else %}
+          <button type="button" class="btn btn-xs btn-primary btn-block" data-addexistingauthor="true" data-author-name="{{author.name}}" data-author-id="{{author.pk}}" data-author-displayname="{{author.displayname}}">{{author.name}} (Add)</button>
+        {% endif %}
+      {% endfor %}
+      {% else %}
+      <button type="button" disabled class="btn btn-xs btn-warning btn-block">No similar authors</button>
+      {% endif %}
+        <button type="button" class="btn btn-xs btn-default btn-block" data-addnewauthor="true" data-author-name="{{s.search}}" data-author-displayname="{{s.displayname}}">This is a new author</button>
+        <button type="button" class="btn btn-xs btn-default" data-addexistingauthor="false">Cancel</button>
+  </div>
+ 
+  {% if forloop.counter|divisibleby:"4" %}
+</div>
+<div class="row">
+{% endif %}
+
+  {% endfor %}
+  </div>
+
+</form>
+{% endblock %}

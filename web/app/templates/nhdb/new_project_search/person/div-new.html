@@ -1,0 +1,12 @@
+{% load i18n %}
+{% load crispy_forms_tags %}
+{{form.errors}}
+  <div class="well">
+    <h4>Main Properties</h4>{% trans "Main Properties" %}</h4>
+    <form method="POST" autocomplete="off">
+  {% csrf_token %}
+  {{form|crispy}}
+  <button class='btn btn-default'> Save changes »</button>
+  </form>
+
+</div>

@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load django_select2_tags %}
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block script %}
+     {{block.super}}
+
+    <link rel="stylesheet" href="{{ STATIC_URL }}leaflet/leaflet.css" />
+    <script src="{{ STATIC_URL }}leaflet/leaflet.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/leaflet.utfgrid.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/leaflet.ajax.min.js"></script>
+    <script src="{{ STATIC_URL }}project_detail.js"></script>
+
+
+    <script>
+        window.model = 'nhdb.project'
+        window.pk = {{object.pk}}
+
+
+    </script>
+
+{% endblock script %}
+
+{% block style %}
+{{block.super}}
+<style>
+
+
+		.info {
+			padding: 6px 8px;
+			font: 14px/16px Arial, Helvetica, sans-serif;
+			background: white;
+			background: rgba(255,255,255,0.8);
+			box-shadow: 0 0 15px rgba(0,0,0,0.2);
+			border-radius: 5px;
+		}
+		.info h4 {
+			margin: 0 0 5px;
+			color: #777;
+		}
+
+    ul.dropdown-menu {
+        max-height: 500px;
+        overflow-y:scroll;
+        z-index: 1001;
+    }
+
+</style>
+{% endblock style %}
+{% block content %}
+{% block navbar_bottom %}
+
+{% endblock navbar_bottom%}
+
+<div class="row" style="margin-bottom:40px;">
+    <div class="col-lg-6 col-sm-6">
+
+    <h3>{{object.name}}<span class="small"> Project Profile</span></h3>
+
+    {% with object.status.code as s  %}
+    <h4>Status:<span class="{% if s == 'X' %}text-danger{% elif s == 'C' %}text-success{% elif s == 'A'%}text-primary{%endif%}">{{object.status}}</span></h4>
+    {% endwith %}
+
+    <h4>Dates: {% if object.startdate %}{{object.startdate}}{% else %}??{% endif %} - {% if object.enddate %}{{object.enddate}}{% else %}??{% endif %}</h4>
+    {% if object.past_enddate %}
+        <div class="alert alert-warning" role="alert">
+          <strong>Past end date</strong> This project is still listed as active, but the end date we have on file has passed.
+        </div>
+        {% endif %}
+
+        {% autoescape off %}
+        <hr>
+        <blockquote>{% if object.description %}
+        {{object.description}} {% else %}
+        <p>No description</p>
+        </blockquote>
+        {% endif %}
+    {% endautoescape %}
+
+
+
+    {% autoescape off %}
+        {% if object.notes %}
+        <hr>
+        {{object.notes}}
+        {% endif %}
+    {% endautoescape %}
+    </div>
+
+        {% block linkToUpdate %}
+    <div class="col-lg-6 col-sm-6">
+     <div class="alert alert-info alert-dismissible fade in" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h4 id="oh-snap!-you-got-an-error!">Do you know this project?<a class="anchorjs-link" href="#oh-snap!-you-got-an-error!"><span class="anchorjs-icon"></span></a></h4>
+            <p>If you have changes you would like to make, please email the database team.</p>
+          <p class="text-danger bg-danger">Click the link below to preview how you can share changes when the site is completed. Note that it is not functional yet.</p>
+          <p>
+            <a href="update/" class="btn btn-warning">Suggest changes</a>
+              <a href="/suggest/?model_name=nhdb_project&model_pk={{object.pk}}&return_url={{request.get_full_path|urlencode}}" class="btn btn-info">See changes already requested</a>
+          </p>
+        </div>
+    </div>
+{% endblock linkToUpdate %}
+    <div class="col-lg-6 col-sm-6 alerts">
+        <div class="alert alert-success alert-dismissible fade in hidden" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <p class="header">You suggested this change:</p>
+            <p class="message"></p>
+        </div>
+    </div>
+
+            <div class="col-lg-6 col-sm-12 col-xs-12">
+        <h4>Images</h4>
+
+            {% for i in object.projectimage_set.all %}
+                {% if i.image %}
+                <img src="{{i.thumbnailurl}}">
+                {% endif %}
+            {% endfor %}
+
+                </div>
+    </div>
+
+        <div class="col-lg-6 col-sm-12 col-xs-12">
+        <h4>Staff</h4>
+        <hr>
+        <div class="row">{% with object.projectperson_set.all as projectpersons %}{% for pp in projectpersons %}{% with pp.person as person %}
+            {# Create a small single box for each organization #}
+            <div class="col-lg-12 col-sm-12 col-xs-12">
+
+                <strong>{{person}}</strong> - {{person.title}} at {{person.organization}} - {{pp.get_staffclass_display}}
+                        {{po.organizationclass.description}}</strong></caption>
+
+            </div>{% endwith %}{% endfor %}{% endwith %}
+        </div>
+    </div>
+
+
+<div class="row"> {% block my_suggestions %}
+
+    {% endblock %}
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+    <h4>
+        Locations
+    </h4>
+
+    <!--<div id="map" style="height:300px; width:100%;"></div>-->
+        {% if object.has_locations %}
+        <img src="{{object.image_overlay_url}}&width=500&height=300" style="width:100%">
+        {% else %}
+        <p> No locations</p>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+        <h4>Properties</h4>
+
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>
+            </th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><th>{% trans "Activities" %}</th><td>{{object.activity.all|join:","}}</td></tr>
+        <tr><th>{% trans "Sectors" %}</th><td>{{object.sector.all|join:","}}</td></tr>
+        <tr><th>{% trans "Beneficiaries" %}</th><td>{{object.beneficiary.all|join:","}}</td></tr>
+    </tbody>
+
+</table>
+</div>
+
+
+    <div class="col-lg-6 col-sm-12 col-xs-12">
+        <h4>Organizations</h4>
+        <hr>
+        <div class="row">{% with object.projectorganization_set.all as projectorgs %}{% for po in projectorgs %}{% with po.organization as org %}{% with org.contact as contact %}
+            {# Create a small single box for each organization #}
+            <div class="col-lg-6 col-sm-6 col-xs-12">
+                <table class="table table-condensed">
+                    <caption style="text-align: left"><strong><a href="{% url 'nhdb:organization:detail' pk=org.pk %}">{{org}}</a>:
+                        {{po.organizationclass.description}}</strong></caption>
+                    <thead>
+                    <tr>
+                        <th>
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>Phone</th>
+                        <td>{{contact.phoneprimary}}{% if contact.phonesecondary %} / {{contact.phonesecondary}} {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>{{contact.email}}</td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>{% endwith %}{% endwith %}{% endfor %}{% endwith %}
+        </div>
+    </div>
+
+
+</div>
+  {% block suggestion_table %}{% endblock %}
+{% endblock content %}

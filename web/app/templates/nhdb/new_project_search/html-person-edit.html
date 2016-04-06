@@ -1,0 +1,17 @@
+{% extends 'nhdb/new_project_search/base.html' %}
+{% load i18n %}
+{% block body %}
+<body>
+    <div class="container">
+      {% block contact %}
+      {% if p.id %}{% include "nhdb/new_project_search/person/div-more.html" %}
+      <div class="contactdetails well">
+      {% include "nhdb/new_project_search/person/form-contact.html" %}
+      </div>{% else%}
+      {% include "nhdb/new_project_search/person/div-new.html" %}
+      {% endif %}
+      {% endblock %}
+      </div>
+</body>
+{% endblock %}
+

@@ -1,0 +1,49 @@
+{% load i18n %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h4>{{object.name}}<span  class="small"> id:{{object.pk}}</span></h4>
+
+        <table class="table table-condensed table-bordered">
+            <tr><th>Description:</th><td>{{object.description}}</td><td rowspan="3"><a data-modalurl="{% url 'library:form' model='publication' form='main'%}?publication={{publication.pk}}"  data-modaltitle="{% trans 'Edit' %}" data-toggle="modal" href="#">{% trans "Edit" %}</a></td> </tr>
+            <tr><th>Year:</th><td>{{object.year}}</td></tr>
+            <tr><th>Type:</th><td>{{object.pubtype}}</td></tr>
+            <tr><th>Organizations:</th><td>{{object.organization.all|join:","}}</td><td><a data-modalurl="{% url 'library:form' model='publication' form='organization'%}?publication={{publication.pk}}"  data-modaltitle="{% trans 'Edit' %}" data-toggle="modal" href="#">{% trans "Edit" %}</a></td></tr>
+            <tr><th>Authors:</th><td> {{object.author.all|join:","}}</td><td><a data-modalurl="{% url 'library:form' model='publication' form='author'%}?publication={{publication.pk}}"  data-modaltitle="{% trans 'Edit' %}" data-toggle="modal" href="#">{% trans "Edit" %}</a></td></tr>
+
+            <tr><th>Locations:</th><td>{{object.location.all|join:","}}</td><td></td></tr>
+        </table>
+        <hr>
+    </div>
+</div>
+<div class="row">
+{% for version in object.versions.all %}
+        <!--Version -->
+<div class="col-lg-3 col-sm-6"><div style="border: 1px solid gray; margin:2px; padding: 2px;">
+        {% for languagecode, item in version.thumbnail.items %}
+        <!--Language: {{languagecode}}-->
+                <p>
+                    <img style="width:50px; margin-right:5px; top:5px; left:5px;" src="{{ STATIC_URL }}locales/{{ languagecode }}.png" alt="{{ languagecode }}"><strong>{{item.title}}</strong>
+                </p>
+                <p>
+                    {% if item.description %}{{item.description}}{% endif %}
+                </p>
+                <br>
+{% if item.url %}
+<a class="download-link" href="{{item.url}}">
+    {% if item.image %}{{item.image}}{% endif%}<p>Download</p>
+</a>
+{% endif %}
+        {% endfor %}
+<div class="btn-group btn-groups-xs" role="group">
+            <button type="button" class="btn btn-default" data-modaltitle="Delete version" data-modalurl="{% url 'library:form' model='version' form='delete'%}?version={{version.pk}}" data-modalselector="#modaldeleteform"><span class="glyphicon glyphicon-remove"></span></button>
+            <button type="button" class="btn btn-default" data-modaltitle="Edit version" data-modalurl="{% url 'library:form' model='version' form='main'%}?version={{version.pk}}"> <span class="glyphicon glyphicon-edit"></span></button>
+    </div>
+
+</div></div>
+{% endfor %}
+
+</div>
+<p><a href="#" data-modalurl="{% url 'library:form' model='version' form='main'%}?publication={{object.pk}}">&raquo; New version (add files)</a></p>
+
+<p><a href="#" data-modalurl="{% url 'library:form' model='publication' form='main'%}?publication={{object.pk}}">&raquo; Delete this publication</a></p>

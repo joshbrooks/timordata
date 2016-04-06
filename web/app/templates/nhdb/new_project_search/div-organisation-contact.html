@@ -1,0 +1,5 @@
+    <strong>T </strong> {{o.contact.phoneprimary}}{% if o.contact.phonesecondary%} / {{o.contact.phonesecondary }}{%endif%}<br>{% if o.contact.email %}
+    <strong>E </strong> {{o.contact.email}}<br>{%endif%}{% if o.contact.web %}
+    <strong>W </strong> <a href='http://{{o.contact.web}}'>{{o.contact.web}}</a><br>{%endif%}{% if o.contact.fax %}
+    <strong>F </strong> {{o.contact.fax}}<br>{%endif%}
+

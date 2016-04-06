@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block navbar %}
+{% include "navbar.html" %}
+{% endblock navbar %}
+
+{% block content %}
+
+        <div>
+            <div class="container" style="background-color:rgba(256,256,256,0.7); border-radius:20px;">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 col-sm-12 col-sm-12">
+                        <img src="{{ STATIC_URL }}/logo/banner.png" style="width:100%">
+
+                    <h1>{% trans 'About Us' %}</h1>
+                    <h3> Contact Us</h3>
+                    <p>Contact Belun with suggestions or extra information <a href="http://belun.tl">through the Belun website</a>, or our <a href="https://www.facebook.com/pages/Belun/135284543226407">facebook page</a>. {% trans "If you would like to" %} {% trans "make suggestions" %} {% trans "about adding to the Data Center" %}, {% trans "please contact Joshua Brooks at <strong>josh.vdbroek@gmail.com</strong> or <strong>admin@timordata.info</strong>" %}</p>
+                    <p>{% trans "For more information about" %} {% trans "the main site" %}, {% trans "please contact" %} Joshua Brooks at <strong>josh.vdbroek@gmail.com</strong> or <a href="http://belun.tl">through the Belun website</a>, or our <a href="https://www.facebook.com/pages/Belun/135284543226407">facebook page </a></p>
+                    <p>{% trans "For more information about" %} {% trans "projects or organization information from the NHDB" %}, {% trans "please contact"%} Eugenia Alves at <strong>eugenia.belun@gmail.com</strong></p>
+                    <p>{% trans "For more information about" %} {% trans "the library" %}, {% trans "please contact" %} Debbie Chia at <strong>debbie.chia@asiafoundation.org</strong> </p>
+                </p>
+                    <h3> About the Data Center</h3>
+                    <p>{% trans "The Timor-Leste Data Center was developed by an NGO network consisting of Belun, the Alola Foundation, Fundasaun Mahein, Fongtil, and the Asia Foundation. It is a repository of project, research and donor information for the public on Timor-Leste." %}</p>
+                    <ol>
+                        <li><strong>{% trans "National humanitarian database" %}</strong>
+
+                            <p><a href="https://timordata.info/nhdb/project/">https://timordata.info/nhdb/project</a>
+                                {% trans "or" %} <a href="https://timordata.info/nhdb/organization/">https://timordata.info/nhdb/organization</a><br>
+                                {% trans "Search for organizations and projects in Timor-Leste."%}</p>
+                        </li>
+                        <li>
+                            <strong>Online library</strong>
+
+                            <p><a href="https://timordata.info/library/publication/">https://timordata.info/library/publication/</a><br>
+                                {% trans "With continued support from a number of development agencies and NGOs, we are regularly adding to the online library of research, media releases, program documents relevant to Timor-Leste."%}
+                            </p>
+                        </li>
+                        <li>
+                            <strong>Donor mapping database</strong>
+
+                            <p><a href="https://timordata.info/donormapping/fundingoffer/list/">https://timordata.info/donormapping/fundingoffer/list</a><br>
+                                {% trans "Search this database for available funding opportunities and instructions on how to apply." %}
+                            </p>
+                        </li>
+                    </ol>
+
+                    <h3>Partners</h3>
+                    <p>{% trans "Many thanks to" %} <strong>Gibrael Carocho</strong> {% trans "for the artwork" %} {% trans "used on this site" %}. {% trans "Contact" %} Gibrael at <a href="mailto:aziby.dias216@gmail.com">aziby.dias216@gmail.com</a> or on +670 78003686</p>
+                    <p>
+                        {% trans "The Data Center team would like to acknowledge the Australian Government for supporting the development of the Timor-Leste Data Center."%}</p>
+                    <h3>{% trans "Disclaimer" %}</h3>
+
+
+                    <h4>{% trans "Online Library Content" %}</h4>
+                    <p>
+                    {% trans "Permission has been granted from individual author/s or organization/s to publish the research available on the Online Library. While we endeavor to keep the information up to date and accurate, we do not take responsibility for the reliability, suitability or completeness of the website information." %}
+                    </p>
+                    <p>
+                    {% trans "Through this website you are able to access and download a number of research-based publications and media releases. The Data Center team does not have any control over the nature or content of these publications and does not imply any recommendations or endorse the views expressed in them."%}
+                        </p>
+                    <p>
+                    {% trans "The Data Center team strongly encourages full and thorough citations and referencing."%}
+                    </p>
+
+                    <h4>Language</h4>
+
+                    <p>{% trans "The Timor-Leste Data Center team would like to recognize internal translators, Google Translate and Tetum Translator (translate.tetumdili.com) for enabling this website to be available in Tetun, English, Portuguese and Indonesian." %}</p>
+
+                    <p>{% trans "Automated and human translation cannot guarantee accuracy, therefore the translation of the website content will not be entirely correct. The Data Center will not be held accountable for any consequences that may arise from the translations provided by the Google Translate or Tetum Translator."%}</p>
+
+                    <p>{% trans "The content of this site originated in English. Data on this site was collected in its original form, regardless of language. By choosing a language from the Google Translate menu, the user accepts the legal implications of any shortcomings or differences in the translation. The Data Center does not guarantee the accuracy of the translated content and is not responsible for any event resulting from the use of translation. By choosing a language from the language menu, the user agrees to withhold all liability and/or damage that may occur to the user by depending on or using the translation by Google or Tetum Translator." %}</p>
+
+                    <h3>{% trans "Contact Us" %}</h3>
+
+                    <p>
+                        {% trans "If you have any projects, research, or funding opportunities you would like published on the Data Center, please feel free to contact us." %}</p>
+                </div>
+            </div>
+        </div>
+{% endblock content %}
+  {% block footer %}
+  <footer class="footer">
+      <div class="container">
+        <p class="text-muted"></p>
+      </div>
+    </footer>
+  {% endblock footer %}

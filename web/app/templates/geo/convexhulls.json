@@ -1,0 +1,7 @@
+{"type":"FeatureCollection",
+"features": [{% for d in data %}
+  {
+    "type": "Feature",
+    "properties": {"id":{{d.pcode}}, "name": "{{d.name}}"},{% autoescape off %}
+    "geometry":  {{d.json}}{% endautoescape %}}{% if not forloop.last %},{% endif %}{% endfor %}
+]}

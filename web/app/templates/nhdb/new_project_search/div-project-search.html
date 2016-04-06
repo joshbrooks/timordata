@@ -1,0 +1,76 @@
+{% load i18n %}
+
+<form target="_ blank" style="font-size: 80%;" autocomplete="off">
+  <div class="well">
+  <div class="row">
+    <div class="col col-md-6">
+      <div class="form-group form-group-sm">
+          <label for="text"> Name / Description contains:</label>
+          <input name="text" id="input-tags" class="form-control">
+          <p class="help-block">{% trans "Enter words or phrases separated by a comma. Projects containing any of these words will be included in the search." %}</p>
+      </div>
+      <div class="form-group form-group-sm">
+        <label for="status">Status</label>
+        <select multiple class="form-control" class="selectize" name="status">{% for s in project_status %}
+          <option value="{{s.pk}}"{% if s.pk == 'A' %} selected{% endif %}>{{s.description}}</option>{% endfor %}
+        </select>
+      </div>
+    </div>
+  
+    
+      <div class="col col-md-3 col-sm-3 col-xs-6">
+        <div class="form-group form-group-sm">
+          <label for="startdate">Starts Between</label>
+          <input class="form-control" type="date" name="startdateafter" value='{{p.startdate|date:"Y-m-d"}}'>
+        </div>
+      </div>
+      
+      <div class="col col-md-3 col-sm-3 col-xs-6">
+        <div class="form-group form-group-sm">
+          <label for="startdatebefore">...</label>
+          <input class="form-control" type="date" name="startdatebefore" value='{{p.startdate|date:"Y-m-d"}}'>
+        </div>
+      </div>
+    
+      <div class="col col-md-3 col-sm-3 col-xs-6">
+        <div class="form-group form-group-sm">
+          <label for="enddateafter">Ends Between</label>
+          <input class="form-control" type="date" name="enddateafter" value='{{p.startdate|date:"Y-m-d"}}'>
+        </div>
+      </div>
+    
+      <div class="col col-md-3 col-sm-3 col-xs-6">
+        <div class="form-group form-group-sm">
+          <label for="enddatebefore">...</label>
+          <input class="form-control" type="date" name="enddatebefore" value='{{p.startdate|date:"Y-m-d"}}'>
+        </div>
+      </div>
+
+  </div>
+  
+    <div class="row">
+    {% for root in propertytag_root_nodes %}
+      <div class="col col-md-4 col-xs-6">
+      <div class="form-group form-group-sm">
+        <label for="select-{{root|lower}}">{{root}}</label>
+        <select id="select-{{root}}" name="properties" multiple>{% for c in root.get_children %}
+          <option value="{{c.pk}}">{{c}}</option>{% endfor %}
+        </select>
+      </div>
+      </div>
+       {% endfor %}
+    </div>
+  <div class="row">
+    <div class="col-md-6">
+      <label for="organization">Organizations </label>
+      <input class="selectize-organization multiple" type="text" name="organization" placeholder="Start typing to search.">
+    </div>
+    <div class="col-md-6">
+      <label for="place">Districts</label>
+      <input id="selectize-place" type="text" name="place" placeholder="Start typing to search.">
+    </div>
+  </div>
+  
+  <input class="btn btn-primary" type="submit" value="Search"></input>
+</div>
+</form>

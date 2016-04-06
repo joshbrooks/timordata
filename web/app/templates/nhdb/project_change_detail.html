@@ -1,0 +1,760 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load getattr %}
+{% load django_select2_tags %}
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block containerclass %}"container-fluid"{% endblock %}
+
+{% block script %}
+     {{block.super}}
+    <link rel="stylesheet" href="{{ STATIC_URL }}leaflet/leaflet.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}zebra/css/bootstrap.css" />
+    <script src="{{ STATIC_URL }}leaflet/leaflet.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/leaflet.utfgrid.js"></script>
+    <script src="{{ STATIC_URL }}leaflet/leaflet.ajax.min.js"></script>
+    <script src="{{ STATIC_URL }}zebra/javascript/zebra_datepicker.js"></script>
+    <!--<script src="{{ STATIC_URL }}project_detail.js"></script>-->
+    <script src="{{ STATIC_URL }}simply-toast/simply-toast.js"></script>
+    <script>
+        window.model = 'nhdb.project';
+        window.pk = parseInt("{{object.pk}}");
+    </script>
+    <script src="{{ STATIC_URL }}select2/js/select2.min.js"></script>
+    <script src="{{ STATIC_URL }}placeconvex.js"></script>
+    <link href="{{ STATIC_URL }}select2/css/select2.css" rel="stylesheet">
+    <script src="{{ STATIC_URL }}leaflet-location-setter.js"></script>
+
+    <script>
+        window.object = function(){return parseInt("{{object.pk}}")}
+        $(document).ready(function () {
+
+            $(document).on('click', 'input.changelocations', function () {
+                $('#map img').remove();
+                createMap();
+                $(this).attr('disabled', 'disabled');
+
+                $(document).off('submit', 'form#update-projectplace').on('submit', 'form#update-projectplace', function (e) {
+                    e.preventDefault();
+
+                    returns = [];
+                    $.map(globalLayers, function (e, i) {
+
+                        returns.push({
+                            "project": window.object(),
+                            "place": globalLayers[i][0].feature.properties.pcode
+                        })
+                    });
+                    $(this).find('[name=data]').val(JSON.stringify({'projectplace_set': returns}));
+
+                    x = returns
+                    $.post('/suggest/suggest/', $(this).serializeArray());
+                    console.log(returns)
+                })
+            });
+
+        });
+
+
+//        Date range picker
+        $(document).ready(function() {
+            $('input[name=startdate]').Zebra_DatePicker({view:'years'});
+            $('input[name=enddate]').Zebra_DatePicker({view:'years'});
+        });
+
+//      Modify the project details form by adding some other required fields
+         $(document).ready(function() {
+
+             // Testing: Unhide all hidden inputs
+             //$('input[type=hidden]').attr('type', 'text')
+
+             var projectForm = $('#project-form');
+             projectForm.on('submit', function(e){
+                 e.preventDefault();
+                 data = $(this).serializeArray().concat(
+                         $('.personal_details_form').serializeArray()
+                 );
+             jqxhr = $.post('/suggest/suggest/', data);
+
+             // If we get a Created (status === 204) update any other 'project' fields which would be submitted
+             // to a '/suggest/suggest/' form with the new ID for the suggestion
+              jqxhr.done(function() {
+                if (jqxhr.status === 201) {
+                    var project_id = '_'+jqxhr.responseJSON.id+'_';
+                    $('form#create-projectperson input[name=project]').val(project_id)
+                }
+              });
+
+                $.simplyToast('Your request has been added and database staff will check it soon', 'success');
+              }).error(function() {
+                $.simplyToast('There was a problem with your request!', 'danger');
+              });
+
+
+             $('#projectplace').find('form').on('submit', function (e) {
+                 e.preventDefault();
+                 data = $(this).serializeArray().concat(
+                         $('.personal_details_form').serializeArray()
+                 );
+                 $.post('/suggest/suggest/', data)
+                 .done(function (){$.simplyToast('Your request has been added and database staff will check it soon', 'success')})
+                 .error(function () {$.simplyToast('There was a problem with your request!', 'danger')});
+             });
+
+//             On submission of an organization delete cross it out
+
+             $('#projectorganizations').find('form.button-form').on('submit', function(e){
+                 e.preventDefault();
+                 data = $(this).serializeArray().concat(
+                         $('.personal_details_form').serializeArray()
+                 );
+                 $.post('/suggest/suggest/', data, function (r) {
+                     $.simplyToast('Your request has been added and database staff will check it soon', 'success');
+                 }).error(function () {
+                     $.simplyToast('There was a problem with your request!', 'danger');
+                 });
+             });
+
+             // On submission of an organization add, add it to the list
+             $('form#new-projectorganization').on('submit',  function(e){
+                 e.preventDefault();
+
+                 var clone = $('.template.projectorganization-template').clone().removeClass('template').removeClass('projectorganization-template');
+                 clone.find('.name').text($(this).find('[name=organization] :selected').text());
+                 clone.find('.organizationclass').text($(this).find('[name=organizationclass] :selected').text());
+                 clone.find('.notes').text($(this).find('[name=notes]').val());
+                 clone.insertAfter($('.template.projectorganization-template'));
+
+                 data = $(this).serializeArray().concat(
+                         $('.personal_details_form').serializeArray()
+                 );
+                 $.post('/suggest/suggest/', data, function (r) {
+                     $.simplyToast('Your request has been added and database staff will check it soon', 'success');
+                 }).error(function () {
+                     $.simplyToast('There was a problem with your request!', 'danger');
+                 });
+             });
+         });
+
+</script>
+
+<script>
+
+    $(document).ready(function(){
+
+//        highlightPlace = L.layerGroup().addTo(Lmap);
+
+//        var highlightFeaturesFromSelect = function(pcodes) {
+//            highlightPlace.clearLayers();
+//            console.log(pcodes);
+//              var data, layer;
+//                    for (var pcode in pcodes) {
+//                  data = window.place_envelopes[pcodes[pcode]];
+//                        console.log(pcode);
+//                        console.log(data);
+//                  layer = L.polygon(data, {
+//                    fillColor: 'green',
+//                    fillOpacity: 0.3
+//                  });
+//                  layer.addTo(highlightPlace);
+//                }
+//            };
+
+        $('[data-selecttwo]').each(function(){
+            $(this).select2();
+        });
+
+//        $('[data-selecturl][name=place]').on('select2:close', function(e){
+//            highlightFeaturesFromSelect([])
+//        });
+
+        $('[data-selecturl]').each(function () {
+            var url = $(this).data('selecturl');
+            var name = $(this).prop('name');
+
+
+            if (name == 'organization') {
+
+                $(this).select2({
+                    ajax: {
+                        url: url,
+                        dataType: 'json',
+                        delay: 250
+                    }
+                })
+
+            }
+            if (name == 'person') {
+
+                $(this).select2({
+                    ajax: {
+                        url: url,
+                        dataType: 'json',
+                        delay: 250
+                    }
+                })
+
+            }
+
+            if (name == 'place') {
+                $(this).select2({
+                    ajax: {
+                        url: url,
+                        dataType: 'json',
+                        delay: 250,
+                        processResults: function (data) {
+                            var pcodes = [];
+                            var type = undefined;
+
+                            for (var i in data.results) {
+                                if (data.results[i].id > 10000) {
+                                    type = 'suco'
+                                }
+                                if (data.results[i].id < 10000) {
+                                    type = 'Postu administrativo'
+                                }
+                                if (data.results[i].id < 100) {
+                                    type = 'Munisipio'
+                                }
+
+
+                                data.results[i]['text'] = '<div style="width:100%" data-pcode=' + data.results[i].id + '>' + data.results[i].text + ' <span class="small">' + type + '</span></div>';
+                                pcodes.push(data.results[i]['id'])
+                            }
+                            highlightFeaturesFromSelect(pcodes);
+                            $.each(data, function () {
+                                console.log(this)
+                            });
+
+                            return data
+                        }
+                    },
+                    minimumInputLength: 3,
+                    escapeMarkup: function (markup) {
+                        return markup;
+                    }
+                })
+            }
+        });
+
+$('[data-template] button.add').off('click').on('click', function() {
+  console.log($(this));
+  p = $(this).parents('[data-template]:first');
+    target = $(p.data('template'));
+  $target = $(p.data('template')).clone();
+
+  p.find('input').each(function(){
+
+    name = $(this).prop('name');
+    text = $(this).text();
+    val  = $(this).val();
+
+    target_el = $target.find("[name="+name+"]");
+    target_el.val(val);
+    target_el.siblings('.repr').text(text)
+
+
+  });
+
+   p.find('textarea').each(function(){
+
+    name = $(this).prop('name');
+    text = $(this).text();
+    val  = $(this).val();
+
+    target_el = $target.find("[name="+name+"]");
+    target_el.val(val);
+    target_el.siblings('.repr').text(val)
+
+
+  });
+
+  p.find('select').each(function(){
+
+    name = $(this).prop('name');
+    text = $(this).find(':selected').text();
+    val  = $(this).val();
+
+    target_el = $target.find("[name="+name+"]");
+    target_el.val(val);
+    target_el.siblings('.repr').text(text)
+
+  });
+
+  $target.insertBefore($(target))
+
+
+});
+
+        var m = $('#modal-get-name-email');
+        m.on('show.bs.modal', function () {
+            $('.form.personal_details_form [name="_name"]').val(localStorage['personal_details_name']);
+            $('.form.personal_details_form [name="_email"]').val(localStorage['personal_details_email']);
+//            $('.form.personal_details_form [name=comment]').val(localStorage['personal_details_comment'])
+        });
+        m.on('hide.bs.modal', function () {
+            localStorage['personal_details_name'] = $('.form.personal_details_form [name="_name"]').val();
+            localStorage['personal_details_email'] = $('.form.personal_details_form [name="_email"]').val();
+//            localStorage['personal_details_comment'] = $('.form.personal_details_form [name=comment]').val()
+        });
+        m.modal()
+    });
+
+    window.edit = true;
+        var markMatch = function(text, term, markup) {
+        var match=text.toUpperCase().indexOf(term.toUpperCase()),
+            tl=term.length;
+
+        if (match<0) {
+            markup.push(escapeMarkup(text));
+            return;
+        }
+
+        markup.push(text.substring(0, match));
+        markup.push("<span class='select2-match'>");
+        markup.push(text.substring(match, match + tl));
+        markup.push("</span>");
+        markup.push(text.substring(match + tl, text.length));
+    };
+
+    $.fn.select2.defaults.formatResult = function(result, container, query) {
+        Lmap.fitWorld();
+        searchGroup.clearLayers();
+            if (result.bounds !== undefined ) {
+
+                 L.polygon(result.bounds).bindPopup(result.text).addTo(searchGroup)
+            }
+            // Selected place
+
+            var markup=[];
+            markMatch(this.text(result), query.term, markup);
+            return markup.join("");
+        },
+
+    $.fn.select2.defaults.formatSelection = function (data, container) {
+
+            if (data.bounds !== undefined ) {
+                selectedPlace.clearLayers();
+                 L.polygon(data.bounds, {color:'red', fillColor: '#f03', fillOpacity: 0.5}).bindPopup(data.text).addTo(selectedPlace)
+            }
+            // Selected place
+
+            d = data ? this.text(data) : undefined;
+        return d
+        };
+
+//        $(document).ready(function () {
+//            $('#id_form-0-place').on('select2-loaded', function (e) {
+//                Lmap.fitWorld();
+//                searchGroup.clearLayers();
+//                for (var i in e.items.results) {
+//                    var bounds = e.items.results[i].bounds;
+//                    var text = e.items.results[i].text;
+//                    L.polygon(bounds).bindPopup(text).addTo(searchGroup)
+//                }
+//            }).on('select2-selecting', function (e) {
+//                Lmap.fitWorld();
+//                searchGroup.clearLayers();
+//                var bounds = e.choice.bounds;
+//                var text = e.choice.text;
+//                L.polygon(bounds, {color:'green', fillColor: 'green', fillOpacity: 0.5}).bindPopup(text).addTo(highlightPlace)
+//            }).on('select2-close', function (e) {
+//                searchGroup.clearLayers()});
+//
+//
+//            $( document ).on("mouseover", "span[data-envelope]", function(){
+//                selectedPlace.clearLayers();
+//                e = $(this).data('envelope');
+//                L.polygon(e, {color:'red', fillColor: '#f03', fillOpacity: 0.5}).addTo(selectedPlace)
+//            }).on('mouseout', "span[data-envelope]", function(){
+//                selectedPlace.clearLayers()})
+//        })
+
+
+</script>
+
+    <script src="{{ STATIC_URL }}projectsuggestion.js"></script>
+    <script>
+        window.rest_urls = {};
+        window.rest_urls.projectorganization = "{% url 'nhdb_rest:rest:projectorganization-list' %}";
+        window.rest_urls.projectplace = "{% url 'nhdb_rest:rest:projectplace-list' %}";
+        window.rest_urls.project = "{% url 'nhdb_rest:rest:project-detail' object.pk%}";
+        window.rest_data = {};
+        window.rest_data.model_name = 'nhdb_project';
+        window.rest_data.model_pk = parseInt("{{object.pk}}");
+        window.rest_data.model_repr = "{{object}}";
+        window.rest_data.user_name = "{{request.user.username}}";
+        window.rest_data.user_id = parseInt("{{request.user.pk}}");
+    </script>
+
+{% endblock script %}
+{% block style %}
+    {{block.super}}
+
+   <style>
+       #feedback-toolbar form {
+           min-width: 300px;
+padding-left: 10px;
+padding-right: 10px;
+       }
+
+       .organizationbox, .projectplace_box{
+           border: 1px solid darkblue;
+           padding: 5px;
+           margin: 2px;
+       }
+
+       #projectplace {
+           border: 1px solid green;
+       }
+
+   </style>
+{% endblock style %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-12">
+    <h1>{{project.name}} <span class="small"> Identity number: {{project.pk}}</span></h1>
+        </div>
+    <div class="col-lg-12">
+        <a href="/suggest/nhdb_project/{{object.pk}}/?return_url={{request.get_full_path|urlencode}}" class="btn btn-info">See changes already requested</a>
+        <a href=/nhdb/project/{{object.pk}}  class="btn btn-info">Back to the project page</a>
+        <br>
+        {% crispy forms.DeleteProject %}
+    </div>
+</div>
+
+<hr>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div>
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#people" aria-controls="home" role="tab" data-toggle="tab">People</a></li>
+                <li role="presentation"><a href="#organizations" aria-controls="profile" role="tab" data-toggle="tab">Organizations</a></li>
+                <li role="presentation"><a href="#places" aria-controls="messages" role="tab" data-toggle="tab">Places</a></li>
+                <li role="presentation"><a href="#xproperties" aria-controls="settings" role="tab" data-toggle="tab">Properties</a></li>
+                <li role="presentation"><a href="#images" aria-controls="settings" role="tab" data-toggle="tab">Images</a></li>
+                <li role="presentation"><a href="#sectors" aria-controls="settings" role="tab" data-toggle="tab">Sectors / Activities</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="people">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col col-lg-6">
+                                <table class="table table-condensed">
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for pp, del in forms.persons %}
+                                    <tr>
+                                        <td>{% if pp.is_primary %}
+                                            <p><strong>{{pp.person.name}}</strong></p>{% else %}
+                                            <p>{{pp.person.name}}</p>{%endif %}
+                                            <p><em>{{pp.person.title}} - {{pp.person.organization}}</em></p>
+                                        </td>
+                                        <td class="col col-lg-4">{% crispy del %}</td>
+
+                                    </tr>
+                                    {% endfor %}
+
+                                    </tbody>
+                                </table>
+
+                                <h4><a href="#collapseAddPerson" data-toggle="collapse">Add a person from the
+                                    database</a></h4>
+
+                                <div class="collapse" id="collapseAddPerson">
+                                    {% crispy forms.projectpersonform %}
+                                </div>
+
+                                <h4><a href="#collapseNewPerson" data-toggle="collapse">Add a new person to the project
+                                    and database</a></h4>
+
+                                <div class="collapse" id="collapseNewPerson">
+                                    <em>Note: Email addresses and phone numbers are not required and they will not be
+                                        shown on the site</em>
+                                    {% crispy forms.addperson %}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                <div role="tabpanel" class="tab-pane" id="organizations">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col col-lg-6">
+                                <table class="table table-condensed">
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for po, del in forms.organizations %}
+                                    <tr>
+                                        <td>
+                                            <p><strong>{{po.organization.name}}</strong>{{po.organizationclass}}</p>
+                                        </td>
+                                        <td class="col col-lg-4">{% crispy del %}</td>
+                                    </tr>
+                                    {% endfor %}
+
+                                    </tbody>
+                                </table>
+
+                                <h4><a href="#collapseAddOrganization" data-toggle="collapse">Add an organization from the
+                                    database</a></h4>
+
+                                <div class="collapse" id="collapseAddOrganization">
+                                    {% crispy forms.projectorganizationform %}
+                                </div>
+
+                                <h4><a href="#collapseNewOrganization" data-toggle="collapse">Add a new organization to the project
+                                    and database</a></h4>
+
+                                <div class="collapse" id="collapseNewOrganization">
+
+                                    {% crispy forms.addorganization %}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="places">
+
+                    <div class="container-fluid">
+
+                        <div class="row">
+        <div class="col-lg-4 col-sm-8">
+
+                <div id="map" style="max-width:100%; width:500px; height:300px">
+        {% if object.has_locations %}
+        <img src="{{object.image_overlay_url}}&width=500&height=300" style="max-width:100%; width:500px">
+        {% else %}
+        <img src="{{ STATIC_URL }}img/location-none.jpg" style="max-width:100%; width:500px">
+
+        {% endif %}
+
+
+    </div>
+        {% crispy forms.projectplaceform %}
+
+    </div>
+</div>
+</div>
+
+
+
+                </div>
+                <div role="tabpanel" class="tab-pane" id="xproperties">
+
+                    TODO: Change properties form
+{% crispy form %}
+                </div>
+                <div role="tabpanel" class="tab-pane" id="images">
+
+
+
+                        <div class="col-lg-6 col-sm-12 col-xs-12" id="image-container">
+        <h4>Images</h4>
+            {% if object.projectimage_set.count == 0 %}
+        <p>No images</p>
+        {% else %}
+            {% for i in object.projectimage_set.all %}
+                            {{i.pk}}
+                {% if i.image %}
+
+                <img alt="{{i.description}}" data-largeimage="{{i.thumbnailurl_large}}" src="{{i.thumbnailurl}}">
+
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+                </div>
+
+                    <form method="post" id="project-image-form" class="form-horizontal" enctype="multipart/form-data" action="/suggest/suggest/">
+                        {% crispy forms.image %}
+                    </form>
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="sectors">
+                    TODO: Add/remove photo
+                    <form method="post" id="project-properties-form" class="form-horizontal" enctype="multipart/form-data" action="/suggest/suggest/">
+                        {% crispy ProjectPropertiesForm %}
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<hr>
+
+{% comment %}
+<h4>Old data</h4>
+
+<div class="row">
+    <div id="projectdetails" class="col-lg-6" style="border:1px solid red">
+        <h4>{% trans "Project Details" %}</h4>
+
+    </div>
+
+    <div id="projectorganizations" class="col-lg-6" style="border:1px solid black">
+        <h4>{% trans "Organizations" %}</h4>
+        <table class="table table-condensed">
+            {% for po in object.projectorganization_set.all %}
+            <tr>
+                <td><strong>{{po.organization.name}}</strong></td>
+                <td><p> {{po.organizationclass}}</p></td>
+                <td> {% if p.notes %} <p><strong> Notes: </strong> {{po.notes}}</p> {% endif %}</td>
+                <td>
+                    <form class="button-form" action="/suggest/suggest/" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_description" value="Remove {{po.organization.name}} from project">
+                        <input type="hidden" name="_affected_instance" value="nhdb_project {{po.project.id}}">
+                        <input type="hidden" name="_url" value="/rest/nhdb/projectorganization/{{po.pk}}/">
+                        <button class="btn btn-xs btn-warning">Remove</button>
+                    </form>
+                </td>
+            </tr>
+
+            {% endfor %}
+            <tr class='template projectorganization-template'>
+                <td><strong class="name">{{po.organization.name}}</strong></td>
+                <td><p class="organizationclass"> {{po.organizationclass}}</p></td>
+                <td><p><strong> Notes: </strong><span class="notes"> {{po.notes}}</span></p></td>
+                <td>
+                    Added
+                </td>
+            </tr>
+        </table>
+
+        <div class="organizationbox neworganization">
+            <form id='new-projectorganization' action="/suggest/suggest/" method="POST" class="form-horizontal">
+                <fieldset>
+                    {% csrf_token %}
+                    <div class="form-group ">
+                        <label class="col-sm-4 control-label ">Notes</label>
+                        <div class="col-sm-8">
+                            <textarea rows="3" name="notes" class="form-control" type="text"></textarea>
+                        </div>
+                    </div>
+                    <input name="_url" type="hidden" value="/rest/nhdb/projectorganization/">
+                    <input name="_method" type="hidden" value="POST">
+                    <input name="_description" type="hidden" value="Add an organization to this project">
+                    <input name="_affected_instance" type="hidden" value="nhdb_project {{project.pk}}">
+                    <input type="hidden" name="project" value="{{object.pk}}">
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label ">Organization</label>
+                        <div class="col-sm-8">
+                            <select data-selecturl="/selecttwo/nhdb/organization/name/icontains" style="width:100%" name="organization"></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label ">Organizationclass</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="organizationclass">
+                                <option value="A">Partner</option>
+                                <option value="P">Primary</option>
+                                <option value="O">Other</option>
+                                <option value="F">Funding</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-primary" title="Make a POST request on the Project Organization List resource">{% trans "Add organization" %}</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+  <div id="projectpersons" class="col-lg-6" style="border:1px solid black">
+        <h4>{% trans "People" %}</h4>
+        <table class="table table-condensed">
+            {% for po in object.projectperson_set.all %}
+            <tr>
+                <td>{{po.person.name}}</td>
+                <td>{{po.person.title}}</td>
+                <td>{{po.person.organization}}</td>
+                <td><p> {{po.is_primary}}</p></td>
+
+                <td>
+                    <form class="button-form remove-person-form" action="/suggest/suggest/" method="POST" data-name="{{po.person.name}}">
+                        {% csrf_token %}
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_description" value="Remove {{po.person.name}} from {{object.name}}">
+                        <input type="hidden" name="_affected_instance" value="nhdb_project {{po.project.id}}">
+                        <input type="hidden" name="_affected_instance" value="nhdb_person {{po.person.id}}">
+                        <input type="hidden" name="_url" value="/rest/nhdb/projectperson/{{po.pk}}/">
+                        <input type="hidden" name="_action" value="DM">
+                        <button class="btn btn-xs btn-warning">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+
+            <div style="'border:5px solid black;">
+
+            <h4>Test</h4>
+            {% for o, deleteform in ProjectPersonDeleteFormset %}
+                {{o}}
+                {% crispy deleteform %}
+            {% endfor %}
+
+            </div>
+
+            <tr class='template projectperson-template'>
+                <td><strong class="name"></strong></td>
+                <td></td>
+                <td></td>
+                <td><p><strong> Notes: </strong><span class="notes"> {{po.notes}}</span></p></td>
+                <td>
+                    Added
+                </td>
+            </tr>
+        </table>
+
+        <div class="personbox newperson">
+
+        </div>
+    </div>
+
+<div id="Properties" class="col-lg-6" style="border:1px solid black">
+    {% crispy ProjectPropertiesForm %}
+</div>
+
+
+
+    <div class="col-lg-12">
+
+        <div class="well">
+
+            {% for i,j in rest.items %}
+            {{i}}
+            <pre>{{j}}</pre>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endcomment %}
+{% endblock content%}

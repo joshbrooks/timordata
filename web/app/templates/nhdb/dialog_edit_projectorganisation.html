@@ -1,0 +1,11 @@
+<div id='dialog_edit_project_organization' style='display:none'>
+{% for o in links %}
+    <h3>{{o.organization.name}}</h3>
+    <span class='buttons-select-class'>      
+        <input type='radio' class='edit_organizationclass_{{o.pk}}' id='edit_organizationclass_{{o.pk}}_P'{% if o.organizationclass == 'P' %} checked='checked' {%endif %}name='edit_organizationclass_{{o.pk}}'/><label for='edit_organizationclass_{{o.pk}}_P'>Primary / Implementing</label>
+        <input type='radio' class='edit_organizationclass_{{o.pk}}' id='edit_organizationclass_{{o.pk}}_A'{% if o.organizationclass == 'A' %} checked='checked' {%endif %}name='edit_organizationclass_{{o.pk}}'/><label for='edit_organizationclass_{{o.pk}}_A'>Partner</label>
+        <input type='radio' class='edit_organizationclass_{{o.pk}}' id='edit_organizationclass_{{o.pk}}_F'{% if o.organizationclass == 'F' %} checked='checked' {%endif %}name='edit_organizationclass_{{o.pk}}'/><label for='edit_organizationclass_{{o.pk}}_F'>Funding</label>
+        <input type='radio' class='edit_organizationclass_{{o.pk}}' id='edit_organizationclass_{{o.pk}}_O'{% if o.organizationclass == 'O' %} checked='checked' {%endif %}name='edit_organizationclass_{{o.pk}}'/><label for='edit_organizationclass_{{o.pk}}_O'>Other</label>
+    </span>
+{% endfor %}
+</div>

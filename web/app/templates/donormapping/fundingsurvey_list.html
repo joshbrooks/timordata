@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+{% load django_select2_tags %}
+{% block headertext%}
+
+{% endblock %}
+
+{% block containerclass %}container-fluid{% endblock %}
+
+{% block script %}
+    {{block.super}}
+    {% import_django_select2_js_css %}
+{% endblock script %}
+
+{% block style %}
+    <link href="{{ STATIC_URL }}django_tables2/themes/paleblu/css/screen.css" rel="stylesheet">
+    <style>
+        ul.pagination {
+            border-radius: 0px;
+            display: block;
+        }
+    </style>
+{% endblock style %}
+
+
+{% block content %}
+<div class="col-12 well" style="overflow-x:scroll;">
+    <h4>Results Summary</h4>
+{% for question_set in test %}
+<table class="table table-bordered" style="width:auto;">
+
+    <thead>
+    <tr><th>Question</th> {% for r in question_set.response %} <th>{{r}}</th>{% endfor %}</tr>
+    </thead>
+    <tbody>{% for q in question_set.questions %}
+        <tr> {% for a in q %}
+            <td>{{a}}</td>{% endfor %}
+        </tr>{% endfor %}
+
+    </tbody>
+
+</table>
+{% endfor %}
+</div>
+
+<p><a class="btn btn-default" href='{% url "donormapping:survey:create" %}' role="button">{% trans 'Add another survey' %} &raquo;</a></p>
+    <div id="charts" class="row">
+    {%  for param, typename, verbose_name in charts %}
+        <div class="{% if param == 'properties' %}col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12{% else %}col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-2{% endif %} flot_categories_chart_container">
+        <div id="plot_{{ param }}" class="flot_{{ typename }}_chart" data-param="{{ param }}" data-type="{{ typename }}"></div>
+        <p class='charttitle'><em>{{ verbose_name }}</em></p>
+        </div>
+    {%  endfor %}
+    </div>
+    <div id="tables" class="row">
+    {%  for param, typename, verbose_name in charts %}
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-2">
+
+        <p><em>{{ verbose_name }}</em></p>
+            {{param}}
+            {{typename}}
+        </div>
+    {%  endfor %}
+    </div>
+    <p><a class="btn btn-primary" href="{% url 'nhdb:project:csv' %}?{{request.GET.urlencode}}">Download for Excel</a></p>
+
+    {% render_table table %}
+</div>
+{% endblock content %}

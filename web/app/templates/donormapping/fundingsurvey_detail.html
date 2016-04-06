@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h3>Donor Mapping Survey</h3>
+<p><a class="btn btn-default" href='{% url "donormapping:survey:edit" pk=object.pk%}' role="button">{% trans 'Change this survey' %} &raquo;</a></p>
+<p><a class="btn btn-default" href='{% url "donormapping:survey:create" %}' role="button">{% trans 'Add another survey' %} &raquo;</a></p>
+<p><a class="btn btn-default" href='{% url "donormapping:survey:list" %}' role="button">{% trans 'Go to the survey list' %} &raquo;</a></p>
+
+<h4>{{object.organizationname}}</h4>
+<div class="col-md-12">
+    <table class="table table-condensed">
+        <caption>Technology access</caption>
+            <tbody>
+            <tr><td>Access to Email</td><td>{{object.get_usegmail_display}}</td></tr>
+            <tr><td>Access to Facebook</td><td>{{object.get_usefacebook_display}}</td></tr>
+            <tr><td>Access to Internet Search</td><td>{{object.get_usegoogle_display}}</td></tr>
+            <tr><td>Access to Computer</td><td>{{object.hascomputer}}</td></tr>
+            <tr><td>Access to Printer</td><td>{{object.hasprinter}}</td></tr>
+            <tr><td>Access to SMS / telephone</td><td>{{object.hasmobile}}</td></tr>
+            <tr><td>Access to Smartphone</td><td>{{object.hassmartphone}}</td></tr>
+        </tbody>    
+    </table>
+</div>
+<div class="col-md-6">
+    <table class="table table-condensed">
+        <caption>Donor Questions</caption>
+            <tbody>
+            <tr><td>Funding given?</td><td>{{object.fundinggiven}}</td></tr>
+            <tr><td>Amount of funding given</td><td>{{object.fundinggiveamt}}</td></tr>
+            <tr><td>It is difficult to locate recipients:</td><td>{{object.get_qrecipients_display}}</td></tr>
+            <tr><td>How we search for recipients:</td><td>{%  for i in object.fundinggiverel.all %}{{i}}{%  if not forloop.last %}, {% endif %} {% endfor %}</td></tr>
+            <tr><td>How we search for recipients (other):</td><td>{{object.fundinggivemethod}}</td></tr>
+        </tbody>
+    </table>
+</div>
+<div class="col-md-6">
+    <table class="table table-condensed">
+        <caption>Recipient Questions</caption>
+            <tbody>
+            <tr><td>Funding received?</td><td>{{object.fundingreceived}}</td></tr>
+            <tr><td>Amount of funding received</td><td>{{object.fundingrecvamt}}</td></tr>
+            <tr><td>How we search for donors:<td>{%  for i in object.fundingrecvrel.all %}{{i}}{%  if not forloop.last %}, {% endif %} {% endfor %}</td></tr>
+            <tr><td>How we search for donors (other):</td><td>{{object.fundingrecmethod}}</td></tr>
+            <tr><td>It is difficult to find donors:</td><td>{{object.get_qfunding_display}}</td></tr>
+            <tr><td>It is difficult to find donors because of the sectors we work in:</td><td>{{object.get_qdonorsector_display}}</td></tr>
+            <tr><td>It is difficult to get funding because of transport:</td><td>{{object.get_qtransport_display}}</td></tr>
+            <tr><td>The funding application process is difficult:</td><td>{{object.get_qprocess_display}}</td></tr>
+
+        </tbody>    
+    </table>
+</div>
+
+<span style="display:none;">
+<h4>Raw Data</h4>
+{% for instance in data %}
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>field</td><th>value</td>
+        </tr>   
+    </thead>    
+        <tbody>{% for field, value in instance.fields.items %}
+        <tr>
+            <td>{{field}}</td><td>{% if not value %}  {% else %}{{value}} {% endif %}</td>
+        </tr>{% endfor %}
+    </tbody>    
+</table></span>
+{% endfor %}
+
+{% endblock content %}

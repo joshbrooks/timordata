@@ -1,0 +1,7 @@
+{% load i18n %}
+{% load crispy_forms_tags %}
+  
+  <form id="versions" method="POST" autocomplete="off" class="{{version_helper.form_class}}">
+  {% crispy versionform version_helper %}
+  </form>
+  

@@ -1,0 +1,64 @@
+from django.contrib.gis.db import models
+from mp_lite.mp_lite import MP_Lite
+
+
+class AdminArea(MP_Lite):
+
+    steps = 3
+
+    pcode = models.IntegerField(primary_key=True)
+    geom = models.MultiPolygonField(srid=32751)
+    objects = models.GeoManager()
+
+    def __unicode__(self):
+        return self.name
+
+
+class Road(models.Model):
+    geom = models.MultiLineStringField(srid=32751)
+    osm_id = models.CharField(max_length=100, null=True)
+    name = models.CharField(max_length=255, null=True)
+    highway = models.CharField(max_length=255, null=True)
+    route = models.CharField(max_length=255, null=True)
+
+
+class World(models.Model):
+
+    '''
+    Countries of the world, not simplified, in EPSG:4326
+    '''
+    iso3 = models.CharField(max_length=3, unique=True)
+    name = models.CharField(max_length=100)
+    geom = models.MultiPolygonField(srid=4326)
+    objects = models.GeoManager()
+
+    def __unicode(self):
+        return self.name
+
+
+class Worldsimple(models.Model):
+
+    '''
+    Countries of the world, simpified, in EPSG:4326
+    '''
+    iso3 = models.CharField(max_length=3)
+    name = models.CharField(max_length=100)
+    geom = models.PolygonField(srid=4326)
+    objects = models.GeoManager()
+
+    def __unicode(self):
+        return self.name
+
+
+class PlaceAlternate(models.Model):
+
+    '''
+    Alternative or "unofficial" place names which are commonly used
+    but not officially recognised in 2010 census information
+    '''
+    name = models.CharField(max_length=100)
+    geom = models.MultiPolygonField(srid=32751)
+    objects = models.GeoManager()
+
+    def __unicode__(self):
+        return self.name

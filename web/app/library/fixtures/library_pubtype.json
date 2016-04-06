@@ -1,0 +1,1 @@
+[{"fields": {"name": "Brief"}, "model": "library.pubtype", "pk": "BRF"}, {"fields": {"name": "Brochure"}, "model": "library.pubtype", "pk": "BRO"}, {"fields": {"name": "Guideline"}, "model": "library.pubtype", "pk": "GDL"}, {"fields": {"name": "Glossary"}, "model": "library.pubtype", "pk": "GLO"}, {"fields": {"name": "Report"}, "model": "library.pubtype", "pk": "RPT"}]

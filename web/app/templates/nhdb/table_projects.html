@@ -1,0 +1,38 @@
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<h3>Project Search</h3>
+</div>
+<div class="modal-body">
+
+<table id='projects' style='width:100%' class="sorttable option-table-update" >
+    <caption>Projects</caption>
+    <thead>
+        <tr>
+            <th>Project Name</th>
+            <th>Organizations Involved</th>
+        </tr>
+    </thead>
+    
+    <tfoot>
+        <tr>
+            <th>Project Name</th>
+            <th>Organizations Involved</th>
+        </tr>
+    </tfoot>
+    
+    <tbody>{% for proj in projects %}
+        <tr>
+            <th><a href="{% url 'nhdb:project:project' proj.pk %}">{{proj.name}}</a></th>
+            <th>{% for o in proj.projectorganization_set.all %}
+                <a href="{% url 'nhdb:organization:organization' o.organization.pk %}">{{o.organization.name}} - {{o.get_organizationclass_display}}</a>
+                </br>{% endfor %}
+            </th>
+        </tr>{% endfor %}
+    </tbody>
+</table>
+
+</div>
+<div class="modal-footer">
+	<button type="button" data-dismiss="modal" class="btn">Close</button>
+	<button type="button" class="btn btn-primary">Ok</button>
+</div>

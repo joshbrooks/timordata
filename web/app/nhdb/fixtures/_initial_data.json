@@ -1,0 +1,1005 @@
+[
+  {
+    "fields": {
+      "name": "Dialogue",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Di\u00e1logu",
+      "name_id": null,
+      "description_tet": null,
+      "path": "ACT.DLG",
+      "name_en": "Dialogue",
+      "name_pt": "Di\u00e1logo"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "name": "Training",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Treinamentu",
+      "name_id": null,
+      "description_tet": null,
+      "path": "ACT.TRN",
+      "name_en": "Training",
+      "name_pt": "Treinamento"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "name": "Capacity Strengthening",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Kapasidade Haforsa",
+      "name_id": null,
+      "description_tet": null,
+      "path": "ACT.CAP",
+      "name_en": "Capacity Strengthening",
+      "name_pt": "Capacidade de Fortalecimento"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "name": "Advocacy",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Advokasia",
+      "name_id": null,
+      "description_tet": null,
+      "path": "ACT.ADV",
+      "name_en": "Advocacy",
+      "name_pt": "Advocacia"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "name": "Research",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Peskiza",
+      "name_id": null,
+      "description_tet": null,
+      "path": "ACT.RES",
+      "name_en": "Research",
+      "name_pt": "Pesquisa"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 5
+  },
+  {
+    "fields": {
+      "name": "Social Services",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Servisu Sosi\u00e1l",
+      "name_id": null,
+      "description_tet": null,
+      "path": "ACT.SSV",
+      "name_en": "Social Services",
+      "name_pt": "Servi\u00e7os Sociais"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 6
+  },
+  {
+    "fields": {
+      "name": "Infrastructure and Rehabilitation",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Infrastrutura no Reabilitasaun",
+      "name_id": null,
+      "description_tet": null,
+      "path": "ACT.INF",
+      "name_en": "Infrastructure and Rehabilitation",
+      "name_pt": "Infra-estrutura e Reabilita\u00e7\u00e3o"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 7
+  },
+  {
+    "fields": {
+      "name": "Income Generation",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Rendimentu Generatio",
+      "name_id": "Generasi pendapatan",
+      "description_tet": null,
+      "path": "ACT.INC",
+      "name_en": "Income Generation",
+      "name_pt": "Gera\u00e7\u00e3o de renda"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 8
+  },
+  {
+    "fields": {
+      "name": "Microfinance and Credit",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Di\u00e1logu",
+      "name_id": null,
+      "description_tet": null,
+      "path": "ACT.MFC",
+      "name_en": "Microfinance and Credit",
+      "name_pt": "Microfinan\u00e7as e Cr\u00e9dito"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 9
+  },
+  {
+    "fields": {
+      "name": "Small Grants",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Fundus ki'ik",
+      "name_id": null,
+      "description_tet": null,
+      "path": "ACT.GRA",
+      "name_en": "Small Grants",
+      "name_pt": "Pequenas Subven\u00e7\u00f5es"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 10
+  },
+  {
+    "fields": {
+      "name": "Public Information",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "P\u00fabliku Informasaun",
+      "name_id": null,
+      "description_tet": null,
+      "path": "ACT.PUB",
+      "name_en": "Public Information",
+      "name_pt": "Informa\u00e7\u00e3o P\u00fablica"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 11
+  },
+  {
+    "fields": {
+      "name": "Advisory Support",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Asesoria Apoiu",
+      "name_id": null,
+      "description_tet": null,
+      "path": "ACT.ADS",
+      "name_en": "Advisory Support",
+      "name_pt": "Apoio Consultivo"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 12
+  },
+  {
+    "fields": {
+      "name": "Networking",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Rede",
+      "name_id": null,
+      "description_tet": null,
+      "path": "ACT.NET",
+      "name_en": "Networking",
+      "name_pt": "Networking"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 13
+  },
+  {
+    "fields": {
+      "name": "Education",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Edukasaun",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.EDU",
+      "name_en": "Education",
+      "name_pt": "Educa\u00e7\u00e3o"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 14
+  },
+  {
+    "fields": {
+      "name": "Agriculture and Food Security",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Agrikultura no ai-Han Seguransa",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.AGR",
+      "name_en": "Agriculture and Food Security",
+      "name_pt": "Agricultura e Seguran\u00e7a Alimentar"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 15
+  },
+  {
+    "fields": {
+      "name": "Dialogue",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Di\u00e1logu",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.DLG",
+      "name_en": "Dialogue",
+      "name_pt": "Di\u00e1logo"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 16
+  },
+  {
+    "fields": {
+      "name": "Health",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Sa\u00fade",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.HLT",
+      "name_en": "Health",
+      "name_pt": "Sa\u00fade"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 17
+  },
+  {
+    "fields": {
+      "name": "Community Development",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Komunit\u00e1ria Dezenvolvimentu ",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.CDV",
+      "name_en": "Community Development",
+      "name_pt": "Desenvolvimento Comunit\u00e1rio"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 18
+  },
+  {
+    "fields": {
+      "name": "Natural Resources Enviroment and Energy",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Rekursu Natur\u00e1l Enviroment no Enerjia",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.NAT",
+      "name_en": "Natural Resources Enviroment and Energy",
+      "name_pt": "Recursos Naturais e Meio Ambiente Energia"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 19
+  },
+  {
+    "fields": {
+      "name": "Infrastructure",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Infrastrutura",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.INF",
+      "name_en": "Infrastructure",
+      "name_pt": "Infra-estrutura"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 20
+  },
+  {
+    "fields": {
+      "name": "Justice Human Rights and Protection",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Justisa Direitus Umanus no Protesaun",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.JUS",
+      "name_en": "Justice Human Rights and Protection",
+      "name_pt": "Justi\u00e7a Direitos Humanos e Prote\u00e7\u00e3o"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 21
+  },
+  {
+    "fields": {
+      "name": "Water and Sanitation",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Bee no Saneamentu",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.WAT",
+      "name_en": "Water and Sanitation",
+      "name_pt": "\u00c1gua e Saneamento"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 22
+  },
+  {
+    "fields": {
+      "name": "Economic Development",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Ekon\u00f3miku Dezenvolvimentu",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.ECD",
+      "name_en": "Economic Development",
+      "name_pt": "Desenvolvimento econ\u00f4mico"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 23
+  },
+  {
+    "fields": {
+      "name": "Conflict Prevention and Peace Strengthening",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Konflitu Prevensaun no Dame Haforsa",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.CPP",
+      "name_en": "Conflict Prevention and Peace Strengthening",
+      "name_pt": "Preven\u00e7\u00e3o de Conflitos e fortalecimento da paz"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 24
+  },
+  {
+    "fields": {
+      "name": "Governance",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Governasaun",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.GOV",
+      "name_en": "Governance",
+      "name_pt": "Governo"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 25
+  },
+  {
+    "fields": {
+      "name": "Media and Public Information",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "M\u00eddia no P\u00fabliku Informasaun",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.MED",
+      "name_en": "Media and Public Information",
+      "name_pt": "M\u00eddia e Informa\u00e7\u00e3o P\u00fablica"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 26
+  },
+  {
+    "fields": {
+      "name": "Gender Equality",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "J\u00e9neru Igualdade",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.GEN",
+      "name_en": "Gender Equality",
+      "name_pt": "Igualdade de G\u00e9nero"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 27
+  },
+  {
+    "fields": {
+      "name": "Coordination",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Koordenasaun",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.CRD",
+      "name_en": "Coordination",
+      "name_pt": "Coordena\u00e7\u00e3o"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 28
+  },
+  {
+    "fields": {
+      "name": "Fisheries",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Peskas",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.FIS",
+      "name_en": "Fisheries",
+      "name_pt": "Pescas"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 29
+  },
+  {
+    "fields": {
+      "name": "Nutrition",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Nutrisaun",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.NUT",
+      "name_en": "Nutrition",
+      "name_pt": "Nutri\u00e7\u00e3o"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 30
+  },
+  {
+    "fields": {
+      "name": "Disaster Risk Management",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Redusaun Risku Jestaun",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.DRM",
+      "name_en": "Disaster Risk Management",
+      "name_pt": "Gest\u00e3o do Risco de Desastres"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 31
+  },
+  {
+    "fields": {
+      "name": "HIV/Aids",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "HIV/Sida",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.HIV",
+      "name_en": "HIV/Aids",
+      "name_pt": "HIV / Aids"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 32
+  },
+  {
+    "fields": {
+      "name": "Food Aid",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Ai-han ajuda",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.FDA",
+      "name_en": "Food Aid",
+      "name_pt": "Ajuda Alimentar"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 33
+  },
+  {
+    "fields": {
+      "name": "Emergency Shelter",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Uma Emerj\u00e9nsia",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.SHL",
+      "name_en": "Emergency Shelter",
+      "name_pt": "Abrigo de Emerg\u00eancia"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 34
+  },
+  {
+    "fields": {
+      "name": "Security",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Seguransa",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV.SEC",
+      "name_en": "Security",
+      "name_pt": "Seguran\u00e7a"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 35
+  },
+  {
+    "fields": {
+      "name": "Youth",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Joven",
+      "name_id": null,
+      "description_tet": null,
+      "path": "BEN.YOU",
+      "name_en": "Youth",
+      "name_pt": "Juventude"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 36
+  },
+  {
+    "fields": {
+      "name": "Community (general)",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Komunidade (jer\u00e1l)",
+      "name_id": null,
+      "description_tet": null,
+      "path": "BEN.COM",
+      "name_en": "Community (general)",
+      "name_pt": "Comunidade (geral)"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 37
+  },
+  {
+    "fields": {
+      "name": "Children",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Labarik",
+      "name_id": null,
+      "description_tet": null,
+      "path": "BEN.CHI",
+      "name_en": "Children",
+      "name_pt": "Crian\u00e7as"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 38
+  },
+  {
+    "fields": {
+      "name": "Women",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Feto",
+      "name_id": null,
+      "description_tet": null,
+      "path": "BEN.WOM",
+      "name_en": "Women",
+      "name_pt": "Mulheres"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 39
+  },
+  {
+    "fields": {
+      "name": "Widows",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Feto-faluk",
+      "name_id": null,
+      "description_tet": null,
+      "path": "BEN.WID",
+      "name_en": "Widows",
+      "name_pt": "Vi\u00favas"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 40
+  },
+  {
+    "fields": {
+      "name": "Organizations",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Organizasaun",
+      "name_id": null,
+      "description_tet": null,
+      "path": "BEN.ORG",
+      "name_en": "Organizations",
+      "name_pt": "Organiza\u00e7\u00f5es"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 41
+  },
+  {
+    "fields": {
+      "name": "Government",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Governu",
+      "name_id": null,
+      "description_tet": null,
+      "path": "BEN.GOV",
+      "name_en": "Government",
+      "name_pt": "Governo"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 42
+  },
+  {
+    "fields": {
+      "name": "Professionals",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Profisionais",
+      "name_id": null,
+      "description_tet": null,
+      "path": "BEN.PRO",
+      "name_en": "Professionals",
+      "name_pt": "Profissionais"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 43
+  },
+  {
+    "fields": {
+      "name": "Survivors of Violence",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Ema moris depois trauma",
+      "name_id": null,
+      "description_tet": null,
+      "path": "BEN.SUR",
+      "name_en": "Survivors of Violence",
+      "name_pt": "Sobreviventes de viol\u00eancia"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 44
+  },
+  {
+    "fields": {
+      "name": "IDPs",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "IDPs",
+      "name_id": null,
+      "description_tet": null,
+      "path": "BEN.IDP",
+      "name_en": "IDPs",
+      "name_pt": "IDPs"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 45
+  },
+  {
+    "fields": {
+      "name": "Suco councils",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Conselhos de Suco",
+      "name_id": null,
+      "description_tet": null,
+      "path": "BEN.SCC",
+      "name_en": "Suco councils",
+      "name_pt": "Conselhos de Suco"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 46
+  },
+  {
+    "fields": {
+      "name": "Ex-combatants",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Ex-combatants",
+      "name_id": null,
+      "description_tet": null,
+      "path": "BEN.EXC",
+      "name_en": "Ex-combatants",
+      "name_pt": "Ex-combatentes"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 47
+  },
+  {
+    "fields": {
+      "name": "Special Needs",
+      "description_id": null,
+      "description": "",
+      "description_pt": null,
+      "description_en": "",
+      "name_tet": "Espesi\u00e1l Presiza",
+      "name_id": null,
+      "description_tet": null,
+      "path": "BEN.SPE",
+      "name_en": "Special Needs",
+      "name_pt": "Necessidades Especiais"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 48
+  },
+  {
+    "fields": {
+      "name": "Activities",
+      "description_id": null,
+      "description": "Activities",
+      "description_pt": null,
+      "description_en": "Activities",
+      "name_tet": "Atividade",
+      "name_id": null,
+      "description_tet": null,
+      "path": "ACT",
+      "name_en": "Activities",
+      "name_pt": "Atividades"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 51
+  },
+  {
+    "fields": {
+      "name": "Beneficiaries",
+      "description_id": null,
+      "description": "Beneficiaries",
+      "description_pt": null,
+      "description_en": "Beneficiaries",
+      "name_tet": "Benefisario",
+      "name_id": null,
+      "description_tet": null,
+      "path": "BEN",
+      "name_en": "Beneficiaries",
+      "name_pt": "Benefici\u00e1rios"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 52
+  },
+  {
+    "fields": {
+      "name": "Sector",
+      "description_id": null,
+      "description": "Areas of Involvement",
+      "description_pt": null,
+      "description_en": "Areas of Involvement",
+      "name_tet": "Setora",
+      "name_id": null,
+      "description_tet": null,
+      "path": "INV",
+      "name_en": "Sector",
+      "name_pt": "Setor"
+    },
+    "model": "nhdb.propertytag",
+    "pk": 53
+  },
+  {
+    "fields": {
+      "name": "Couples",
+      "description_id": "",
+      "description": "Couples",
+      "description_pt": "",
+      "description_en": "Couples",
+      "name_tet": "Ema nain rua kazamento",
+      "name_id": "",
+      "description_tet": "",
+      "path": "BEN.COU",
+      "name_en": "Couples",
+      "name_pt": ""
+    },
+    "model": "nhdb.propertytag",
+    "pk": 55
+  },
+  {
+    "fields": {
+      "name": "Farmers",
+      "description_id": "",
+      "description": "Farmers",
+      "description_pt": "",
+      "description_en": "Farmers",
+      "name_tet": "to'os nain",
+      "name_id": "",
+      "description_tet": "",
+      "path": "BEN.FAR",
+      "name_en": "Farmers",
+      "name_pt": ""
+    },
+    "model": "nhdb.propertytag",
+    "pk": 56
+  },
+  {
+    "fields": {
+      "name": "Church leaders",
+      "description_id": "",
+      "description": "Church leaders",
+      "description_pt": "",
+      "description_en": "Church leaders",
+      "name_tet": "Katekista",
+      "name_id": "",
+      "description_tet": "",
+      "path": "BEN.CHU",
+      "name_en": "Church leaders",
+      "name_pt": ""
+    },
+    "model": "nhdb.propertytag",
+    "pk": 57
+  },
+  {
+    "fields": {"description": "Active"},
+    "model": "nhdb.projectstatus",
+    "pk": "A"
+  },
+  {
+    "fields": {"description": "Completed"},
+    "model": "nhdb.projectstatus",
+    "pk": "C"
+  },
+  {
+    "fields": {"description": "Planned"},
+    "model": "nhdb.projectstatus",
+    "pk": "P"
+  },
+  {
+    "fields": {"description": "Unknown"},
+    "model": "nhdb.projectstatus",
+    "pk": "U"
+  },
+  {
+    "fields": {"description": "Cancelled"},
+    "model": "nhdb.projectstatus",
+    "pk": "X"
+  },
+  {
+    "fields": {"orgtype": "Academic / Research Agency"},
+    "model": "nhdb.organizationclass",
+    "pk": "AC"
+  },
+  {
+    "fields": {"orgtype": "Bilateral Agency"},
+    "model": "nhdb.organizationclass",
+    "pk": "BI"
+  },
+  {
+    "fields": {"orgtype": "Community Based Organization"},
+    "model": "nhdb.organizationclass",
+    "pk": "CBO"
+  },
+  {
+    "fields": {"orgtype": "International NGO"},
+    "model": "nhdb.organizationclass",
+    "pk": "INGO"
+  },
+  {
+    "fields": {"orgtype": "Local NGO"},
+    "model": "nhdb.organizationclass",
+    "pk": "LNGO"
+  },
+  {
+    "fields": {"orgtype": "Unknown type"},
+    "model": "nhdb.organizationclass",
+    "pk": "None"
+  },
+  {
+    "fields": {"orgtype": "United Nations agency"},
+    "model": "nhdb.organizationclass",
+    "pk": "UN"
+  },
+  {
+    "fields": {"description": "Partner"},
+    "model": "nhdb.projectorganizationclass",
+    "pk": "A"
+  },
+  {
+    "fields": {"description": "Funding"},
+    "model": "nhdb.projectorganizationclass",
+    "pk": "F"
+  },
+  {
+    "fields": {"description": "Other"},
+    "model": "nhdb.projectorganizationclass",
+    "pk": "O"
+  },
+  {
+    "fields": {"description": "Primary"},
+    "model": "nhdb.projectorganizationclass",
+    "pk": "P"
+  },
+  {
+    "fields": {"description": "Humanitarian"},
+    "model": "nhdb.projecttype",
+    "pk": 1
+  }
+]

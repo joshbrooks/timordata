@@ -1,0 +1,28 @@
+{% load i18n %}
+{% csrf_token %}
+
+{% if not orgs %}
+<div class="result">
+     <h4 class='organization-name' >No projects found</h4>
+     <h5 class='organization-description'>Sorry, no projects matching those criteria were found</h5>
+</div>
+{% endif %}
+
+{% for o in orgs %}
+<div class="result">
+     <h4 class='organization-name' >{{o.name}}</h4>
+     <h5>{{o.get_orgtype_display}}</h5>
+<!--
+     <strong>Relevant projects:</strong>{% for p in projects %}{% if p in o.project_set.all %}<a href="{% url 'nhdb:project:project' p.pk%}">{{p}}</a>{% if not forloop.last %}; {% endif %}{%endif%}{%endfor%}<br>
+-->
+
+     <strong>Relevant projects:</strong>{% for link in org_project_links %}{% if link.organization == o.pk %} <a href="{% url 'nhdb:project:project' link.project%}">{{link.project__name}}</a>{% if not forloop.last %}; {% endif %}{%endif%}{%endfor%}<br>
+     <strong>T </strong> {{o.contact.phoneprimary}}{% if o.contact.phonesecondary%} / {{o.contact.phonesecondary }}{%endif%}<br>
+     {% if o.contact.email %}<strong>E </strong> {{o.contact.email}}<br>{%endif%}
+     {% if o.contact.web %}<strong>W </strong> <a href='http://{{o.contact.web}}'>{{o.contact.web}}</a><br>{%endif%}
+     {% if o.contact.fax %}<strong>F </strong> {{o.contact.fax}}<br>{%endif%}
+     <strong>A </strong> <em><span style='color:red;'>Organization Addresses not yet implemented</span></em><br>
+     
+<p><a role="button" href="{% url 'nhdb:organization:organization' o.id %}" class="btn btn-default">View details »</a></p>
+</div>{% endfor %}
+

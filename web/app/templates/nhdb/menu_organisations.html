@@ -1,0 +1,11 @@
+<li id='menu_organizations' class=' project' data-pk={{proj.pk}}>Organizations
+    <ul class='organizations'  style='width:250px;'>{% for po in proj.projectorganization_set.all %}
+        <li class='projectorganization' data-pk={{po.pk}}>{{ po.organization.name }}
+            <ul class='oclass' style='width:350px;'>{% for short, long in po.ORGANIZATION_TYPES %}
+                <li class='update' data-orgtype={{short}}>Set as {{long}}</li>{% endfor %}
+                <li class='remove'>Remove</li>
+            </ul>
+        </li>{% endfor %}
+        <li class='organization_add'><button>Add a new organization</button></li>
+    </ul>
+</li>

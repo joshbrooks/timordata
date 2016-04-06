@@ -1,0 +1,18 @@
+<div id='orgdialog' style='display:none;'>
+    <div id='chooseorgtype' class='row' style='width:605px; float:left; margin-bottom:10px;'>
+        <div id='chooseorgtype' class="ui-widget-header ui-corner-all col col_10">
+            <span id='orgtype'>{% for o in orgtypes %}
+                <input type='radio' id='{{o.short}}' class='orgtype_radio' name='orgtype'/><label for='{{o.short}}'>{{o.name}}</label>{% endfor %}
+            </span>
+        </div>
+    </div>
+    <div class='row' style='width:605px; float:left; margin-top:10px;'>
+        <div id='chooseletter' class="ui-widget-header ui-corner-all col col_4">
+            <span id='startswith'>{% for l in letters %}
+                <input type='radio' id='{{l}}' class='letter_radio' name='letter'/><label for='{{l}}'><span style='font-family:monospace'>{{l}}</span></label>{% endfor %}
+            </span>
+        </div>
+        <div id='results' class="ui-widget-header ui-corner-all col col_6" style='height:150px; width:340px; overflow-x:scroll; overflow-y:scroll;'>
+        </div>
+    </div>
+</div>

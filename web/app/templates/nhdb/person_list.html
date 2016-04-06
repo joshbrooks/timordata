@@ -1,0 +1,60 @@
+{% extends "object_list.html" %}
+{% load i18n %}
+{% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{block.super}} Persons {% endblock title %}
+
+{% block leftsidelist %}
+{{object_list.count}}
+    <form class="search-form form-horizontal">
+        <div class="container-fluid">
+            <div class="row">
+
+
+    <div class="form-group">
+        <label for="search-form-organization"  class="col-sm-3 control-label">Org(s)</label>
+        <div class="col-sm-9">
+            <select style="width:100%" name="org" id="search-form-organization" data-selecturl="/selecttwo/nhdb/organization/name/icontains/" multiple="multiple">
+                {% for i in organization %}
+                <option value="{{i.pk}}" selected>{{i}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label for="search-form-project"  class="col-sm-3 control-label">Project</label>
+        <div class="col-sm-9">
+            <select style="width:100%" name="project" id="search-form-project" data-selecturl="/selecttwo/nhdb/project/name/icontains/" multiple="multiple">
+                {% for i in project %}
+                <option value="{{i.pk}}" selected>{{i}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+                <input type="hidden" name="per_page" value="100">
+
+<div class="col-sm-12">
+<button class="btn btn-block">Search</button>
+</div>
+</div>
+</div>
+</form>
+
+{% endblock %}
+
+
+{% block objectlist %}
+<div id="object-list" class="collapse in">
+
+    <div>
+        <a href="table/?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">Show as Table</a>
+        <a href="xls/?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">Download Table (Excel)</a>
+
+    </div>
+    {% render_table table %}
+</div>
+{% endblock %}

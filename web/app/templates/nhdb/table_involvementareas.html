@@ -1,0 +1,6 @@
+<table id='table_involvementareas'>
+    <caption>Involvement Area</caption>
+    <tbody class='involvementareas'>{% for opt in proj.option.all %}{% if opt.classtype == 'Involvement' %}
+        <tr class='activity' data-pk={{opt.classid}}><td>{{ opt.description }}</td></tr>{% endif %}{% endfor %}
+    </tbody>
+</table>

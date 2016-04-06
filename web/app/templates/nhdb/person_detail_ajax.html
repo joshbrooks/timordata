@@ -1,0 +1,43 @@
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+
+<div class="row">
+    <div class="col-lg-12">
+
+    <h3>{{object}}</h3>
+        <h4>{{person.title}} at <a href="/nhdb/organization/#object={{person.organization_id}}">{{person.organization}}</a></h4>
+
+        <p>Last changed on {{person.verified}}
+
+            <p>Contact Details:<br>
+
+        Ph. {{person.phone}}<br>
+        Email {{person.email}}</p>
+
+       <p>Projects:<br>
+
+           {% for p in person.project_set.all %}
+           <p><a href="/nhdb/project/#object={{p.pk}}">{{p}}</a>
+    </p>
+
+           {% endfor %}
+
+           {% if person.project_set.count == 0 %}
+           No projects
+           {% endif %}
+
+    <p>
+        <a href="/nhdb/form/projectperson/main/?person={{person.pk}}"  data-modalurl="/nhdb/form/projectperson/main/?person={{person.pk}}"  data-modaltitle="Add {{person}} to a project">&raquo; "Add {{person}} to a project"</a>
+    </p>
+
+    </p>
+    <p>
+        <a href="/nhdb/form/person/delete/?person={{person.pk}}"  data-modalurl="/nhdb/form/person/delete/?person={{person.pk}}" data-modalselector="#modaldeleteform" data-modaltitle="Are you sure?">&raquo; Remove</a>
+    </p>
+    <p>
+        <a href="/nhdb/form/person/main/?person={{person.pk}}"  data-modalurl="/nhdb/form/person/main/?person={{person.pk}}"  data-modaltitle="Information about {{person}}">&raquo; Change</a>
+    </p>
+    </div>
+</div>
+
