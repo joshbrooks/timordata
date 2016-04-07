@@ -19,7 +19,9 @@ services:
       - front
 
   web:
-    build: ./web
+    build: 
+      context: ./web
+      dockerfile: Dockerfile.local
     links:
       - db
       - memcached
@@ -48,7 +50,8 @@ services:
       - dbstore:/var/lib/postgresql/data
 
   gis:
-    build: ./postgis
+    # build: ./postgis
+    image: digitaltl/gis
     networks:
       - front
     environment:
@@ -64,6 +67,7 @@ services:
       - gis
     networks:
       - front
+    command: ["uwsgi", "/home/tilestache/app/uwsgi.ini"]
 
   simplewms:
     build: ./simplewms

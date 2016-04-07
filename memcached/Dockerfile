@@ -13,7 +13,7 @@ RUN groupadd -r memcache && useradd -r -g memcache memcache
 ENV MEMCACHED_VERSION 1.4.25
 ENV MEMCACHED_SHA1 7fd0ba9283c61204f196638ecf2e9295688b2314
 
-RUN apt-get update && apt-get install -y memcached
+RUN apt-get update && apt-get install -y memcached libmemcached-dev
 RUN if [ -f "/etc/apt/apt.conf.d/30proxy" ]; then rm /etc/apt/apt.conf.d/30proxy; fi
 
 USER memcache

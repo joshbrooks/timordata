@@ -26,31 +26,22 @@ RUN apt-get install -y libmagickwand-dev
 
 RUN if [ -f "/etc/apt/apt.conf.d/30proxy" ]; then rm /etc/apt/apt.conf.d/30proxy; fi
 
-# COPY ./get-pip.py /tmp
-# RUN python /tmp/get-pip.py
 RUN pip install -U pip
 RUN pip install virtualenv
 RUN useradd -U -ms /bin/bash django
 
-RUN mkdir -p /home/django/.cache/pip
-COPY ./pip /home/django/.cache/pip
-RUN chown -R django:django /home/django/.cache
+COPY 	pip /tmp/pip/
+COPY 	requirements.txt /tmp/requirements.txt 
+RUN 	virtualenv /home/django/env
+RUN	. /home/django/env/bin/activate && pip install --index-url=file:///tmp/pip/simple/ -r /tmp/requirements.txt
+RUN	rm -rf tmp/pip
+RUN	rm -rf tmp/requirements.txt
+
 USER django
 WORKDIR /home/django
 
-RUN virtualenv /home/django/env
+RUN 
 RUN mkdir -p /home/django/app/
-COPY requirements.txt /home/django/
-
-RUN mkdir -p /home/django/.cache
-COPY pip /home/django/.cache
-
-RUN . env/bin/activate && pip install -r /home/django/requirements.txt
-RUN . env/bin/activate && pip install uwsgi
-USER root
-RUN rm -rf /home/django/.cache/pip
-RUN mkdir -p /var/www/html/static/
-RUN touch /var/www/html/static/test
 
 USER django
 
