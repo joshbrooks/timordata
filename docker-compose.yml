@@ -50,8 +50,7 @@ services:
       - dbstore:/var/lib/postgresql/data
 
   gis:
-    # build: ./postgis
-    image: digitaltl/gis
+    build: ./postgis
     networks:
       - front
     environment:

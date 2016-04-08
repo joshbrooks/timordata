@@ -2,7 +2,7 @@ db:
   build: .
   environment:
     - POSTGRES_PASSWORD=L1terary20@
-    - POSTGRES_USER=belun
+    - POSTGRES_USER=django
     - POSTGRES_DB=timordata.info
   volumes:
     - dbteststore:/var/lib/postgresql/data
