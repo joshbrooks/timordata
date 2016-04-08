@@ -139,6 +139,7 @@ class Thumbnail(models.Model):
 
         if not os.path.exists(file_path):
             logger.error('Could not find model file at {}'.format(file_path))
+            return False
 
 
         # Remove any instances of Thumbnail where the model is the same but the file name has changed!
@@ -189,7 +190,8 @@ class Thumbnail(models.Model):
                 pass
 
             # thumbnail_path = make_thumbnail_convert(file_path, thumbnail_path, res, page)
-            assert os.path.exists(thumbnail_path)
+            if not os.path.exists(thumbnail_path):
+                thumbnail_path = '404'
             thumbnail.thumbnailPath = thumbnail_path
             thumbnail.save()
         obsolete.delete()

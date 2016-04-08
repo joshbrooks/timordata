@@ -13,6 +13,7 @@ from django.core.urlresolvers import reverse
 import reversion
 import json
 from library.models import Thumbnail
+from suggest.views import logger
 
 __all__ = [
     'Organization', 'Person',
@@ -316,6 +317,9 @@ class ProjectImage(models.Model):
             return Thumbnail.make(self, model_field='image', res=res)
         except KeyError:
             pass
+        except Exception, e:
+            logger.error('Failed to create thumbnail: {}'.format(e.message))
+            return False
 
     @property
     def thumbnailurl(self):
