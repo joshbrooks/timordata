@@ -2,25 +2,3 @@
 {% load i18n %}
 
 
-{% block managementdropdown %}
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Management
-                        <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li>{% if user.is_authenticated %}<a href="{% url 'nhdb:logout' %}">Log out</a>{% else %}<a href="{% url 'admin:login' %}?next={{request.get_full_path|urlencode}}">Login</a>{% endif %}</li>
-                        <li><a data-modalurl="{% url 'nhdb:form' model='project' form='main'%}"  data-modaltitle="New Project" data-toggle="modal" href="#">{% trans "Add a project" %}</a></li>
-                        <li><a data-modalurl="{% url 'nhdb:form' model='organization' form='main'%}"  data-modaltitle="New Organization" data-toggle="modal" href="#">{% trans "Add an organization" %}</a></li>
-
-                        <li class="divider"></li>
-
-                        <li><a data-modalurl="{% url 'library:form' model='publication' form='main'%}"  data-modaltitle="New Publication" data-toggle="modal" href="#">{% trans "Add a publication" %}</a></li>
-
-                        <li class="divider"></li>
-
-                        <li><a data-modalurl="{% url 'donormapping:form' model='fundingoffer' form='main'%}"  data-modaltitle="New Funding Offer" data-toggle="modal" href="#">{% trans "Add a funding offer" %}</a></li>
-<li class="divider"></li>
-                        <li><a href="/suggest/?state=W">{% trans "Suggestions" %} </a></li>
-
-                    </ul>
-                </li>
-{% endblock managementdropdown %}

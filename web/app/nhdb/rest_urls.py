@@ -7,12 +7,13 @@ from django.conf.urls import url, include
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, mixins, viewsets
 from nhdb.models import Project, ProjectPerson, ProjectOrganization, ProjectPlace, Organization, \
-    OrganizationPlace, Person, ProjectImage, PropertyTag, ProjectType
+    OrganizationPlace, Person, ProjectImage, PropertyTag, ProjectType, ExcelDownloadFeedback
 from nhdb.serializers import SimpleProjectSerializer as ProjectSerializer, ProjectPersonSerializer, TestProjectSerializer, \
     ProjectOrganizationSerializer, ProjectPlaceSerializer, OrganizationSerializer, PersonSerializer, \
     OrganizationPlaceSerializer, Project_ProjectOrganizationSerializer, Project_ProjectPlaceSerializer, \
     ProjectPropertiesSerializer, Project_ProjectPersonSerializer, OrganizationOrganizationPlaceSerializer, \
-    ProjectPropertiesSerializerByID, ProjectImageSerializer, PropertyTagSerializer, ProjectTypeSerializer
+    ProjectPropertiesSerializerByID, ProjectImageSerializer, PropertyTagSerializer, ProjectTypeSerializer, \
+    ExcelDownloadFeedbackSerializer
 from rest_framework.pagination import PageNumberPagination
 
 
@@ -143,6 +144,11 @@ class ProjectTypeViewSet(viewsets.ModelViewSet):
     queryset = ProjectType.objects.all()
     serializer_class = ProjectTypeSerializer
 
+class ExcelDownloadFeedbackViewSet(viewsets.ModelViewSet):
+    queryset = ExcelDownloadFeedback.objects.all()
+    serializer_class = ExcelDownloadFeedbackSerializer
+
+
 router = routers.DefaultRouter()
 router.register(r'user', UserViewSet, 'user')
 
@@ -156,6 +162,7 @@ router.register(r'projectpropertiesbyid', ProjectPropertiesIDViewSet, base_name=
 router.register(r'projectimage', ProjectImageViewSet, base_name='projectimage')
 router.register(r'projecttype', ProjectTypeViewSet, base_name='projecttype')
 router.register(r'person', PersonViewSet, base_name='person')
+router.register(r'exceldownloadfeedback', ExcelDownloadFeedbackViewSet)
 
 router.register(r'projectprojectorganization', ProjectProjectOrganizationViewSet, base_name='projectprojectorganization')
 router.register(r'projectprojectplace', ProjectProjectPlaceViewset, base_name='projectprojectplace')

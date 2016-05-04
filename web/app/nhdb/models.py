@@ -21,7 +21,7 @@ __all__ = [
     'ProjectType', 'RecordOwner', 'Project', 'ProjectImage',
     'ProjectOrganization', 'ProjectPerson', 'ProjectPlace',
     'OrganizationPlace', 'OrganizationClass',
-    'PropertyTag', 'ProjectStatus'
+    'PropertyTag', 'ProjectStatus', 'ExcelDownloadFeedback'
 ]
 
 
@@ -80,6 +80,23 @@ class OrganizationManager(models.Manager):
         return super(OrganizationManager, self)\
             .get_queryset()\
             .filter(email__regex=r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9]+\.[a-zA-Z0-9.]+$")
+
+
+class ExcelDownloadFeedback(models.Model):
+
+    PURPOSE_CHOICES = (
+        ('PP', 'Project planning'),
+        ('RE', 'Research'),
+        ('IN', 'Personal interest'),
+        ('OT', 'Other (please specify)'),
+    )
+
+    name = models.CharField(_('name'), max_length=150)
+    description = models.TextField(_('description'), null=True, blank=True)
+    email = models.EmailField(_('email'), null=True, blank=True)
+    purpose = models.CharField(max_length=2, choices=PURPOSE_CHOICES,)
+    purposeother = models.CharField(_('Other purpose'), max_length=150,)
+    referralurl = models.CharField( max_length=256)
 
 
 class Organization(models.Model):
@@ -198,7 +215,7 @@ class Email(object):
 
 
 def emailencode(email):
-    '''
+    """
     Reversed, rot13 encoded address with substitution of '.' and '@'
     :param email:
     :return:
@@ -221,7 +238,7 @@ def emailencode(email):
             })
         });
     });
-    '''
+    """
 
     reverse_code_obfuscated = """var _0x7972=["\x72\x65\x76\x65\x72\x73\x65","\x70\x72\x6F\x74\x6F\x74\x79\x70\x65","","\x6A\x6F\x69\x6E","\x73\x70\x6C\x69\x74","\x64\x6F\x74\x61\x74","\x2E","\x72\x65\x70\x6C\x61\x63\x65","\x40","\x72\x6F\x74\x31\x33","\x5A","\x63\x68\x61\x72\x43\x6F\x64\x65\x41\x74","\x66\x72\x6F\x6D\x43\x68\x61\x72\x43\x6F\x64\x65","\x63\x6C\x69\x63\x6B","\x74\x61\x62\x6C\x65\x3A\x66\x69\x72\x73\x74","\x70\x61\x72\x65\x6E\x74\x73","\x2E\x65\x6D\x61\x69\x6C","\x69\x6E\x64\x65\x78","\x63\x68\x69\x6C\x64\x72\x65\x6E","\x70\x61\x72\x65\x6E\x74","\x64\x69\x73\x61\x62\x6C\x65\x64","\x61\x64\x64\x43\x6C\x61\x73\x73","\x74\x64","\x67\x72\x65\x65\x6E","\x63\x73\x73","\x74\x65\x78\x74","\x65\x61\x63\x68","\x74\x62\x6F\x64\x79\x20\x74\x72","\x66\x69\x6E\x64","\x6F\x6E","\x62\x75\x74\x74\x6F\x6E\x2E\x73\x68\x6F\x77\x6C\x69\x61\x6D\x65","\x72\x65\x61\x64\x79"];String[_0x7972[1]][_0x7972[0]]=function(){return this[_0x7972[4]](_0x7972[2])[_0x7972[0]]()[_0x7972[3]](_0x7972[2])};String[_0x7972[1]][_0x7972[5]]=function(){return this[_0x7972[7]](/ at /gi,_0x7972[8])[_0x7972[7]](/ dot /gi,_0x7972[6])};String[_0x7972[1]][_0x7972[9]]=function(){return this[_0x7972[7]](/[a-zA-Z]/gi,function(_0xf065x1){return String[_0x7972[12]]((_0xf065x1<=_0x7972[10]?90:122)>=(_0xf065x1=_0xf065x1[_0x7972[11]](0)+13)?_0xf065x1:_0xf065x1-26)})};$(document)[_0x7972[31]](function(){$(_0x7972[30])[_0x7972[29]](_0x7972[13],function(){var _0xf065x2=$(_0x7972[16])[_0x7972[15]](_0x7972[14]);var _0xf065x3=$(_0x7972[16])[_0x7972[19]]()[_0x7972[18]]()[_0x7972[17]]($(_0x7972[16]));$(this)[_0x7972[21]](_0x7972[20]);_0xf065x2[_0x7972[28]](_0x7972[27])[_0x7972[26]](function(){var _0xf065x4=$(this)[_0x7972[18]](_0x7972[22])[_0xf065x3];$(_0xf065x4)[_0x7972[24]]({color:_0x7972[23]});$(_0xf065x4)[_0x7972[25]]($(_0xf065x4)[_0x7972[25]]()[_0x7972[0]]()[_0x7972[9]]()[_0x7972[5]]());});})});"""
 
@@ -271,8 +288,8 @@ class PropertyTag(MP_Lite):
     def __unicode__(self):
         return unicode(self.name)
 
-    class Meta:
-        ordering = ["description"]
+    # class Meta:
+    #     ordering = ["description"]
 
     steps = 3
 

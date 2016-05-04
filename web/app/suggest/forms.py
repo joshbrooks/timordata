@@ -20,7 +20,6 @@ def manyfieldlayout(instance):
     '''
     return Layout(*[Hidden('has_many', f.name) for f in instance._meta.many_to_many])
 
-
 def choose_or_create(*args, **kwargs):
     layout = Layout()
 
@@ -55,10 +54,10 @@ class DeleteFormHelper(FormHelper):
             Hidden('_action', 'DM'),
             Hidden('_description', u'Remove {} from the database'.format(instance)),
             Hidden('_affected_instance_primary', '{}_{} {}'.format(app, mod, pk)),
-            FormActions(
-                Submit('__action', buttontext, css_class=css_class),
-            ))
-
+            # FormActions(
+            #     Submit('__action', buttontext, css_class=css_class+' hidden'),
+            # ))
+        )
         if alert is True:
             try:
                 self.layout.append(
@@ -81,7 +80,6 @@ class DeleteFormHelper(FormHelper):
             self.layout.append(
             HTML(errormessage.format(alert))
             )
-
 
 class CreateFormHelper(FormHelper):
 
@@ -122,6 +120,7 @@ class CreateFormHelper(FormHelper):
                 Hidden('__formtype', "Create Form"),
                 Hidden('_next', '/suggest/#object=_suggestion_'),
                 manyfieldlayout(instance),
+                Layout(*[Hidden('__nochange', f) for f in kwargs.get('nochange', [])]),
         )
 
         except Exception, e:
@@ -224,6 +223,7 @@ class UpdateSuggestionHelper(FormHelper):
                 Hidden('_affected_instance_primary', 'suggest_suggest {}'.format(suggestion.pk)),
                 Hidden('_next', '/suggest/#object=_suggestion_'),
                 manyfieldlayout(instance),
+                Layout(*[Hidden('__nochange', f) for f in kwargs.get('nochange', [])]),
                 # HTML('''<div class="alert alert-{}" role="alert">{}</div>'''.format('info', 'UpdateSuggestionHelper loaded successfully'))
             )
 
@@ -309,6 +309,9 @@ class SuggestionForm(forms.ModelForm):
         else:
             raise TypeError, '_instance should be a %s or a Suggest object - got %s'%(self.Meta.model._meta.model_name, type(_instance))
 
+        self.nochange = kwargs.pop('nochange', ['no-fixed-attributes'])
+
+
         super(SuggestionForm, self).__init__(instance=instance, *args, **kwargs)
 
         # Update fields where an existing suggestion is being modified
@@ -317,6 +320,11 @@ class SuggestionForm(forms.ModelForm):
                 if i in self.fields:
                     self.fields[i].initial = j
 
+    def get_wrapper_class(self, field_name):
+        if field_name in self.nochange:
+            return 'hidden'
+        else:
+            return None
 
     def get_helper(self, **kwargs):
 
@@ -324,6 +332,7 @@ class SuggestionForm(forms.ModelForm):
             helper = UpdateSuggestionHelper(suggestion=self.suggest)
         elif hasattr(self, 'instance') and self.instance is not None and self.instance.pk is not None:
             helper = UpdateFormHelper(instance=self.instance, **kwargs)
+            helper.layout.append(Layout(*[Hidden('__nochange', f) for f in self.nochange])),
         elif self.instance is None:
             helper = CreateFormHelper(instance=self.Meta.model(), **kwargs)
         else:

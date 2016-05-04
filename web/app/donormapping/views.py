@@ -24,67 +24,65 @@ from .tables import FundingOfferTable, FundingSurveyTable, DonorSurveyResponseTa
 from .admin import FundingOfferAdmin
 from datetime import datetime
 
+def fundingofferlist(request):
 
-class FundingOfferList(SingleTableView):
-    model = FundingOffer
-    table_class = FundingOfferTable
+    #
+    #
+    # class FundingOfferList(SingleTableView):
+    #     model = FundingOffer
+    #     table_class = FundingOfferTable
+    #
+    #     def get_context_data(self, **kwargs):
+    #         context = super(FundingOfferList, self).get_context_data(**kwargs)
 
-    def get_context_data(self, **kwargs):
-        context = super(FundingOfferList, self).get_context_data(**kwargs)
+    context = {}
+    context['filters'] = {
+        'inv': PropertyTag.objects.filter(path__startswith="INV."),
+        'act': PropertyTag.objects.filter(path__startswith="ACT."),
+        'ben': PropertyTag.objects.filter(path__startswith="BEN."),
+        'district': [{'value': 'district.{}'.format(d[1].upper()), 'label': d[0]} for d in
+                     District.objects.values_list('name', 'path')],
+    }
 
-        context['filters'] = {
-            'inv': PropertyTag.objects.filter(path__startswith="INV."),
-            'act': PropertyTag.objects.filter(path__startswith="ACT."),
-            'ben': PropertyTag.objects.filter(path__startswith="BEN."),
-            'district': [{'value': 'district.{}'.format(d.path.lower()), 'label': d.name[12:]} for d in District.objects.all()],
-        }
+    context['tabs'] = {
+        'first':{'name':'About'},
+        'second':{},
+        'third':{},
+        'fourth':{}
+    }
 
-        context['tabs'] = {
-            'first':{'name':'About'},
-            'second':{},
-            'third':{},
-            'fourth':{}
-        }
+    filter_parameter = 'q'
+    context['activefilters'] = request.GET.getlist(filter_parameter)
 
-        filter_parameter = 'q'
-        context['activefilters'] = self.request.GET.getlist(filter_parameter)
+    get = request.GET
+    inv, act, ben, district = Q(), Q(), Q(), Q()
 
-        return context
+    qs = FundingOffer.objects.all()
+    if get.getlist('organization'):
+        qs = qs.filter(organization__pk__in =get.getlist('organization') )
+    for _f in get.getlist(filter_parameter):
 
-    def get_queryset(self, filter_parameter = 'q'):
+        if _f.lower().startswith('inv.'):
+            inv = inv|Q(sector__path=_f.upper())
+        elif _f.lower().startswith('act.'):
+            act = act|Q(activity__path=_f.upper())
+        elif _f.lower().startswith('ben.'):
+            ben = ben|Q(beneficiary__path=_f.upper())
+        elif _f.lower().startswith('district'):
+            district = district|Q(place__path__startswith=_f.split('.')[1].upper())
 
-        def pstrings(strings):
-            '''
-            Takes a list of propertytag strings and returns instances
-            '''
-            return [PropertyTag.getfromstring(PropertyTag.separatestring(i)) for i in strings]
+    qs = qs.filter(inv).filter(ben).\
+        filter(act).filter(district).distinct()
 
-        get = self.request.GET
-        inv, act, ben, district = Q(), Q(), Q(), Q()
+    if request.GET.get('expired') != 'True':
+        qs = qs.exclude(application_end_date__lt=datetime.today().date())
 
-        qs = FundingOffer.objects.all()
-        if get.getlist('organization'):
-            qs = qs.filter(organization__pk__in =get.getlist('organization') )
-        for _f in get.getlist(filter_parameter):
+    qs = qs.prefetch_related('activity','beneficiary','sector','organization')
 
-            if _f.lower().startswith('inv.'):
-                inv = inv|Q(sector__path=_f.upper())
-            elif _f.lower().startswith('act.'):
-                act = act|Q(activity__path=_f.upper())
-            elif _f.lower().startswith('ben.'):
-                ben = ben|Q(beneficiary__path=_f.upper())
-            elif _f.lower().startswith('district'):
-                district = district|Q(place__path__startswith=_f.split('.')[1].upper())
+    context['table'] = FundingOfferTable(qs)
 
-        qs = qs.filter(inv).filter(ben).\
-            filter(act).filter(district).distinct()
 
-        if self.request.GET.get('expired') == 'True':
-            return qs
-        else:
-            today = datetime.today().date()
-            return qs.exclude(application_end_date__lt=today)
-
+    return render(request, 'donormapping/fundingoffer_list.html', context)
 
 class DonorSurveyResponseView(SingleTableView):
     model = DonorSurveyResponse

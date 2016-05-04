@@ -1,37 +1,35 @@
 import StringIO
-from datetime import datetime, time
-from itertools import product
-import subprocess
-import json
 import csv
-
-from belun import settings
+import json
+import logging
+import os
+import subprocess
+import warnings
+from itertools import product
+from string import uppercase
+import xlsxwriter
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q, Count
 from django.forms import modelformset_factory
-from django.http import HttpResponse, Http404, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
-from django.utils.safestring import mark_safe
-from django.views.generic.edit import CreateView, DeleteView
 from django.views.generic import DetailView, ListView
-from geo.models import District, Subdistrict, Suco, AdminArea
-from nhdb.models import Organization, PropertyTag, Project, ProjectPerson, Person, ProjectOrganization, \
-    OrganizationPlace, ProjectStatus, ProjectOrganizationClass, OrganizationClass, ProjectImage, ProjectPlace
+from django.views.generic.edit import CreateView, DeleteView
 from django_tables2 import SingleTableView
+from rest_framework.parsers import JSONParser
+from six import BytesIO
+
+from geo.models import District, Subdistrict, Suco, AdminArea
 from nhdb import forms as nhdb_forms
-from nhdb.forms_delete import *
 from nhdb import forms_delete as nhdb_forms_delete
+from nhdb import serializers
 from nhdb.forms import *
+from nhdb.forms_delete import *
 from nhdb.tables import OrganizationTable, ProjectTable, PropertyTagTable, ProjectPersonTable, PersonProjectTable, \
     PersonTable
-import os
-from six import BytesIO
-from suggest.models import Suggest, AffectedInstance
+from suggest.models import Suggest
 from views_helpers import projectset_filter, orgset_filter
-from django.db.models import Q, Count, QuerySet
-from rest_framework.parsers import JSONParser
-import warnings
-from nhdb import serializers
-from django.contrib.admin.views.decorators import staff_member_required
-import xlsxwriter
 
 languages = (('en', 'English'), ('tet', 'Tetun'), ('pt', 'Portugese'), ('id', 'Bahasa'))
 
@@ -74,8 +72,8 @@ def project_dashboard_info(projects, prefetch=True):
             dashboard[i][pt] = getattr(pt, 'project_%s__count'%name)
 
     pplist = ProjectPlace.objects.filter(project__in=projects).values_list('project__id', 'place__path')
-    for d in District.objects.all():
-        dashboard['district'][d] = len(set([(i[0], i[1][:3]) for i in pplist if i[1][:3] == d.path]))
+    for name, path in District.objects.values_list('name', 'path'):
+        dashboard['district'][name] = len(set([(i[0], i[1][:3]) for i in pplist if i[1][:3] == path]))
 
     return dashboard
 
@@ -112,7 +110,7 @@ class ProjectPersonDelete(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ProjectPersonDelete, self).get_context_data(**kwargs)
         context['object'] = self.object
-        context['deleteform'] = ProjectPersonDeleteForm(instance=self.object)
+        context['deleteform'] = ProjectPersonDeleteForm(projectperson=self.object)
         return context
 
 
@@ -433,11 +431,10 @@ def get_organization_queryset(request, filter_parameter='q'):
         if 'active.false' not in filters and 'active.any' not in filters:
             status = status | Q(active=True)
 
-    return Organization.objects.prefetch_related('organizationplace_set').filter(inv).filter(ben). \
-        filter(act).filter(type).filter(district).filter(status).filter(org_location).filter(name).distinct()
+    return Organization.objects.filter(inv).filter(ben).filter(act).filter(type).filter(district).filter(status).filter(org_location).filter(name).distinct()
 
 
-def get_project_queryset(request, filter_parameter='q'):
+def get_projects_page(request, filter_parameter='q'):
     def translatedfilter(parameters, filter_values, filter_type="icontains"):
 
         # For compatibility with "django-modeltranslation" expand a nonspecific filter such as "name" to "name_en",
@@ -490,9 +487,7 @@ def get_project_queryset(request, filter_parameter='q'):
             exclude = exclude | Q(status=exclude_filter.split('.')[1].upper())
 
     projects = Project.objects.filter(inv).filter(ben). \
-        filter(act).filter(type).filter(district).filter(status).distinct() \
-        .prefetch_related('status') \
-        .prefetch_related('organization')
+        filter(act).filter(type).filter(district).filter(status).distinct()
 
     projects = projects.exclude(exclude)
 
@@ -514,151 +509,171 @@ def get_project_queryset(request, filter_parameter='q'):
 
     return projects
 
+def get_projects_paginated(request):
+    projects = get_projects_page(request)
+    paginator = Paginator(projects, request.GET.get('per_page', 50))
+    page = request.GET.get('page', 1)
 
-def organization_table_excel(request):
-    output = StringIO.StringIO()
-    workbook = xlsxwriter.Workbook(output)
-    worksheet = workbook.add_worksheet()
+    try:
+        projects_page = paginator.page(page)
+    except PageNotAnInteger:
+        projects_page = paginator.page(1)
+    except EmptyPage:
+        projects_page = paginator.page(paginator.num_pages)
 
-    worksheet.write('A9', 'Name')
-    worksheet.set_column('A:A', 50)
-    worksheet.set_column('B:B', 30)
-    worksheet.set_column('C:C', 30)
-    worksheet.set_column('D:D', 50)
-    worksheet.write('B9', 'Phone')
-    worksheet.write('C9', 'Email')
-    worksheet.write('D9', 'Main address')
-    code = request.LANGUAGE_CODE
-
-    if code == 'tet':
-        worksheet.write('A7', 'Database Nasional')  # TODO: Full title here
-        worksheet.insert_image('A1', '/webapps/project/media/banner.jpg', options={'x_scale': 0.25, 'y_scale': 0.25})
-
-    if code == 'en':
-        worksheet.write('A7', 'National Database')  # TODO: Full title here
-        worksheet.insert_image('A1', '/webapps/project/media/banner.jpg', options={'x_scale': 0.25, 'y_scale': 0.25})
-
-    row = 9
-    organizations = get_organization_queryset(request)
-    for org in organizations:
-        row += 1
-        # Write some numbers, with row/column notation.
-
-        phone = org.phoneprimary
-        if org.phonesecondary:
-            phone += '\n' + org.phonesecondary
-
-        address = '\n'.join([i.description for i in org.organizationplace_set.all() if i.description])
-        worksheet.write(row, 0, org.name)
-        worksheet.write(row, 1, phone)
-        worksheet.write(row, 2, org.email)
-        worksheet.write(row, 3, address)
-
-    row += 2
-    # Add some info about where downloaded from, date
-    s = "Generated on {} - downloaded from {}".format(datetime.today(), request.META.get('HTTP_REFERER'))
-    worksheet.write(row, 0, s)
-    # Insert an image.
+    return projects_page
 
 
-    workbook.close()
+class WorksheetResponse(object):
+    def __init__(self, output = StringIO.StringIO()):
+        self.output = output #
+        self.workbook = xlsxwriter.Workbook(self.output)
+        self.sheet = self.workbook.add_worksheet()
+        self.date_format = self.workbook.add_format({'num_format': 'yyyy-mm-dd'})
 
-    output.seek(0)
-    response = HttpResponse(output.read(),
-                            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-    response['Content-Disposition'] = "attachment; filename=NHDB_contact_list.xlsx"
+    def set_col(self, col='A', row='1', width=50, d='Name'):
+        """
+        Create a column
+        :param col: Column reference A - ZZ
+        :param row: Row 1-10000
+        :param width: Width (px?)
+        :param d: Description (header)
+        :return:
+        """
+        print 'set col'
+        self.sheet.set_column('{}:{}'.format(col, col), 50)
+        self.sheet.write('{}{}'.format(col, row), d)
 
-    return response
+    def headers(self, head_list=(('name',50),('description',30)), head_row = 1):
+        print 'headers'
+        index = -1
+        for d, width in head_list:
+            index +=1
+            col = uppercase[index]
+            self.set_col(col=col, row = str(head_row), width = width, d = d)
+
+    @property
+    def response(self):
+        self.workbook.close()
+        self.output.seek(0)
+        response = HttpResponse(self.output.read(),
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        response['Content-Disposition'] = "attachment; filename=NHDB_projects.xlsx"
+        return response
+
+
+def downloadexcel(request):
+    """
+    Asks the user some questions for feedback purposes, returns a form object with a link to the
+    download Excel page
+    :return:
+    """
+    context={'url':request.GET.get('next'),'form':ExcelDownloadForm}
+    return render(request, 'nhdb/crispy_form.html', context)
+
+
+
 
 
 def project_table_excel(request):
-    output = StringIO.StringIO()
-    workbook = xlsxwriter.Workbook(output)
 
-    sheet = workbook.add_worksheet()
-    sheet.write('A9', 'Name')
-    sheet.set_column('A:A', 50)
-    sheet.set_column('B:B', 30)
-    sheet.set_column('C:C', 20)
-    sheet.set_column('D:D', 20)
-    sheet.set_column('E:E', 50)
-    sheet.write('B9', 'Description')
-    sheet.write('C9', 'Start Date')
-    sheet.write('D9', 'End Date')
-    sheet.write('E9', 'Organizations')
+    workbook = WorksheetResponse()
+    sheet = workbook.sheet
 
+    workbook.headers(head_list = (('Name',50),('Description',50),('Start Date',50),('End Date',50),('Organizations',50),))
     row = 9
-    objects = get_project_queryset(request)
-
-    date_format = workbook.add_format({'num_format': 'yyyy-mm-dd'})
-
-    for obj in objects:
-        row += 1
-        # Write some numbers, with row/column notation.
-
-        orgs = []
-        orgs = '\n'.join([i.name for i in obj.organization.all()])
+    for obj in get_projects_page(request):
         sheet.write(row, 0, obj.name)
         sheet.write(row, 1, obj.description)
         if obj.startdate:
-            sheet.write(row, 2, obj.startdate, date_format)
+            sheet.write(row, 2, obj.startdate, workbook.date_format)
         if obj.enddate:
-            sheet.write(row, 3, obj.enddate, date_format)
-        sheet.write(row, 4, orgs)
-
+            sheet.write(row, 3, obj.enddate, workbook.date_format)
+        sheet.write(row, 4, '\n'.join([i.name for i in obj.organization.all()]))
+        row +=1
+        print row
     row += 2
     # Add some info about where downloaded from, date
     s = "Generated on {} - downloaded from {}".format(datetime.today(), request.META.get('HTTP_REFERER'))
     sheet.write(row, 0, s)
-    # Insert an image.
-    sheet.insert_image('A1', '/webapps/project/media/banner.jpg', options={'x_scale': 0.25, 'y_scale': 0.25})
+    # Insert an image
+    sheet.insert_image('A1', settings.MEDIA_ROOT+'banner.jpg', options={'x_scale': 0.25, 'y_scale': 0.25})
 
-    workbook.close()
-
-    output.seek(0)
-    response = HttpResponse(output.read(),
-                            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-    response['Content-Disposition'] = "attachment; filename=NHDB_contact_list.xlsx"
-
-    return response
+    return workbook.response
 
 
-class OrganizationList(SingleTableView):
-    model = Organization
-    table_class = OrganizationTable
+def organization_table_excel(request):
 
-    # paginate_by = 10
+    workbook = WorksheetResponse()
+    sheet = workbook.sheet
 
-    def get_context_data(self, **kwargs):
+    workbook.headers(head_list = (('Name',50),('Phone',30),('Email',30),('Main Address',50)))
+    code = request.LANGUAGE_CODE
 
-        context = super(OrganizationList, self).get_context_data(**kwargs)
-        context['propertytag_root_nodes'] = PropertyTag.get_root_nodes()
+    if code == 'tet':
+        sheet.write('A7', 'Database Nasional')  # TODO: Full title here
+        sheet.insert_image('A1', '/webapps/project/media/banner.jpg', options={'x_scale': 0.25, 'y_scale': 0.25})
 
-        context['filters'] = {
-            'inv': PropertyTag.objects.filter(path__startswith="INV."),
-            'act': PropertyTag.objects.filter(path__startswith="ACT."),
-            'ben': PropertyTag.objects.filter(path__startswith="BEN."),
-            'district': [{'value': 'district.{}'.format(d.path.upper()), 'label': d.name} for d in
-                         District.objects.all()],
-            'org_location': [{'value': 'org_location.{}'.format(d.path.upper()), 'label': d.name} for d in
-                             District.objects.all()],
-            'type': [{'value': 'orgtype.{}'.format(o.pk), 'label': o} for o in OrganizationClass.objects.all()]
-        }
+    if code == 'en':
+        sheet.write('A7', 'National Database')  # TODO: Full title here
+        sheet.insert_image('A1', '/webapps/project/media/banner.jpg', options={'x_scale': 0.25, 'y_scale': 0.25})
 
-        if self.request.GET.values() == []:
-            context['form'] = OrganizationSearchForm()
-        else:
-            context['form'] = OrganizationSearchForm(self.request.GET)
+    row = 9
+    for org in get_organization_queryset(request):
+        row += 1
+        phone = org.phoneprimary
+        if org.phonesecondary:
+            phone += '\n' + org.phonesecondary
+        address = '\n'.join([i.description for i in org.organizationplace_set.all() if i.description])
+        sheet.write(row, 0, org.name)
+        sheet.write(row, 1, phone)
+        sheet.write(row, 2, org.email)
+        sheet.write(row, 3, address)
+    row += 2
+    # Add some info about where downloaded from, date
+    s = "Generated on {} - downloaded from {}".format(datetime.today(), request.META.get('HTTP_REFERER'))
+    sheet.insert_image('A1', settings.MEDIA_ROOT+'banner.jpg', options={'x_scale': 0.25, 'y_scale': 0.25})
 
-        filter_parameter = 'q'
-        context['activefilters'] = self.request.GET.getlist(filter_parameter)
-        context['dashboard'] = org_dashboard_info(context['object_list'])
-        context['object_index'] = json.dumps(object_index(context['object_list']))
-        context['object_class_count'] = OrganizationList.model.objects.count()
-        return context
+    return workbook.response
 
-    def get_queryset(self):
-        return get_organization_queryset(self.request)
+
+def organizationlist(request):
+
+    r = request
+    g = r.GET
+    get = r.GET.get
+    gl = r.GET.getlist
+
+    context = {'propertytag_root_nodes':  PropertyTag.get_root_nodes()}
+
+    context['filters'] = {
+        'inv': PropertyTag.objects.filter(path__startswith="INV."),
+        'act': PropertyTag.objects.filter(path__startswith="ACT."),
+        'ben': PropertyTag.objects.filter(path__startswith="BEN."),
+        'district': [{'value': 'district.{}'.format(d[1].upper()), 'label': d[0]} for d in
+                     District.objects.values_list('name', 'path')],
+        'org_location': [{'value': 'org_location.{}'.format(d[1].upper()), 'label': d[0]} for d in
+                         District.objects.values_list('name', 'path')],
+        'type': [{'value': 'orgtype.{}'.format(o.pk), 'label': o} for o in OrganizationClass.objects.all()]
+    }
+
+    if g.values() == []:
+        context['form'] = OrganizationSearchForm()
+    else:
+        context['form'] = OrganizationSearchForm(request.GET)
+
+    organizations = get_organization_queryset(r).\
+        prefetch_related('organizationplace_set').\
+        prefetch_related('orgtype')
+
+    filter_parameter = 'q'
+    context['activefilters'] = gl(filter_parameter)
+    context['dashboard'] = org_dashboard_info(organizations)
+    context['object_class_count'] = Organization.objects.count()
+    context['table'] = OrganizationTable(organizations)
+    context['table'].paginate(page=get('page', 1), per_page=get('per_page', 50))
+
+    return render(request, 'nhdb/organization_list.html', context)
 
 
 def organization_list_as_json(request):
@@ -672,11 +687,11 @@ def organization_list_as_json(request):
 
 
 def organizationdescription(request, pk, language_code):
-    '''
+    """
     Loads a rich text editor to push a description in the selected language as a suggestion to "Suggest.suggest"
     :param UpdateView:
     :return:
-    '''
+    """
     instance = Organization.objects.get(pk=pk)
     my_field = 'description_' + language_code
 
@@ -935,7 +950,7 @@ def projectcsv_nutrition(request):
 def projectdashboard(request):
     c = {}
     tags = {}
-    projects = get_project_queryset(request)
+    projects = get_projects_page(request, paginate=False)
     projectpks = projects.values_list('pk', flat=True)
     propertytags = PropertyTag.objects.select_related('project')
 
@@ -974,7 +989,7 @@ def projectplaces(request):
     :return:
     '''
     path = request.GET.get('path')
-    projects = get_project_queryset(request)
+    projects = get_projects_page(request, paginate=False)
     if path is None:
         places = District.objects.all()
     elif path in District.objects.all().values_list('path', flat=True):
@@ -989,168 +1004,102 @@ def projectplaces(request):
     return places, _max
 
 
-class ProjectList(SingleTableView):
-    model = Project
-    table_class = ProjectTable
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
-    def get_context_data(self, **kwargs):
 
-        # Define search parameters
-        # Call the base implementation first to get a context
-        context = super(ProjectList, self).get_context_data(**kwargs)
-        context['searchdescription'] = {}
-        search = ''
+logger = logging.getLogger(__name__)
 
-        # Add in a QuerySet of all the PropertyTags
-        context['propertytag_root_nodes'] = PropertyTag.get_root_nodes()
-        orgpks = self.request.GET.getlist('organization') or []
-        orgpks.extend(self.request.GET.getlist('org'))
-        orgpks.extend(self.request.GET.getlist('orgpk'))
-        context['organization'] = Organization.objects.filter(pk__in=orgpks)
-        c = self.request.GET.copy()
-        if 'organization' in c:
-            c.pop('organization')
-        context['form'] = ProjectSearchForm(c)
-        context['count'] = get_project_queryset(self.request).count()
 
-        context['filters'] = {
-            'inv': PropertyTag.objects.filter(path__startswith="INV."),
-            'act': PropertyTag.objects.filter(path__startswith="ACT."),
-            'ben': PropertyTag.objects.filter(path__startswith="BEN."),
-            'district': [{'value': 'district.{}'.format(d.path.lower()), 'label': d.name} for d in
-                         District.objects.all()],
-            'type': [{'value': 'orgtype.{}'.format(o.pk), 'label': o} for o in OrganizationClass.objects.all()],
-            'status': [{'value': 'status.{}'.format(o.pk), 'label': o} for o in ProjectStatus.objects.all()],
-            'sort': [
-                {'value': 'name', 'label': 'Name (A-Z)'},
-                {'value': '-name', 'label': 'Name (Z-A)'},
-                {'value': 'startdate', 'label': 'Oldest first'},
-                {'value': '-startdate', 'label': 'Newest first'},
-                {'value': '-enddate', 'label': 'Latest end date first'},
+def projectlist(request):
 
-            ]
+    c = {}
+    req  = request
+    getlist = req.GET.getlist
+    get = req.GET.get
+
+    c['ip'] = get_client_ip(req)
+    if getlist('org'):
+         c['organization'] = Organization.objects.filter(pk__in=[i for i in getlist('org') if i.isdigit()])
+
+    c['filters'] = {
+        'inv': PropertyTag.objects.filter(path__startswith="INV."),
+        'act': PropertyTag.objects.filter(path__startswith="ACT."),
+        'ben': PropertyTag.objects.filter(path__startswith="BEN."),
+        'district': [{'value': 'district.{}'.format(d[1].lower()), 'label': d[0]} for d in
+                     District.objects.values_list('name', 'path')],
+        'type': [{'value': 'orgtype.{}'.format(o.pk), 'label': o} for o in OrganizationClass.objects.all()],
+        'status': [{'value': 'status.{}'.format(o.pk), 'label': o} for o in ProjectStatus.objects.all()]
+    }
+
+    filter_parameter = 'q'
+    c['activefilters'] = getlist(filter_parameter)
+    c['activeexcludes'] = getlist('-' + filter_parameter)
+
+    c['searchdescription'] = {}
+    # Build a human readable translation of the search filters
+
+
+
+
+    if c['activefilters'] or c['activeexcludes']:
+        c['searchdescription'] = {  # List of search parameters in human readable form
+            "Sector ": PropertyTag.objects.filter(
+                path__in=[i for i in c['activefilters'] if i.startswith('INV.')]).values_list('name',
+                                                                                                    flat=True),
+            "NOT Sector ": PropertyTag.objects.filter(
+                path__in=[i for i in c['activeexcludes'] if i.startswith('INV.')]).values_list('name',
+                                                                                                     flat=True),
+            "Beneficiary ": PropertyTag.objects.filter(
+                path__in=[i for i in c['activefilters'] if i.startswith('BEN.')]).values_list('name',
+                                                                                                    flat=True),
+            "NOT Beneficiary ": PropertyTag.objects.filter(
+                path__in=[i for i in c['activeexcludes'] if i.startswith('BEN.')]).values_list('name',
+                                                                                                     flat=True),
+            "Activity ": PropertyTag.objects.filter(
+                path__in=[i for i in c['activefilters'] if i.startswith('ACT.')]).values_list('name',
+                                                                                                    flat=True),
+            "NOT Activity ": PropertyTag.objects.filter(
+                path__in=[i for i in c['activeexcludes'] if i.startswith('ACT.')]).values_list('name',
+                                                                                                     flat=True),
+            "In districts": District.objects.filter(
+                path__in=[i.replace('district.', '').upper() for i in c['activefilters'] if
+                          i.startswith('district.')]).values_list('name', flat=True),
         }
 
-        filter_parameter = 'q'
-        context['activefilters'] = self.request.GET.getlist(filter_parameter)
-        context['activeexcludes'] = self.request.GET.getlist('-' + filter_parameter)
+    status = [i for i in c['activefilters'] if i.startswith('status')]
+    if not status:
+        c['activefilters'].append('status.A')
 
-        context['searchdescription'] = {}
-        # Build a human readable translation of the search filters
-        if context['activefilters'] or context['activeexcludes']:
-            context['searchdescription'] = {  # List of search parameters in human readable form
-                "Sector ": PropertyTag.objects.filter(
-                    path__in=[i for i in context['activefilters'] if i.startswith('INV.')]).values_list('name',
-                                                                                                        flat=True),
-                "NOT Sector ": PropertyTag.objects.filter(
-                    path__in=[i for i in context['activeexcludes'] if i.startswith('INV.')]).values_list('name',
-                                                                                                         flat=True),
-                "Beneficiary ": PropertyTag.objects.filter(
-                    path__in=[i for i in context['activefilters'] if i.startswith('BEN.')]).values_list('name',
-                                                                                                        flat=True),
-                "NOT Beneficiary ": PropertyTag.objects.filter(
-                    path__in=[i for i in context['activeexcludes'] if i.startswith('BEN.')]).values_list('name',
-                                                                                                         flat=True),
-                "Activity ": PropertyTag.objects.filter(
-                    path__in=[i for i in context['activefilters'] if i.startswith('ACT.')]).values_list('name',
-                                                                                                        flat=True),
-                "NOT Activity ": PropertyTag.objects.filter(
-                    path__in=[i for i in context['activeexcludes'] if i.startswith('ACT.')]).values_list('name',
-                                                                                                         flat=True),
-                "In districts": District.objects.filter(
-                    path__in=[i.replace('district.', '').upper() for i in context['activefilters'] if
-                              i.startswith('district.')]).values_list('name', flat=True),
-            }
+    else:
+        c['search'] = "All active projects"
 
-        status = [i for i in context['activefilters'] if i.startswith('status')]
-        if not status:
-            context['activefilters'].append('status.A')
+    c['searchdescription']['status'] = [i for i in c['activefilters'] if
+                                              i.startswith('status')] or 'Active'
+    c['activesort'] = get('sort')
+    c['text'] = get('text')
+    # Edge case where sometimes "None" is taken as literal text
+    if not c['text'] or c['text'] == 'None':
+        c['text'] = ''
 
-        else:
-            context['search'] = "All active projects"
+    c['object_class_count'] = Project.objects.count()
 
-        context['searchdescription']['status'] = [i for i in context['activefilters'] if
-                                                  i.startswith('status')] or 'Active'
-        context['activesort'] = self.request.GET.get('sort')
-        context['text'] = self.request.GET.get('text')
-        # Edge case where sometimes "None" is taken as literal text
-        if not context['text'] or context['text'] == 'None':
-            context['text'] = ''
+    c['tabs'] = {'first':{'name':'Search'}}
+    object_list = get_projects_page(req)
+    c['object_list_count'] = object_list.count()
+    c['dashboard'] = project_dashboard_info(object_list)
+    c['table'] = ProjectTable(
+        #paginated.object_list.prefetch_related('organization', 'sector', 'status')
+        object_list.prefetch_related('organization', 'sector', 'status')
+    )
+    c['table'].paginate(page=get('page', 1), per_page=get('per_page', 50))
 
-        def timeseries(projects):
-            """
-            Build a list of tuples of month / number of projects
-            :return:
-            """
-            projects = projects.filter(status_id='A')
-
-            def jstime(dt):
-                return (dt - datetime(1970, 1, 1)).total_seconds() * 1000
-
-            dates = []
-            for year in range(2010, 2015):
-
-                for month in range(1, 12 + 1):
-
-                    if month == 12:
-                        filter = {'startdate__lt': '%s-%s-01' % (year, month),
-                                  'enddate__gt': '%s-%s-01' % (year + 1, 1)}
-                    else:
-                        filter = {'startdate__lt': '%s-%s-01' % (year, month),
-                                  'enddate__gt': '%s-%s-01' % (year, month + 1)}
-                    t = jstime(datetime(year, month, 1))
-                    dates.append((t, projects.filter(**filter).count()))
-            return dates
-
-        # context['timeseries'] = json.dumps(timeseries(context['object_list']))
-
-        context['dashboard'] = project_dashboard_info(context['object_list'])
-
-        # Implementing "Next" / "Previous" links for detail
-
-        context['object_index'] = json.dumps(object_index(context['object_list']))
-        context['object_class_count'] = ProjectList.model.objects.count()
-
-        return context
-
-    def get_queryset(self):
-        # queryset = projectset_filter(self.request)
-        queryset = get_project_queryset(self.request)
-        # raise AssertionError, queryset
-        return queryset
-
-
-class ProjectSuggestedList(SingleTableView):
-    model = Project
-    table_class = ProjectTable
-
-    def get_context_data(self, **kwargs):
-
-        # Define search parameters
-        # Call the base implementation first to get a context
-        context = super(ProjectList, self).get_context_data(**kwargs)
-
-        if self.request.GET.values() == []:
-            # ~ raise AssertionError
-            context['form'] = ProjectSearchForm(initial={'status': ('A',)})
-            return context
-
-        # Add in a QuerySet of all the PropertyTags
-        context['propertytag_root_nodes'] = PropertyTag.get_root_nodes()
-        context['orgpk'] = self.request.GET.get('organization')
-        if context['orgpk']:
-            context['organization'] = Organization.objects.get(pk=context['orgpk'])
-        c = self.request.GET.copy()
-        if 'organization' in c:
-            c.pop('organization')
-        context['form'] = ProjectSearchForm(c)
-        context['count'] = projectset_filter(self.request).count()
-        return context
-
-    def get_queryset(self):
-        queryset = projectset_filter(self.request)
-        # raise AssertionError, queryset
-        return queryset
+    return render(request, 'nhdb/project_list.html', c)
 
 
 def search(request, model, languages='en'):
@@ -1246,22 +1195,30 @@ def form(request, model=None, form='main'):
     args = {}
     f = None
     g = request.GET.get
-    p = request.GET.get
-
     template = 'nhdb/crispy_form.html'
+    app_name = 'nhdb'
 
-    for m in Project, Person, Organization, Suggest, ProjectPerson, ProjectImage, ProjectPlace, ProjectOrganization, OrganizationPlace:
-        m_name = m._meta.model_name
+    from django.apps import apps
+
+    g = request.GET.get
+    args = {}
+    args['nochange'] = []
+
+    models = apps.get_app_config(app_name).models
+    for m_name in models:
+        m = models[m_name]
 
         if g(m_name):
             args[m_name] = m.objects.get(pk=g(m_name))
 
-        # Use an underscore to indicate a suggestion ID
-        if g('_' + m_name):
-            args[m_name] = Suggest.objects.get(pk=g('_' + m_name))
+        #  Use an exclamation to indicate a field which should not be changable
+        if g('!' + m_name):
+            args[m_name] = m.objects.get(pk=g('!'+m_name))
+            args['nochange'].append(m_name)
 
-    # if model in args:
-    #     args['instance'] = args[model]
+        #  Use an underscore to indicate a suggestion ID
+        elif g('_' + m_name):
+            args[m_name] = Suggest.objects.get(pk=g('_' + m_name))
 
     if model == 'project':
         if form == 'main':

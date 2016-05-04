@@ -13,7 +13,7 @@ def logmein(request, _next=None):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                return HttpResponseRedirect(request.GET.get('next') or request.META.get('HTTP_REFERER'))
             else:
                 pass
                 return HttpResponse('Account Locked')

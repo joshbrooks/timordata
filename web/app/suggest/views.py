@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
+from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView, CreateView, DetailView
@@ -65,94 +66,73 @@ def unhide(request, model_name, model_pk, state='all'):
     return redirect('/suggest/{}/{}/'.format(model_name, model_pk))
 
 
-class SuggestList(SingleTableView):
+def suggestlist(request, model_name=None, model_pk=None):
+
+    g = request.GET.get
+    gl = request.GET.getlist
+
     table_class = SuggestTable
     model = Suggest
 
-    def get_context_data(self, **kwargs):
+    queryset = model.objects.all()
 
-        queryset = Suggest.objects.all()
-        context = super(SuggestList, self).get_context_data(**kwargs)
+    model_name = model_name or g('model_name')
+    model_pk = model_pk or g('model_pk')
 
-        context['filters'] = {
-            'model_name': set(AffectedInstance.objects.all().values_list('model_name', flat=True)),
-            'action': Suggest._meta.get_field('action').choices,
-            'state' : Suggest._meta.get_field('state').choices,
-            'user_name': set(Suggest.objects.all().values_list('user_name', flat=True)),
-        }
+    context = {
+        'return_url' : g('return_url'),
+        'model_name': model_name,
+        'model_pk': model_pk,
+        'email': g('email')
+    }
 
-        context['activefilters'] = {}
+    context['filters'] = {
+        'model_name': set(AffectedInstance.objects.all().values_list('model_name', flat=True)),
+        'action': Suggest._meta.get_field('action').choices,
+        'state' : Suggest._meta.get_field('state').choices,
+        'user_name': set(Suggest.objects.all().values_list('user_name', flat=True)),
+    }
 
-        for i in context['filters']:
-            context['activefilters'][i] = self.request.GET.getlist(i)
+    context['activefilters'] = {}
 
-        context['return_url'] = self.request.GET.get('return_url')
-        model_name = self.kwargs.get('model_name') or self.request.GET.get('model_name')
-        model_pk = self.kwargs.get('model_pk') or self.request.GET.get('model_pk')
-        context['model_name'] = model_name
-        context['model_pk'] = model_pk
-        context['email'] = self.request.GET.get('email')
+    for i in context['filters']:
+        context['activefilters'][i] = gl(i)
 
-        # If there is a model_name and model_pk
-        if model_name and model_pk:
+    # If there is a model_name and model_pk
+
+    if model_name and model_pk:
+        try:
+            a, m = model_name.split('_') # "eg nhdb_project" -> ['nhdb', 'project']
+        except ValueError:
+            raise ValueError, "Expected an underscored app_project name eg nhdb_project -> ['nhdb', 'project']. Got %s"%g(model_name)
+        context['model'] = apps.get_model(a, m)
+        context['object'] = context['model'].objects.get(pk = model_pk)
+
+        if not context['return_url']:
             try:
-                a, m = model_name.split('_') # "eg nhdb_project" -> ['nhdb', 'project']
-            except ValueError:
-                raise ValueError, "Expected an underscored app_project name eg nhdb_project -> ['nhdb', 'project']. Got %s"%model_name
-            context['model'] = apps.get_model(a, m)
-            context['object'] = context['model'].objects.get(pk = model_pk)
+                context['return_url'] = context['object'].get_absolute_url()
+            except:
+                pass
 
-            if not context['return_url']:
-                try:
-                    context['return_url'] = context['object'].get_absolute_url()
-                except:
-                    pass
+    context['tabs'] = {'first':{'disabled':True}}
 
-        context['tabs'] = {'first':{'disabled':True}}
+    filters = {
+        'affectedinstance__model_name': model_name,
+        'affectedinstance__model_pk': model_pk,
+        'state__in': gl('state'),
+        'action__in': gl('action'),
+        'user_name__in': gl('user_name'),
+        'email': gl('email'),
+        'is_hidden': False
+    }
 
-        return context
-
-    def get_queryset(self):
-
-        def _filter():
-            _l = self.request.GET.getlist
-            filters = {
-                'affectedinstance__model_name__in': _l('model_name'),
-                'affectedinstance__model_pk__in': _l('model_pk'),
-                'state__in': _l('state'),
-                'action__in': _l('action'),
-                'user_name__in': _l('user_name'),
-                'email': _l('email'),
-                'is_hidden': False
-            }
-            for k, v in filters.items():
-                if v is None or v == [] or v == [None]:
-                    filters.pop(k)
-            return filters
-
-        def _extra(qs):
-            """
-            Also include suggestions where the "affected instance" model is a suggestion
-            :param qs:
-            :return:
-            """
-            queryset_extra = Suggest.objects.filter(
-                affectedinstance__model_name='suggest_suggest',
-                affectedinstance__model_pk__in=[str(i) for i in qs.values_list('pk', flat=True)]
-            )
-            if queryset_extra.count() == 0:
-                return qs
-
-            pk_list = list(qs.values_list('pk', flat = True))
-            pk_list.extend(list(queryset_extra.values_list('pk', flat = True)))
-            qs = Suggest.objects.filter(pk__in = pk_list)
-            return qs
-
-        queryset_with_extra = _extra(Suggest.objects.filter(**_filter()).distinct())
-
-        return queryset_with_extra.order_by('-id')
-
-
+    for k, v in filters.items():
+        if v is None or v == [] or v == [None]:
+            filters.pop(k)
+    queryset = Suggest.objects.filter(**filters).distinct().prefetch_related('affectedinstance_set',)
+    context['table'] = SuggestTable(queryset)
+    context['table'].paginate(page=g('page', 1), per_page=g('per_page', 20))
+    return render(request, 'suggest/suggest_list.html', context)
 
 
 class SuggestCreate(CreateView):

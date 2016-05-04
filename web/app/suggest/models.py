@@ -12,7 +12,7 @@ from django.db.models.base import ModelBase
 from django.utils.safestring import mark_safe
 import os
 import re
-from django.db import models
+from django.db import models, IntegrityError
 from django.apps import apps
 import dateutil.parser
 
@@ -363,9 +363,18 @@ class Suggest(models.Model):
 
         for f in self.suggestupload_set.all():
             name = os.path.split(f.upload.name)[-1]
-            file_field = getattr(i, f.field_name)
-            file_field.save(name, f.upload.file)
-        i.save()
+            try:
+                file_field = getattr(i, f.field_name)
+                file_field.save(name, f.upload.file)
+            except AttributeError, e: #  Happens using image insertion into Summernote
+                logger.error(e.message)
+                continue
+            except IntegrityError, e:
+                logger.error(e.message)
+                continue
+
+
+        # i.save()
 
     def _set(self, data=None, write=True):
         """
@@ -685,7 +694,7 @@ class Suggest(models.Model):
         except:
             return {}
         returns = {}
-        ready, changed, suggestion_data = self._set()
+        ready, changed, suggestion_data = self._set(write=False)
         suggestion_data = json.loads(suggestion_data)
 
         # TODO: More elegant return for models which do not exist
@@ -746,7 +755,10 @@ class Suggest(models.Model):
                     if value_current == value_suggested and value_suggested is not None:
                         returns[key] = wrap_class(value_current, u'unchanged')
                     elif value_suggested is None:
-                            returns[key] = None
+                        returns[key] = None
+                    # Try coercing to the same value
+                    elif '{}'.format(value_suggested) == '{}'.format(value_current):
+                        returns[key] = wrap_class(value_current, u'unchanged')
                     else:
                         returns[key] = mark_safe(u"{} {}").format(wrap_class(value_current or '', u'removed'),
                                                                  wrap_class(value_suggested, u'added'))

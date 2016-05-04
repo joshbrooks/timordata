@@ -28,7 +28,9 @@ RUN if [ -f "/etc/apt/apt.conf.d/30proxy" ]; then rm /etc/apt/apt.conf.d/30proxy
 
 RUN pip install -U pip
 RUN pip install virtualenv
+RUN ls -la
 RUN useradd -U -ms /bin/bash django
+
 
 COPY 	pip /tmp/pip/
 COPY 	requirements.txt /tmp/requirements.txt 

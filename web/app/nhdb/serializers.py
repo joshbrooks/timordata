@@ -1,7 +1,7 @@
 from django.contrib.gis.geos import Point
 from rest_framework import serializers
 from nhdb.models import Organization, Project, ProjectOrganization, ProjectPerson, Person, ProjectPlace, \
-    PropertyTag, OrganizationPlace, ProjectImage, ProjectType
+    PropertyTag, OrganizationPlace, ProjectImage, ProjectType, ExcelDownloadFeedback
 from geo.models import AdminArea, Suco
 from rest_framework.reverse import reverse
 
@@ -46,6 +46,10 @@ class PropertyTagSerializer(serializers.ModelSerializer):
 class ProjectTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectType
+
+class ExcelDownloadFeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExcelDownloadFeedback
 
 
 class ProjectOrganizationPersonSerializer(serializers.ModelSerializer):

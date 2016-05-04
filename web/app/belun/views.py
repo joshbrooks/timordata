@@ -1,16 +1,18 @@
 import json
 from django.apps import apps
-from django.http.response import HttpResponse
-from django.shortcuts import render, get_object_or_404
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.flatpages.models import FlatPage
+from django.http.response import HttpResponse, Http404
+from django.shortcuts import render, get_object_or_404, render_to_response
 from django.contrib.auth import logout
+from django.template import Context
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView, DetailView
+from django_tables2 import SingleTableView
+from settings import LANGUAGES_FIX_ID
 from suggest.models import Suggest
 
-
-def logout_view(request):
-    logout(request)
-    return render(request, 'index.html')
-
+language_codes = [i[0] for i in LANGUAGES_FIX_ID]
 def index(request):
     # return HttpResponse('ok')
     if request.GET.get('background') == '2':
@@ -157,3 +159,67 @@ def chosen(request, app_name='library', model_name='tag', filter_field='name', f
 def selecttwo_create(request, **kw):
     kw['create'] = True
     return selecttwo(request, **kw)
+
+
+
+class TranslatedPageList(list):
+    def __init__(self, language, **kwargs):
+
+        super(TranslatedPageList, self).__init__(**kwargs)
+        self.language = language
+
+# @login_required
+def flatpagelist(request):
+    """
+    Edit a flatpage by primary key
+    :param pk:
+    :return:
+    """
+    c = {}
+
+    def pages():
+        """
+        Return a list of pages and translated languages
+        """
+        page_objects = FlatPage.objects.all()
+        pages = {}
+
+        pages['languages'] = language_codes
+        pages['translated'] = {}
+
+        page_names =  [page.url.split('/')[1] for page in page_objects]
+
+        for page in page_objects:
+            page_name = page.url.split('/')[1]
+            if page_name not in pages['translated']:
+                pages['translated'][page_name] = TranslatedPageList(size = len(language_codes))
+
+            language = page.url.split('/')[-2]
+
+            if language == '':
+                language = 'en' # Default to english
+            if language not in language_codes:
+                language = 'en' # Default to english
+                #raise AssertionError, language
+
+            language_index = pages['languages'].index(language)
+            pages['translated'][page_name][language_index] = page
+
+        return pages
+    c['pages'] = pages()
+
+    return render(request, 'flatpages/flatpage_list.html', c)
+
+def flatpage(request, pk):
+    return HttpResponse('Not here yet! pk %s'%pk)
+
+
+
+@method_decorator(login_required, name='dispatch')
+class FlatpageList(ListView):
+    model = FlatPage
+
+
+@method_decorator(login_required, name='dispatch')
+class FlatpageDetail(DetailView):
+    model = FlatPage

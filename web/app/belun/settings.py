@@ -7,10 +7,9 @@ https://docs.djangoproject.com/en/1.7/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.7/ref/settings/
 """
-from settings_secret import SECRET_KEY, DEBUG, CRISPY_FAIL_SILENTLY, DATABASES # Keep this out of the git repository
+from settings_secret import SECRET_KEY, DEBUG, CRISPY_FAIL_SILENTLY, DATABASES, ALLOWED_HOSTS # Keep this out of the git repository
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
 # Add Tetun as a selectable language along with ID, EN and PT language codes
 from django.utils.translation import gettext_noop
 import django.conf.locale
@@ -81,9 +80,6 @@ TEMPLATES = [
     },
 ]
 
-ALLOWED_HOSTS = []
-
-
 INSTALLED_APPS = (
     'grappelli',
     'modeltranslation', # Keep this above admin!!
@@ -96,6 +92,7 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'django.contrib.sites',
     'django.contrib.flatpages',
+    'debug_toolbar',
 
     # Contributed apps
     'rest_framework',
@@ -111,6 +108,7 @@ INSTALLED_APPS = (
     'nhdb',
     'geo',
     'suggest',
+
 )
 
 SITE_ID = 1 # For flatpages
@@ -118,6 +116,7 @@ SITE_ID = 1 # For flatpages
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 MIDDLEWARE_CLASSES = (
+    'belun.stats_middleware.StatsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -127,16 +126,15 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
 
+
     # Caching
-    'django.middleware.cache.UpdateCacheMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
-
-
+    # 'django.middleware.cache.UpdateCacheMiddleware',
+    # 'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 CACHE_MIDDLEWARE_ALIAS = 'default'
-CACHE_MIDDLEWARE_SECONDS = 600
+# CACHE_MIDDLEWARE_SECONDS = 600
 CACHE_MIDDLEWARE_KEY_PREFIX = 'timordata.info'
 
 ROOT_URLCONF = 'belun.urls'
@@ -187,7 +185,9 @@ GRAPPELLI_AUTOCOMPLETE_SEARCH_FIELDS = {
     }
 }
 
-INTERNAL_IPS = ('127.0.0.1', )
+
+INTERNAL_IPS = ['127.0.0.1','172.18.0.1']
+
 
 GRAPPELLI_ADMIN_TITLE = "Timor-Leste Data Center"
 
@@ -230,8 +230,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination'
 
 }
-
+LOGIN_REDIRECT_URL = '/'
 DATETIME_FORMAT = 'Y-m-d H:i:sO'
 DATE_FORMAT = 'Y-m-d'
 SELECT2_BOOTSTRAP = True
 AUTO_RENDER_SELECT2_STATICS = False
+
+STATIC_ROOT = "/var/www/html/static/new/"

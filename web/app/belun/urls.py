@@ -17,10 +17,18 @@ from belun. views import selecttwo, chosen ,selecttwo_create
 from belun.flatpage_trans import flatpage_translation
 from library.views import thumbnail as th
 from django.views.decorators.cache import cache_page
+from django.conf import settings
+from views_authentication import logmein, logmeout
 
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    url(r'^logout/', views.logout_view, name='logout'),
+    url(r'^accounts/login/$', auth_views.login),
+    url(r'^accounts/logout/$', auth_views.logout),
+    url(r'^login/$',  auth_views.login, name="login"),
+    url(r'^logout/', auth_views.logout, name='logout'),
+    url(r'^flatpages/flatpages/$', views.flatpagelist, name='flatpage'),
+    url(r'^flatpage/(?P<pk>[0-9]+)$', views.FlatpageDetail.as_view(), name='flatpage'),
 
     # url(r'^index/$', views.index, name='index'),
     # url(r'^about/$', views.about, name='about'),
@@ -61,3 +69,6 @@ urlpatterns = [
     url(r'^$', views.index, name='home'),
     url(r'^page/(?P<url>.*)$', flatpage_translation, name='django.contrib.flatpages.views.flatpage'),
 ]
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += url(r'^__debug__/', include(debug_toolbar.urls)),

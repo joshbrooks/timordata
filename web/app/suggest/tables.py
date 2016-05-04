@@ -20,19 +20,6 @@ class SuggestTable(Table):
         attrs = {"class": "paleblu"}
         fields = (
         'description', 'data', 'user_name', 'suggestDate', 'approvalDate', 'email_obfs', 'url', 'children', 'parent')
-        #
-        # def render_url(self, value, record):
-        #     r = '''
-        #     <form method="POST" action="{}">
-        #
-        #         <input type="hidden" name="_method" value="{}">
-        #         <input type="hidden" name="confirm" value="true">
-        #         <input type="hidden" name="data" value="true">
-        #         <button>Approve</button>
-        #     </form>
-        #     '''.format(value, record.method)
-
-        # return mark_safe(r)
 
     def render_data(self, value, record):
         novalues = []
@@ -64,13 +51,21 @@ class SuggestTable(Table):
         return mark_safe(returns)
 
     def render_children(self, value):
-        r = ''
-        for i in value:
-            detail_url = '#object=' + str(i.pk)
-            r += u'<p><a href="{}">{}</a></p>'.format(detail_url, i)
-        return mark_safe(r)
+
+        pattern = u'<a href="#object={i.pk}">{i}</a>'
+        return mark_safe(u''.join([pattern.format(i=link) for link in value.all()]))
+        #
+        # r = ''
+        # for i in value:
+        #     detail_url = '#object=' + str(i.pk)
+        #     r += u'<p><a href="{}">{}</a></p>'.format(detail_url, i)
+        # return mark_safe(r)
 
     def render_parent(self, value):
+
+        pattern = u'<a href="#object={i.pk}">{i}</a>'
+        return mark_safe(u''.join([pattern.format(i=link) for link in value.all()]))
+
         r = ''
         for i in value:
             detail_url = '#object=' + str(i.pk)
@@ -78,11 +73,8 @@ class SuggestTable(Table):
         return mark_safe(r)
 
     def render_url(self, value, record):
-
         p = record.prepare
-
         cancelform = get_template('suggest/forms/cancel.html').render({'record':record})
-
         if not p['ready']:
             f = "<p> Can't apply changes yet.<br> {} </p>".format(p['exception'])
             notreadyform = get_template('suggest/forms/not_ready.html').render({'record':record})
@@ -93,9 +85,6 @@ class SuggestTable(Table):
                 form = get_template('suggest/forms/delete.html').render({'record':record})
             else:
                 form = get_template('suggest/forms/main.html').render({'record':record})
-
-
-
             return mark_safe(form + cancelform)
 
         elif record.state == 'A':

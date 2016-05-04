@@ -3,15 +3,8 @@
 {% load render_table from django_tables2 %}
 {% load crispy_forms_tags %}
 
-{% block navbar %}
-
-{% include "object_list_navbar.html" %}
-{% endblock %}
-
 {% block script %}
     {{block.super}}
-    <!--Loaded from object_list.html-->
-
     <script src="{{ STATIC_URL }}js/bootstrap-multiselect.js"></script>
     <script src="{{ STATIC_URL }}bootstrap-modal/js/bootstrap-modal.js"></script>
     <script src="{{ STATIC_URL }}bootstrap-modal/js/bootstrap-modalmanager.js"></script>
@@ -25,104 +18,37 @@
     <script src="{{ STATIC_URL }}chosen-ajax-addition-master/chosen.ajaxaddition.jquery.js"></script>
     <script src="{{ STATIC_URL }}jasny-bootstrap.min.js"></script>
     <script src="{{ STATIC_URL }}zebra/javascript/zebra_datepicker.js"> </script>
-
-
-<script>
-    // Define SELECTURL dropdown lists here
-    $(document).ready(function () {
-
-        // Define a global function to get the current project id
-        window.object = function () {
-            return parseInt(location.hash.match('#object=[0-9]+')[0].split('=')[1])
-        };
-
-        $('.selecttwo').select2();
-        // OVerride selcttwo default 100px input box
-        $('.select2-container').css({width:'100%'});
-        $('.apply_datepicker').each(function () {$(this).Zebra_DatePicker()});
-        $('[data-selecturl]').each(function () {
-            var url = $(this).data('selecturl');
-            var ajaxdefault = {url: url, dataType: 'json', delay: 250};
-            var name = $(this).prop('name');
-            switch (name) {
-
-                case 'project':
-                    $(this).select2({ajax: ajaxdefault, minimumInputLength: 3});
-                    break;
-
-                case 'org':
-                    $(this).select2({ajax: ajaxdefault, minimumInputLength: 3});
-                    break;
-
-                case 'person':
-                    $(this).select2({ajax: ajaxdefault, minimumInputLength: 3});
-                    break;
-                    $(this).on("select2:select", function (e) {
-                        var data = {'project': 'getSuggestionId', 'person': $(this).val()};
-                        $('<p>').text($(this).find(':selected').text()).insertBefore($(this))
-                    });
-                    break;
-
-                case 'place':
-                    $(this).select2({ajax: ajaxdefault,
-                        processResults: processPlaceResults,
-                        escapeMarkup: function (markup) {return markup;}
-            });
-                    break;
-            }
+    <script src="{{ STATIC_URL }}summernote/summernote.js"></script>
+    {% comment %}
+    This is a trivial function to reverse email obfuscation: it's reversed and rot13 encoded. The obfuscated code is shown below.
+    Note that it provides 3 functions for a string: .reverse, .dotat, .rot13
+    <script>
+    String.prototype.reverse = function () {return this.split("").reverse().join("");};
+    String.prototype.dotat = function () {return this.replace(/ at /gi, '@').replace(/ dot /gi ,'.')};
+    String.prototype.rot13 = function () {return this.replace(/[a-zA-Z]/gi, function (c) {return String.fromCharCode(
+        (c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);});};
+    $(document).ready(function(){
+        $('button.showliame').on('click', function(){
+            var table = $('.email').parents('table:first')
+            var index = $('.email').parent().children().index( $('.email') )
+            $(this).addClass('disabled')
+            table.find('tbody tr').each(function(){
+                var i = $(this).children('td')[index];
+                $(i).css({color:'green'});
+                $(i).text($(i).text().reverse().rot13().dotat())
+            })
         });
-
     });
-
-    // Image modal
-
-
-</script>
-
-<script>
-  $(document).ready(function(){
-
-      $('#listactions').affix({
-          offset: {
-              top: 10
-          }
-      })
-
-  })
-
-</script>
-<!--End of object_list javascript-->
-
-{% comment %}
-This is a trivial function to reverse email obfuscation: it's reversed and rot13 encoded. The obfuscated code is shown below.
-Note that it provides 3 functions for a string: .reverse, .dotat, .rot13
-<script>
-String.prototype.reverse = function () {return this.split("").reverse().join("");};
-String.prototype.dotat = function () {return this.replace(/ at /gi, '@').replace(/ dot /gi ,'.')};
-String.prototype.rot13 = function () {return this.replace(/[a-zA-Z]/gi, function (c) {return String.fromCharCode(
-    (c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);});};
-$(document).ready(function(){
-    $('button.showliame').on('click', function(){
-        var table = $('.email').parents('table:first')
-        var index = $('.email').parent().children().index( $('.email') )
-        $(this).addClass('disabled')
-        table.find('tbody tr').each(function(){
-            var i = $(this).children('td')[index];
-            $(i).css({color:'green'});
-            $(i).text($(i).text().reverse().rot13().dotat())
-        })
-    });
-});
-</script>
-{% endcomment %}
-<script>
-var _0x7972=["\x72\x65\x76\x65\x72\x73\x65","\x70\x72\x6F\x74\x6F\x74\x79\x70\x65","","\x6A\x6F\x69\x6E","\x73\x70\x6C\x69\x74","\x64\x6F\x74\x61\x74","\x2E","\x72\x65\x70\x6C\x61\x63\x65","\x40","\x72\x6F\x74\x31\x33","\x5A","\x63\x68\x61\x72\x43\x6F\x64\x65\x41\x74","\x66\x72\x6F\x6D\x43\x68\x61\x72\x43\x6F\x64\x65","\x63\x6C\x69\x63\x6B","\x74\x61\x62\x6C\x65\x3A\x66\x69\x72\x73\x74","\x70\x61\x72\x65\x6E\x74\x73","\x2E\x65\x6D\x61\x69\x6C","\x69\x6E\x64\x65\x78","\x63\x68\x69\x6C\x64\x72\x65\x6E","\x70\x61\x72\x65\x6E\x74","\x64\x69\x73\x61\x62\x6C\x65\x64","\x61\x64\x64\x43\x6C\x61\x73\x73","\x74\x64","\x67\x72\x65\x65\x6E","\x63\x73\x73","\x74\x65\x78\x74","\x65\x61\x63\x68","\x74\x62\x6F\x64\x79\x20\x74\x72","\x66\x69\x6E\x64","\x6F\x6E","\x62\x75\x74\x74\x6F\x6E\x2E\x73\x68\x6F\x77\x6C\x69\x61\x6D\x65","\x72\x65\x61\x64\x79"];String[_0x7972[1]][_0x7972[0]]=function(){return this[_0x7972[4]](_0x7972[2])[_0x7972[0]]()[_0x7972[3]](_0x7972[2])};String[_0x7972[1]][_0x7972[5]]=function(){return this[_0x7972[7]](/ at /gi,_0x7972[8])[_0x7972[7]](/ dot /gi,_0x7972[6])};String[_0x7972[1]][_0x7972[9]]=function(){return this[_0x7972[7]](/[a-zA-Z]/gi,function(_0xf065x1){return String[_0x7972[12]]((_0xf065x1<=_0x7972[10]?90:122)>=(_0xf065x1=_0xf065x1[_0x7972[11]](0)+13)?_0xf065x1:_0xf065x1-26)})};$(document)[_0x7972[31]](function(){$(_0x7972[30])[_0x7972[29]](_0x7972[13],function(){var _0xf065x2=$(_0x7972[16])[_0x7972[15]](_0x7972[14]);var _0xf065x3=$(_0x7972[16])[_0x7972[19]]()[_0x7972[18]]()[_0x7972[17]]($(_0x7972[16]));$(this)[_0x7972[21]](_0x7972[20]);_0xf065x2[_0x7972[28]](_0x7972[27])[_0x7972[26]](function(){var _0xf065x4=$(this)[_0x7972[18]](_0x7972[22])[_0xf065x3];$(_0xf065x4)[_0x7972[24]]({color:_0x7972[23]});$(_0xf065x4)[_0x7972[25]]($(_0xf065x4)[_0x7972[25]]()[_0x7972[0]]()[_0x7972[9]]()[_0x7972[5]]());});})});
-</script>
-
+    </script>
+    {% endcomment %}
+    <script>
+    var _0x7972=["\x72\x65\x76\x65\x72\x73\x65","\x70\x72\x6F\x74\x6F\x74\x79\x70\x65","","\x6A\x6F\x69\x6E","\x73\x70\x6C\x69\x74","\x64\x6F\x74\x61\x74","\x2E","\x72\x65\x70\x6C\x61\x63\x65","\x40","\x72\x6F\x74\x31\x33","\x5A","\x63\x68\x61\x72\x43\x6F\x64\x65\x41\x74","\x66\x72\x6F\x6D\x43\x68\x61\x72\x43\x6F\x64\x65","\x63\x6C\x69\x63\x6B","\x74\x61\x62\x6C\x65\x3A\x66\x69\x72\x73\x74","\x70\x61\x72\x65\x6E\x74\x73","\x2E\x65\x6D\x61\x69\x6C","\x69\x6E\x64\x65\x78","\x63\x68\x69\x6C\x64\x72\x65\x6E","\x70\x61\x72\x65\x6E\x74","\x64\x69\x73\x61\x62\x6C\x65\x64","\x61\x64\x64\x43\x6C\x61\x73\x73","\x74\x64","\x67\x72\x65\x65\x6E","\x63\x73\x73","\x74\x65\x78\x74","\x65\x61\x63\x68","\x74\x62\x6F\x64\x79\x20\x74\x72","\x66\x69\x6E\x64","\x6F\x6E","\x62\x75\x74\x74\x6F\x6E\x2E\x73\x68\x6F\x77\x6C\x69\x61\x6D\x65","\x72\x65\x61\x64\x79"];String[_0x7972[1]][_0x7972[0]]=function(){return this[_0x7972[4]](_0x7972[2])[_0x7972[0]]()[_0x7972[3]](_0x7972[2])};String[_0x7972[1]][_0x7972[5]]=function(){return this[_0x7972[7]](/ at /gi,_0x7972[8])[_0x7972[7]](/ dot /gi,_0x7972[6])};String[_0x7972[1]][_0x7972[9]]=function(){return this[_0x7972[7]](/[a-zA-Z]/gi,function(_0xf065x1){return String[_0x7972[12]]((_0xf065x1<=_0x7972[10]?90:122)>=(_0xf065x1=_0xf065x1[_0x7972[11]](0)+13)?_0xf065x1:_0xf065x1-26)})};$(document)[_0x7972[31]](function(){$(_0x7972[30])[_0x7972[29]](_0x7972[13],function(){var _0xf065x2=$(_0x7972[16])[_0x7972[15]](_0x7972[14]);var _0xf065x3=$(_0x7972[16])[_0x7972[19]]()[_0x7972[18]]()[_0x7972[17]]($(_0x7972[16]));$(this)[_0x7972[21]](_0x7972[20]);_0xf065x2[_0x7972[28]](_0x7972[27])[_0x7972[26]](function(){var _0xf065x4=$(this)[_0x7972[18]](_0x7972[22])[_0xf065x3];$(_0xf065x4)[_0x7972[24]]({color:_0x7972[23]});$(_0xf065x4)[_0x7972[25]]($(_0xf065x4)[_0x7972[25]]()[_0x7972[0]]()[_0x7972[9]]()[_0x7972[5]]());});})});
+    </script>
 
 {% endblock script %}
  {% block style %}
 {{block.super}}
+    <link href="{{ STATIC_URL }}timordata.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}css/object_list.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}leaflet/leaflet.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}select2/css/select2.min.css" rel="stylesheet">
@@ -134,6 +60,7 @@ var _0x7972=["\x72\x65\x76\x65\x72\x73\x65","\x70\x72\x6F\x74\x6F\x74\x79\x70\x6
     <link href="{{ STATIC_URL }}zebra/css/bootstrap.css" rel="stylesheet" />
     <link href="{{ STATIC_URL }}jasny-bootstrap.min.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}django_tables2/themes/paleblu/css/screen.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}summernote/summernote.css" rel="stylesheet">
 {% endblock style %}
 
 {% block bodyopen %}  <body data-spy="scroll" data-target="#listactions"> {% endblock %}
@@ -148,12 +75,7 @@ var _0x7972=["\x72\x65\x76\x65\x72\x73\x65","\x70\x72\x6F\x74\x6F\x74\x79\x70\x6
     <h4 class="modal-title">Stack One</h4>
   </div>
   <div class="modal-body">
-    <p>One fine body…</p>
-    <p>One fine body…</p>
-    <p>One fine body…</p>
-    <input class="form-control" type="text" data-tabindex="1">
-    <input class="form-control" type="text" data-tabindex="2">
-    <button class="btn btn-default" data-toggle="modal" href="#stack2">Launch modal</button>
+
   </div>
   <div class="modal-footer">
     <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
@@ -184,51 +106,31 @@ var _0x7972=["\x72\x65\x76\x65\x72\x73\x65","\x70\x72\x6F\x74\x6F\x74\x79\x70\x6
     </div>
 </div>
 
-
-<div class="row">
-    <div class="col col-lg-12 col-sm-12">{% block toolbar %}
-        <button type="button" class="btn btn-sm btn-default glyphicon glyphicon-search" data-toggle="offcanvas" data-target="#searchmenu" data-canvas="#searchmenuCanvas" data-placement="left">
-            Search
-        </button>
-
-        <p><strong><em>Showing {{object_list.count}}{% if object_class_count %} of {{object_class_count}}{% endif %}</em></strong></p>
-        {% endblock %}
-    </div>
-</div>
-
- <div id="searchmenuCanvas" class="" style="">
-    <nav id="searchmenu" class="navmenu navmenu-default navmenu-fixed-left offcanvas" role="navigation">
-      <a class="navmenu-brand" href="#">Search</a>
-        {% block leftsidelist %}
-            <form>This side holds a Search box or similar information</form>{% endblock %}
-    </nav>
- </div>
-
 <div class="row">
     <div id="rightpane" class="col col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
         {% comment %} Use context item "tabs" to change title of tabs through context {% endcomment %}
          <ul id="object-tabs" class="nav nav-tabs" role="tablist" style="margin-bottom:30px;">{% if not tabs.first.disabled %}
-            <li role="presentation"><a href="#dashboard-tab" aria-controls="home" role="tab" data-toggle="tab">{{ tabs.first.name|default:"Dashboard" }}</a></li>{% endif %} {% if not tabs.second.disabled %}
-            <li role="presentation"><a href="#list-tab" aria-controls="profile" role="tab" data-toggle="tab">{{ tabs.second.name|default:"List" }}</a></li>{% endif %} {% if not tabs.third.disabled %}
-            <li role="presentation"><a href="#detail-tab" aria-controls="messages" role="tab" data-toggle="tab">{{ tabs.third.name|default:"Detail" }}</a></li>{% endif %} {% if tabs.fourth.enabled %}
-            <li role="presentation"><a href="#help-tab" aria-controls="settings" role="tab" data-toggle="tab">{{ tabs.fourth.name|default:"Help" }}</a></li>{% endif %}
+            <li role="presentation"><a href="#first-tab" aria-controls="home" role="tab" data-toggle="tab">{{ tabs.first.name|default:"Dashboard" }}</a></li>{% endif %} {% if not tabs.second.disabled %}
+            <li role="presentation"><a href="#second-tab" aria-controls="profile" role="tab" data-toggle="tab">{{ tabs.second.name|default:"List" }}</a></li>{% endif %} {% if not tabs.third.disabled %}
+            <li role="presentation"><a href="#third-tab" aria-controls="messages" role="tab" data-toggle="tab">{{ tabs.third.name|default:"Detail" }}</a></li>{% endif %} {% if tabs.fourth.enabled %}
+            <li role="presentation"><a href="#fourth-tab" aria-controls="settings" role="tab" data-toggle="tab">{{ tabs.fourth.name|default:"Help" }}</a></li>{% endif %}
           </ul>
 
       <div class="tab-content">
         {% if not tabs.first.disabled %}
-        <div role="tabpanel" class="tab-pane" id="dashboard-tab">{% block dashboard %}
-            <h4>Dashboard</h4>
+        <div role="tabpanel" class="tab-pane" id="first-tab">{% block tab_first %}
+            <h4>{{ tabs.first.name|default:"Dashboard" }}</h4>
             <p>...</p>{% endblock %}
         </div>
         {% endif %}
         {% if not tabs.second.disabled %}
-        <div role="tabpanel" class="tab-pane" id="list-tab">{% block objectlist %}
+        <div role="tabpanel" class="tab-pane" id="second-tab">{% block tab_second %}
             <h4>List</h4>
             <p>...</p>{% endblock %}
         </div>
         {% endif %}
         {% if not tabs.third.disabled %}
-        <div role="tabpanel" class="tab-pane" id="detail-tab">{% block detail %}
+        <div role="tabpanel" class="tab-pane" id="third-tab">{% block tab_third %}
             <div id="detail">
                 <h4>Select an object from the list</h4>
             </div>
@@ -236,7 +138,7 @@ var _0x7972=["\x72\x65\x76\x65\x72\x73\x65","\x70\x72\x6F\x74\x6F\x74\x79\x70\x6
         </div>
         {% endif %}
         {% if not tabs.fourth.disabled %}
-        <div role="tabpanel" class="tab-pane" id="help-tab">{% block help %}
+        <div role="tabpanel" class="tab-pane" id="fourth-tab">{% block tab_fourth %}
             <h4>Help</h4>
             <div id="help">
                 <h4>Help text</h4>
@@ -250,41 +152,6 @@ var _0x7972=["\x72\x65\x76\x65\x72\x73\x65","\x70\x72\x6F\x74\x6F\x74\x79\x70\x6
 
 </div>
 
-
-
-{% if debug %}
-<div id="debug" style="display:none;">
-    <p><strong> Filters: </strong>{{filters}}</p>
-    <p><strong> Active Filters: </strong>{{activefilters}}</p>
-
-  <h2>Queries</h2>
-  <p>
-    {{ sql_queries|length }} Quer{{ sql_queries|pluralize:"y,ies" }}
-    {% ifnotequal sql_queries|length 0 %}
-    (<a  data-toggle="collapse" data-target="#debugQueryTable">Show</a>)
-    {% endifnotequal %}
-  </p>
-
-    <div id="debugQueryTable collapse">
-
-  <table class="table table-bordered table-condensed">
-    <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">SQL</th>
-      <th scope="col">Time</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for query in sql_queries %}<tr class="{% cycle odd,even %}">
-      <td>{{ forloop.counter }}</td>
-      <td>{{ query.sql|escape }}</td>
-      <td>{{ query.time }}</td>
-    </tr>{% endfor %}
-    </tbody>
-  </table>
-</div></div>
-{% endif %}
 
 {% endblock %}
 

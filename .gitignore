@@ -2,6 +2,7 @@ web/app/belun/settings_secret.py
 web/app/dumpdata.sh
 web/app/timordata.log
 web/pip/
+web/env/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

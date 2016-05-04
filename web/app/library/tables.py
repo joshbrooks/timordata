@@ -25,66 +25,79 @@ class PublicationTable(tables.Table):
     class Meta:
         # model = Publication
         attrs = {"class": "paleblu"}
-        fields = ('publication', 'year', 'organizations')
+        fields = ('publication', 'year')
 
     # pk = tables.LinkColumn('library:publication:detail', args=[A('pk')])
     publication = tables.Column(empty_values=())
     year = tables.Column(empty_values=())
-    organizations = tables.Column(empty_values=())
+    organization = tables.Column()
     pubtype = tables.Column(empty_values=())
 
-    def render_organizations(self,record):
+    def render_organization(self, value):
 
-        def format_parameters(organization):
-            return [
-                reverse('nhdb:organization:detail', kwargs={'pk':organization.pk}),
-                organization.name]
+        pattern = u'<a href="/nhdb/organization/?q=active.true#object={organization.pk}">{organization.name}({organization.orgtype_id})</a>'
+        return mark_safe(u'<br>'.join([pattern.format(organization=organization) for organization in value.all()]))
 
-        format_string = u'''<a href={0}>{1}</a>'''
-        try:
-            organizations = [format_string.format(*format_parameters(i)) for i in record.organization.all()]
-        except:
-            raise
+    @property
+    def language_ids(self):
+        return self.context["request"].GET.getlist('language_id')
 
-        return mark_safe('<br>'.join(organizations))
+    @property
+    def versions(self):
+        """
+        Build a list of Version pk's which match the search criteria so that only Versions which are relevant
+        are displayed below the publication object in the list
 
-    def render_publication(self, record):
+        Returns self._version, creates it if not yet created, a list or 'all'
+        :return:
+        """
+        if hasattr(self, '_versions'):
+            return self._versions
         request = self.context["request"]
-
         filter_terms = ("sector__path", "activity__path", "beneficiary__path", 'tag__id')
         filters = {}
+        filter = False
         for term in filter_terms:
             if request.GET.getlist(term):
+                filter=True
                 filters[term+'__in'] = [PropertyTag.separatestring(i).upper() for i in request.GET.getlist(term)]
 
-        detail_url = '#object='+str(record.pk)
-
-        returns = u'<strong>{}</strong><a href={}> More &raquo;</a><br>'\
-            .format(record.__unicode__(), detail_url)
-        versions = record.versions.filter(**filters)
-
         languages = Q()
-        language_ids = request.GET.getlist('language_id')
-        for language_id in language_ids:
+
+        for language_id in self.language_ids:
+            filter = True
             kw = {'title_'+language_id+'__isnull': False}
             languages = languages | Q(**kw)
 
-        versions.filter(languages)
+        # If NOT filtered, we can save a lot of excess queries by including all versions
+        if filter:
+            self._versions = Version.objects.filter(**filters).filter(languages).values_list('pk', flat=True)
+            return self._versions
+        else:
+            self._versions = 'all'
+            return 'all'
 
-        version_count = versions.count()
+    def render_publication(self, record):
+
+        version_count = record.versions.count()
         hide_versions_after = 5
         extra = version_count - hide_versions_after
+        detail_url = '#object='+str(record.pk)
+        returns = u'<strong>{}</strong><a href={}> More &raquo;</a><br>'\
+            .format(record.__unicode__(), detail_url)
 
-        for idx, i in enumerate(versions):
+        for idx, i in enumerate(record.versions.all()):
             # "Filter keys" for record: "sector__path", "activity__path", "beneficiary__path"
             # Where there are an excessive number of version (e.g. for Blog posts), hide some rows
+            # if self.versions != 'all' and i.pk not in self.versions:
+            #     continue
+
             if version_count > 5 and idx == hide_versions_after:
                     returns = returns + '''<a class="btn btn-xs btn-default" data-toggle="collapse" href=".collapse-more-versions-{}" aria-expanded="false"> {} More &gt; </a>'''.format(record.pk, extra)
                     returns = returns + '''<div class="collapse collapse-more-versions-{}">'''.format(record.pk)
 
-
             for langcode, langname in settings.LANGUAGES_FIX_ID:
-                if language_ids and langcode not in language_ids:
+                if self.language_ids and langcode not in self.language_ids:
                     continue
                 # returns.append(u"{}".format(getattr(i, 'title_'+langcode)))
                 title = u"{}".format(getattr(i, 'title_'+langcode))

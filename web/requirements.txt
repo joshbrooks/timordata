@@ -1,9 +1,12 @@
 commonmark
 dateutils
-django
+six>=1.2
+pandas>=0.14.1
+django>=1.9.5
 django-ckeditor
 django-crispy-forms
 django-datatrans
+django-debug-toolbar
 django-extensions
 django-grappelli
 django-model-utils

@@ -1,0 +1,10 @@
+        <tr>
+            <td><a href="#object={{project.pk}}">{{project}}</a></td>
+            <td>{{project.startdate|default:"?"}} - {{project.enddate|default:"?"}}</td>
+            <td>{{project.verified}}</td>
+            <td>{{project.status}}</td>
+            <td>{{project.sector.all|join:","}}</td>
+            <td>{% for o in project.organization.all %}
+                <a href="{% url 'nhdb:organization:list'%}#object={{o.pk}} ">{{o}}</a><br>{% endfor %}
+            </td>
+        </tr>

@@ -3,9 +3,10 @@ from library import views
 
 
 publication = [
-    url(r'^$', views.PublicationList.as_view(), name='list'),
-    url(r'^table/$', views.PublicationList.as_view(template_name='library/publication_list_table.html'),
-        name='list_as_table'),
+    # url(r'^$', views.PublicationList.as_view(), name='list'),
+    # url(r'^$', views.PublicationList.as_view(), name='list'),
+    url(r'^$', views.publicationlist, name='list'),
+
     url(r'^xls/$', views.project_table_excel, name='list_as_excel'),
 
     url(r'^(?P<pk>[0-9]+)/$', views.PublicationDetail.as_view(), name='detail'),

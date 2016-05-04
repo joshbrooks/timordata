@@ -45,6 +45,25 @@ def radiobuttons(inputs):
     return HTML(''.join(radios))
 
 
+class ExcelDownloadForm(forms.ModelForm):
+    class Meta:
+        model = ExcelDownloadFeedback
+        exclude = ()
+
+    def __init__(self, *args, **kwargs):
+        super(ExcelDownloadForm, self).__init__(*args, **kwargs)
+
+    @property
+    def helper(self):
+        helper = FormHelper()
+
+        helper.form_class = 'form-horizontal'
+        helper.label_class = 'col-lg-3'
+        helper.field_class = 'col-lg-9'
+
+        return helper
+
+
 class OrganizationForm(SuggestionForm):
     class Meta:
         model = Organization
@@ -155,8 +174,8 @@ def get_adminarea_list():
 
     placechoices = []
     try:
-        for place in apps.get_model('geo', 'adminarea').objects.order_by('path'):
-            placechoices.append((place.pk, mark_safe(u'{}{}'.format(indent(place), place.name))))
+        for place in apps.get_model('geo', 'adminarea').objects.order_by('path').values_list('pk','name'):
+            placechoices.append((place[0], mark_safe(u'{}{}'.format(indent(place[1]), place[1]))))
     except:
         pass
     return placechoices
@@ -420,6 +439,7 @@ class ProjectImageForm(SuggestionForm):
         helper.layout.extend([
             'description',
             'image',
+            Field('project', data_selecturl='/selecttwo/nhdb/project/name/icontains', wrapper_class=self.get_wrapper_class('project'))
         ])
 
         return helper
@@ -750,9 +770,10 @@ class ProjectPersonForm(SuggestionForm):
         }
 
         helper = self.get_helper()
-        helper.layout.append(Field('project', data_selecturl='/selecttwo/nhdb/project/name/icontains'))
+        helper.layout.append(Field('project', data_selecturl='/selecttwo/nhdb/project/name/icontains', wrapper_class=self.get_wrapper_class('project')))
         helper.layout.append(
             Field('person', data_selecturl='/selecttwo/nhdb/person/name/icontains', **create_person_elements))
+        self.fields['person'].choices=[]
         return helper
 
 
@@ -806,7 +827,7 @@ class ProjectPlaceForm(SuggestionForm):
 
     def __init__(self, projectplace=None, project=None, place=None, *args, **kwargs):
         _instance = locals().get(self.Meta.model._meta.model_name)
-        # super(self, ProjectPlaceForm).__init__(_instance)
+
         super(ProjectPlaceForm, self).__init__(_instance, *args, **kwargs)
         self.place = place
         self.project = project
@@ -816,7 +837,7 @@ class ProjectPlaceForm(SuggestionForm):
     def helper(self):
         helper = self.get_helper()
         helper.form_class = 'form-horizontal'
-        helper.layout.append(Field('project', data_selecturl='/selecttwo/nhdb/project/name/icontains'))
+        helper.layout.append(Field('project', data_selecturl='/selecttwo/nhdb/project/name/icontains', wrapper_class=self.get_wrapper_class('project')))
         helper.layout.append(Field('place', data_selecturl='/selecttwo/geo/adminarea/name/icontains'))
         helper.layout.append(Field('description'))
         return helper

@@ -94,9 +94,13 @@ $.ajaxSetup({
     <a href="/admin/login/?next={{request.get_full_path|urlencode}}">Login</a>
 {% endif %}
 
- {% block leftsidelist %}
+ {% block tab_second %}
 
 <div>
+    <button class="btn btn-default btn-sm" type="button" data-autohide="false" data-toggle="offcanvas" data-target="#search-form-container" data-placement="left"><span class="glyphicon glyphicon-edit"></span>Search</button>
+
+    <div id="search-form-container" class="offcanvas navmenu navmenu-default navmenu-fixed-left">
+        <button class="btn btn-default btn-block" type="button" data-toggle="offcanvas" data-target="#search-form-container">&laquo;Hide</button>
 
 <form class="form-horizontal search-form">
 
@@ -159,9 +163,8 @@ $.ajaxSetup({
     <button type="submit" class="btn btn-block">Search</button>
 </form>
         </div>
-{% endblock %}
+        </div>
 
-{% block objectlist %}
 <div id="object-list" class="collapse in">
     <div>
         <!--<a href="table/?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">Show as Table</a>-->

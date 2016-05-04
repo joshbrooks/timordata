@@ -1,70 +1,61 @@
 {% load i18n %}
+{% comment "Description of content" %}
+
+Base Bootstrap Template
+
+    blocks defined:
+        title
+            Timor Development Data
+        css
+        style
+        bodyopen
+        navbar
+            include navbar code
+        body
+        containerclass
+        content
+            Same as body but wrapped with "container"
+        footer
+        script
+{% endcomment %}
 <!DOCTYPE html>
 <html>
-<head>
+<head>{% block meta %}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="shortcut icon" type="image/png" href="{{ STATIC_URL }}favicon.png">
-    <link rel="icon" type="image/png" href="{{ STATIC_URL }}favicon.png" />
-    <title>
+    <link rel="icon" type="image/png" href="{{ STATIC_URL }}favicon.png" />{% endblock %}
+    <title>{% block title %}Timor Development Data &middot;{% endblock title %}</title>
 
-        {% block title %}Timor Development Data &middot;{% endblock title %}
-
-    </title>
-
-{% block script %}
-      <!--<script src="{{ STATIC_URL }}require.js" data-main="{{ STATIC_URL }}bootstrap_require.js"></script>-->
-    <script src="{{ STATIC_URL}}jquery.js"></script>
-    <script src="{{ STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>
-    <script>
-    $(document).ready(function(){
-        $('form#mysuggestions input[name=name]').val(localStorage.user_name)
-        $('form#mysuggestions input[name=email]').val(localStorage.user_email)
-    })
-    </script>
-    {% if media.js %}{% for script_url in media.js %}
-    <script src="{{ STATIC_URL}}{{script_url}}"></script>
-    {% endfor %}{% endif %}
-    
-  
-{% endblock script %}
-{% block css %}
+    {% block css %}
+      <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
     {% if media.css %}{% for css_url in media.css %}
       <link href="{{ STATIC_URL }}{{ css_url }}" rel="stylesheet">
     {% endfor %}{% endif %}
       <link href="{{ STATIC_URL }}bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet">
       <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-      <style>
-        .language-button-image {
-            width: 40px;
-            height: 20px;
-        }
+    {% endblock css %}
 
-      .btn-language {
-          border-width: 0;
-          padding: 2px;
-      }
+    {% block style %}{# Use "style" block to add custom CSS files to a template like so #}
+    {% comment %}
+    <link href="/static/path/to/my/css/my_css.css" rel="stylesheet"> {% endcomment %}
+    {% endblock style %}
 
-      .btn-language on {
-          border-color: forestgreen;
-      }
-
-      </style>
-{% endblock css %}
-      {% block style %} {% endblock style %}
   </head>
-  {% block bodyopen %}  <body> {% endblock %}
-{% block navbar %}{% include "navbar.html" %}
-{% endblock navbar %}
-{% block body %}
+{% block bodyopen %}  <body> {% endblock %}
+
+{% block navbar %}{% include "navbar.html" %}{% endblock navbar %}
+
+    {% block body %}
 
     <div class="{% block containerclass %}container{% endblock %}">
     {% block content %}{% endblock %}
   </div>
 {% endblock body %}
+
   {% block footer %}
 
 <div class="container">
@@ -74,5 +65,25 @@
     </footer>
     </div>
   {% endblock footer %}
-  </body>
+
+    <!--Load jQuery from google API for preference or local if google is offline-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{{ STATIC_URL}}jquery.js"><\/script>')</script>
+    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js"></script>
+   <script>
+    $(document).ready(function(){
+        $('form#mysuggestions input[name=name]').val(localStorage.user_name)
+        $('form#mysuggestions input[name=email]').val(localStorage.user_email)
+    })
+    </script>
+    {% block script %}
+    {% if media.js %}{% for script_url in media.js %}
+    <script src="{{ STATIC_URL}}{{script_url}}"></script>
+    {% endfor %}{% endif %}
+    {% endblock script %}
+
+
+
+    <!--Body closing tag - Django debug toolbar inserts below-->
+    </body>
 </html>

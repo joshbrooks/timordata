@@ -1,10 +1,12 @@
 from django.conf.urls import url, include
+
+from belun import views_authentication
 from nhdb import views
-from nhdb import views_authentication
-from django.views.decorators.cache import cache_page
 
 organization = [
-    url(r'^$', cache_page(60 * 15)(views.OrganizationList.as_view()), name='list'),
+    # url(r'^$', views.OrganizationList.as_view(), name='list'),
+    url(r'^$', views.organizationlist, name='list'),
+
     # url(r'^table/$', views.OrganizationList.as_view(template_name='nhdb/organization_list_table.html'), name='list_as_table'),
     url(r'^xls/$', views.organization_table_excel, name='list_as_excel'),
     url(r'^list.json/$', views.organization_list_as_json, name='list_as_json'),
@@ -16,10 +18,6 @@ organization = [
     url(r'^(?P<pk>\d+)/description_(?P<language_code>\w+)/$', views.organizationdescription, name='update_description'),
     # url(r'^(?P<pk>\d+)/places/$', views.organizationplace, name='places'),
     url(r'^(?P<organization_id>\d+)/people/$', views.organization_persons, name='persons'),
-
-    url(r'^suggestion/$', views.organizationsuggestions, name="suggestions"),
-    url(r'^suggestion/$', views.organizationsuggestions, name="suggestions"),
-    url(r'^suggestion/(?P<suggestion_pk>[0-9]+)/$', views.organizationsuggestion, name="suggestion"),
     ]
 
 propertytag = [
@@ -36,8 +34,9 @@ projectperson = [
 
 project = [
 
-    url(r'^$', cache_page(60 * 15)(views.ProjectList.as_view()), name='list'),
-    url(r'^table/$', views.ProjectList.as_view(template_name='nhdb/project_list_table.html'), name='list_as_table'),
+    # url(r'^$', views.ProjectList.as_view(), name='list'),
+    url(r'^$', views.projectlist, name='list'),
+    # url(r'^table/$', views.ProjectList.as_view(template_name='nhdb/project_list_table.html'), name='list_as_table'),
     url(r'^dashboard/$', views.projectdashboard, name='dashboard'),
     url(r'^places/$', views.projectplaces, name='places'),
     url(r'^xls/$', views.project_table_excel, name='list_as_excel'),
@@ -78,20 +77,13 @@ urlpatterns = [
     url(r'^projectimage/(?P<pk>[0-9]+)/$', views.ProjectImageDetail.as_view()),
     url(r'^projectimage/(?P<pk>[0-9]+)/delete/$', views.ProjectImageDelete.as_view()),
     url(r'^projectimage/new/$', views.projectimagecreate),
-
     url(r'^project/', include(project, namespace='project')),
     url(r'^person/', include(person, namespace='person')),
     url(r'^form/(?P<model>\w+)/(?P<form>\w+)/$', views.form, name="form"),
     url(r'^form/(?P<model>\w+)/$', views.form),
-
     url(r'^projectperson/', include(projectperson, namespace='projectperson')),
-
-
     url(r'^projectorganization/', include(projectorganization, namespace='projectorganization')),
-
-
     url(r'^projectproperties/', views.projectproperties, name="projectproperties"),
-
     url(r'^personproject/', views.PersonProjectList.as_view(), name="personproject"),
     url(r'^propertytag/', include(propertytag, namespace='propertytag')),
     url(r'^logout/$', views_authentication.logmeout, name='logout'),
@@ -99,5 +91,6 @@ urlpatterns = [
     url(r'^search/(?P<model>\w+)/$', views.search, name="search"),
     url(r'^index/', views.index, name='index'),
     url(r'^partners/', views.partners, name='partners'),
+    url(r'^downloadexcel/', views.downloadexcel, name='downloadexcel'),
 
     ]

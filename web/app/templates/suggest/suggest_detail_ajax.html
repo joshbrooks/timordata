@@ -125,27 +125,39 @@ suggest
 </table>
 
 {% endif %}
-
 {% endwith %}
-
-
-
-
 {% endif %}
+
+
 
 {% if suggest.state != 'A' %}
-{% if suggest.prepare.ready %}
-{% include 'suggest/forms/main.html' with record=suggest %}
-{% else %} {% comment %} There are probably dependent objects {% endcomment %}
-<p> Can't apply changes yet.<br> {{suggest.dependent_url.message}}</p> <p><a href="#object={{suggest.dependent_url.instance.pk}}">{{suggest.dependent_url.instance.description}}</a></p>
-{% endif %}
-{% endif %}
-{% include 'suggest/forms/cancel.html' with record=suggest %}
-{% if suggest.suggestupload_set.all %}
-{% for upload in suggest.suggestupload_set.all %}
 
-<a href="{{upload.upload.url}}"></a>
+    {% if permission_granted %}
+
+        {% if suggest.prepare.ready %}
+
+            {% include 'suggest/forms/main.html' with record=suggest %}
+            {% include 'suggest/forms/cancel.html' with record=suggest %}
+
+        {% else %}
+
+            <p> Can't apply changes yet.<br> {{suggest.dependent_url.message|default:''}}</p> <p><a href="#object={{suggest.dependent_url.instance.pk}}">{{suggest.dependent_url.instance.description}}</a></p>
+
+        {% endif %}
+
+    {% else %}
+
+            <p>You're not logged in or you do not have permission to change this information.</p>
+
+    {% endif %}
 
 
-{% endfor %}
+    {% if suggest.suggestupload_set.all %}
+    <h4> Links </h4>
+        {% for upload in suggest.suggestupload_set.all %}
+
+        <a href="{{upload.upload.url}}"></a>
+
+        {% endfor %}
+    {% endif %}
 {% endif %}

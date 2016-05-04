@@ -70,17 +70,12 @@ class ProjectTable(Table):
     def render_sector(self, value):
         return ', '.join([activity.name for activity in value.all()])
 
-    def render_organization(self, value, record):
+    def render_organization(self, value):
 
-        returns = []
-        for name, pk, org_class in record.projectorganization_set.values_list('organization__name', 'organization__pk', 'organizationclass__description'):
-            detail_url = "/nhdb/organization/?q=active.true#object=%s"%(pk)
-            returns.append(u'<a href="{}">{}({})</a><br>'.format(detail_url, name, org_class))
-        return mark_safe('\n'.join(returns))
+        pattern = u'<a href="/nhdb/organization/?q=active.true#object={organization.pk}">{organization.name}({organization.orgtype_id})</a>'
+        return mark_safe(u'<br>'.join([pattern.format(organization=organization) for organization in value.all()]))
 
     def render_name(self, value, record):
-        change_url = urlresolvers.reverse('admin:nhdb_project_change', args=[A('pk')])
-        # detail_url = urlresolvers.reverse('nhdb:project:detail', kwargs={'pk': record.pk})
         detail_url = '#object='+str(record.pk)
         return mark_safe(u'<a href="{}">{}</a><br><span class="table-project-description">{}</span>'.format(detail_url, value,  record.description or ''))
 

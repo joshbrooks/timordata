@@ -2,7 +2,8 @@ from django.conf.urls import include, url
 from donormapping import views
 
 fundingoffer = [
-    url(r'^$', views.FundingOfferList.as_view(), name="list"),
+    url(r'^$', views.fundingofferlist, name="list"),
+    #url(r'^$', views.FundingOfferList.as_view(), name="list"),
     url(r'^(?P<pk>\d+)/$', views.FundingOfferDetail.as_view(), name="detail"),
     url(r'^(?P<pk>[0-9]+)/ajax/$', views.FundingOfferDetail.as_view(template_name='donormapping/fundingoffer_detail_ajax.html'),
         name='ajax'),

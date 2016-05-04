@@ -1,17 +1,12 @@
 {% extends "object_list.html" %}
 {% load i18n %}
+{% load cache %}
 {% load render_table from django_tables2 %}
 {% load crispy_forms_tags %}
 {% block title %}{{block.super}} Organizations {% endblock title %}
 {% block script %}
     {{block.super}}
 <script type="text/javascript" src="{{ STATIC_URL }}leaflet-organizationplace.js"></script>
-<script>
-    {% autoescape off %}
-    var object_list = {{object_index}}
-{% endautoescape  %}
-</script>
-
 
 <script>
     $(document).ready(function() {
@@ -38,111 +33,6 @@
 
 {% block containerclass %}container-fluid{% endblock %}
 
-{% block leftsidelist %}
-
-    <form class="search-form form-horizontal">
-        <div class="container-fluid">
-            <div class="row">
-
-    <div class="form-group">
-        <label for="search-form-activities" class="col-sm-3 control-label">Activities</label>
-        <div class="col-sm-9">
-            <select style="width:100%;" id="search-form-activities" class="auto-select2" name="q" multiple=multiple>{% for a in filters.act %}
-                <option value="{{a.path}}" {% if a.path in activefilters %}selected{%endif%}>{{a}}</option> {% endfor %}
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="search-form-beneficiaries" class="col-sm-3 control-label">Beneficiaries</label>
-        <div class="col-sm-9">
-            <select style="width:100%;" id="search-form-beneficiaries" class="auto-select2" name="q" multiple=multiple>{% for a in filters.ben %}
-                <option value="{{a.path}}" {% if a.path in activefilters %}selected{%endif%}>{{a}}</option> {% endfor %}
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="search-form-sectors" class="col-sm-3 control-label">Sectors</label>
-        <div class="col-sm-9">
-            <select style="width:100%;" id="search-form-sectors" class="auto-select2" name="q" multiple=multiple>{% for a in filters.inv %}
-                <option value="{{a.path}}" {% if a.path in activefilters %}selected{%endif%}>{{a}}</option> {% endfor %}
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="search-form-district" class="col-sm-3 control-label">Project in</label>
-        <div class="col-sm-9">
-            <select style="width:100%;" id="search-form-district" class="auto-select2" name="q" multiple=multiple>{% for a in filters.district %}
-                <option value="{{a.value}}" {% if a.value in activefilters %}selected{%endif%}>{{a.label}}</option> {% endfor %}
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="search-form-office" class="col-sm-3 control-label">Office in</label>
-        <div class="col-sm-9">
-            <select style="width:100%;" id="search-form-office" class="auto-select2" name="q" multiple=multiple>{% for a in filters.org_location %}
-                <option value="{{a.value}}" {% if a.value in activefilters %}selected{%endif%}>{{a.label}}</option> {% endfor %}
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="search-form-orgtype" class="col-sm-3 control-label">Organization Type</label>
-        <div class="col-sm-9">
-            <select style="width:100%;" id="search-form-orgtype" class="auto-select2" name="q" multiple=multiple>{% for a in filters.type %}
-                <option value="{{a.value}}" {% if a.value in activefilters %}selected{%endif%}>{{a.label}}</option> {% endfor %}
-            </select>
-        </div>
-    </div>
-
-    <div class="clearfix"></div>
-
-    <div class="col-sm-12">
-<label class="radio-inline">
-<input type="radio" name="q" id="inlineRadio1" value="active.true" {% if "active.true" in activefilters %} checked=checked {%endif %}> Active only
-</label>
-</div>
-<div class="col-sm-12">
-<label class="radio-inline">
-<input type="radio" name="q" id="inlineRadio2" value="active.false" {% if "active.false" in activefilters %} checked=checked {%endif %}> Inactive organizations only
-</label>
-</div>
-<div class="col-sm-12">
-<label class="radio-inline">
-<input type="radio" name="q" id="inlineRadio3" value="active.any" {% if "active.any" in activefilters %} checked=checked {%endif %}> Active and Inactive
-</label>
-</div>
-<button class="btn btn-block">Search</button>
-
-</form>
-
-
-<div>
-    <form class="search-form form-horizontal">
-        <div class="container-fluid">
-            <div class="row">
-    <div class="form-group">
-        <label for="search-form-organization"  class="col-sm-3 control-label">Go to</label>
-        <div class="col-sm-9">
-            <select style="width:100%" name="org" id="search-form-organization" data-selecturl="/selecttwo/nhdb/organization/name/icontains/" multiple="multiple">
-                {% for i in organization %}
-                <option value="{{i.pk}}" selected>{{i}}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-</div>
-
-
-{% endblock %}
 
 {% block objectlist %}
         <div id="object-list" class="collapse in"><div>
@@ -156,29 +46,113 @@
 </div>{% endblock %}
 
 
-{% block dashboard %}
-    <h4>Organization Search</h4>
-     <p><strong>{{object_list.count}} Organizations</strong> found with this search</p>
+{% block tab_first %}{% cache 600 organization_dashboard request.user.username %}
+<h4>Organization Search</h4>
+ <p><strong>{{object_list.count}} Organizations</strong> found with this search</p>
 
-     <div class="container-fluid"><div class="row">
+<div class="container-fluid">
+    <div class="row">{% for category, tag_count in dashboard.items %}
+        <div class="col col-sm-6 col-xs-12 col-md-4 col-lg-3">
+            <table class="table table-condensed">
+                <caption>{{category}}</caption>
+                <tbody>{% for tag, count in tag_count.items %}{% if tag.path in activefilters %}
+                    <tr><td><strong>{{tag}}</strong></td> <td><strong>{{count}}</strong></td></tr>{% else %}
+                    <tr><td>{{tag}}</td> <td>{{count}}</td></tr>{% endif %}{% endfor %}
+                </tbody>
+            </table>
+         </div>{% endfor %}
+    </div>
+</div>
+{% endcache %}{% endblock %}
+{% block tab_second %}
 
-     {% for category, tag_count in dashboard.items %}<div class="col col-sm-6 col-xs-12 col-md-4 col-lg-3">
-             <table class="table table-condensed">
-            <caption>{{category}}</caption>
-            <tbody>
-        {% for tag, count in tag_count.items %}
+ <button class="btn btn-default btn-sm" type="button" data-autohide="false" data-toggle="offcanvas" data-target="#search-form-container" data-placement="left"><span class="glyphicon glyphicon-edit"></span>Search</button>
 
-            <tr>{% if tag.path in activefilters %}
-                <td><strong>{{tag}}</strong></td> <td><strong>{{count}}</strong></td>
-                {% else %}
-                <td>{{tag}}</td> <td>{{count}}</td>
-                {% endif %}
-            </tr>
+    <div id="search-form-container" class="offcanvas navmenu navmenu-default navmenu-fixed-left">
+    <button class="btn btn-default btn-block" type="button" data-toggle="offcanvas" data-target="#search-form-container">&laquo;Hide</button>
 
-     {% endfor %}
+    <form class="search-form form-horizontal">
+        <div class="container-fluid">
+            <div class="row">
 
-                    </tbody>
-        </table>
-     </div>{% endfor %}</div></div>
+                <div class="form-group">
+                    <label for="search-form-activities" class="col-sm-3 control-label">Activities</label>
+                    <div class="col-sm-9">
+                        <select style="width:100%;" id="search-form-activities" class="auto-select2" name="q" multiple=multiple>{% for a in filters.act %}
+                            <option value="{{a.path}}" {% if a.path in activefilters %}selected{%endif%}>{{a}}</option> {% endfor %}
+                        </select>
+                    </div>
+                </div>
 
+                <div class="form-group">
+                    <label for="search-form-beneficiaries" class="col-sm-3 control-label">Beneficiaries</label>
+                    <div class="col-sm-9">
+                        <select style="width:100%;" id="search-form-beneficiaries" class="auto-select2" name="q" multiple=multiple>{% for a in filters.ben %}
+                            <option value="{{a.path}}" {% if a.path in activefilters %}selected{%endif%}>{{a}}</option> {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="search-form-sectors" class="col-sm-3 control-label">Sectors</label>
+                    <div class="col-sm-9">
+                        <select style="width:100%;" id="search-form-sectors" class="auto-select2" name="q" multiple=multiple>{% for a in filters.inv %}
+                            <option value="{{a.path}}" {% if a.path in activefilters %}selected{%endif%}>{{a}}</option> {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="search-form-district" class="col-sm-3 control-label">Project in</label>
+                    <div class="col-sm-9">
+                        <select style="width:100%;" id="search-form-district" class="auto-select2" name="q" multiple=multiple>{% for a in filters.district %}
+                            <option value="{{a.value}}" {% if a.value in activefilters %}selected{%endif%}>{{a.label}}</option> {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="search-form-office" class="col-sm-3 control-label">Office in</label>
+                    <div class="col-sm-9">
+                        <select style="width:100%;" id="search-form-office" class="auto-select2" name="q" multiple=multiple>{% for a in filters.org_location %}
+                            <option value="{{a.value}}" {% if a.value in activefilters %}selected{%endif%}>{{a.label}}</option> {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="search-form-orgtype" class="col-sm-3 control-label">Organization Type</label>
+                    <div class="col-sm-9">
+                        <select style="width:100%;" id="search-form-orgtype" class="auto-select2" name="q" multiple=multiple>{% for a in filters.type %}
+                            <option value="{{a.value}}" {% if a.value in activefilters %}selected{%endif%}>{{a.label}}</option> {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+
+                <div class="col-sm-12">
+            <label class="radio-inline">
+            <input type="radio" name="q" id="inlineRadio1" value="active.true" {% if "active.true" in activefilters %} checked=checked {%endif %}> Active only
+            </label>
+            </div>
+            <div class="col-sm-12">
+            <label class="radio-inline">
+            <input type="radio" name="q" id="inlineRadio2" value="active.false" {% if "active.false" in activefilters %} checked=checked {%endif %}> Inactive organizations only
+            </label>
+            </div>
+            <div class="col-sm-12">
+            <label class="radio-inline">
+            <input type="radio" name="q" id="inlineRadio3" value="active.any" {% if "active.any" in activefilters %} checked=checked {%endif %}> Active and Inactive
+            </label>
+            </div>
+            <button class="btn btn-block">Search</button>
+            </div>
+            </div>
+        </form>
+    </div>
+
+{% render_table table %}
 {% endblock %}
+
+

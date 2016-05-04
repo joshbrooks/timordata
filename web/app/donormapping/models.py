@@ -16,7 +16,8 @@ class FundingOffer(models.Model):
         return reverse('donormapping:fundingoffer:detail', kwargs={'pk': self.pk})
 
     title = models.CharField(max_length=256, help_text="Put in the title")
-    description = RichTextField(config_name='awesome_ckeditor')
+    #description = RichTextField(config_name='awesome_ckeditor')
+    description = models.TextField()
     summary = models.TextField(null=True, blank=True)
     organization = models.ForeignKey('nhdb.Organization')
     amount = models.IntegerField(null=True)

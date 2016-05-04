@@ -6,7 +6,8 @@ from suggest import views
 
 urlpatterns = [
 
-    url(r'^$', views.SuggestList.as_view(), name='list'),
+    # url(r'^$', views.SuggestList.as_view(), name='list'),
+    url(r'^$', views.suggestlist, name='list'),
     url(r'^(?P<pk>[0-9]+)/$', views.suggest, name='detail'),
     url(r'^(?P<pk>[0-9]+)/ajax/$', views.suggest_ajax, name='detail_ajax'),
     url(r'^(?P<pk>[0-9]+)/delete/$', views.suggestdelete, name='delete'),
@@ -24,7 +25,7 @@ urlpatterns = [
 
     url(r'^suggest/$', views.suggestcreate, name='suggest'),
 
-    url(r'^(?P<model_name>[a-z_]+)/(?P<model_pk>[0-9]+)/$', views.SuggestList.as_view(), name='suggest_model'),
-    url(r'^(?P<model_name>[a-z_]+)/$', views.SuggestList.as_view(), name='suggest_model_name'),
+    url(r'^(?P<model_name>[a-z_]+)/(?P<model_pk>[0-9]+)/$', views.suggestlist, name='suggest_model'),
+    url(r'^(?P<model_name>[a-z_]+)/$', views.suggestlist, name='suggest_model_name'),
 
     ]

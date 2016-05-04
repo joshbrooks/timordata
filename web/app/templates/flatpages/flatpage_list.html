@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+{% block title %}{{block.super}} Flat Pages {% endblock title %}
+{% block script %}
+    {{block.super}}
+{% endblock script %}
+
+{% block containerclass %}container-fluid{% endblock %}
+
+{% block leftsidelist %}
+
+    <form class="search-form form-horizontal">
+        <div class="container-fluid">
+            <div class="row">
+				<div class="form-group">
+					<label for="search-form-activities" class="col-sm-3 control-label">Activities</label>
+					<div class="col-sm-9">
+						<select style="width:100%;" id="search-form-activities" class="auto-select2" name="q" multiple=multiple>{% for a in filters.act %}
+							<option value="{{a.path}}" {% if a.path in activefilters %}selected{%endif%}>{{a}}</option> {% endfor %}
+						</select>
+					</div>
+				</div>
+			</div>
+	</form>
+
+{% endblock %}
+{% block content %}
+{{pages}}
+
+
+<table class="table table-bordered">
+<thead>
+<tr>
+	<th>Languages</th>
+	
+	{% for language in pages.languages %}
+<th>{{language}}</th> {%endfor %}
+</tr>
+</thead>
+
+<tbody>
+	{% for page_name, page_list in pages.translated.items %}
+	<tr>
+		<th>{{page_name}}</th>
+		{% for p in page_list %}
+		{% if p %}
+		<td><a href="/page{{p.url}}">{{p.title}}</a></td>
+		{% else %}
+		<td><a href="new/?page={{page_name}}&lang=??">Create page {% trans page_name %}</a></td>
+		{% endif %}
+		{% endfor %}
+	</tr>
+	{% endfor %}
+</tbody>
+
+
+
+</table>
+
+{% endblock content%}
+
+{% block dashboard %}
+{% endblock %}

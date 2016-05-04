@@ -193,13 +193,13 @@ class PublicationOrganizationForm(SuggestionForm):
         return helper
 
 
-class PublicationAuthorForm(SuggestionForm):
+class Publication_AuthorForm(SuggestionForm):
     class Meta:
         model = Publication
         fields = ["author"]
 
     def __init__(self, publication=None, *args, **kwargs):
-        super(PublicationAuthorForm, self).__init__(_instance=publication, *args, **kwargs)
+        super(Publication_AuthorForm, self).__init__(_instance=publication, *args, **kwargs)
         self.instance = publication
         self.set_field_opts(name=['author'], instance = self.instance)
 
