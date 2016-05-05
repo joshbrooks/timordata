@@ -4,14 +4,7 @@
     <list default="true" id="81ffb0a8-b757-4161-b930-7251899fad14" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/postgis" afterPath="$PROJECT_DIR$/postgis" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tilestache" afterPath="$PROJECT_DIR$/tilestache" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docker-compose.yml" afterPath="$PROJECT_DIR$/docker-compose.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/app/nhdb/forms.py" afterPath="$PROJECT_DIR$/web/app/nhdb/forms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/app/nhdb/models.py" afterPath="$PROJECT_DIR$/web/app/nhdb/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/app/nhdb/views.py" afterPath="$PROJECT_DIR$/web/app/nhdb/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/app/suggest/forms.py" afterPath="$PROJECT_DIR$/web/app/suggest/forms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/app/suggest/views.py" afterPath="$PROJECT_DIR$/web/app/suggest/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/app/templates/nhdb/organization_detail_ajax.html" afterPath="$PROJECT_DIR$/web/app/templates/nhdb/organization_detail_ajax.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/app/templates/nhdb/organization_list.html" afterPath="$PROJECT_DIR$/web/app/templates/nhdb/organization_list.html" />
     </list>
     <ignored path="timordata.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -43,10 +36,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="tables.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="tables.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/web/app/suggest/tables.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7997775">
+            <state vertical-scroll-proportion="0.0">
               <caret line="93" column="33" selection-start-line="93" selection-start-column="33" selection-end-line="93" selection-end-column="33" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
@@ -77,21 +70,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="forms.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/web/app/nhdb/forms.py">
+      <file leaf-file-name="organization_list.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/web/app/templates/nhdb/organization_list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="133" column="21" selection-start-line="133" selection-start-column="21" selection-end-line="133" selection-end-column="21" />
+            <state vertical-scroll-proportion="0.51785713">
+              <caret line="62" column="27" selection-start-line="62" selection-start-column="27" selection-end-line="62" selection-end-column="27" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/web/app/nhdb/urls.py">
+      <file leaf-file-name="forms.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/web/app/nhdb/forms.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="54" column="24" selection-start-line="54" selection-start-column="24" selection-end-line="54" selection-end-column="24" />
+              <caret line="133" column="21" selection-start-line="133" selection-start-column="21" selection-end-line="133" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -182,7 +175,6 @@
         <option value="$PROJECT_DIR$/web/app/belun/urls.py" />
         <option value="$PROJECT_DIR$/web/app/belun/settings_secret.py" />
         <option value="$PROJECT_DIR$/web/app/templates/index.html" />
-        <option value="$PROJECT_DIR$/web/app/templates/nhdb/organization_list.html" />
         <option value="$PROJECT_DIR$/web/app/library/urls.py" />
         <option value="$PROJECT_DIR$/web/app/templates/library/publication_list.html" />
         <option value="$PROJECT_DIR$/web/app/library/tables.py" />
@@ -218,6 +210,7 @@
         <option value="$PROJECT_DIR$/web/app/nhdb/forms.py" />
         <option value="$PROJECT_DIR$/web/app/templates/nhdb/organization_detail_ajax.html" />
         <option value="$PROJECT_DIR$/web/app/suggest/views.py" />
+        <option value="$PROJECT_DIR$/web/app/templates/nhdb/organization_list.html" />
       </list>
     </option>
   </component>
@@ -660,13 +653,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/web/app/templates/library/publication_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-50.0">
-          <caret line="119" column="18" selection-start-line="119" selection-start-column="18" selection-end-line="119" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/web/app/library/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-15.885715">
@@ -945,7 +931,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="112" column="26" selection-start-line="112" selection-start-column="26" selection-end-line="112" selection-end-column="26" />
           <folding>
-            <element signature="e#0#15#0" expanded="true" />
+            <element signature="e#0#15#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1010,14 +996,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/web/app/templates/nhdb/organization_detail_ajax.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.0338984">
-          <caret line="17" column="89" selection-start-line="17" selection-start-column="89" selection-end-line="17" selection-end-column="89" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/web/app/suggest/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-15.085714">
@@ -1030,11 +1008,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/web/app/suggest/tables.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7997775">
+        <state vertical-scroll-proportion="0.0">
           <caret line="93" column="33" selection-start-line="93" selection-start-column="33" selection-end-line="93" selection-end-column="33" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/app/templates/nhdb/organization_detail_ajax.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.0338984">
+          <caret line="17" column="89" selection-start-line="17" selection-start-column="89" selection-end-line="17" selection-end-column="89" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/app/templates/nhdb/organization_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.51785713">
+          <caret line="62" column="27" selection-start-line="62" selection-start-column="27" selection-end-line="62" selection-end-column="27" />
+          <folding />
         </state>
       </provider>
     </entry>

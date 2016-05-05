@@ -46,7 +46,7 @@
 </div>{% endblock %}
 
 
-{% block tab_first %}{% cache 600 organization_dashboard request.user.username %}
+{% block tab_first %}
 <h4>Organization Search</h4>
  <p><strong>{{object_list.count}} Organizations</strong> found with this search</p>
 
@@ -63,7 +63,7 @@
          </div>{% endfor %}
     </div>
 </div>
-{% endcache %}{% endblock %}
+{% endblock %}
 {% block tab_second %}
 
  <button class="btn btn-default btn-sm" type="button" data-autohide="false" data-toggle="offcanvas" data-target="#search-form-container" data-placement="left"><span class="glyphicon glyphicon-edit"></span>Search</button>
