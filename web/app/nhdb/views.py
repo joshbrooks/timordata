@@ -422,6 +422,9 @@ def get_organization_queryset(request, filter_parameter='q'):
         if 'active.false' not in filters and 'active.any' not in filters:
             status = status | Q(active=True)
 
+    if request.GET.get('name'):
+        name = Q(name__icontains=request.GET.get('name'))
+
     return Organization.objects.filter(inv).filter(ben).filter(act).filter(type).filter(district).filter(status).filter(org_location).filter(name).distinct()
 
 
