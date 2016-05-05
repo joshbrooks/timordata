@@ -129,7 +129,7 @@ def suggestlist(request, model_name=None, model_pk=None):
     for k, v in filters.items():
         if v is None or v == [] or v == [None]:
             filters.pop(k)
-    queryset = Suggest.objects.filter(**filters).distinct().prefetch_related('affectedinstance_set',)
+    queryset = Suggest.objects.filter(**filters).distinct().prefetch_related('affectedinstance_set',).order_by('id')
     context['table'] = SuggestTable(queryset)
     context['table'].paginate(page=g('page', 1), per_page=g('per_page', 20))
     return render(request, 'suggest/suggest_list.html', context)

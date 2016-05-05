@@ -2,9 +2,6 @@
 
 <div class="container-fluid"><div class="row small-alerts">
 
-        <button class="object-last btn btn-sm btn-default"><span class="glyphicon glyphicon-chevron-left"></span>Last organization</button>
-    <button class="object-next btn btn-sm btn-default"><span class="glyphicon glyphicon-chevron-right"></span>Next organization</button>
-
      <button class="btn btn-sm btn-default glyphicon glyphicon-edit" type="button"  data-toggle="offcanvas" data-target="#myNavmenu" data-canvas="#myNavmenuCanvas" data-placement="left">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -15,9 +12,11 @@
         <div class="bs-example bs-navmenu-offcanvas-example">
       <div id="myNavmenuCanvas" class="" style="">
         <nav id="myNavmenu" class="navmenu navmenu-default navmenu-fixed-left offcanvas" role="navigation">
-          <a class="navmenu-brand" href="#">Edit Project</a>
+          <p class="navmenu-brand" href="#">Edit Organization</p>
           <ul class="nav navmenu-nav">
-
+                <li role="presentation">
+                    <a data-modalurl="{% url 'nhdb:form' model='organization' form='main' %}?organization={{object.pk}}"  data-reload="true" data-modaltitle="Organization" data-toggle="modal" href="#">Edit Organization</a>
+                </li>
               <li role="presentation" class="dropdown">
                 <a id="drop4" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   Descriptions

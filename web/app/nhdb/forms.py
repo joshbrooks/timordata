@@ -133,7 +133,6 @@ class OrganizationDescriptionForm(SuggestionForm):
 
         return helper
 
-
 class ProjectdescriptionForm(SuggestionForm):
     description = forms.CharField(widget=CKEditorWidget(config_name='awesome_ckeditor'))
     description_en = forms.CharField(widget=CKEditorWidget(config_name='awesome_ckeditor'))

@@ -77,15 +77,6 @@ def project_dashboard_info(projects, prefetch=True):
 
     return dashboard
 
-
-def org_dashboard_info(organizations):
-    dashboard = {}
-    dashboard['orgtype'] = {}
-    for c in OrganizationClass.objects.filter(organization__in=organizations).annotate(Count('organization')):
-        dashboard['orgtype'][c] = c.organization__count
-    return dashboard
-
-
 def index(request):
     return render(request, 'nhdb/index.html')
 
@@ -638,6 +629,15 @@ def organization_table_excel(request):
 
 
 def organizationlist(request):
+
+
+    def org_dashboard_info(organizations):
+        dashboard = {}
+        dashboard['orgtype'] = {}
+        for c in OrganizationClass.objects.filter(organization__in=organizations).annotate(Count('organization')):
+            dashboard['orgtype'][c] = c.organization__count
+        return dashboard
+
 
     r = request
     g = r.GET

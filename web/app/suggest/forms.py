@@ -245,6 +245,8 @@ class SuggestionDeleteForm(forms.ModelForm):
         model = Suggest
 
     def __init__(self, instance, *args, **kwargs):
+        if 'nochange' in kwargs:
+            kwargs.pop('nochange')
         super(SuggestionDeleteForm, self).__init__(instance=instance, *args, **kwargs)
         self.instance = instance
 
