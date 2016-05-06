@@ -8,12 +8,15 @@ import warnings
 from itertools import product
 from string import uppercase
 import xlsxwriter
+from crispy_forms.utils import render_crispy_form
 from django.contrib.admin.views.decorators import staff_member_required
+from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q, Count
 from django.forms import modelformset_factory
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
+from django.template import RequestContext
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView
 from django_tables2 import SingleTableView
@@ -570,8 +573,14 @@ def downloadexcel(request):
     :return:
     """
     if request.POST:
-        f = ExcelDownloadForm(request.POST)
-        f.save()
+        f = ExcelDownloadForm(request.POST or None)
+        if f.is_valid():
+            f.save()
+            return HttpResponse(status=200) # Success
+        else:
+            request_context = RequestContext(request)
+            form_html = render_crispy_form(f, context=request_context)
+            return HttpResponse(form_html, status=400)
 
     context={'url':request.GET.get('next'),'form':ExcelDownloadForm}
     return render(request, 'nhdb/crispy_form.html', context)

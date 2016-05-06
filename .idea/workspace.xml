@@ -2,19 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="81ffb0a8-b757-4161-b930-7251899fad14" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/web/app/templates/nhdb/exceldownloadfeedback_list.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/postgis" afterPath="$PROJECT_DIR$/postgis" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tilestache" afterPath="$PROJECT_DIR$/tilestache" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/app/nhdb/forms.py" afterPath="$PROJECT_DIR$/web/app/nhdb/forms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/app/nhdb/models.py" afterPath="$PROJECT_DIR$/web/app/nhdb/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/app/nhdb/serializers.py" afterPath="$PROJECT_DIR$/web/app/nhdb/serializers.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/app/nhdb/urls.py" afterPath="$PROJECT_DIR$/web/app/nhdb/urls.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/app/nhdb/views.py" afterPath="$PROJECT_DIR$/web/app/nhdb/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/app/suggest/views.py" afterPath="$PROJECT_DIR$/web/app/suggest/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/app/templates/nhdb/organization_detail_ajax.html" afterPath="$PROJECT_DIR$/web/app/templates/nhdb/organization_detail_ajax.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/app/templates/nhdb/organization_list.html" afterPath="$PROJECT_DIR$/web/app/templates/nhdb/organization_list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/app/templates/nhdb/project_list.html" afterPath="$PROJECT_DIR$/web/app/templates/nhdb/project_list.html" />
     </list>
     <ignored path="timordata.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -46,21 +36,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="object_list.coffee" pinned="false" current-in-tab="false">
-        <entry file="file:///var/www/html/static/object_list.coffee">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="602" column="20" selection-start-line="602" selection-start-column="20" selection-end-line="602" selection-end-column="20" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="forms.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/web/app/nhdb/forms.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+              <caret line="47" column="6" selection-start-line="47" selection-start-column="6" selection-end-line="47" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -69,53 +49,9 @@
       <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/env/local/lib/python2.7/site-packages/django/forms/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="565" column="41" selection-start-line="565" selection-start-column="41" selection-end-line="565" selection-end-column="41" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="forms.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/web/app/suggest/forms.py">
-          <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="-8.228572">
-              <caret line="45" column="59" selection-start-line="45" selection-start-column="58" selection-end-line="45" selection-end-column="59" />
+              <caret line="1017" column="48" selection-start-line="1017" selection-start-column="40" selection-end-line="1017" selection-end-column="48" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="organization_list.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/web/app/templates/nhdb/organization_list.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.152542">
-              <caret line="180" column="41" selection-start-line="180" selection-start-column="41" selection-end-line="180" selection-end-column="41" />
-              <folding>
-                <element signature="n#style#0;n#input#0;n#div#0;n#div#6;n#div#0;n#div#0;n#form#0;n#div#2;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="exceldownloadfeedback_list.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/web/app/templates/nhdb/exceldownloadfeedback_list.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.1666665">
-              <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/web/app/nhdb/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="74" column="48" selection-start-line="74" selection-start-column="48" selection-end-line="74" selection-end-column="48" />
-              <folding>
-                <element signature="e#43#72#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -130,11 +66,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/web/app/nhdb/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.38541666">
-              <caret line="838" column="47" selection-start-line="838" selection-start-column="47" selection-end-line="838" selection-end-column="47" />
+            <state vertical-scroll-proportion="-12.514286">
+              <caret line="581" column="70" selection-start-line="581" selection-start-column="70" selection-end-line="581" selection-end-column="70" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -142,11 +78,61 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="request.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/web/env/local/lib/python2.7/site-packages/django/http/request.py">
+      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/env/local/lib/python2.7/site-packages/crispy_forms/utils.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="160" column="8" selection-start-line="160" selection-start-column="8" selection-end-line="160" selection-end-column="8" />
+              <caret line="177" column="4" selection-start-line="177" selection-start-column="4" selection-end-line="177" selection-end-column="4" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="object_list.coffee" pinned="false" current-in-tab="true">
+        <entry file="file:///var/www/html/static/object_list.coffee">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.516129">
+              <caret line="589" column="38" selection-start-line="589" selection-start-column="38" selection-end-line="589" selection-end-column="38" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="suggestionlist.coffee" pinned="false" current-in-tab="false">
+        <entry file="file:///var/www/html/static/suggestionlist.coffee">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="jquery.js" pinned="false" current-in-tab="false">
+        <entry file="file:///var/www/html/static/flot/jquery.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="7830" column="21" selection-start-line="7830" selection-start-column="14" selection-end-line="7830" selection-end-column="21" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="response.py" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/env/local/lib/python2.7/site-packages/django/http/response.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-8.142858">
+              <caret line="40" column="48" selection-start-line="40" selection-start-column="42" selection-end-line="40" selection-end-column="48" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="forms.py" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/env/local/lib/python2.7/site-packages/django/forms/forms.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="149" column="8" selection-start-line="149" selection-start-column="8" selection-end-line="149" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -211,7 +197,6 @@
         <option value="$PROJECT_DIR$/web/app/suggest/views.py" />
         <option value="$PROJECT_DIR$/web/app/templates/nhdb/organization_detail_ajax.html" />
         <option value="$PROJECT_DIR$/web/app/nhdb/serializers.py" />
-        <option value="/var/www/html/static/object_list.coffee" />
         <option value="$PROJECT_DIR$/web/app/nhdb/models.py" />
         <option value="$PROJECT_DIR$/web/app/nhdb/urls.py" />
         <option value="$PROJECT_DIR$/web/app/templates/nhdb/exceldownloadfeedback_list.html" />
@@ -219,6 +204,7 @@
         <option value="$PROJECT_DIR$/web/app/templates/nhdb/project_list.html" />
         <option value="$PROJECT_DIR$/web/app/templates/nhdb/organization_list.html" />
         <option value="$PROJECT_DIR$/web/app/nhdb/views.py" />
+        <option value="/var/www/html/static/object_list.coffee" />
       </list>
     </option>
   </component>
@@ -558,41 +544,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/env/local/lib/python2.7/site-packages/django/views/generic/list.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="204" column="0" selection-start-line="204" selection-start-column="0" selection-end-line="204" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/env/local/lib/python2.7/site-packages/django_tables2/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="103" column="46" selection-start-line="103" selection-start-column="46" selection-end-line="103" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/env/local/lib/python2.7/site-packages/django/conf/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/env/local/lib/python2.7/site-packages/xlsxwriter/worksheet.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.314285">
-          <caret line="382" column="37" selection-start-line="382" selection-start-column="37" selection-end-line="382" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/env/local/lib/python2.7/site-packages/xlsxwriter/workbook.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="572" column="30" selection-start-line="572" selection-start-column="30" selection-end-line="572" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharm50/system/python_stubs/1200079770/strop.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3322091">
@@ -853,18 +804,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/web/app/templates/nhdb/exceldownloadfeedback_list.html">
+    <entry file="file://$PROJECT_DIR$/web/app/suggest/forms.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.1666665">
-          <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///var/www/html/static/object_list.coffee">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="602" column="20" selection-start-line="602" selection-start-column="20" selection-end-line="602" selection-end-column="20" />
+        <state vertical-scroll-proportion="-8.228572">
+          <caret line="45" column="59" selection-start-line="45" selection-start-column="58" selection-end-line="45" selection-end-column="59" />
           <folding />
         </state>
       </provider>
@@ -874,7 +817,25 @@
         <state vertical-scroll-proportion="-9.152542">
           <caret line="180" column="41" selection-start-line="180" selection-start-column="41" selection-end-line="180" selection-end-column="41" />
           <folding>
-            <element signature="n#style#0;n#input#0;n#div#0;n#div#6;n#div#0;n#div#0;n#form#0;n#div#2;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#0;n#div#6;n#div#0;n#div#0;n#form#0;n#div#2;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/app/templates/nhdb/exceldownloadfeedback_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.1666665">
+          <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/app/nhdb/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="100" column="0" selection-start-line="84" selection-start-column="6" selection-end-line="84" selection-end-column="27" />
+          <folding>
+            <element signature="e#43#72#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -887,21 +848,69 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/web/app/suggest/forms.py">
+    <entry file="file:///var/www/html/static/flot/jquery.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.228572">
-          <caret line="45" column="59" selection-start-line="45" selection-start-column="58" selection-end-line="45" selection-end-column="59" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="7830" column="21" selection-start-line="7830" selection-start-column="14" selection-end-line="7830" selection-end-column="21" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/web/app/nhdb/models.py">
+    <entry file="file:///var/www/html/static/suggestionlist.coffee">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="74" column="48" selection-start-line="74" selection-start-column="48" selection-end-line="74" selection-end-column="48" />
+          <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/env/local/lib/python2.7/site-packages/django/forms/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="149" column="8" selection-start-line="149" selection-start-column="8" selection-end-line="149" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/env/local/lib/python2.7/site-packages/django/http/response.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.142858">
+          <caret line="40" column="48" selection-start-line="40" selection-start-column="42" selection-end-line="40" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/app/nhdb/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="47" column="6" selection-start-line="47" selection-start-column="6" selection-end-line="47" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/env/local/lib/python2.7/site-packages/crispy_forms/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="177" column="4" selection-start-line="177" selection-start-column="4" selection-end-line="177" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/app/nhdb/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-12.514286">
+          <caret line="581" column="70" selection-start-line="581" selection-start-column="70" selection-end-line="581" selection-end-column="70" />
           <folding>
-            <element signature="e#43#72#0" expanded="true" />
+            <element signature="e#0#15#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/env/local/lib/python2.7/site-packages/django/forms/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.228572">
+          <caret line="1017" column="48" selection-start-line="1017" selection-start-column="40" selection-end-line="1017" selection-end-column="48" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -913,29 +922,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/web/app/nhdb/forms.py">
+    <entry file="file:///var/www/html/static/object_list.coffee">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.516129">
+          <caret line="589" column="38" selection-start-line="589" selection-start-column="38" selection-end-line="589" selection-end-column="38" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/env/local/lib/python2.7/site-packages/django/forms/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="565" column="41" selection-start-line="565" selection-start-column="41" selection-end-line="565" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web/app/nhdb/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.38541666">
-          <caret line="838" column="47" selection-start-line="838" selection-start-column="47" selection-end-line="838" selection-end-column="47" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
