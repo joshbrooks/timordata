@@ -1,0 +1,38 @@
+{% extends "object_list.html" %}
+{% load i18n %}
+{% load cache %}
+{% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+{% block title %}{{block.super}} Excel Downloads {% endblock title %}
+
+{% block tab_second %}
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>name</th>
+        <th>organization</th>
+        <th>description</th>
+        <th>email</th>
+        <th>purpose</th>
+        <th>purposeother</th>
+        <th>referralurl</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for object in object_list %}
+        <tr>
+            <td>{{object.name}}</td>
+            <td>{{object.organization}}</td>
+            <td>{{object.description}}</td>
+            <td>{{object.email}}</td>
+            <td>{{object.get_purpose_display}}</td>
+            <td>{{object.purposeother}}</td>
+            <td>{{object.referralurl}}</td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+{% endblock %}
+

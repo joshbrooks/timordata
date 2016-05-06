@@ -69,7 +69,6 @@ class OrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
 
-
 class TestProjectSerializer(serializers.ModelSerializer):
     activity = serializers.SlugRelatedField(
         queryset=PropertyTag.objects.filter(path__startswith="ACT"),

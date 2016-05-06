@@ -92,16 +92,17 @@ class ExcelDownloadFeedback(models.Model):
     )
 
     name = models.CharField(_('name'), max_length=150)
+    organization = models.CharField(_('organization'), max_length=150)
     description = models.TextField(_('description'), null=True, blank=True)
     email = models.EmailField(_('email'), null=True, blank=True)
     purpose = models.CharField(max_length=2, choices=PURPOSE_CHOICES,)
-    purposeother = models.CharField(_('Other purpose'), max_length=150,)
-    referralurl = models.CharField( max_length=256)
+    purposeother = models.CharField(_('Other purpose'), max_length=150, null=True, blank=True)
+    referralurl = models.CharField( max_length=256, null=True, blank=True)
 
 
 class Organization(models.Model):
     name = models.CharField(_('name'), max_length=150)
-    description = models.CharField(_('description'), null=True, blank=True)
+    description = models.TextField(_('description'), null=True, blank=True)
     orgtype = models.ForeignKey('OrganizationClass', verbose_name=_('class'), default="LNGO")
     active = models.BooleanField(default=True)
     fongtilid = models.IntegerField(null=True, blank=True, verbose_name="Org. ID (Fongtil)")

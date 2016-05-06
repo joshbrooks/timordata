@@ -1,7 +1,7 @@
 {% extends "object_list.html" %}
 {% load i18n %}
 {% load render_table from django_tables2 %}
-
+{% load crispy_forms_tags %}
 {% load cache %}
 {% block title %}{{block.super}} Projects {% endblock title %}
 
@@ -106,7 +106,11 @@ some additional javascript code is required
 
 {% block tab_second %}
         <a href="table/?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">Show as Table</a>
-        <a href="xls/?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">Download Table (Excel)</a>
+        <!--<a href="xls/?{{ request.GET.urlencode }}" class="btn btn-default btn-sm">Download Table (Excel)</a>-->
+
+<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModal">
+  Download as Excel
+</button>
     <button class="btn btn-default btn-sm" type="button" data-autohide="false" data-toggle="offcanvas" data-target="#search-form-container" data-placement="left"><span class="glyphicon glyphicon-edit"></span>Search</button>
 
     <div id="search-form-container" class="offcanvas navmenu navmenu-default navmenu-fixed-left">
@@ -182,6 +186,30 @@ some additional javascript code is required
     </div>
 
 {% render_table table %}
+
+
+<!-- Modal -->
+
+<div class="modal fade in" id="myModal" tabindex="-1" data-backdrop="static" data-focus-on="input:first" aria-hidden="false">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 class="modal-title">Download List</h4>
+  </div>
+  <div class="modal-body">
+      {% trans "Thanks for your interest in downloading this information!" %}
+      {% trans "Please tell us how this information could help you." %}
+      {% trans "This information isn't used to identify you, but only help us to make our services better." %}
+      <a href="xls/?referralurl={{request.build_absolute_uri}}" class="btn btn-default btn-sm">I want to skip this and download anyway</a>
+
+      {% crispy excelform %}
+      <a href="xls/?referralurl={{request.build_absolute_uri}}" data-postForm="#excel-download-form" class="btn btn-sm btn-primary">Download</a>
+  </div>
+  <div class="modal-footer">
+
+    <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+  </div>
+</div>
+
 
 {% endblock %}
 

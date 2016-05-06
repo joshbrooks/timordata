@@ -259,20 +259,37 @@
         </div>
         {% endfor %}
 
-            <h4>
-{% trans "Planned or Completed Projects" %}
-</h4>
+<h4>{% trans "Planned or Completed Projects" %}</h4>
 
-    {% for project in object.project_set.all %}{% if project.status_id != 'A' %}
+      <table class="table table-bordered table-condensed">
+            <thead>
+            <tr>
+                <th>Name</th><th>Status</th><th>Dates</th><th>Email</th>
+            </tr>
 
-        <p><a href="{% url 'nhdb:project:list'%}?org={{object.pk}}#object={{project.pk}}">{{project.name}}</a> - {% with project.status.code as s  %}<span class="{% if s == 'X' %}text-danger{% elif s == 'C' %}text-success{% elif s == 'A'%}text-primary{%endif%}">{% endwith %}{{project.status}}</span> {% if project.startdate %}{{project.startdate}}{% else %}??{% endif %} - {% if project.enddate %}{{project.enddate}}{% else %}??{% endif %} </p>
-        
-        
-        {% endif %}{% endfor %}
+            </thead>
+            {% for project in object.project_set.all %}{% if project.status_id != 'A' %}
+            <tr>
+                <td>
+                    <a href="{% url 'nhdb:project:list'%}?org={{object.pk}}#object={{project.pk}}">{{project.name}}</a>
+                </td>
+                <td>
+                    {% with project.status.code as s  %}<span class="{% if s == 'X' %}text-danger{% elif s == 'C' %}text-success{% elif s == 'A'%}text-primary{%endif%}">{% endwith %}{{project.status}}</span>
+                </td>
+
+                <td>
+                    {% if project.startdate %}{{project.startdate}}{% else %}??{% endif %} - {% if project.enddate %}{{project.enddate}}{% else %}??{% endif %}
+                </td>
+            </tr>{% endif %}{% endfor %}
+        </table>
+
+
+
         {% comment %}
         Code for showing publication details : this generates thumbnails for EVERY publication, so is slow for organizations with lots
         Where publications > 5, do 'See all publications' instead
         {% endcomment %}
+
         <h4>Publications</h4>
         <div id="publications">{% if object.publication_set.count == 0 %}
             <p>Sorry, no publications on record</p>{% else %}
@@ -287,4 +304,36 @@
                 </div>{% endfor %}
             </div>{% endif %}
         </div>
-</div></div></div>
+        </div>
+         <h4>{% trans "Personnel" %}</h4>
+                <table class="table table-bordered table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Name</th><th>Title</th><th>Phone</th><th>Email</th>
+                    </tr>
+
+
+                    </thead>
+                    {% for person in object.person_set.all %}
+                    <tr>
+                        <td>
+                            {{person.name}}
+                        </td>
+                        <td>
+                            {{person.title}}
+                        </td>
+
+                        <td>
+                            {{person.phone|default:""}}
+                        </td>
+
+                        <td>
+                            {{person.email|default:""}}
+                        </td>
+                    </tr>{% endfor %}
+                </table>
+
+
+     </div>
+</div>
+</div>

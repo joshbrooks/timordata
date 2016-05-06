@@ -91,6 +91,7 @@ urlpatterns = [
     url(r'^search/(?P<model>\w+)/$', views.search, name="search"),
     url(r'^index/', views.index, name='index'),
     url(r'^partners/', views.partners, name='partners'),
-    url(r'^downloadexcel/', views.downloadexcel, name='downloadexcel'),
+    url(r'^downloadexcel/$', views.downloadexcel, name='downloadexcel'),
+    url(r'^downloadexcel/list/', views.ExcelDownloadFeedbackList.as_view(), name='downloadexcel_list'),
 
     ]

@@ -382,6 +382,13 @@ class ProjectOrganizationList(ListView):
         return ProjectOrganization.objects.filter(project_id=int(project))
 
 
+class ExcelDownloadFeedbackList(ListView):
+    """
+    Show a list of people for a project instance
+    """
+    model = ExcelDownloadFeedback
+    # template_name = 'nhdb/excel.html'
+
 def get_organization_queryset(request, filter_parameter='q'):
     """
         Returns a set of django 'Q' ('or') filters
@@ -562,11 +569,12 @@ def downloadexcel(request):
     download Excel page
     :return:
     """
+    if request.POST:
+        f = ExcelDownloadForm(request.POST)
+        f.save()
+
     context={'url':request.GET.get('next'),'form':ExcelDownloadForm}
     return render(request, 'nhdb/crispy_form.html', context)
-
-
-
 
 
 def project_table_excel(request):
@@ -675,7 +683,7 @@ def organizationlist(request):
     context['object_class_count'] = Organization.objects.count()
     context['table'] = OrganizationTable(organizations)
     context['table'].paginate(page=get('page', 1), per_page=get('per_page', 50))
-
+    context['excelform'] = ExcelDownloadForm({'referralurl':request.build_absolute_uri()})
     return render(request, 'nhdb/organization_list.html', context)
 
 
@@ -1046,7 +1054,7 @@ def projectlist(request):
 
     c['searchdescription'] = {}
     # Build a human readable translation of the search filters
-
+    c['excelform'] = ExcelDownloadForm({'referralurl':request.build_absolute_uri()})
 
 
 

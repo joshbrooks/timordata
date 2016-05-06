@@ -56,7 +56,8 @@ class ExcelDownloadForm(forms.ModelForm):
     @property
     def helper(self):
         helper = FormHelper()
-
+        helper.attrs = {'action': '/nhdb/downloadexcel/'}
+        helper.form_id = "excel-download-form"
         helper.form_class = 'form-horizontal'
         helper.label_class = 'col-lg-3'
         helper.field_class = 'col-lg-9'
@@ -133,6 +134,21 @@ class OrganizationDescriptionForm(SuggestionForm):
 
         return helper
 
+class ExcelDownloadFeedbackForm(forms.ModelForm):
+
+    class Meta:
+        model = ExcelDownloadFeedback
+        exclude = ()
+
+    @property
+    def helper(self):
+        helper = FormHelper()
+        helper.form_class = 'form-horizontal'
+        helper.form_id = self.Meta.model._meta.model_name+'-form'
+        helper.label_class = 'col-lg-3'
+        helper.field_class = 'col-lg-9'
+        return helper
+
 class ProjectdescriptionForm(SuggestionForm):
     description = forms.CharField(widget=CKEditorWidget(config_name='awesome_ckeditor'))
     description_en = forms.CharField(widget=CKEditorWidget(config_name='awesome_ckeditor'))
@@ -159,7 +175,6 @@ class ProjectdescriptionForm(SuggestionForm):
     def helper(self):
         helper = self.get_helper()
         helper.layout.append(Field('description_%s' % (self.language)))
-
         return helper
 
 
