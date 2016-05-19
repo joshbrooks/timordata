@@ -7,6 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import Count
 from django.core.validators import validate_email
 import string
+import logging
+logger = logging.getLogger(__name__)
 
 
 class AlphabetFilter(admin.SimpleListFilter):
@@ -41,6 +43,27 @@ class LastNameListFilter(AlphabetFilter):
     def queryset(self, request, queryset):
         if self.value():
             return queryset.filter(contact__last__startswith=self.value)
+
+
+class PersonFirstNameListFilter(AlphabetFilter):
+    # Human-readable title
+    title = _('First Name')
+    parameter_name = 'firstname'
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(name__startswith=self.value())
+
+#
+# class PersonLastNameListFilter(AlphabetFilter):
+#     # Human-readable title
+#     title = _('Last Name')
+#     parameter_name = 'lastname'
+#
+#     def queryset(self, request, queryset):
+#         if self.value():
+#
+#             return queryset.filter(name__last__startswith=self.value)
 
 
 class NumberOfStaffFilter(admin.SimpleListFilter):
@@ -107,7 +130,7 @@ class PersonAdmin(admin.ModelAdmin):
     autocomplete_lookup_fields = {
         'fk': ['organization']
     }
-    list_filter = (FirstNameListFilter, LastNameListFilter)
+    list_filter = (PersonFirstNameListFilter,)#, PersonLastNameListFilter)
 
     # form = PersonInlineAdminForm
 
