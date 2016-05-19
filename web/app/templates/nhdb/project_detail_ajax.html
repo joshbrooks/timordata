@@ -37,7 +37,7 @@
     <h4>Status:<span class="{% if s == 'X' %}text-danger{% elif s == 'C' %}text-success{% elif s == 'A'%}text-primary{%endif%}">{{object.status}}</span></h4>
     {% endwith %}
     <h4>Dates: {% if object.startdate %}{{object.startdate}}{% else %}??{% endif %} - {% if object.enddate %}{{object.enddate}}{% else %}??{% endif %}</h4>
-
+    <h4>Verified: {{object.verified}}</h4>
     <h4>Description</h4>{% autoescape off %}
     <div class="alert {% if not object.description_en %}alert-warning{%else%}alert-info{%endif%}">
         <img class="language-button-image" src="{{ STATIC_URL }}locales/en{% if not object.description_en %}_bw{%endif%}.png">
