@@ -1,3 +1,5 @@
+import re
+
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -6,6 +8,15 @@ import reversion
 from datetime import datetime
 from pivottable import pivot_table
 
+def isRichField(test):
+    """
+    Check to see if there's HTML tags in the code or if it's just text
+    :return:
+    """
+    ultimate_regexp = "(?i)<\/?\w+((\s+\w+(\s*=\s*(?:\".*?\"|'.*?'|[^'\">\s]+))?)+\s*|\s*)\/?>"
+    if re.search(ultimate_regexp, test):
+        return True
+    return False
 
 class FundingOffer(models.Model):
     def __unicode__(self):
@@ -35,8 +46,17 @@ class FundingOffer(models.Model):
     beneficiary = models.ManyToManyField(
         'nhdb.PropertyTag',  blank=True, related_name="fundingoffer_beneficiary", limit_choices_to={'path__startswith':"BEN."})
 
+
     def get_admin_url(self):
         return reverse("admin:%s_%s_change" % (self._meta.app_label, self._meta.module_name), args=(self.id,))
+
+    @property
+    def rich_description(self):
+        return isRichField(self.description)    \
+
+    @property
+    def rich_summary(self):
+        return isRichField(self.summary)
 
 
 class FundingOfferDocument(models.Model):
