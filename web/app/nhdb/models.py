@@ -103,7 +103,7 @@ class ExcelDownloadFeedback(models.Model):
 class Organization(models.Model):
     name = models.CharField(_('name'), max_length=150)
     description = models.TextField(_('description'), null=True, blank=True)
-    orgtype = models.ForeignKey('OrganizationClass', verbose_name=_('class'), default="LNGO")
+    orgtype = models.ForeignKey('OrganizationClass', verbose_name=_('class'), default="LNGO",)
     active = models.BooleanField(default=True)
     fongtilid = models.IntegerField(null=True, blank=True, verbose_name="Org. ID (Fongtil)")
     justiceid = models.IntegerField(null=True, blank=True, verbose_name="Org. ID (Min. Justice)")
