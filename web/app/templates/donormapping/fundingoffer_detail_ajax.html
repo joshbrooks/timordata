@@ -12,27 +12,28 @@
             <p><strong>{% trans "Activities" %}:</strong> {{ object.activity.all|join:', ' }}</p>
             <p><strong>{% trans "Beneficiaries" %}:</strong> {{ object.beneficiary.all|join:', ' }}</p>
     </div>
-
+{% if object.summary %}
     <div class="col-lg-8 col-md-8" style="border-top:1px solid #ddd; border-bottom:1px solid #ddd; padding-top:20px;">
         <p><strong>{% trans "Summary" %}:</strong> </p>
             {% if object.rich_summary %}
             {% autoescape off %}{{object.summary}}{% endautoescape %}
             {% else %}
-           <p> {{object.summary}}</p>
+           <pre> {{object.summary}}</pre>
             {% endif %}
     </div>
-
+{% endif %}
+{% if object.description %}
     <div class="col-lg-8 col-md-8" style="border-top:1px solid #ddd; border-bottom:1px solid #ddd; padding-top:20px;">
         <p><strong>{% trans "Description" %}:</strong> </p>
             {% if object.rich_description %}
-        Description is rich
+
             {% autoescape off %}{{object.description}}{% endautoescape %}
             {% else %}
-        Description is NOT rich
-           <p> {{object.description}}</p>
+
+           <pre> {{object.description}}</pre>
             {% endif %}
     </div>
-
+{% endif %}
 
 
 
