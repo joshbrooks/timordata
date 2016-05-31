@@ -14,6 +14,7 @@ import reversion
 import json
 from library.models import Thumbnail
 from suggest.views import logger
+from unidecode import unidecode
 
 __all__ = [
     'Organization', 'Person',
@@ -24,6 +25,15 @@ __all__ = [
     'PropertyTag', 'ProjectStatus', 'ExcelDownloadFeedback'
 ]
 
+
+def unisafe(inputstring):
+    try:
+        return u'{}'.format(inputstring)
+    except UnicodeEncodeError:
+        try:
+            return unidecode(inputstring)
+        except:
+            return 'Sorry, unicode error'
 
 class ProjectManager(models.Manager):
 
@@ -162,7 +172,7 @@ class Organization(models.Model):
         ordering = ['name',]
 
     def __unicode__(self):
-        return u'{}'.format(self.name)
+        return unisafe(self.name)
 
     def get_absolute_url(self):
         return "/nhdb/organization/?q=active.true#object=%s" % (self.pk)
@@ -361,7 +371,7 @@ class Project(models.Model):
 
         # Translated fields : should automagically do whichever 'name' is first on the list
         if self.name:
-            return self.name
+            return unicode(self.name)
         return '?'
 
     class Meta:
@@ -477,8 +487,7 @@ class ProjectOrganization(models.Model):
 
     def __unicode__(self):
         try:
-            return "{} {}".format(
-                self.organization.__unicode__(), self.project.__unicode__())
+            return self.organization.__unicode__() +unicode(" ")+ self.project.__unicode__()
         except AttributeError:
             return 'Invalid project / organization'
 

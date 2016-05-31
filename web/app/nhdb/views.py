@@ -1229,7 +1229,10 @@ def form(request, model=None, form='main'):
         m = models[m_name]
 
         if g(m_name):
-            args[m_name] = m.objects.get(pk=g(m_name))
+            #try:
+                args[m_name] = m.objects.get(pk=g(m_name))
+            #except m.DoesNotExist:
+            #    return HttpResponse("This object does not exist in the database: {} (id = {})".format(m_name,g(m_name), status=404)
 
         #  Use an exclamation to indicate a field which should not be changable
         if g('!' + m_name):

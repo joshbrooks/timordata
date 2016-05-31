@@ -15,7 +15,7 @@ import re
 from django.db import models, IntegrityError
 from django.apps import apps
 import dateutil.parser
-
+from unidecode import unidecode
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
@@ -45,6 +45,23 @@ def _get_model(app_model_name):
         raise ValueError('Looked for pattern (appname)_(modelname), did not find it in {}'.format(app_model_name))
     return apps.get_model(app_label=app_label, model_name=model_name)
 
+def safe_compare(input_a, input_b):
+    """
+    Try to compare two strings, handling UnicodeErrors with a bit more grace
+    """
+    from unidecode import unidecode
+    try:
+        if input_a == input_b:
+            return True
+        if '{}'.format(input_a) == '{}'.format(input_b):
+            return True
+    except UnicodeEncodeError:
+        try:
+            if unidecode(input_a) == unidecode(input_b):
+               return True
+        except:
+            return False
+    return False 
 
 class ReturnedData(unicode):
     # Wrapper to add 'ready' to the data
@@ -751,18 +768,22 @@ class Suggest(models.Model):
                         returns[key] = mark_safe(u"{} {}").format(wrap_class(value_current, u'removed'),
                                                                  wrap_class(value_suggested, u'added'))
 
-                else:
-                    if value_current == value_suggested and value_suggested is not None:
+                
+                elif value_current == value_suggested and value_suggested is not None:
                         returns[key] = wrap_class(value_current, u'unchanged')
-                    elif value_suggested is None:
+                elif value_suggested is None:
                         returns[key] = None
                     # Try coercing to the same value
-                    elif '{}'.format(value_suggested) == '{}'.format(value_current):
+                    
+                else:
+                    if safe_compare(value_suggested, value_current):
                         returns[key] = wrap_class(value_current, u'unchanged')
                     else:
-                        returns[key] = mark_safe(u"{} {}").format(wrap_class(value_current or '', u'removed'),
-                                                                 wrap_class(value_suggested, u'added'))
-
+                        try:
+                            returns[key] = mark_safe(u"{} {}").format(wrap_class(unidecode(value_current or ''), u'removed'),
+                                                                 wrap_class(unidecode(value_suggested or ''), u'added'))
+                        except AttributeError:
+                            returns_key = wrap_class(value_current, u'added')
         else:
             for key, value_suggested in suggestion_data.items():
                 if value_suggested is None:
