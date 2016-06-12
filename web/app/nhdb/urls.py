@@ -1,14 +1,14 @@
 from django.conf.urls import url, include
 
 from belun import views_authentication
-from nhdb import views
+from nhdb import views, views_excel
 
 organization = [
     # url(r'^$', views.OrganizationList.as_view(), name='list'),
     url(r'^$', views.organizationlist, name='list'),
 
     # url(r'^table/$', views.OrganizationList.as_view(template_name='nhdb/organization_list_table.html'), name='list_as_table'),
-    url(r'^xls$', views.excel.organization, name='list_as_excel'),
+    url(r'^xls$', views_excel.organization, name='list_as_excel'),
     url(r'^list.json/$', views.organization_list_as_json, name='list_as_json'),
     url(r'^(?P<pk>[0-9]+)/$', views.OrganizationDetail.as_view(), name='detail'),
     url(r'^(?P<pk>[0-9]+)/ajax/$', views.OrganizationDetail.as_view(template_name='nhdb/organization_detail_ajax.html'), name='detail_ajax'),
@@ -39,7 +39,7 @@ project = [
     # url(r'^table/$', views.ProjectList.as_view(template_name='nhdb/project_list_table.html'), name='list_as_table'),
     url(r'^dashboard/$', views.projectdashboard, name='dashboard'),
     url(r'^places/$', views.projectplaces, name='places'),
-    url(r'^xls$', views.excel.project, name='list_as_excel'),
+    url(r'^xls$', views_excel.project, name='list_as_excel'),
     url(r'^csv/$', views.projectcsv, name='csv'),
     url(r'^csv_export/$', views.projectcsv_nutrition, name='csv_export'),
 

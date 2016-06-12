@@ -1,6 +1,7 @@
 from datetime import date
 
 from export.excel_export import ExportTemplateWriter, FORMATS
+from .views import get_organization_queryset, get_projects_page
 from .models import Project, Organization
 import logging
 logger = logging.getLogger(__name__)
@@ -10,7 +11,7 @@ from django.utils.translation import ugettext as _
 def project(request, object_list=None):
 
     if object_list is None:
-        object_list = Project.objects.all()
+        object_list = get_projects_page(request)
     logger.debug(object_list)
     object_list = object_list.prefetch_related('organization')
 
@@ -46,7 +47,7 @@ def project(request, object_list=None):
 def organization(request, object_list=None, code='en', refer="timordata.info"):
 
     if not object_list:
-        object_list = Organization.objects.all()
+        object_list = get_organization_queryset(request)
     object_list = object_list.prefetch_related('organizationplace_set__organizationplacedescription').prefetch_related('orgtype')
 
     row = 1

@@ -30,9 +30,10 @@ from nhdb.tables import OrganizationTable, ProjectTable, PropertyTagTable, Proje
 from rest_framework.parsers import JSONParser
 from suggest.models import Suggest
 from views_helpers import projectset_filter, orgset_filter
-import views_excel as excel
 
-languages = (('en', 'English'), ('tet', 'Tetun'), ('pt', 'Portugese'), ('id', 'Bahasa'))
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def object_index(queryset):
@@ -394,6 +395,7 @@ def get_organization_queryset(request, filter_parameter='q'):
     """
         Returns a set of django 'Q' ('or') filters
         """
+    logger.debug('Filtering organizations')
 
     inv = Q()
     act = Q()
@@ -432,7 +434,7 @@ def get_organization_queryset(request, filter_parameter='q'):
 
     if request.GET.get('name'):
         name = Q(name__icontains=request.GET.get('name'))
-
+    logger.debug(filters)
     return Organization.objects.filter(inv).filter(ben).filter(act).filter(type).filter(district).filter(status).filter(
         org_location).filter(name).distinct()
 
