@@ -3,8 +3,8 @@ import re
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from ckeditor.fields import RichTextField
-import reversion
+# from ckeditor.fields import RichTextField
+
 from datetime import datetime
 from pivottable import pivot_table
 
@@ -33,7 +33,7 @@ class FundingOffer(models.Model):
     organization = models.ForeignKey('nhdb.Organization')
     amount = models.IntegerField(null=True)
 
-    conditions = RichTextField(null=True, blank=True, config_name='awesome_ckeditor')
+    conditions = models.TextField(null=True, blank=True)
 
     application_end_date = models.DateField(null=True, blank=True)
     district = models.ManyToManyField('geo.District', blank=True)
@@ -77,7 +77,7 @@ class DonorAnnouncement(models.Model):
     source = models.ForeignKey('nhdb.Organization', blank=True, null=True)
     title = models.CharField(max_length=256)
     summary = models.TextField()
-    content = RichTextField(config_name='awesome_ckeditor')
+    content = models.TextField()
 
 
 

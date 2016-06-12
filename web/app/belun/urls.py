@@ -23,6 +23,7 @@ from views_authentication import logmein, logmeout
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
+
     url(r'^accounts/login/$', auth_views.login),
     url(r'^accounts/logout/$', auth_views.logout),
     url(r'^login/$',  auth_views.login, name="login"),
@@ -67,6 +68,7 @@ urlpatterns = [
 
 
     url(r'^$', views.index, name='home'),
+    url(r'^indexmanifest/$', views.indexmanifest, name='indexmanifest'),
     url(r'^page/(?P<url>.*)$', flatpage_translation, name='django.contrib.flatpages.views.flatpage'),
 ]
 if settings.DEBUG:

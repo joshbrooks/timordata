@@ -11,9 +11,9 @@ django-extensions
 django-grappelli
 django-model-utils
 django-modeltranslation
-django-pandas
+# django-pandas
 django-rest-swagger
-django-reversion
+# django-reversion
 django-tables2
 djangorestframework
 fuzzywuzzy
@@ -23,24 +23,23 @@ ipython
 jinja2
 numpy
 pillow
-pypdf2
+# pypdf2
 python-dateutil
 python-memcached
 pytz
 pyyaml
-qrcode
+# qrcode
 redis
 selenium
 setuptools
 simplejson
 sorl-thumbnail
-sphinx
+#sphinx
 unicodecsv
 unidecode
 xlsxwriter
-xlwt
-mysqlclient
+# mysqlclient
 psycopg2
-wand
+# wand
 ghostscript
 uwsgi

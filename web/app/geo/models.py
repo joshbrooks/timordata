@@ -74,6 +74,19 @@ class Suco(AdminArea):
     def selectlist_repr(self):
         return u'%s'%self
 
+    @property
+    def subdistrict(self):
+        try:
+            return Subdistrict.objects.get(path=self.get_ancestor_path())
+        except Subdistrict.DoesNotExist:
+            return None
+
+    @property
+    def district(self):
+        try:
+            return District.objects.get(path=self.get_ancestor_path().get_ancestor_path())
+        except District.DoesNotExist:
+            return None
 
 class Subdistrict(AdminArea):
     def __unicode__(self):
@@ -82,6 +95,12 @@ class Subdistrict(AdminArea):
     def selectlist_repr(self):
         return u'%s'%self
 
+    @property
+    def district(self):
+        try:
+            return District.objects.get(path=self.get_ancestor_path())
+        except District.DoesNotExist:
+            return None
 
 class District(AdminArea):
     def __unicode__(self):
