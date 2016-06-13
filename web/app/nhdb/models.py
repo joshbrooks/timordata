@@ -13,7 +13,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 import json
 from library.models import Thumbnail
-from suggest.views import logger
+import logging
+logger = logging.getLogger(__name__)
 from unidecode import unidecode
 
 __all__ = [
@@ -37,6 +38,7 @@ def unisafe(inputstring):
 
 
 class ProjectManager(models.Manager):
+
     def past_enddate(self):
         """
         Projects which are active but the end date has already finished
@@ -73,10 +75,11 @@ class ProjectManager(models.Manager):
 
 
 class OrganizationManager(models.Manager):
+
     def invalid_emails(self):
-        return super(OrganizationManager, self) \
-            .get_queryset() \
-            .exclude(email__regex=r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9]+\.[a-zA-Z0-9.+-]+$") \
+        return super(OrganizationManager, self)\
+            .get_queryset()\
+            .exclude(email__regex=r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9]+\.[a-zA-Z0-9.+-]+$")\
             .exclude(email__isnull=True)
 
     def no_email(self):
@@ -91,6 +94,7 @@ class OrganizationManager(models.Manager):
 
 
 class ExcelDownloadFeedback(models.Model):
+
     PURPOSE_CHOICES = (
         ('PP', 'Project planning'),
         ('RE', 'Research'),
@@ -135,8 +139,8 @@ class Organization(models.Model):
         for lang in settings.LANGUAGES_FIX_ID:
             key = 'upload_' + lang[0]
             kw = {key: ''}
-            Version = apps.get_model('library', 'version')
-            count = Version.objects.filter(publication__organization=self).exclude(**kw).count()
+            version_model = apps.get_model('library', 'version')
+            count = version_model.objects.filter(publication__organization=self).exclude(**kw).count()
             if count > 0:
                 filecounts[lang[0]] = count
         return filecounts
@@ -198,6 +202,7 @@ import re
 
 
 class Email(object):
+
     def __init__(self, address):
         self._address = address
         if not address:
@@ -248,6 +253,7 @@ def emailencode(email):
     """
 
     reverse_code_obfuscated = """var _0x7972=["\x72\x65\x76\x65\x72\x73\x65","\x70\x72\x6F\x74\x6F\x74\x79\x70\x65","","\x6A\x6F\x69\x6E","\x73\x70\x6C\x69\x74","\x64\x6F\x74\x61\x74","\x2E","\x72\x65\x70\x6C\x61\x63\x65","\x40","\x72\x6F\x74\x31\x33","\x5A","\x63\x68\x61\x72\x43\x6F\x64\x65\x41\x74","\x66\x72\x6F\x6D\x43\x68\x61\x72\x43\x6F\x64\x65","\x63\x6C\x69\x63\x6B","\x74\x61\x62\x6C\x65\x3A\x66\x69\x72\x73\x74","\x70\x61\x72\x65\x6E\x74\x73","\x2E\x65\x6D\x61\x69\x6C","\x69\x6E\x64\x65\x78","\x63\x68\x69\x6C\x64\x72\x65\x6E","\x70\x61\x72\x65\x6E\x74","\x64\x69\x73\x61\x62\x6C\x65\x64","\x61\x64\x64\x43\x6C\x61\x73\x73","\x74\x64","\x67\x72\x65\x65\x6E","\x63\x73\x73","\x74\x65\x78\x74","\x65\x61\x63\x68","\x74\x62\x6F\x64\x79\x20\x74\x72","\x66\x69\x6E\x64","\x6F\x6E","\x62\x75\x74\x74\x6F\x6E\x2E\x73\x68\x6F\x77\x6C\x69\x61\x6D\x65","\x72\x65\x61\x64\x79"];String[_0x7972[1]][_0x7972[0]]=function(){return this[_0x7972[4]](_0x7972[2])[_0x7972[0]]()[_0x7972[3]](_0x7972[2])};String[_0x7972[1]][_0x7972[5]]=function(){return this[_0x7972[7]](/ at /gi,_0x7972[8])[_0x7972[7]](/ dot /gi,_0x7972[6])};String[_0x7972[1]][_0x7972[9]]=function(){return this[_0x7972[7]](/[a-zA-Z]/gi,function(_0xf065x1){return String[_0x7972[12]]((_0xf065x1<=_0x7972[10]?90:122)>=(_0xf065x1=_0xf065x1[_0x7972[11]](0)+13)?_0xf065x1:_0xf065x1-26)})};$(document)[_0x7972[31]](function(){$(_0x7972[30])[_0x7972[29]](_0x7972[13],function(){var _0xf065x2=$(_0x7972[16])[_0x7972[15]](_0x7972[14]);var _0xf065x3=$(_0x7972[16])[_0x7972[19]]()[_0x7972[18]]()[_0x7972[17]]($(_0x7972[16]));$(this)[_0x7972[21]](_0x7972[20]);_0xf065x2[_0x7972[28]](_0x7972[27])[_0x7972[26]](function(){var _0xf065x4=$(this)[_0x7972[18]](_0x7972[22])[_0xf065x3];$(_0xf065x4)[_0x7972[24]]({color:_0x7972[23]});$(_0xf065x4)[_0x7972[25]]($(_0xf065x4)[_0x7972[25]]()[_0x7972[0]]()[_0x7972[9]]()[_0x7972[5]]());});})});"""
+
 
     if email:
         if '@' in email:
@@ -321,6 +327,7 @@ class RecordOwner(models.Model):
 
 
 class ProjectImage(models.Model):
+
     def __unicode__(self):
         try:
             if self.project:
@@ -360,6 +367,7 @@ class ProjectImage(models.Model):
 
 
 class Project(models.Model):
+
     def __unicode__(self):
 
         # Translated fields : should automagically do whichever 'name' is first on the list
@@ -461,12 +469,14 @@ class Project(models.Model):
     def geojson(self):
         return json.dumps(self.feature)
 
+
     @classmethod
     def pivot_table(cls, _filter, field_name, relation_data=None):
         return pivot(cls, _filter, field_name, relation_data=None)
 
 
 class ProjectStatus(models.Model):
+
     def __unicode__(self):
         return self.description
 
@@ -475,9 +485,10 @@ class ProjectStatus(models.Model):
 
 
 class ProjectOrganization(models.Model):
+
     def __unicode__(self):
         try:
-            return self.organization.__unicode__() + unicode(" ") + self.project.__unicode__()
+            return self.organization.__unicode__() +unicode(" ")+ self.project.__unicode__()
         except AttributeError:
             return 'Invalid project / organization'
 
@@ -504,6 +515,7 @@ class ProjectOrganizationClass(models.Model):
 
 
 class ProjectPerson(models.Model):
+
     class Meta:
         unique_together = (('person', 'project'))
 
@@ -539,7 +551,7 @@ class ProjectPlace(models.Model):
             return self.description
         elif self.place.name:
             return u'{}, {}'.format(
-                    self.project.name, self.place.name)
+                self.project.name, self.place.name)
         else:
             return '?'
 
@@ -582,11 +594,25 @@ class ProjectPlace(models.Model):
              "geometry": {
                  "type": "Point",
                  "coordinates": self.coordinates,
-             },
+                 },
              "properties": properties
              }
 
         return f
+
+
+class OrganizationPlaceDescription(models.Model):
+    """
+    Cache the OrganizationPlace to prevent looking up suco, subd., district every time
+    """
+
+    def __unicode__(self):
+        return '{} {} {}'.format(self.suco, self.subdistrict, self.district)
+
+    organizationplace = models.OneToOneField('nhdb.OrganizationPlace', primary_key=True)
+    suco = models.CharField(max_length=256, null=True, blank=True)
+    subdistrict = models.CharField(max_length=256, null=True, blank=True)
+    district = models.CharField(max_length=256, null=True, blank=True)
 
 
 class OrganizationPlace(models.Model):
@@ -602,38 +628,24 @@ class OrganizationPlace(models.Model):
     point = models.PointField(srid=4326, null=True)
     phone = models.CharField(max_length=256, null=True, blank=True)
     email = models.CharField(max_length=256, null=True, blank=True)
-    suco = models.ForeignKey('geo.Suco',null=True,blank=True)
 
     objects = models.GeoManager()
 
-    @classmethod
-    def update_place(cls):
-        for i in cls.objects.all():
-            try:
-                suco = Suco.objects.get(geom__contains=i.point)
-            except Exception, e:
-                logger.exception(e.message)
-                continue
-            i.suco = suco
-            i.save()
+    def update_place(self):
 
-    @property
-    def location(self):
-        """
-        Returns the admin areas (district, subdistrict, suco) of this point
-        :return:
-        """
-        return {
-            'district': apps.get_model('geo', 'district').objects.filter(geom__contains=self.point).first() or 'None',
-            'subdistrict': apps.get_model('geo', 'subdistrict').objects.filter(
-                geom__contains=self.point).first() or 'None',
-            'suco': apps.get_model('geo', 'suco').objects.filter(geom__contains=self.point).first() or 'None',
-        }
-
-    @property
-    def locationstring(self):
-        l = self.location
-        return '{}, {}, {}'.format(l['suco'], l['subdistrict'], l['district'])
+        description, created = OrganizationPlaceDescription.objects.get_or_create(organizationplace = self)
+        try:
+            suco = Suco.objects.get(geom__contains=self.point)
+        except Suco.DoesNotExist:
+            return
+        if description.suco == suco.name:
+            logger.debug('skip updating info for {}'.format(self))
+            return
+        description.suco = suco.name
+        description.subdistrict = suco.subdistrict.name
+        description.district = suco.subdistrict.district.name
+        description.save()
+        logger.debug('updated info for {}'.format(self))
 
     @property
     def lat(self):
@@ -645,11 +657,11 @@ class OrganizationPlace(models.Model):
         return self.point.x
 
     @property
-    def latlng(self):
-        """
+    def latlng (self):
+        '''
         Getting tired of remembering if "x = lat" or "y = lat"!
         :return:
-        """
+        '''
 
         return [self.lat, self.lng]
 

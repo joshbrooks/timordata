@@ -1,0 +1,102 @@
+version: '2'
+services:
+
+  nginx:
+    restart: always
+    build: ./nginx
+    ports:
+      - "82:80"
+      - "444:443"
+    volumes:
+      - /www/static
+    volumes_from:
+      - web
+    links:
+      - web
+      - tilestache
+      - simplewms
+    networks:
+      - front
+
+  web:
+    restart: always
+    build: 
+      context: ./web
+      dockerfile: Dockerfile.local
+    links:
+      - db
+      - memcached
+    ports:
+      - "8000"
+      - "8001"
+      - "8002"
+    volumes:
+      - ./web/app:/home/django/app
+      - /var/www/html/static:/var/www/html/static
+      - /var/www/html/media:/var/www/html/media
+    networks:
+      - front
+    # command: ["sh", "/home/django/app/run_dev.sh"] # Development only
+    command: ["env/bin/uwsgi", "--ini", "app/uwsgi.ini"]
+
+  db:
+    build: ./server
+    restart: always
+    networks:
+      - front
+    ports:
+      - "5432"
+    environment:
+      POSTGRES_PASSWORD:  L1terary20@
+      POSTGRES_USER: belun
+      POSTGRES_DB: timordata.info
+    volumes:
+      - dbstore:/var/lib/postgresql/data
+
+  gis:
+    restart: always
+    build: ./postgis
+    networks:
+      - front
+    environment:
+      POSTGRES_PASSWORD:  L1terary20@
+      POSTGRES_USER: belun
+      POSTGRES_DB: timordata.info
+
+  tilestache:
+    restart: always
+    build: tilestache
+    ports:
+      - "8080"
+    links:
+      - gis
+    networks:
+      - front
+    command: ["uwsgi", "/home/tilestache/app/uwsgi.ini"]
+
+  simplewms:
+    restart: always
+    build: ./simplewms
+    ports:
+      - "8080"
+    links:
+      - memcached
+    networks:
+      - front
+    command: ["uwsgi", "/home/simplewms/app/uwsgi.ini"]
+
+  memcached:
+    restart: always
+    build: memcached
+    ports:
+      - "11211"
+    networks:
+      - front
+    command: ["memcached"]
+
+networks:
+  front:
+    driver: bridge
+
+volumes:
+  dbstore:

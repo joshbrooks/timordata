@@ -24,6 +24,24 @@ def index(request):
     return render(request, 'index.html')
 
 
+def indexmanifest(request):
+
+    content_type = "text/cache-manifest"
+    manifest = [
+        "CACHE MANIFEST",
+        "/static/timordata.css",
+        "/static/font-awesome.min.css",
+        "/static/bootstrap-modal/css/bootstrap-modal-bs3patch.css",
+        "/static/bootstrap/css/bootstrap.min.css",
+        "/static/timordata.css",
+        "/static/jquery.js",
+        "/static/bootstrap/js/bootstrap.js",
+        "/static/backgrounds/background_min.jpg"]
+
+
+    return HttpResponse('\n'.join(manifest), content_type=content_type)
+
+
 def about(request):
     if request.LANGUAGE_CODE == 'tet':
         return render(request, 'about_tet.html')

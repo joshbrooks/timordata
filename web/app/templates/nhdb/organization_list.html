@@ -178,10 +178,10 @@
       {% trans "Thanks for your interest in downloading this information!" %}
       {% trans "Please tell us how this information could help you." %}
       {% trans "This information isn't used to identify you, but only help us to make our services better." %}
-      <a href="xls/?referralurl={{request.build_absolute_uri}}" class="btn btn-default btn-sm">I want to skip this and download anyway</a>
+      <a href="xls?{% for n, v in request.GET.items %}{{n}}={{v}}{% if not forloop.last %}&{% endif %}{% endfor %}" class="btn btn-default btn-sm">I want to skip this and download anyway</a>
 
       {% crispy excelform %}
-      <a href="xls/?referralurl={{request.build_absolute_uri}}" data-postForm="#excel-download-form" class="btn btn-sm btn-primary">Download</a>
+      <a href="xls?{% for n, v in request.GET.items %}{{n}}={{v}}{% if not forloop.last %}&{% endif %}{% endfor %}" data-postForm="#excel-download-form" class="btn btn-sm btn-primary">Download</a>
   </div>
   <div class="modal-footer">
 

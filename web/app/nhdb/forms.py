@@ -1,20 +1,18 @@
 from datetime import datetime
 from belun import settings
 from belun.settings import LANGUAGES_FIX_ID
-from ckeditor.widgets import CKEditorWidget
 from crispy_forms.bootstrap import TabHolder, PrependedText, FormActions, AccordionGroup, Accordion
-# from crispy_forms.bootstrap import Tab
-# from belun.crunchyforms import TranslationTabs
 from django.apps import apps
 from django.utils.safestring import mark_safe
 from nhdb.models import *
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML, Field, Div, Fieldset, Hidden
 from django import forms
-from django.utils.translation import ugettext_lazy as _, ugettext
+from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext as u_
 from suggest.forms import SuggestionForm
 from suggest.models import Suggest
+
 
 def getchoices(model, field='pk', field_display=None):
     try:
@@ -22,6 +20,7 @@ def getchoices(model, field='pk', field_display=None):
     except:
         # raise a warning
         return []
+
 
 def radiobuttons(inputs):
     '''
@@ -102,11 +101,11 @@ class OrganizationForm(SuggestionForm):
 
 
 class OrganizationDescriptionForm(SuggestionForm):
-    description = forms.CharField(widget=CKEditorWidget(config_name='awesome_ckeditor'))
-    description_en = forms.CharField(widget=CKEditorWidget(config_name='awesome_ckeditor'))
-    description_tet = forms.CharField(widget=CKEditorWidget(config_name='awesome_ckeditor'))
-    description_ind = forms.CharField(widget=CKEditorWidget(config_name='awesome_ckeditor'))
-    description_pt = forms.CharField(widget=CKEditorWidget(config_name='awesome_ckeditor'))
+    description = forms.CharField()
+    description_en = forms.CharField()
+    description_tet = forms.CharField()
+    description_ind = forms.CharField()
+    description_pt = forms.CharField()
 
     class Meta:
         model = Organization
@@ -134,8 +133,8 @@ class OrganizationDescriptionForm(SuggestionForm):
 
         return helper
 
-class ExcelDownloadFeedbackForm(forms.ModelForm):
 
+class ExcelDownloadFeedbackForm(forms.ModelForm):
     class Meta:
         model = ExcelDownloadFeedback
         exclude = ()
@@ -144,17 +143,18 @@ class ExcelDownloadFeedbackForm(forms.ModelForm):
     def helper(self):
         helper = FormHelper()
         helper.form_class = 'form-horizontal'
-        helper.form_id = self.Meta.model._meta.model_name+'-form'
+        helper.form_id = self.Meta.model._meta.model_name + '-form'
         helper.label_class = 'col-lg-3'
         helper.field_class = 'col-lg-9'
         return helper
 
+
 class ProjectdescriptionForm(SuggestionForm):
-    description = forms.CharField(widget=CKEditorWidget(config_name='awesome_ckeditor'))
-    description_en = forms.CharField(widget=CKEditorWidget(config_name='awesome_ckeditor'))
-    description_tet = forms.CharField(widget=CKEditorWidget(config_name='awesome_ckeditor'))
-    description_ind = forms.CharField(widget=CKEditorWidget(config_name='awesome_ckeditor'))
-    description_pt = forms.CharField(widget=CKEditorWidget(config_name='awesome_ckeditor'))
+    description = forms.CharField()
+    description_en = forms.CharField()
+    description_tet = forms.CharField()
+    description_ind = forms.CharField()
+    description_pt = forms.CharField()
 
     class Meta:
         model = Project
@@ -188,7 +188,7 @@ def get_adminarea_list():
 
     placechoices = []
     try:
-        for place in apps.get_model('geo', 'adminarea').objects.order_by('path').values_list('pk','name'):
+        for place in apps.get_model('geo', 'adminarea').objects.order_by('path').values_list('pk', 'name'):
             placechoices.append((place[0], mark_safe(u'{}{}'.format(indent(place[1]), place[1]))))
     except:
         pass
@@ -287,7 +287,7 @@ class ProjectpropertiesForm(SuggestionForm):
     def helper(self):
         if isinstance(self._instance, Project):
             helper = self.get_helper(url='/rest/nhdb/projectpropertiesbyid/{}/'.format(self._instance.pk))
-        elif isinstance(self._instance,Suggest):
+        elif isinstance(self._instance, Suggest):
             helper = self.get_helper(url='/rest/nhdb/projectpropertiesbyid/_{}/'.format(self._instance.pk))
 
         helper.form_id = 'update-projectproperties-form'
@@ -326,7 +326,7 @@ class ProjectTranslationsForm(SuggestionForm):
     @property
     def helper(self):
         helper = self.get_helper()
-        a = [AccordionGroup(n, "name_"+c, "description_"+c) for c, n in LANGUAGES_FIX_ID]
+        a = [AccordionGroup(n, "name_" + c, "description_" + c) for c, n in LANGUAGES_FIX_ID]
         helper.layout.append(Accordion(*a))
         return helper
 
@@ -369,7 +369,7 @@ project_form_fields = ['status',
 #     for fieldname in ['name', 'description']:
 #         project_form_fields.append('{}_{}'.format(fieldname, code))
 
-def translation_accordion(field_list = (), instance = None):
+def translation_accordion(field_list=(), instance=None):
     accordion_groups = []
 
     for language_code, lanuage_name in LANGUAGES_FIX_ID:
@@ -382,6 +382,7 @@ def translation_accordion(field_list = (), instance = None):
                 fields.append(field_name_trans)
         accordion_groups.append(AccordionGroup(lanuage_name, *fields))
     return Accordion(*accordion_groups)
+
 
 class ProjectForm(SuggestionForm):
     name_en = forms.CharField()
@@ -417,7 +418,7 @@ class ProjectForm(SuggestionForm):
         msg = _("You can add translations in these languages: ")
         msg += ', '.join([i[1] for i in languages])
 
-        helper.layout.append(translation_accordion(field_list = ['name', 'description'], instance = self.project))
+        helper.layout.append(translation_accordion(field_list=['name', 'description'], instance=self.project))
 
         helper.layout.extend([
             'status',
@@ -453,7 +454,8 @@ class ProjectImageForm(SuggestionForm):
         helper.layout.extend([
             'description',
             'image',
-            Field('project', data_selecturl='/selecttwo/nhdb/project/name/icontains', wrapper_class=self.get_wrapper_class('project'))
+            Field('project', data_selecturl='/selecttwo/nhdb/project/name/icontains',
+                  wrapper_class=self.get_wrapper_class('project'))
         ])
 
         return helper
@@ -560,7 +562,7 @@ class ProjectSearchForm(forms.Form):
     status = forms.MultipleChoiceField(
             required=False,
             label="Status",
-            choices = getchoices(ProjectStatus, 'code', 'description')
+            choices=getchoices(ProjectStatus, 'code', 'description')
     )
 
     organization = forms.TypedChoiceField(
@@ -570,8 +572,8 @@ class ProjectSearchForm(forms.Form):
     orgtype = forms.MultipleChoiceField(
             required=False,
             label="Organization types",
-            choices = getchoices(OrganizationClass, 'pk', 'orgtype')
-            #choices=[(i.pk, i.orgtype) for i in OrganizationClass.objects.all()]
+            choices=getchoices(OrganizationClass, 'pk', 'orgtype')
+            # choices=[(i.pk, i.orgtype) for i in OrganizationClass.objects.all()]
     )
 
     enddateafter = forms.DateField(
@@ -754,8 +756,8 @@ class PropertyTagForm(SuggestionForm):
         helper = self.get_helper()
         helper.form_class = 'form-inline'
         helper.layout.extend(
-            Field('path'),
-            Accordion(*[AccordionGroup(n, "name_"+c, "description_"+c) for c, n in LANGUAGES_FIX_ID])
+                Field('path'),
+                Accordion(*[AccordionGroup(n, "name_" + c, "description_" + c) for c, n in LANGUAGES_FIX_ID])
         )
         return helper
 
@@ -784,10 +786,11 @@ class ProjectPersonForm(SuggestionForm):
         }
 
         helper = self.get_helper()
-        helper.layout.append(Field('project', data_selecturl='/selecttwo/nhdb/project/name/icontains', wrapper_class=self.get_wrapper_class('project')))
+        helper.layout.append(Field('project', data_selecturl='/selecttwo/nhdb/project/name/icontains',
+                                   wrapper_class=self.get_wrapper_class('project')))
         helper.layout.append(
-            Field('person', data_selecturl='/selecttwo/nhdb/person/name/icontains', **create_person_elements))
-        self.fields['person'].choices=[]
+                Field('person', data_selecturl='/selecttwo/nhdb/person/name/icontains', **create_person_elements))
+        self.fields['person'].choices = []
         return helper
 
 
@@ -851,7 +854,8 @@ class ProjectPlaceForm(SuggestionForm):
     def helper(self):
         helper = self.get_helper()
         helper.form_class = 'form-horizontal'
-        helper.layout.append(Field('project', data_selecturl='/selecttwo/nhdb/project/name/icontains', wrapper_class=self.get_wrapper_class('project')))
+        helper.layout.append(Field('project', data_selecturl='/selecttwo/nhdb/project/name/icontains',
+                                   wrapper_class=self.get_wrapper_class('project')))
         helper.layout.append(Field('place', data_selecturl='/selecttwo/geo/adminarea/name/icontains'))
         helper.layout.append(Field('description'))
         return helper

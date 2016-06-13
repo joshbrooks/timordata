@@ -17,9 +17,11 @@ Base Bootstrap Template
             Same as body but wrapped with "container"
         footer
         script
+        
 {% endcomment %}
 <!DOCTYPE html>
-<html>
+
+<html {% block manifest %}{% endblock manifest %}>
 <head>{% block meta %}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,12 +33,12 @@ Base Bootstrap Template
     <title>{% block title %}Timor Development Data &middot;{% endblock title %}</title>
 
     {% block css %}
-      <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+      <link href="{{ STATIC_URL }}font-awesome.min.css" rel="stylesheet">
     {% if media.css %}{% for css_url in media.css %}
       <link href="{{ STATIC_URL }}{{ css_url }}" rel="stylesheet">
     {% endfor %}{% endif %}
       <link href="{{ STATIC_URL }}bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet">
-      <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" rel="stylesheet">
     {% endblock css %}
 
     {% block style %}{# Use "style" block to add custom CSS files to a template like so #}
@@ -66,9 +68,7 @@ Base Bootstrap Template
     </div>
   {% endblock footer %}
 
-    <!--Load jQuery from google API for preference or local if google is offline-->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="{{ STATIC_URL}}jquery.js"><\/script>')</script>
+    <script src="{{ STATIC_URL }}jquery.js"></script>
     <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js"></script>
    <script>
     $(document).ready(function(){
@@ -81,8 +81,6 @@ Base Bootstrap Template
     <script src="{{ STATIC_URL}}{{script_url}}"></script>
     {% endfor %}{% endif %}
     {% endblock script %}
-
-
 
     <!--Body closing tag - Django debug toolbar inserts below-->
     </body>
