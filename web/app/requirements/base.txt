@@ -1,0 +1,44 @@
+django==1.9.7
+django-crispy-forms
+django-extensions
+django-grappelli
+django-model-utils
+django-modeltranslation
+djangorestframework
+django-rest-swagger
+django-tables2
+ipython
+pillow
+python-dateutil
+python-memcached
+pytz
+pyyaml
+redis
+selenium
+sorl-thumbnail
+unicodecsv
+unidecode
+xlsxwriter
+psycopg2
+ghostscript
+uwsgi
+
+# django-datatrans
+# mysqlclient
+# wand
+# sphinx
+# qrcode
+# pypdf2
+# commonmark
+# dateutils
+# six>=1.2
+# pandas>=0.14.1
+# django-ckeditor
+# django-pandas
+# django-reversion
+# fuzzywuzzy
+# setuptools
+# gunicorn
+# httplib2
+# jinja2
+# numpy

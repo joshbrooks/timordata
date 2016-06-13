@@ -144,6 +144,7 @@ class ProjectTypeViewSet(viewsets.ModelViewSet):
     queryset = ProjectType.objects.all()
     serializer_class = ProjectTypeSerializer
 
+
 class ExcelDownloadFeedbackViewSet(viewsets.ModelViewSet):
     queryset = ExcelDownloadFeedback.objects.all()
     serializer_class = ExcelDownloadFeedbackSerializer
