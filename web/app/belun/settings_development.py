@@ -100,7 +100,6 @@ INSTALLED_APPS = (
     'django_tables2',
     'crispy_forms',
     'django_extensions',
-
     'rest_framework_swagger',
 
     # My own applications
@@ -238,3 +237,43 @@ SELECT2_BOOTSTRAP = True
 AUTO_RENDER_SELECT2_STATICS = False
 
 STATIC_ROOT = "/var/www/html/static/new/"
+
+
+SECRET_KEY = '4gpe9e)-#$_nlhc@d+72d9dt&0fc5fdhgf7z1fgo9go_09$nxk'
+DEBUG = True #False # SECURITY WARNING: don't run with debug turned on in production!
+ALLOWED_HOSTS = ['*']
+CRISPY_FAIL_SILENTLY = False # in production make this True
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'USER': 'django',
+        'NAME': 'timordata.info',
+        'PASSWORD': 'L1terary20@',
+        'HOST': 'localhost'
+    }
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'nhdb.views_excel': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+        },
+        'nhdb.views': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+        },
+    },
+}

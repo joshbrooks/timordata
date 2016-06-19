@@ -3,17 +3,18 @@ from datetime import datetime
 
 from belun import settings
 from django.apps import apps
+
+from geo.models import Suco
 from pivottable import pivot_table as pivot
-from ckeditor.fields import RichTextField
 from django.contrib.gis.db import models
 from django.db.models import Q
 from mp_lite import MP_Lite
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
-import reversion
 import json
 from library.models import Thumbnail
-from suggest.views import logger
+import logging
+logger = logging.getLogger(__name__)
 from unidecode import unidecode
 
 __all__ = [
@@ -35,6 +36,7 @@ def unisafe(inputstring):
         except:
             return 'Sorry, unicode error'
 
+
 class ProjectManager(models.Manager):
 
     def past_enddate(self):
@@ -42,9 +44,9 @@ class ProjectManager(models.Manager):
         Projects which are active but the end date has already finished
         :return:
         """
-        return super(ProjectManager, self)\
-            .get_queryset()\
-            .filter(status__pk='A')\
+        return super(ProjectManager, self) \
+            .get_queryset() \
+            .filter(status__pk='A') \
             .filter(enddate__lt=datetime.today().date())
 
     def active(self, include_unknown=False):
@@ -55,16 +57,15 @@ class ProjectManager(models.Manager):
         if include_unknown:
             q = q | Q(enddate__isnull=True)
 
-        return super(ProjectManager, self)\
-            .get_queryset()\
-            .filter(status__pk='A')\
+        return super(ProjectManager, self) \
+            .get_queryset() \
+            .filter(status__pk='A') \
             .filter(q)
 
     def inactive(self):
-        return super(ProjectManager, self)\
-            .get_queryset()\
-            .exclude(status__pk='A')\
-
+        return super(ProjectManager, self) \
+            .get_queryset() \
+            .exclude(status__pk='A')
 
     def active_or_unknown(self):
         """
@@ -82,13 +83,13 @@ class OrganizationManager(models.Manager):
             .exclude(email__isnull=True)
 
     def no_email(self):
-        return super(OrganizationManager, self)\
-            .get_queryset()\
+        return super(OrganizationManager, self) \
+            .get_queryset() \
             .filter(email__isnull=True)
 
     def valid_email(self):
-        return super(OrganizationManager, self)\
-            .get_queryset()\
+        return super(OrganizationManager, self) \
+            .get_queryset() \
             .filter(email__regex=r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9]+\.[a-zA-Z0-9.]+$")
 
 
@@ -105,15 +106,15 @@ class ExcelDownloadFeedback(models.Model):
     organization = models.CharField(_('organization'), max_length=150)
     description = models.TextField(_('description'), null=True, blank=True)
     email = models.EmailField(_('email'), null=True, blank=True)
-    purpose = models.CharField(max_length=2, choices=PURPOSE_CHOICES,)
+    purpose = models.CharField(max_length=2, choices=PURPOSE_CHOICES, )
     purposeother = models.CharField(_('Other purpose'), max_length=150, null=True, blank=True)
-    referralurl = models.CharField( max_length=256, null=True, blank=True)
+    referralurl = models.CharField(max_length=256, null=True, blank=True)
 
 
 class Organization(models.Model):
     name = models.CharField(_('name'), max_length=150)
     description = models.TextField(_('description'), null=True, blank=True)
-    orgtype = models.ForeignKey('OrganizationClass', verbose_name=_('class'), default="LNGO",)
+    orgtype = models.ForeignKey('OrganizationClass', verbose_name=_('class'), default="LNGO", )
     active = models.BooleanField(default=True)
     fongtilid = models.IntegerField(null=True, blank=True, verbose_name="Org. ID (Fongtil)")
     justiceid = models.IntegerField(null=True, blank=True, verbose_name="Org. ID (Min. Justice)")
@@ -127,7 +128,6 @@ class Organization(models.Model):
     web = models.CharField(max_length=64, null=True, blank=True)
     facebook = models.CharField(max_length=64, null=True, blank=True)
 
-
     @property
     def encryptedemail(self):
         e = Email(self.email)
@@ -137,10 +137,10 @@ class Organization(models.Model):
     def filecounts(self):
         filecounts = {}
         for lang in settings.LANGUAGES_FIX_ID:
-            key = 'upload_'+lang[0]
-            kw = {key:''}
-            Version = apps.get_model('library', 'version')
-            count = Version.objects.filter(publication__organization = self).exclude(**kw).count()
+            key = 'upload_' + lang[0]
+            kw = {key: ''}
+            version_model = apps.get_model('library', 'version')
+            count = version_model.objects.filter(publication__organization=self).exclude(**kw).count()
             if count > 0:
                 filecounts[lang[0]] = count
         return filecounts
@@ -157,8 +157,8 @@ class Organization(models.Model):
         places = self.organizationplace_set
 
         e = places.collect().extent
-        sw = [e[1],e[0]]
-        ne = [e[3],e[2]]
+        sw = [e[1], e[0]]
+        ne = [e[3], e[2]]
 
         if sw == ne:
             sw[0] = sw[0] - 0.05
@@ -169,7 +169,7 @@ class Organization(models.Model):
         return json.dumps((sw, ne))
 
     class Meta:
-        ordering = ['name',]
+        ordering = ['name', ]
 
     def __unicode__(self):
         return unisafe(self.name)
@@ -183,11 +183,11 @@ class Organization(models.Model):
     @property
     def featurecollection(self):
 
-        return json.dumps({'type':"FeatureCollection",
-            'features': [project.feature for project in self.project_set.all()]
-         })
+        return json.dumps({'type': "FeatureCollection",
+                           'features': [project.feature for project in self.project_set.all()]
+                           })
 
-    # objects = OrganizationManager
+        # objects = OrganizationManager
 
 
 class OrganizationClass(models.Model):
@@ -197,6 +197,7 @@ class OrganizationClass(models.Model):
     code = models.CharField('Code', max_length=5, primary_key=True)
     orgtype = models.CharField('Type', max_length=150)
 
+
 import re
 
 
@@ -205,10 +206,10 @@ class Email(object):
     def __init__(self, address):
         self._address = address
         if not address:
-             self.address, self.domain = ['','']
+            self.address, self.domain = ['', '']
 
         elif '@' not in address:
-            self.address, self.domain = ['','']
+            self.address, self.domain = ['', '']
         try:
             self.address, self.domain = address.split('@')
             self.address = re.sub('\.', ' dot ', self.address).encode('rot13')
@@ -390,17 +391,17 @@ class Project(models.Model):
     # properties = models.ManyToManyField('PropertyTag', null=True, blank=True, )
     # Deprecated (again!) in favour of individual fields
     sector = models.ManyToManyField(
-        'nhdb.PropertyTag', blank=True, related_name="project_sector",
-        limit_choices_to={'path__startswith': "INV."})
+            'nhdb.PropertyTag', blank=True, related_name="project_sector",
+            limit_choices_to={'path__startswith': "INV."})
     activity = models.ManyToManyField(
-        'nhdb.PropertyTag', blank=True, related_name="project_activity",
-        limit_choices_to={'path__startswith': "ACT."})
+            'nhdb.PropertyTag', blank=True, related_name="project_activity",
+            limit_choices_to={'path__startswith': "ACT."})
     beneficiary = models.ManyToManyField(
-        'nhdb.PropertyTag', blank=True, related_name="project_beneficiary",
-        limit_choices_to={'path__startswith': "BEN."})
+            'nhdb.PropertyTag', blank=True, related_name="project_beneficiary",
+            limit_choices_to={'path__startswith': "BEN."})
 
     place = models.ManyToManyField("geo.AdminArea", through='ProjectPlace', blank=True)
-    organization = models.ManyToManyField(Organization, through='ProjectOrganization',  blank=True)
+    organization = models.ManyToManyField(Organization, through='ProjectOrganization', blank=True)
     stafffulltime = models.IntegerField(null=True, blank=True, verbose_name=_('Full time staff'))
     staffparttime = models.IntegerField(null=True, blank=True, verbose_name=_('Part time staff'))
 
@@ -415,7 +416,7 @@ class Project(models.Model):
 
     def get_absolute_url(self):
         # return reverse('nhdb:project:detail', kwargs={'pk': self.pk})
-        return reverse('nhdb:project:list')+'?q=status.A#object=%s'%self.pk
+        return reverse('nhdb:project:list') + '?q=status.A#object=%s' % self.pk
 
     def image_overlay_url(self):
         '''
@@ -444,7 +445,7 @@ class Project(models.Model):
     @property
     def coordinates(self):
 
-        return [p.coordinates for p in self.projectplace_set.all() ]
+        return [p.coordinates for p in self.projectplace_set.all()]
 
     @property
     def feature(self):
@@ -458,7 +459,7 @@ class Project(models.Model):
              "geometry": {
                  "type": "MultiPolygon",
                  "coordinates": self.coordinates,
-                 },
+             },
              "properties": properties
              }
 
@@ -497,7 +498,8 @@ class ProjectOrganization(models.Model):
 
     project = models.ForeignKey('Project')
     organization = models.ForeignKey(Organization, null=True, blank=True)
-    organizationclass = models.ForeignKey('ProjectOrganizationClass', default='P', verbose_name=_('Organization involvement'))
+    organizationclass = models.ForeignKey('ProjectOrganizationClass', default='P',
+                                          verbose_name=_('Organization involvement'))
     notes = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Notes about this relationship'))
 
 
@@ -599,6 +601,20 @@ class ProjectPlace(models.Model):
         return f
 
 
+class OrganizationPlaceDescription(models.Model):
+    """
+    Cache the OrganizationPlace to prevent looking up suco, subd., district every time
+    """
+
+    def __unicode__(self):
+        return '{} {} {}'.format(self.suco, self.subdistrict, self.district)
+
+    organizationplace = models.OneToOneField('nhdb.OrganizationPlace', primary_key=True)
+    suco = models.CharField(max_length=256, null=True, blank=True)
+    subdistrict = models.CharField(max_length=256, null=True, blank=True)
+    district = models.CharField(max_length=256, null=True, blank=True)
+
+
 class OrganizationPlace(models.Model):
     def __unicode__(self):
 
@@ -615,22 +631,21 @@ class OrganizationPlace(models.Model):
 
     objects = models.GeoManager()
 
-    @property
-    def location(self):
-        """
-        Returns the admin areas (district, subdistrict, suco) of this point
-        :return:
-        """
-        return {
-            'district': apps.get_model('geo','district').objects.filter(geom__contains=self.point).first() or 'None',
-            'subdistrict': apps.get_model('geo','subdistrict').objects.filter(geom__contains=self.point).first() or 'None',
-            'suco': apps.get_model('geo','suco').objects.filter(geom__contains=self.point).first() or 'None',
-        }
+    def update_place(self):
 
-    @property
-    def locationstring(self):
-        l = self.location
-        return '{}, {}, {}'.format(l['suco'], l['subdistrict'], l['district'])
+        description, created = OrganizationPlaceDescription.objects.get_or_create(organizationplace = self)
+        try:
+            suco = Suco.objects.get(geom__contains=self.point)
+        except Suco.DoesNotExist:
+            return
+        if description.suco == suco.name:
+            logger.debug('skip updating info for {}'.format(self))
+            return
+        description.suco = suco.name
+        description.subdistrict = suco.subdistrict.name
+        description.district = suco.subdistrict.district.name
+        description.save()
+        logger.debug('updated info for {}'.format(self))
 
     @property
     def lat(self):
@@ -674,7 +689,7 @@ class OrganizationPlace(models.Model):
              "geometry": {
                  "type": "Point",
                  "coordinates": coordinates,
-                 },
+             },
              "properties": properties
              }
 
