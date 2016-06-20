@@ -18,14 +18,14 @@ import warnings
 from library import forms as library_forms, forms_delete as library_forms_delete
 from django.apps import apps
 
+
 def index(request):
     return render(request, 'library/index.html')
 
 
-
 def thumbnail(request, app_name, model_name, pk, res=150):
     try:
-        t = Thumbnail.make(instance = apps.get_model(app_name, model_name).objects.get(pk = pk), res=int(res))
+        t = Thumbnail.make(instance=apps.get_model(app_name, model_name).objects.get(pk=pk), res=int(res))
     except:
         return HttpResponseNotFound()
     return HttpResponse(mark_safe(t.img))
@@ -33,79 +33,86 @@ def thumbnail(request, app_name, model_name, pk, res=150):
 
 def publicationlist(request):
 
-    model = Publication
-    table_class = PublicationTable
-    table_pagination={'per_page':50}
+    # Prefetching some links speeds up rendering time - greatly!
+    prefetch = ['versions', 'pubtype', 'organization']
 
-    def object_list(request):
+    if request.GET.get('tag__id'):
+        prefetch.append('versions__tag')
+    if request.GET.get('sector__path'):
+        prefetch.append('versions__sector')
+    if request.GET.get('activity__path'):
+        prefetch.append('versions__activity')
+    if request.GET.get('beneficiary__path'):
+        prefetch.append('versions__beneficiary')
+
+    logger.info(prefetch)
+
+    def object_list(request, prefetch=('versions', 'pubtype', 'organization')):
+        objects = Publication.objects.all().prefetch_related(*prefetch)
         GET = request.GET
         filters = {}
         params = ('org', 'pubtype')
         version_params = ('tag__id',)
         version_filter_terms = ("sector__path", "activity__path", "beneficiary__path")
 
-        objects = Publication.objects.all()
-
         for param in version_params:
-
             if GET.getlist(param):
-                filters['versions__'+param+'__in'] = GET.getlist(param)
+                filters['versions__' + param + '__in'] = GET.getlist(param)
 
         for param in params:
-
             if GET.getlist(param):
-
                 # Rewrite shorthand requests here
                 if param == 'org':
                     _param = 'organization'
                 else:
                     _param = param
-
-                filters[_param+'__in'] = GET.getlist(param)
+                filters[_param + '__in'] = GET.getlist(param)
 
         years = GET.getlist('year')
         if years:
             param = 'year'
             if len(years) == 1:
-                filters[param+'__in'] = GET.getlist(param)
+                filters[param + '__in'] = GET.getlist(param)
             elif len(years) >= 2:
-                filters[param+'__gte'] = min([int(i) for i in GET.getlist(param)])
-                filters[param+'__lte'] = max([int(i) for i in GET.getlist(param)])
+                filters[param + '__gte'] = min([int(i) for i in GET.getlist(param)])
+                filters[param + '__lte'] = max([int(i) for i in GET.getlist(param)])
 
         for term in version_filter_terms:
             if GET.getlist(term):
-                filters["versions__"+term+'__in'] = [PropertyTag.separatestring(i).upper() for i in request.GET.getlist(term)]
+                filters["versions__" + term + '__in'] = [PropertyTag.separatestring(i).upper() for i in
+                                                         request.GET.getlist(term)]
 
         languages = Q()
         language_ids = GET.getlist('language_id')
         for language_id in language_ids:
-            kw = {'versions__title_'+language_id+'__isnull': False, 'versions__title_'+language_id+'__icontains': ' '}
+            kw = {'versions__title_' + language_id + '__isnull': False,
+                  'versions__title_' + language_id + '__icontains': ' '}
             languages = languages | Q(**kw)
         try:
 
             objects = objects.filter(**filters).filter(languages).distinct()
 
         except ValueError, e:
-            objects = objects.all()
+            raise
 
         text = GET.get('q.text') or GET.get('text')
         if text:
             q = Q()
             for lang, lang_name in LANGUAGES_FIX_ID:
                 for fieldname in ['name', 'description', 'versions__description', 'versions__title']:
-                    k = {fieldname+'_'+lang+'__icontains': text}
+                    k = {fieldname + '_' + lang + '__icontains': text}
                     q = q | Q(**k)
             # raise AssertionError, q
             objects = objects.filter(q)
 
         primarysource = request.GET.get('primarysource') or 'false'
 
-        if primarysource == 'false': # Default
-            objects = objects.exclude(pubtype = 'PRI')
+        if primarysource == 'false':  # Default
+            objects = objects.exclude(pubtype='PRI')
         if primarysource == 'true':
             pass
         if primarysource == 'only':
-            objects = objects.filter(pubtype = 'PRI')
+            objects = objects.filter(pubtype='PRI')
 
         return objects
 
@@ -117,37 +124,36 @@ def publicationlist(request):
         if len(request.GET.getlist('tag__id')) > 1:
             dashboard['tags'] = {}
             for tag_id in request.GET.getlist('tag__id'):
-                tag = Tag.objects.get(pk = tag_id)
-                dashboard['tags'][tag.name] = objects.filter(versions__tag = tag).distinct().count()
+                tag = Tag.objects.get(pk=tag_id)
+                dashboard['tags'][tag.name] = objects.filter(versions__tag=tag).distinct().count()
 
         if len(request.GET.getlist('sector__path')) > 1:
             dashboard[PropertyTag.objects.get(path='INV')] = {}
             for tag_id in request.GET.getlist('sector__path'):
-                tag = PropertyTag.objects.get(path = tag_id)
-                dashboard[PropertyTag.objects.get(path='INV')][tag] = objects.filter(versions__sector = tag).distinct().count()
+                tag = PropertyTag.objects.get(path=tag_id)
+                dashboard[PropertyTag.objects.get(path='INV')][tag] = objects.filter(
+                    versions__sector=tag).distinct().count()
 
         if len(request.GET.getlist('org')) > 1:
-            orgs = Organization.objects.filter(pk__in = request.GET.getlist('org')).filter(publication__in = objects).annotate(
-                num_publications = Count('publication'))
+            orgs = Organization.objects.filter(pk__in=request.GET.getlist('org')).filter(
+                publication__in=objects).annotate(
+                    num_publications=Count('publication'))
             dashboard['organizations'] = {}
             for o in orgs:
                 dashboard['organizations'][o] = o.num_publications
         return dashboard
 
-    ol = object_list(request)
-
-
     context = {
-        'lang':request.LANGUAGE_CODE,
-        'filters' : {
-            'language_id': [{'value':s[0], 'label':s[1]} for s in settings.LANGUAGES_FIX_ID],
+        'lang': request.LANGUAGE_CODE,
+        'filters': {
+            'language_id': [{'value': s[0], 'label': s[1]} for s in settings.LANGUAGES_FIX_ID],
             'tag__id': Tag.objects.all(),
             'sector__path': PropertyTag.objects.filter(path__startswith='INV.'),
-            'pubtype': [{'value':p.pk, 'label':p.name} for p in Pubtype.objects.exclude(code='PRI')],
-            'org': [{'value':o.pk, 'label':u'{}'.format(o.name)} for o in Organization.objects.annotate(
-                num_publications = Count('publication')).filter(num_publications__gt=0)],
-            },
-        'activefilters' : {}
+            'pubtype': [{'value': p.pk, 'label': p.name} for p in Pubtype.objects.exclude(code='PRI')],
+            'org': [{'value': o.pk, 'label': u'{}'.format(o.name)} for o in Organization.objects.annotate(
+                    num_publications=Count('publication')).filter(num_publications__gt=0)],
+        },
+        'activefilters': {}
     }
 
     for f in context['filters'].keys():
@@ -158,46 +164,34 @@ def publicationlist(request):
 
     context['object_class_count'] = Publication.objects.count()
 
-    # Prefetching some links speeds up rendering time - greatly!
-    prefetch = ['versions','pubtype','organization']
-    if request.GET.get('tag__id'):
-        prefetch.append('versions__tag')
-    if request.GET.get('sector__path'):
-        prefetch.append('versions__sector')
-    logger.info(prefetch)
-    ol = ol.prefetch_related(*prefetch)
-
-    context['object_list'] = ol
-    context['dashboard'] = dashboard(request, ol)
-    context['table'] = table_class(ol)
+    context['object_list'] = object_list(request, prefetch)
 
     return render(request, 'library/publication_list.html', context)
 
-class xPublicationList(SingleTableView):
 
+class xPublicationList(SingleTableView):
     model = Publication
     table_class = PublicationTable
-    table_pagination={'per_page':50}
+    table_pagination = {'per_page': 50}
 
     def get_context_data(self, **kwargs):
         context = super(xPublicationList, self).get_context_data(**kwargs)
         context['lang'] = self.request.LANGUAGE_CODE
 
         context['filters'] = {
-            'language_id': [{'value':s[0], 'label':s[1]} for s in settings.LANGUAGES_FIX_ID],
+            'language_id': [{'value': s[0], 'label': s[1]} for s in settings.LANGUAGES_FIX_ID],
             'tag__id': Tag.objects.all(),
             'sector__path': PropertyTag.objects.filter(path__startswith='INV.'),
-            'pubtype': [{'value':p.pk, 'label':p.name} for p in Pubtype.objects.exclude(code='PRI')],
-            'org': [{'value':o.pk, 'label':u'{}'.format(o.name)} for o in Organization.objects.annotate(
-                num_publications = Count('publication')).filter(num_publications__gt=0)],
-            }
+            'pubtype': [{'value': p.pk, 'label': p.name} for p in Pubtype.objects.exclude(code='PRI')],
+            'org': [{'value': o.pk, 'label': u'{}'.format(o.name)} for o in Organization.objects.annotate(
+                    num_publications=Count('publication')).filter(num_publications__gt=0)],
+        }
 
         context['activefilters'] = {}
 
         for f in context['filters'].keys():
 
             if self.request.GET.getlist(f) != []:
-
                 context['activefilters'][f] = self.request.GET.getlist(f)
 
         # ID numbers need to be numeric
@@ -211,7 +205,7 @@ class xPublicationList(SingleTableView):
 
         if len(self.request.GET.getlist('org')) > 0:
             try:
-                context['org'] = Organization.objects.filter(pk__in = self.request.GET.getlist('org'))
+                context['org'] = Organization.objects.filter(pk__in=self.request.GET.getlist('org'))
             except ValueError:
                 context['org'] = Organization.objects.none()
         context['activefilters']['primarysource'] = self.request.GET.get('primarysource') or 'false'
@@ -228,18 +222,20 @@ class xPublicationList(SingleTableView):
         if len(self.request.GET.getlist('tag__id')) > 1:
             dashboard['tags'] = {}
             for tag_id in self.request.GET.getlist('tag__id'):
-                tag = Tag.objects.get(pk = tag_id)
-                dashboard['tags'][tag.name] = objects.filter(versions__tag = tag).distinct().count()
+                tag = Tag.objects.get(pk=tag_id)
+                dashboard['tags'][tag.name] = objects.filter(versions__tag=tag).distinct().count()
 
         if len(self.request.GET.getlist('sector__path')) > 1:
             dashboard[PropertyTag.objects.get(path='INV')] = {}
             for tag_id in self.request.GET.getlist('sector__path'):
-                tag = PropertyTag.objects.get(path = tag_id)
-                dashboard[PropertyTag.objects.get(path='INV')][tag] = objects.filter(versions__sector = tag).distinct().count()
+                tag = PropertyTag.objects.get(path=tag_id)
+                dashboard[PropertyTag.objects.get(path='INV')][tag] = objects.filter(
+                    versions__sector=tag).distinct().count()
 
         if len(self.request.GET.getlist('org')) > 1:
-            orgs = Organization.objects.filter(pk__in = self.request.GET.getlist('org')).filter(publication__in = objects).annotate(
-                num_publications = Count('publication'))
+            orgs = Organization.objects.filter(pk__in=self.request.GET.getlist('org')).filter(
+                publication__in=objects).annotate(
+                    num_publications=Count('publication'))
             dashboard['organizations'] = {}
             for o in orgs:
                 dashboard['organizations'][o] = o.num_publications
@@ -255,7 +251,7 @@ class xPublicationList(SingleTableView):
         for param in version_params:
 
             if GET.getlist(param):
-                filters['versions__'+param+'__in'] = GET.getlist(param)
+                filters['versions__' + param + '__in'] = GET.getlist(param)
 
         for param in params:
 
@@ -267,25 +263,27 @@ class xPublicationList(SingleTableView):
                 else:
                     _param = param
 
-                filters[_param+'__in'] = GET.getlist(param)
+                filters[_param + '__in'] = GET.getlist(param)
 
         years = GET.getlist('year')
         if years:
             param = 'year'
             if len(years) == 1:
-                filters[param+'__in'] = GET.getlist(param)
+                filters[param + '__in'] = GET.getlist(param)
             elif len(years) >= 2:
-                filters[param+'__gte'] = min([int(i) for i in GET.getlist(param)])
-                filters[param+'__lte'] = max([int(i) for i in GET.getlist(param)])
+                filters[param + '__gte'] = min([int(i) for i in GET.getlist(param)])
+                filters[param + '__lte'] = max([int(i) for i in GET.getlist(param)])
 
         for term in version_filter_terms:
             if GET.getlist(term):
-                filters["versions__"+term+'__in'] = [PropertyTag.separatestring(i).upper() for i in self.request.GET.getlist(term)]
+                filters["versions__" + term + '__in'] = [PropertyTag.separatestring(i).upper() for i in
+                                                         self.request.GET.getlist(term)]
 
         languages = Q()
         language_ids = GET.getlist('language_id')
         for language_id in language_ids:
-            kw = {'versions__title_'+language_id+'__isnull': False, 'versions__title_'+language_id+'__icontains': ' '}
+            kw = {'versions__title_' + language_id + '__isnull': False,
+                  'versions__title_' + language_id + '__icontains': ' '}
             languages = languages | Q(**kw)
         try:
 
@@ -299,30 +297,30 @@ class xPublicationList(SingleTableView):
             q = Q()
             for lang, lang_name in LANGUAGES_FIX_ID:
                 for fieldname in ['name', 'description', 'versions__description', 'versions__title']:
-                    k = {fieldname+'_'+lang+'__icontains': text}
+                    k = {fieldname + '_' + lang + '__icontains': text}
                     q = q | Q(**k)
             # raise AssertionError, q
             objects = objects.filter(q)
 
         primarysource = self.request.GET.get('primarysource') or 'false'
 
-        if primarysource == 'false': # Default
-            objects = objects.exclude(pubtype = 'PRI')
+        if primarysource == 'false':  # Default
+            objects = objects.exclude(pubtype='PRI')
         if primarysource == 'true':
             pass
         if primarysource == 'only':
-            objects = objects.filter(pubtype = 'PRI')
+            objects = objects.filter(pubtype='PRI')
 
-        return objects.prefetch_related('author')\
-            .prefetch_related('organization')\
+        return objects.prefetch_related('author') \
+            .prefetch_related('organization') \
             .prefetch_related('pubtype')
 
 
 def project_table_excel(request):
     pass
 
-def version_thumbnail_nginx(request):
 
+def version_thumbnail_nginx(request):
     '''
     NGINX is set up to forward a request for "thumbnail does not exist"
     :param request:
@@ -335,33 +333,33 @@ def version_thumbnail_nginx(request):
 
     x, root, d, res, lang, filename = r.split('/')
 
-     #    ['',
-     # 'media',
-     # 'publication_pages',
-     # '150',
-     # 'en',
-     # '07-057r7_Web_Map_Tile_Service_Standard_PRBxiHh_Stpcw2r_1.jpg']
+    #    ['',
+    # 'media',
+    # 'publication_pages',
+    # '150',
+    # 'en',
+    # '07-057r7_Web_Map_Tile_Service_Standard_PRBxiHh_Stpcw2r_1.jpg']
 
     if d == "publication_pages":
 
-        page = int(filename.split('_')[-1][:-4]) # Cut off the last underscore + digit (page number)
-        filename = filename[0:-1*(len(filename.split('_')[-1]))-1]
+        page = int(filename.split('_')[-1][:-4])  # Cut off the last underscore + digit (page number)
+        filename = filename[0:-1 * (len(filename.split('_')[-1])) - 1]
 
-        kw = {'upload_{}__icontains'.format(lang):filename}
+        kw = {'upload_{}__icontains'.format(lang): filename}
 
         version = Version.objects.filter(**kw).first()
         # t = Version.objects.filter(**kw).first().thumbnail_to_res(language=lang)
 
         if not version:
             return HttpResponseNotFound(open('/webapps/project/media/404.jpg').read(), content_type='image/jpg')
-        t = version.page_image(page=page, language=lang, res=res )
+        t = version.page_image(page=page, language=lang, res=res)
         return HttpResponse(open(t).read(), content_type='image/jpg')
 
     elif d == "publication_covers":
 
-        filename = filename[0:-1*(len(filename.split('_')[-1]))-1]
+        filename = filename[0:-1 * (len(filename.split('_')[-1])) - 1]
 
-        kw = {'cover_{}__icontains'.format(lang):filename}
+        kw = {'cover_{}__icontains'.format(lang): filename}
 
         version = Version.objects.filter(**kw).first()
         # t = Version.objects.filter(**kw).first().thumbnail_to_res(language=lang)
@@ -382,11 +380,11 @@ def version_thumbnail(request, version_pk, language='en'):
     '''
     _g = request.GET.get
     kw = {
-        'res':_g('res', 150),
-        '_format':_g('format', 'jpg')
+        'res': _g('res', 150),
+        '_format': _g('format', 'jpg')
     }
 
-    if kw['_format'] not in ('jpg','png','gif','jpeg','pdf'):
+    if kw['_format'] not in ('jpg', 'png', 'gif', 'jpeg', 'pdf'):
         kw['_format'] = 'jpg'
 
     try:
@@ -403,23 +401,22 @@ def version_thumbnail(request, version_pk, language='en'):
         print kw
         t = v.thumbnail(language=language, **kw)
         if t.get('image-errors'):
-            raise AssertionError('Could not generate thumbnail: %s'%t['image-errors'])
+            raise AssertionError('Could not generate thumbnail: %s' % t['image-errors'])
         thumbnail = t[language]['thumbnail']
-        return HttpResponse(open(thumbnail.thumbnailPath).read(), content_type='image/'+kw['_format'])
+        return HttpResponse(open(thumbnail.thumbnailPath).read(), content_type='image/' + kw['_format'])
 
     except:
         raise
 
 
 def version_page(request, pk, page, language):
-    version = Version.objects.get(pk = pk)
+    version = Version.objects.get(pk=pk)
     res = request.GET.get('size', 150)
-    p = version.page_image(page=page, language=language, res=res )
+    p = version.page_image(page=page, language=language, res=res)
     return HttpResponse(open(p).read(), content_type='image/jpg')
 
 
 def suggested_publication(request, suggestion_pk):
-
     context = {}
     context['suggestion'] = Suggest.objects.get(pk=suggestion_pk)
 
@@ -427,7 +424,6 @@ def suggested_publication(request, suggestion_pk):
 
 
 class PublicationDetail(DetailView):
-
     model = Publication
 
     # def get_context_data(self, **kwargs):
@@ -491,12 +487,12 @@ def publicationdashboard(request):
     context = {}
 
     try:
-        context['suggestion'] = Suggest.objects.get(pk = request.GET.get('suggestion'))
+        context['suggestion'] = Suggest.objects.get(pk=request.GET.get('suggestion'))
     except:
         context['suggestion'] = request.GET.get('suggestion')
 
     try:
-        context['publication'] = Publication.objects.get(pk = request.GET.get('publication'))
+        context['publication'] = Publication.objects.get(pk=request.GET.get('publication'))
     except:
         context['publication'] = request.GET.get('publication')
 
@@ -504,7 +500,6 @@ def publicationdashboard(request):
 
 
 def form(request, model, form='main'):
-
     app_name = 'library'
 
     from django.apps import apps
@@ -536,10 +531,13 @@ def form(request, model, form='main'):
             f = getattr(forms_delete, f_name)
             return render(request, template, {'form': f(**args)})
     else:
-        f_name = '%s%sForm' % (model.title(), form.upper())
+        f_name = '%s%sForm' % (model.title(), form.title())
     if hasattr(forms, f_name):
         f = getattr(forms, f_name)
         return render(request, template, {'form': f(**args)})
+
+    if settings.DEBUG:
+        raise NotImplementedError("Class nhdb.forms.{} is not defined yet".format(f_name))
 
     return HttpResponseBadRequest(
         mark_safe("<form>Class nhdb.forms.{} is not defined yet</form>".format(f_name)))
@@ -553,21 +551,21 @@ def suggested_publications(request):
     :return:
     '''
     context = {}
-    context['suggestions'] = Suggest.objects.filter(affectedinstance__in = AffectedInstance.objects.filter(primary=True, model_name='library_publication'), action="CM")
+    context['suggestions'] = Suggest.objects.filter(
+        affectedinstance__in=AffectedInstance.objects.filter(primary=True, model_name='library_publication'),
+        action="CM")
     return render(request, 'library/suggested_publications.html', context)
 
 
-class AuthorCreate (CreateView):
+class AuthorCreate(CreateView):
     model = Author
 
 
 class PublicationDelete(DeleteView):
-
     model = Publication
 
 
 class VersionDetail(DetailView):
-
     model = Version
 
     def get_context_data(self, **kwargs):
@@ -583,7 +581,7 @@ class VersionDetail(DetailView):
             upload = getattr(self.object, 'upload_%s' % lc)
 
             context['version_language'].append({
-                'languagecode':lc,
+                'languagecode': lc,
                 'upload': upload,
                 'upload_exists': os.path.exists(upload.path),
                 'url': getattr(self.object, 'url_%s' % lc),
@@ -595,17 +593,14 @@ class VersionDetail(DetailView):
 
 
 class VersionDelete(DeleteView):
-
     model = Version
 
 
 class VersionUpdate(UpdateView):
-
     model = Version
     form_class = VersionUpdateForm
 
 
 class VersionList(SingleTableView):
-
     model = Version
     table_class = VersionTable

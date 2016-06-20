@@ -3,7 +3,7 @@
 {% load cache %}
 {% load render_table from django_tables2 %}
 {% load crispy_forms_tags %}
-{% block title %}{{block.super}} Organizations {% endblock title %}
+{% block title %}{{block.super}} Publications {% endblock title %}
 
 {% block tab_first %}
 <h4>Library Search</h4>
@@ -123,6 +123,34 @@
         </form>
     </div>
 </div>
-{% render_table table %}
+
+    <table class="table table-bordered table-condensed">
+        <thead>
+        <tr>
+        <th>
+            Publication
+        </th>
+        <th>
+            Year
+        </th>
+        <th>
+            Organization(s)
+        </th>
+        </tr>
+        </thead>
+        <tbody>
+        {%  for publication in object_list %}
+            <tr>
+                <td><a href="#object={{ publication.id }}">{{ publication }}</a></td>
+                <td>{{ publication.year }}</td>
+                <td>{%  for organization in publication.organization.all %}{%  autoescape off %}
+                        <a href="{% url 'nhdb:organization:list' %}#object={{ organization.id }}">{{ organization }}</a> {% if not forloop.last %}, <br> {%  endif %}
+                    {%  endautoescape %}
+                    {%  endfor %}
+                <td>{{ publication.version_set|join:',' }}</td>
+            </tr>
+        {%  endfor %}
+        </tbody>
+    </table>
 
 {% endblock %}

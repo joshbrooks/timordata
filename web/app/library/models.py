@@ -14,7 +14,6 @@ from geo.models import AdminArea
 from library.thumbnail import make_thumbnail, make_thumbnail_convert
 from suggest.models import logger, get_field_type
 from unidecode import unidecode
-from translationutils import get_translated_fields
 
 
 class Publication(models.Model):
@@ -42,7 +41,7 @@ class Publication(models.Model):
 
     @classmethod
     def get_translated_fields(cls, prefix='title'):
-        return get_translated_fields(cls, prefix)
+        return ['name','description']
 
     def get_absolute_url(self):
         return '/library/publication/#object=%s'%(self.id)
@@ -256,8 +255,7 @@ class Version(models.Model):
 
     @classmethod
     def get_translated_fields(cls, prefix='title'):
-        return get_translated_fields(cls, prefix)
-
+        return ['description','title', 'upload', 'cover', 'url']
 
     @classmethod
     def populate_covers(cls, res='150'):
