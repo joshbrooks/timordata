@@ -55,37 +55,38 @@ def make_thumbnail(file_path, thumbnail_path, res, page):
         temp_file = NamedTemporaryFile()
         # Rip to an image with ghostscript first
         file_path = make_thumbnail_gs(file_path, thumbnail_path=temp_file.name, res=res, page=page)
+    try:
+        with Image(filename=file_path, format='jpg') as img:
+            logger.debug('Opened {}'.format(file_path))
+            res = float(res)
+            aspect = img.width / img.height
+            if aspect > 1:
+                w = int(res)
+                h = int(img.height * res / img.width)
+            else:
+                h = int(res)
+                w = int(img.width * res / img.height)
+            if page in [0, '0', 'cover'] and img.format == 'PDF':
+                logger.debug('Clone first page {}'.format(file_path))
+                img = img.sequence[0].clone()
+                img.format = 'jpg'
+                img.background_color = Color('white')
+                img.alpha_channel = 'remove'
+                img.resize(width = w, height=h)
+                logger.debug('Save {} -> {}'.format(file_path, thumbnail_path))
 
+                img.save(filename=thumbnail_path)
 
-    with Image(filename=file_path, format='jpg') as img:
-        logger.debug('Opened {}'.format(file_path))
-        res = float(res)
-        aspect = img.width / img.height
-        if aspect > 1:
-            w = int(res)
-            h = int(img.height * res / img.width)
-        else:
-            h = int(res)
-            w = int(img.width * res / img.height)
-        if page in [0, '0', 'cover'] and img.format == 'PDF':
-            logger.debug('Clone first page {}'.format(file_path))
-            img = img.sequence[0].clone()
-            img.format = 'jpg'
-            img.background_color = Color('white')
-            img.alpha_channel = 'remove'
-            img.resize(width = w, height=h)
-            logger.debug('Save {} -> {}'.format(file_path, thumbnail_path))
-
-            img.save(filename=thumbnail_path)
-
-        else:
-            img = img.sequence[int(page)].clone()
-            img.format = 'jpg'
-            img.background_color = Color('white')
-            img.alpha_channel = 'remove'
-            img.resize(width = w, height=h)
-            logger.debug('Save {} -> {}'.format(file_path, thumbnail_path))
-            img.save(filename=thumbnail_path)
+            else:
+                img = img.sequence[int(page)].clone()
+                img.format = 'jpg'
+                img.background_color = Color('white')
+                img.alpha_channel = 'remove'
+                img.resize(width = w, height=h)
+                logger.debug('Save {} -> {}'.format(file_path, thumbnail_path))
+                img.save(filename=thumbnail_path)
+    except Exception, e:
+        logger.exception(e.message)
 
     if temp_file and os.path.exists(temp_file.name):
         temp_file.close()

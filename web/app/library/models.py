@@ -191,7 +191,6 @@ class Thumbnail(models.Model):
                 logger.exception(e.message)
                 pass
 
-            # thumbnail_path = make_thumbnail_convert(file_path, thumbnail_path, res, page)
             if not os.path.exists(thumbnail_path):
                 thumbnail_path = '404'
             thumbnail.thumbnailPath = thumbnail_path

@@ -243,7 +243,7 @@ class VersionForm(SuggestionForm):
         super(VersionForm, self).__init__(version, *args, **kwargs)
         self.version = version
         self.publication = publication
-        self.set_field_opts(name=['publication'], instance=version)
+        self.set_field_opts(name=['publication'], instance=publication)
 
     @property
     def helper(self):
