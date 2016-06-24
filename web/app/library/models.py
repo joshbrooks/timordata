@@ -187,6 +187,9 @@ class Thumbnail(models.Model):
                 make_thumbnail(file_path, thumbnail_path, res, page) # Slow
             except UnicodeEncodeError:
                 pass
+            except Exception, e:
+                logger.exception(e.message)
+                pass
 
             # thumbnail_path = make_thumbnail_convert(file_path, thumbnail_path, res, page)
             if not os.path.exists(thumbnail_path):
