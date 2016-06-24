@@ -550,7 +550,7 @@ def downloadexcel(request):
     return render(request, 'nhdb/crispy_form.html', context)
 
 
-def organizationlist(request):
+def organizationlist(request, pk=None):
     def org_dashboard_info(organizations):
         dashboard = {}
         dashboard['orgtype'] = {}

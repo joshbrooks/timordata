@@ -238,3 +238,7 @@ SELECT2_BOOTSTRAP = True
 AUTO_RENDER_SELECT2_STATICS = False
 
 STATIC_ROOT = "/var/www/html/static/new/"
+try:
+    from settings_local import *
+except ImportError:
+    pass

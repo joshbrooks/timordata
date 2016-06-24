@@ -1,4 +1,5 @@
 from django.conf.urls import url, include
+from django.utils.safestring import mark_safe
 
 from belun import views_authentication
 from nhdb import views, views_excel
@@ -6,8 +7,6 @@ from nhdb import views, views_excel
 organization = [
     # url(r'^$', views.OrganizationList.as_view(), name='list'),
     url(r'^$', views.organizationlist, name='list'),
-
-    # url(r'^table/$', views.OrganizationList.as_view(template_name='nhdb/organization_list_table.html'), name='list_as_table'),
     url(r'^xls$', views_excel.organization, name='list_as_excel'),
     url(r'^list.json/$', views.organization_list_as_json, name='list_as_json'),
     url(r'^(?P<pk>[0-9]+)/$', views.OrganizationDetail.as_view(), name='detail'),
