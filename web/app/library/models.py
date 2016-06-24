@@ -385,7 +385,7 @@ class Version(models.Model):
 
 class Author(models.Model):
     name = models.CharField(max_length=128)
-    displayname = models.CharField(max_length=128)
+    displayname = models.CharField(max_length=128, null=True, blank=True)
 
     @classmethod
     def suggestdisplayname(cls, name):
