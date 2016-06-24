@@ -34,7 +34,7 @@ def thumbnail(request, app_name, model_name, pk, res=150):
 def publicationlist(request):
 
     # Prefetching some links speeds up rendering time - greatly!
-    prefetch = ['versions', 'pubtype', 'organization']
+    prefetch = ['versions', 'pubtype', 'organization', 'author']
 
     if request.GET.get('tag__id'):
         prefetch.append('versions__tag')
