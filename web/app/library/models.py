@@ -14,7 +14,6 @@ from geo.models import AdminArea
 from library.thumbnail import make_thumbnail, make_thumbnail_convert
 from suggest.models import logger, get_field_type
 from unidecode import unidecode
-from translationutils import get_translated_fields
 
 
 class Publication(models.Model):
@@ -42,7 +41,7 @@ class Publication(models.Model):
 
     @classmethod
     def get_translated_fields(cls, prefix='title'):
-        return get_translated_fields(cls, prefix)
+        return ['name','description']
 
     def get_absolute_url(self):
         return '/library/publication/#object=%s'%(self.id)
@@ -188,8 +187,10 @@ class Thumbnail(models.Model):
                 make_thumbnail(file_path, thumbnail_path, res, page) # Slow
             except UnicodeEncodeError:
                 pass
+            except Exception, e:
+                logger.exception(e.message)
+                pass
 
-            # thumbnail_path = make_thumbnail_convert(file_path, thumbnail_path, res, page)
             if not os.path.exists(thumbnail_path):
                 thumbnail_path = '404'
             thumbnail.thumbnailPath = thumbnail_path
@@ -256,8 +257,7 @@ class Version(models.Model):
 
     @classmethod
     def get_translated_fields(cls, prefix='title'):
-        return get_translated_fields(cls, prefix)
-
+        return ['description','title', 'upload', 'cover', 'url']
 
     @classmethod
     def populate_covers(cls, res='150'):
@@ -387,7 +387,7 @@ class Version(models.Model):
 
 class Author(models.Model):
     name = models.CharField(max_length=128)
-    displayname = models.CharField(max_length=128)
+    displayname = models.CharField(max_length=128, null=True, blank=True)
 
     @classmethod
     def suggestdisplayname(cls, name):
