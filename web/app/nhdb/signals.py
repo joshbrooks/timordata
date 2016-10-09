@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 @receiver(pre_save, sender=OrganizationPlace)
 def save_default_category_name(sender, instance, **kwargs):
-    if not instance.suco:
+    if not hasattr(instance, 'suco'):
         try:
             instance.suco = Suco.objects.get(geom__contains=instance.point)
         except Exception, e:
