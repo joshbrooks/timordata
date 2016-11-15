@@ -98,9 +98,12 @@ def organization(request, object_list=None):
         address_row = 0
         for organizationplace in object.organizationplace_set.all():
             sheet.write(row + address_row, 4, organizationplace.description)
-            sheet.write(row + address_row, 5, organizationplace.organizationplacedescription.suco)
-            sheet.write(row + address_row, 6, organizationplace.organizationplacedescription.subdistrict)
-            sheet.write(row + address_row, 7, organizationplace.organizationplacedescription.district)
-            address_row += 1
+            try:
+              sheet.write(row + address_row, 5, organizationplace.organizationplacedescription.suco)
+              sheet.write(row + address_row, 6, organizationplace.organizationplacedescription.subdistrict)
+              sheet.write(row + address_row, 7, organizationplace.organizationplacedescription.district)
+            except:
+              pass
+            address_row +=1
 
     return workbook.response(filename='nhdb-organizations-{}.xlsx'.format(date.today().isoformat()))
