@@ -33,10 +33,15 @@ version = [
     url(r'^(?P<pk>[0-9]+)/page/(?P<page>\d+)/(?P<language>\w+)$', views.version_page, name='s'),
 ]
 
+untl = [
+    url(r'^$', views.publicationlist, name='list'),
+]
+
 
 urlpatterns = [
     url(r'^$', views.index, name="index"),
     url(r'^publication/', include(publication, namespace='publication')),
+    url(r'^untl/', include(untl, namespace='untl')),
     url(r'^version/', include(version, namespace='version')),
     url(r'^form/(?P<model>\w+)/$', views.form, name="form"),
     url(r'^form/(?P<model>\w+)/(?P<form>\w+)/$', views.form, name="form")
