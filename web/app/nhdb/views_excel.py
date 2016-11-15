@@ -3,6 +3,7 @@ from django.utils.translation import ugettext as _
 from export.excel_export import ExportTemplateWriter
 from .views import get_organization_queryset, get_projects_page
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -99,11 +100,11 @@ def organization(request, object_list=None):
         for organizationplace in object.organizationplace_set.all():
             sheet.write(row + address_row, 4, organizationplace.description)
             try:
-              sheet.write(row + address_row, 5, organizationplace.organizationplacedescription.suco)
-              sheet.write(row + address_row, 6, organizationplace.organizationplacedescription.subdistrict)
-              sheet.write(row + address_row, 7, organizationplace.organizationplacedescription.district)
+                sheet.write(row + address_row, 5, organizationplace.organizationplacedescription.suco)
+                sheet.write(row + address_row, 6, organizationplace.organizationplacedescription.subdistrict)
+                sheet.write(row + address_row, 7, organizationplace.organizationplacedescription.district)
             except:
-              pass
-            address_row +=1
+                pass
+            address_row += 1
 
     return workbook.response(filename='nhdb-organizations-{}.xlsx'.format(date.today().isoformat()))
