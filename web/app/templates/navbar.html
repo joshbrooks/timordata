@@ -47,6 +47,8 @@
                         <li class="divider"></li>
                         <li><a data-modalurl="{% url 'donormapping:form' model='fundingoffer' form='main'%}"  data-modaltitle="New Funding Offer" data-container="true" data-toggle="modal" href="#">{% trans "Add a funding offer" %}</a></li><li class="divider"></li>
                         <li><a href="/suggest/?state=W">{% trans "Suggestions" %} </a></li>
+                         <li class="divider"></li>
+                        <li><a href="{%  url 'nhdb:project:verification' %}">{% trans "Project Verification" %} </a></li>
                     </ul>
                 </li>{% endblock managementdropdown %}
                 <li class="dropdown">
