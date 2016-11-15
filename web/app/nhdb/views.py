@@ -1,6 +1,5 @@
 import csv
 import json
-import logging
 import os
 import subprocess
 import warnings
@@ -608,6 +607,7 @@ def organization_list_as_json(request):
 def organizationdescription(request, pk, language_code):
     """
     Loads a rich text editor to push a description in the selected language as a suggestion to "Suggest.suggest"
+    :param request:
     :param UpdateView:
     :return:
     """
