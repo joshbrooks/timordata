@@ -3,6 +3,7 @@ from django.utils.translation import ugettext as _
 from export.excel_export import ExportTemplateWriter
 from .views import get_organization_queryset, get_projects_page
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -61,8 +62,10 @@ def project(request, object_list=None):
 def organization(request, object_list=None):
     if not object_list:
         object_list = get_organization_queryset(request)
-    object_list = object_list.prefetch_related('organizationplace_set__organizationplacedescription').prefetch_related(
-        'orgtype')
+    object_list = object_list\
+        .prefetch_related('organizationplace_set__organizationplacedescription')\
+        .prefetch_related('orgtype')\
+        .prefetch_related('primary_contact_person')
 
     row = 1
     columns = (
@@ -70,10 +73,11 @@ def organization(request, object_list=None):
         (1, _('Type'), 50),
         (2, _('Phone'), 50),
         (3, _('Email'), 23),
-        (4, _('Addresses'), 23),
-        (5, _('District'), 20),
-        (6, _('Subdistrict'), 20),
-        (7, _('Suco'), 20)
+        (4, _('Primary Contact'), 20),
+        (5, _('Addresses'), 23),
+        (6, _('District'), 20),
+        (7, _('Subdistrict'), 20),
+        (8, _('Suco'), 20)
     )
 
     workbook = ExportTemplateWriter(columns=columns, header_row=row)
@@ -95,15 +99,18 @@ def organization(request, object_list=None):
         sheet.write(row, 1, object.orgtype.orgtype)
         sheet.write(row, 3, object.email)
 
+        if object.primary_contact_person:
+            sheet.write(row, 4, u'{}'.format(object.primary_contact_person.first() or ''))
+
         address_row = 0
         for organizationplace in object.organizationplace_set.all():
-            sheet.write(row + address_row, 4, organizationplace.description)
+            sheet.write(row + address_row, 5, organizationplace.description)
             try:
-              sheet.write(row + address_row, 5, organizationplace.organizationplacedescription.suco)
-              sheet.write(row + address_row, 6, organizationplace.organizationplacedescription.subdistrict)
-              sheet.write(row + address_row, 7, organizationplace.organizationplacedescription.district)
+                sheet.write(row + address_row, 6, organizationplace.organizationplacedescription.suco)
+                sheet.write(row + address_row, 7, organizationplace.organizationplacedescription.subdistrict)
+                sheet.write(row + address_row, 8, organizationplace.organizationplacedescription.district)
             except:
-              pass
-            address_row +=1
+                pass
+            address_row += 1
 
     return workbook.response(filename='nhdb-organizations-{}.xlsx'.format(date.today().isoformat()))

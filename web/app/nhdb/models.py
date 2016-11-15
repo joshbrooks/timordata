@@ -3,19 +3,22 @@ from datetime import datetime
 
 from belun import settings
 from django.apps import apps
-
+from unidecode import unidecode
 from geo.models import Suco
 from pivottable import pivot_table as pivot
 from django.contrib.gis.db import models
 from django.db.models import Q
 from mp_lite import MP_Lite
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import python_2_unicode_compatible
+
 from django.core.urlresolvers import reverse
 import json
 from library.models import Thumbnail
 import logging
+import re
+
 logger = logging.getLogger(__name__)
-from unidecode import unidecode
 
 __all__ = [
     'Organization', 'Person',
@@ -38,7 +41,6 @@ def unisafe(inputstring):
 
 
 class ProjectManager(models.Manager):
-
     def past_enddate(self):
         """
         Projects which are active but the end date has already finished
@@ -75,11 +77,10 @@ class ProjectManager(models.Manager):
 
 
 class OrganizationManager(models.Manager):
-
     def invalid_emails(self):
-        return super(OrganizationManager, self)\
-            .get_queryset()\
-            .exclude(email__regex=r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9]+\.[a-zA-Z0-9.+-]+$")\
+        return super(OrganizationManager, self) \
+            .get_queryset() \
+            .exclude(email__regex=r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9]+\.[a-zA-Z0-9.+-]+$") \
             .exclude(email__isnull=True)
 
     def no_email(self):
@@ -94,7 +95,6 @@ class OrganizationManager(models.Manager):
 
 
 class ExcelDownloadFeedback(models.Model):
-
     PURPOSE_CHOICES = (
         ('PP', 'Project planning'),
         ('RE', 'Research'),
@@ -111,6 +111,7 @@ class ExcelDownloadFeedback(models.Model):
     referralurl = models.CharField(max_length=256, null=True, blank=True)
 
 
+@python_2_unicode_compatible
 class Organization(models.Model):
     name = models.CharField(_('name'), max_length=150)
     description = models.TextField(_('description'), null=True, blank=True)
@@ -171,7 +172,7 @@ class Organization(models.Model):
     class Meta:
         ordering = ['name', ]
 
-    def __unicode__(self):
+    def __str__(self):
         return unisafe(self.name)
 
     def get_absolute_url(self):
@@ -190,19 +191,16 @@ class Organization(models.Model):
         # objects = OrganizationManager
 
 
+@python_2_unicode_compatible
 class OrganizationClass(models.Model):
-    def __unicode__(self):
-        return unicode(self.orgtype)
+    def __str__(self):
+        return self.orgtype
 
     code = models.CharField('Code', max_length=5, primary_key=True)
     orgtype = models.CharField('Type', max_length=150)
 
 
-import re
-
-
 class Email(object):
-
     def __init__(self, address):
         self._address = address
         if not address:
@@ -251,10 +249,7 @@ def emailencode(email):
         });
     });
     """
-
     reverse_code_obfuscated = """var _0x7972=["\x72\x65\x76\x65\x72\x73\x65","\x70\x72\x6F\x74\x6F\x74\x79\x70\x65","","\x6A\x6F\x69\x6E","\x73\x70\x6C\x69\x74","\x64\x6F\x74\x61\x74","\x2E","\x72\x65\x70\x6C\x61\x63\x65","\x40","\x72\x6F\x74\x31\x33","\x5A","\x63\x68\x61\x72\x43\x6F\x64\x65\x41\x74","\x66\x72\x6F\x6D\x43\x68\x61\x72\x43\x6F\x64\x65","\x63\x6C\x69\x63\x6B","\x74\x61\x62\x6C\x65\x3A\x66\x69\x72\x73\x74","\x70\x61\x72\x65\x6E\x74\x73","\x2E\x65\x6D\x61\x69\x6C","\x69\x6E\x64\x65\x78","\x63\x68\x69\x6C\x64\x72\x65\x6E","\x70\x61\x72\x65\x6E\x74","\x64\x69\x73\x61\x62\x6C\x65\x64","\x61\x64\x64\x43\x6C\x61\x73\x73","\x74\x64","\x67\x72\x65\x65\x6E","\x63\x73\x73","\x74\x65\x78\x74","\x65\x61\x63\x68","\x74\x62\x6F\x64\x79\x20\x74\x72","\x66\x69\x6E\x64","\x6F\x6E","\x62\x75\x74\x74\x6F\x6E\x2E\x73\x68\x6F\x77\x6C\x69\x61\x6D\x65","\x72\x65\x61\x64\x79"];String[_0x7972[1]][_0x7972[0]]=function(){return this[_0x7972[4]](_0x7972[2])[_0x7972[0]]()[_0x7972[3]](_0x7972[2])};String[_0x7972[1]][_0x7972[5]]=function(){return this[_0x7972[7]](/ at /gi,_0x7972[8])[_0x7972[7]](/ dot /gi,_0x7972[6])};String[_0x7972[1]][_0x7972[9]]=function(){return this[_0x7972[7]](/[a-zA-Z]/gi,function(_0xf065x1){return String[_0x7972[12]]((_0xf065x1<=_0x7972[10]?90:122)>=(_0xf065x1=_0xf065x1[_0x7972[11]](0)+13)?_0xf065x1:_0xf065x1-26)})};$(document)[_0x7972[31]](function(){$(_0x7972[30])[_0x7972[29]](_0x7972[13],function(){var _0xf065x2=$(_0x7972[16])[_0x7972[15]](_0x7972[14]);var _0xf065x3=$(_0x7972[16])[_0x7972[19]]()[_0x7972[18]]()[_0x7972[17]]($(_0x7972[16]));$(this)[_0x7972[21]](_0x7972[20]);_0xf065x2[_0x7972[28]](_0x7972[27])[_0x7972[26]](function(){var _0xf065x4=$(this)[_0x7972[18]](_0x7972[22])[_0xf065x3];$(_0xf065x4)[_0x7972[24]]({color:_0x7972[23]});$(_0xf065x4)[_0x7972[25]]($(_0xf065x4)[_0x7972[25]]()[_0x7972[0]]()[_0x7972[9]]()[_0x7972[5]]());});})});"""
-
-
     if email:
         if '@' in email:
             e = re.sub('\.', ' dot ', email)
@@ -262,16 +257,18 @@ def emailencode(email):
             return e[::-1].encode('rot13')
 
 
+@python_2_unicode_compatible
 class Person(models.Model):
     class Meta:
         ordering = ['name']
 
-    def __unicode__(self):
-        return unicode(self.name)
+    def __str__(self):
+        return self.name
 
     name = models.CharField(max_length=100)
     title = models.CharField(max_length=100, null=True, blank=True)
     organization = models.ForeignKey('nhdb.Organization', null=True, blank=True)
+    primary_contact_of = models.ForeignKey('nhdb.Organization', null=True, blank=True, related_name="primary_contact_person")
     phone = models.CharField(max_length=64, null=True, blank=True)
     email = models.CharField(max_length=64, null=True, blank=True)
     verified = models.DateField(auto_now=True, null=True, blank=True)
@@ -297,8 +294,8 @@ class Person(models.Model):
 
 
 class PropertyTag(MP_Lite):
-    def __unicode__(self):
-        return unicode(self.name)
+    def __str__(self):
+        return self.name
 
     # class Meta:
     #     ordering = ["description"]
@@ -312,29 +309,31 @@ class PropertyTag(MP_Lite):
     description = models.CharField(max_length=255)
 
 
+@python_2_unicode_compatible
 class ProjectType(models.Model):
-    def __unicode__(self):
-        return unicode(self.description)
+    def __str__(self):
+        return self.description
 
     description = models.CharField(max_length=255)
 
 
+@python_2_unicode_compatible
 class RecordOwner(models.Model):
-    def __unicode__(self):
-        return unicode(self.description)
+    def __str__(self):
+        return self.description
 
     description = models.CharField(max_length=255)
 
 
+@python_2_unicode_compatible
 class ProjectImage(models.Model):
-
-    def __unicode__(self):
+    def __str__(self):
         try:
             if self.project:
-                return u'Image from project {} - {}'.format(unicode(self.project), unicode(self.description))
+                return u'Image from project {} - {}'.format(self.project, self.description)
             else:
                 return None
-        except Exception, e:
+        except Exception as e:
             return e.message
 
     description = models.CharField(max_length=100, null=True, blank=True)
@@ -346,7 +345,7 @@ class ProjectImage(models.Model):
             return Thumbnail.make(self, model_field='image', res=res)
         except KeyError:
             pass
-        except Exception, e:
+        except Exception as e:
             logger.error('Failed to create thumbnail: {}'.format(e.message))
             return False
 
@@ -366,13 +365,13 @@ class ProjectImage(models.Model):
             return self.thumbnail(res=50).url
 
 
+@python_2_unicode_compatible
 class Project(models.Model):
-
-    def __unicode__(self):
+    def __str__(self):
 
         # Translated fields : should automagically do whichever 'name' is first on the list
         if self.name:
-            return unicode(self.name)
+            return self.name
         return '?'
 
     class Meta:
@@ -391,14 +390,14 @@ class Project(models.Model):
     # properties = models.ManyToManyField('PropertyTag', null=True, blank=True, )
     # Deprecated (again!) in favour of individual fields
     sector = models.ManyToManyField(
-            'nhdb.PropertyTag', blank=True, related_name="project_sector",
-            limit_choices_to={'path__startswith': "INV."})
+        'nhdb.PropertyTag', blank=True, related_name="project_sector",
+        limit_choices_to={'path__startswith': "INV."})
     activity = models.ManyToManyField(
-            'nhdb.PropertyTag', blank=True, related_name="project_activity",
-            limit_choices_to={'path__startswith': "ACT."})
+        'nhdb.PropertyTag', blank=True, related_name="project_activity",
+        limit_choices_to={'path__startswith': "ACT."})
     beneficiary = models.ManyToManyField(
-            'nhdb.PropertyTag', blank=True, related_name="project_beneficiary",
-            limit_choices_to={'path__startswith': "BEN."})
+        'nhdb.PropertyTag', blank=True, related_name="project_beneficiary",
+        limit_choices_to={'path__startswith': "BEN."})
 
     place = models.ManyToManyField("geo.AdminArea", through='ProjectPlace', blank=True)
     organization = models.ManyToManyField(Organization, through='ProjectOrganization', blank=True)
@@ -469,26 +468,25 @@ class Project(models.Model):
     def geojson(self):
         return json.dumps(self.feature)
 
-
     @classmethod
     def pivot_table(cls, _filter, field_name, relation_data=None):
         return pivot(cls, _filter, field_name, relation_data=None)
 
 
+@python_2_unicode_compatible
 class ProjectStatus(models.Model):
-
-    def __unicode__(self):
+    def __str__(self):
         return self.description
 
     code = models.CharField(max_length=2, primary_key=True)
     description = models.CharField(max_length=256)
 
 
+@python_2_unicode_compatible
 class ProjectOrganization(models.Model):
-
-    def __unicode__(self):
+    def __str__(self):
         try:
-            return self.organization.__unicode__() +unicode(" ")+ self.project.__unicode__()
+            return self.organization.__str__() + " " + self.project.__str__()
         except AttributeError:
             return 'Invalid project / organization'
 
@@ -503,6 +501,7 @@ class ProjectOrganization(models.Model):
     notes = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Notes about this relationship'))
 
 
+@python_2_unicode_compatible
 class ProjectOrganizationClass(models.Model):
     """
     Replaces an "option" for organizationclass
@@ -510,16 +509,16 @@ class ProjectOrganizationClass(models.Model):
     code = models.CharField(max_length=3, primary_key=True)
     description = models.TextField()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.description
 
 
+@python_2_unicode_compatible
 class ProjectPerson(models.Model):
-
     class Meta:
         unique_together = (('person', 'project'))
 
-    def __unicode__(self):
+    def __str__(self):
 
         if not self.pk:
             return 'A new link between a project and a person'
@@ -530,13 +529,10 @@ class ProjectPerson(models.Model):
                 return u'{} as primary contact of {}'.format(self.person, self.project)
             return u'{} as contact of {}'.format(self.person, self.project)
 
-        except Exception, e:
+        except Exception as e:
             try:
-
                 return u'contact of {}'.format(self.project)
-
-            except Exception, e:
-
+            except Exception as e:
                 return 'Error in formatting: {}'.format(e.message)
 
     project = models.ForeignKey(Project)
@@ -545,8 +541,9 @@ class ProjectPerson(models.Model):
     verified = models.DateField(auto_now=True, null=True, blank=True)
 
 
+@python_2_unicode_compatible
 class ProjectPlace(models.Model):
-    def __unicode__(self):
+    def __str__(self):
         if self.description:
             return self.description
         elif self.place.name:
@@ -594,19 +591,20 @@ class ProjectPlace(models.Model):
              "geometry": {
                  "type": "Point",
                  "coordinates": self.coordinates,
-                 },
+             },
              "properties": properties
              }
 
         return f
 
 
+@python_2_unicode_compatible
 class OrganizationPlaceDescription(models.Model):
     """
     Cache the OrganizationPlace to prevent looking up suco, subd., district every time
     """
 
-    def __unicode__(self):
+    def __str__(self):
         return '{} {} {}'.format(self.suco, self.subdistrict, self.district)
 
     organizationplace = models.OneToOneField('nhdb.OrganizationPlace', primary_key=True)
@@ -615,8 +613,9 @@ class OrganizationPlaceDescription(models.Model):
     district = models.CharField(max_length=256, null=True, blank=True)
 
 
+@python_2_unicode_compatible
 class OrganizationPlace(models.Model):
-    def __unicode__(self):
+    def __str__(self):
 
         if self.description:
             return self.description
@@ -633,7 +632,7 @@ class OrganizationPlace(models.Model):
 
     def update_place(self):
 
-        description, created = OrganizationPlaceDescription.objects.get_or_create(organizationplace = self)
+        description, created = OrganizationPlaceDescription.objects.get_or_create(organizationplace=self)
         try:
             suco = Suco.objects.get(geom__contains=self.point)
         except Suco.DoesNotExist:
@@ -657,7 +656,7 @@ class OrganizationPlace(models.Model):
         return self.point.x
 
     @property
-    def latlng (self):
+    def latlng(self):
         '''
         Getting tired of remembering if "x = lat" or "y = lat"!
         :return:
