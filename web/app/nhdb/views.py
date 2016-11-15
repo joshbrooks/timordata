@@ -165,9 +165,9 @@ class ProjectImageDetail(DetailView):
 
 
 class ProjectImageDelete(DetailView):
-    '''
+    """
     Returns a simple AJAX confirmation form to be injected into a page through an asynchronous request
-    '''
+    """
 
     template_name = 'nhdb/projectimage_delete.html'
     model = ProjectImage
@@ -224,7 +224,7 @@ class OrganizationDetail(DetailView):
         context = super(OrganizationDetail, self).get_context_data(**kwargs)
         context['suggestions'] = Suggest.objects.suggest(self.object)
         context['initialFeatures'] = OrganizationPlace.organization_place_feature_collection(
-                {'organization_id': self.object.pk}, as_list=False)
+            {'organization_id': self.object.pk}, as_list=False)
         context['projectsets'] = {}
         for status in ProjectStatus.objects.all():
             _projects = self.object.project_set.filter(status=status)
@@ -238,8 +238,8 @@ class OrganizationDetail(DetailView):
             context['project_ben'] = Project.pivot_table(_filter=_filter, field_name='beneficiary')
 
             rel = Organization.objects.filter(
-                    projectorganization__project__organization__id=self.object.pk,
-                    projectorganization__project__in=self.object.project_set.filter(status='A')
+                projectorganization__project__organization__id=self.object.pk,
+                projectorganization__project__in=self.object.project_set.filter(status='A')
             ).distinct().values_list('pk', 'name')
 
         return context
@@ -595,11 +595,11 @@ def organizationlist(request, pk=None):
 
 
 def organization_list_as_json(request):
-    '''
+    """
     Returns Organizations grouped
     :param request:
     :return:
-    '''
+    """
     organizations, projects = orgset_filter(request)
     return HttpResponse(json.dumps([org.name for org in organizations]), content_type='application/json')
 
@@ -607,9 +607,6 @@ def organization_list_as_json(request):
 def organizationdescription(request, pk, language_code):
     """
     Loads a rich text editor to push a description in the selected language as a suggestion to "Suggest.suggest"
-    :param request:
-    :param UpdateView:
-    :return:
     """
     instance = Organization.objects.get(pk=pk)
     my_field = 'description_' + language_code
@@ -618,7 +615,7 @@ def organizationdescription(request, pk, language_code):
     data['id'] = instance.id
     data['description'] = getattr(instance,
                                   my_field) or '<h2>About {}</h2><p>Enter details about this organization here</p>'.format(
-            instance.name)
+        instance.name)
     data['language'] = language_code
     context = {'form': OrganizationDescriptionForm(data), 'basesuggestionform': BaseSuggestionForm(), 'pk': pk}
     return render(request, 'nhdb/organizationdescription.html', context)
@@ -637,11 +634,11 @@ def organizationsuggestion(request, suggestion_pk):
 
 
 def projectdescription(request, pk, language_code):
-    '''
+    """
     Loads a rich text editor to push a description in the selected language as a suggestion to "Suggest.suggest"
     :param UpdateView:
     :return:
-    '''
+    """
     instance = Project.objects.get(pk=pk)
     my_field = 'description_' + language_code
 
@@ -649,7 +646,7 @@ def projectdescription(request, pk, language_code):
     data['id'] = instance.id
     data['description'] = getattr(instance,
                                   my_field) or '<h2>About {}</h2><p>Enter details about this organization here</p>'.format(
-            instance.name)
+        instance.name)
     data['language'] = language_code
     context = {'form': ProjectdescriptionForm(data), 'pk': pk}
     return render(request, 'nhdb/projectdescription.html', context)
@@ -688,7 +685,7 @@ def organizationupdate(request, form="main"):
     elif form == 'contact':
         context['form'] = OrganizationcontactForm(instance=organization, suggestion=suggestion)
     # elif form == 'place':
-    #     context['form'] = OrganizationPlaceForm(_data={'organization': organization}, instance = OrganizationPlace.objects.get(pk = form_object_pk))
+    # context['form'] = OrganizationPlaceForm(_data={'organization': organization}, instance = OrganizationPlace.objects.get(pk = form_object_pk))
 
     elif form == 'description':
         language = request.GET.get('language', 'en')
@@ -742,12 +739,12 @@ class ProjectOrganizations(ListView):
 
 @staff_member_required
 def organization_persons(request, organization_id):
-    '''
+    """
     Contact list for people in the organization
     :param request:
     :param organization_id:
     :return:
-    '''
+    """
     organization = Organization.objects.get(pk=organization_id)
     persons = organization.person_set.all()
     context = {'organization': organization, 'persons': persons,
@@ -758,11 +755,11 @@ def organization_persons(request, organization_id):
 
 
 def thumbnail_image(request):
-    '''
+    """
     Expects a GET parameter like request=/media/projectimage/100/20150818/star-512_0DXbMiK.jpg
     :param request:
     :return:
-    '''
+    """
     r = request.GET['request']
     s = r.split('/')
     res = s.pop(3)
@@ -777,7 +774,7 @@ def thumbnail_image(request):
     _c = ' '.join(call)
     subprocess.call(call)
     if not os.path.exists(output_path):
-        raise AssertionError, _c
+        raise AssertionError(_c)
     return HttpResponse(open(output_path).read(), content_type='image/jpg')
 
 
@@ -878,9 +875,9 @@ def projectdashboard(request):
         tag = propertytags.get(path=tag_path)
         filters = {link_name + '__pk__in'.format(link_name): projectpks, 'path__startswith': tag_path + '.'}
         tags[tag.name_en] = list(
-                propertytags.filter(**filters).annotate(count=Count(link_name)).values('name', 'path',
-                                                                                       'count').order_by(
-                        'name'))
+            propertytags.filter(**filters).annotate(count=Count(link_name)).values('name', 'path',
+                                                                                   'count').order_by(
+                'name'))
 
         # tags[tag.name_en].append({'name': 'none', 'count': Project.objects.annotate(c = Count(link)).filter(c=0).count(), 'path':None})
 
@@ -901,12 +898,10 @@ def projectdashboard(request):
 
 
 def projectplaces(request):
-    '''
+    """
     Return a JSON-encoded list of places and the number of projects filtered by GET parameters
-    :param request:
-    :param path:
     :return:
-    '''
+    """
     path = request.GET.get('path')
     projects = get_projects_page(request, paginate=False)
     if path is None:
@@ -930,9 +925,6 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
-
-
-logger = logging.getLogger(__name__)
 
 
 def projectlist(request):
@@ -966,26 +958,26 @@ def projectlist(request):
     if c['activefilters'] or c['activeexcludes']:
         c['searchdescription'] = {  # List of search parameters in human readable form
             "Sector ": PropertyTag.objects.filter(
-                    path__in=[i for i in c['activefilters'] if i.startswith('INV.')]).values_list('name',
-                                                                                                  flat=True),
+                path__in=[i for i in c['activefilters'] if i.startswith('INV.')]).values_list('name',
+                                                                                              flat=True),
             "NOT Sector ": PropertyTag.objects.filter(
-                    path__in=[i for i in c['activeexcludes'] if i.startswith('INV.')]).values_list('name',
-                                                                                                   flat=True),
+                path__in=[i for i in c['activeexcludes'] if i.startswith('INV.')]).values_list('name',
+                                                                                               flat=True),
             "Beneficiary ": PropertyTag.objects.filter(
-                    path__in=[i for i in c['activefilters'] if i.startswith('BEN.')]).values_list('name',
-                                                                                                  flat=True),
+                path__in=[i for i in c['activefilters'] if i.startswith('BEN.')]).values_list('name',
+                                                                                              flat=True),
             "NOT Beneficiary ": PropertyTag.objects.filter(
-                    path__in=[i for i in c['activeexcludes'] if i.startswith('BEN.')]).values_list('name',
-                                                                                                   flat=True),
+                path__in=[i for i in c['activeexcludes'] if i.startswith('BEN.')]).values_list('name',
+                                                                                               flat=True),
             "Activity ": PropertyTag.objects.filter(
-                    path__in=[i for i in c['activefilters'] if i.startswith('ACT.')]).values_list('name',
-                                                                                                  flat=True),
+                path__in=[i for i in c['activefilters'] if i.startswith('ACT.')]).values_list('name',
+                                                                                              flat=True),
             "NOT Activity ": PropertyTag.objects.filter(
-                    path__in=[i for i in c['activeexcludes'] if i.startswith('ACT.')]).values_list('name',
-                                                                                                   flat=True),
+                path__in=[i for i in c['activeexcludes'] if i.startswith('ACT.')]).values_list('name',
+                                                                                               flat=True),
             "In districts": District.objects.filter(
-                    path__in=[i.replace('district.', '').upper() for i in c['activefilters'] if
-                              i.startswith('district.')]).values_list('name', flat=True),
+                path__in=[i.replace('district.', '').upper() for i in c['activefilters'] if
+                          i.startswith('district.')]).values_list('name', flat=True),
         }
 
     status = [i for i in c['activefilters'] if i.startswith('status')]
@@ -1010,8 +1002,8 @@ def projectlist(request):
     c['object_list_count'] = object_list.count()
     c['dashboard'] = project_dashboard_info(object_list)
     c['table'] = ProjectTable(
-            # paginated.object_list.prefetch_related('organization', 'sector', 'status')
-            object_list.prefetch_related('organization', 'sector', 'status')
+        # paginated.object_list.prefetch_related('organization', 'sector', 'status')
+        object_list.prefetch_related('organization', 'sector', 'status')
     )
     c['table'].paginate(page=get('page', 1), per_page=get('per_page', 50))
 
@@ -1054,7 +1046,7 @@ def search(request, model, languages='en'):
     filtered = model.objects.filter(q)
     if filtered.count() == 0:
         warnings.warn('Nothing found')
-        raise TypeError, filtered.query.sql_with_params()
+        raise TypeError(filtered.query.sql_with_params())
 
     items = []
     for i in filtered:
@@ -1088,6 +1080,8 @@ def propertytagselect(request):
         if len(i.path) == PropertyTag.steps:
             data_section = i.name
             continue
+        else:
+            data_section = ''
         option = {'pk': i.pk, 'name': i.name, 'data-section': data_section, 'data-description': i.description}
         if i.pk in request.GET.getlist('s'):
             option['selected'] = 'selected="selected"'
@@ -1229,4 +1223,9 @@ def form(request, model=None, form='main'):
                 return render(request, template, {'form': f(**args)})
 
         return HttpResponseBadRequest(
-                mark_safe("<form>Class nhdb.forms.{} is not defined yet</form>".format(f_name)))
+            mark_safe("<form>Class nhdb.forms.{} is not defined yet</form>".format(f_name)))
+
+
+def project_verification(request):
+    context = {'projects': Project.objects.order_by('-verified')}
+    return render(request, 'nhdb/project_verification.html', context)
