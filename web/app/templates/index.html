@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% block manifest %}manifest="/static/indexmanifest"{% endblock %}
+{#{% block manifest %}manifest="/static/indexmanifest"{% endblock %}#}
 
 {% block style %}
 <link href="/static/timordata.css" rel="stylesheet">
@@ -27,9 +27,9 @@
                 <p> Search for information about humanitarian projects and NGO's working in Timor-Leste </p>
 
                 <p><a class="btn btn-default" href='{% url "nhdb:project:list" %}'
-                      role="button">{% trans 'Search' %} {% trans 'Projects' %} &raquo;</a></p>
+                      role="button">{% trans 'Projects' %} &raquo;</a></p>
                 <p><a class="btn btn-default" href='{% url "nhdb:organization:list" %}'
-                      role="button">{% trans 'Search' %} {% trans 'Organizations' %}&raquo;</a></p>
+                      role="button">{% trans 'Organizations' %}&raquo;</a></p>
             </div>
             <div class="col-md-4">
                 <h2>{% trans 'Library' %}
@@ -37,8 +37,9 @@
                 </h2>
                 <p>Search for information on research papers published about Timor-Leste</p>
 
-                <p><a class="btn btn-default" href='{% url "library:publication:list" %}' role="button">{% trans 'View' %} &raquo;</a>
-                </p>
+                <p><a class="btn btn-default" href='{% url "library:publication:list" %}' role="button">{% trans 'Publications' %} &raquo;</a></p>
+                <p><a class="btn btn-default" href='{% url "library:untl:list" %}' role="button">{% trans 'UNTL Library' %} &raquo;</a></p>
+
             </div>
 
             <div class="col-md-4">
