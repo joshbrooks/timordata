@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-28 16:03+0900\n"
+"POT-Creation-Date: 2016-11-15 09:45+0000\n"
 "PO-Revision-Date: 2016-03-31 16:18+0900\n"
 "Last-Translator: josh <josh.vdbroek@gmail.com>\n"
 "Language-Team: Tetun <>\n"
@@ -20,175 +20,178 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Gtranslator 2.91.6\n"
 
-#: belun/settings.py:37 belun/settings.py:40 belun/settings_original.py:37
-#: belun/settings_original.py:40 belun/settings_production.py:21
-#: belun/settings_production.py:24
+#: belun/settings.py:27 belun/settings.py:31 belun/settings.py:38
+#: belun/settings_development.py:27 belun/settings_development.py:31
+#: belun/settings_development.py:38
 msgid "Tetun"
 msgstr "Tetun"
 
-#: belun/settings.py:41 belun/settings_original.py:41
-#: belun/settings_production.py:25
+#: belun/settings.py:32 belun/settings.py:39 belun/settings_development.py:32
+#: belun/settings_development.py:39
 msgid "English"
 msgstr "Ingles"
 
-#: belun/settings.py:42 belun/settings_original.py:42
-#: belun/settings_production.py:26
+#: belun/settings.py:33 belun/settings.py:40 belun/settings_development.py:33
+#: belun/settings_development.py:40
 msgid "Portugese"
 msgstr "Portugese"
 
-#: belun/settings.py:43 belun/settings_original.py:43
-#: belun/settings_production.py:27
+#: belun/settings.py:34 belun/settings.py:41 belun/settings_development.py:34
+#: belun/settings_development.py:41
 msgid "Indonesian"
 msgstr "Bahasa"
 
-#: donormapping/forms.py:31
+#: donormapping/forms.py:32
 msgid "Questions for Recipients"
 msgstr "Perguntas ba Parseirus"
 
-#: donormapping/forms.py:41
+#: donormapping/forms.py:42
 msgid "Questions for Donors"
 msgstr "Perguntas ba Doadores"
 
-#: donormapping/forms.py:49
+#: donormapping/forms.py:50
 msgid "Technology Access"
 msgstr "Assusu ba Komputador nsst."
 
-#: donormapping/forms.py:72
-#: templates/nhdb/new_project_search/translation.html:38
-msgid "Organization"
-msgstr "Organizasaun"
-
-#: donormapping/forms.py:77 library/models.py:51
-#: templates/nhdb/new_project_search/div-publication-search.html:17
-msgid "Tags"
-msgstr "Tags"
-
-#: donormapping/forms.py:129 library/forms.py:35
-#: templates/donormapping/fundingoffer_detail.html:12
-#: templates/nhdb/organization_detail.html:227
-#: templates/nhdb/project_detail.html:150
-msgid "Sectors"
-msgstr "Sektor"
-
-#: donormapping/forms.py:136 nhdb/forms.py:100 nhdb/forms.py:431
-#: nhdb/partialforms.py:198 templates/donormapping/fundingoffer_detail.html:14
-#: templates/nhdb/organization_detail.html:229
-#: templates/nhdb/project_detail.html:151
-msgid "Beneficiaries"
-msgstr "Benefisiario"
-
-#: donormapping/forms.py:144 nhdb/forms.py:105 nhdb/forms.py:436
-#: nhdb/partialforms.py:203 templates/donormapping/fundingoffer_detail.html:13
-#: templates/nhdb/organization_detail.html:228
-#: templates/nhdb/project_detail.html:149
-msgid "Activities"
-msgstr "Actividade"
-
-#: donormapping/forms.py:172 nhdb/forms.py:256
-#: templates/donormapping/navbar.html:18 templates/index.html:61
-#: templates/navbar.html:18
+#: donormapping/forms.py:181 nhdb/views_excel.py:24
+#: templates/donormapping/navbar.html:18 templates/index.html:32
+#: templates/navbar.html:22
 #: templates/nhdb/new_project_search/div-project-details.html:22
 #: templates/nhdb/new_project_search/div-project-more-noninteractive.html:47
 #: templates/nhdb/new_project_search/div-project-more.html:72
-#: templates/nhdb/organization_detail.html:231
+#: templates/nhdb/organization_detail.html:508
+#: templates/nhdb/organization_detail_ajax.html:240
 msgid "Organizations"
 msgstr "Organizasaun"
 
-#: donormapping/forms.py:177
+#: donormapping/forms.py:186 library/forms.py:56
+#: templates/donormapping/fundingoffer_detail.html:12
+#: templates/donormapping/fundingoffer_detail_ajax.html:11
+#: templates/donormapping/fundingoffer_list_old.html:63
+#: templates/nhdb/organization_detail.html:449
+#: templates/nhdb/organization_detail_ajax.html:205
+#: templates/nhdb/project_detail.html:171
+#: templates/nhdb/project_detail_ajax.html:174
+msgid "Sectors"
+msgstr "Sektor"
+
+#: donormapping/forms.py:193 nhdb/forms.py:548
+#: templates/donormapping/fundingoffer_detail.html:14
+#: templates/donormapping/fundingoffer_detail_ajax.html:13
+#: templates/donormapping/fundingoffer_list_old.html:64
+#: templates/nhdb/organization_detail.html:430
+#: templates/nhdb/organization_detail_ajax.html:186
+#: templates/nhdb/project_detail.html:172
+#: templates/nhdb/project_detail_ajax.html:175
+msgid "Beneficiaries"
+msgstr "Benefisiario"
+
+#: donormapping/forms.py:201 nhdb/forms.py:553
+#: templates/donormapping/fundingoffer_detail.html:13
+#: templates/donormapping/fundingoffer_detail_ajax.html:12
+#: templates/donormapping/fundingoffer_list_old.html:62
+#: templates/nhdb/organization_detail.html:411
+#: templates/nhdb/organization_detail_ajax.html:167
+#: templates/nhdb/project_detail.html:170
+#: templates/nhdb/project_detail_ajax.html:173
+msgid "Activities"
+msgstr "Actividade"
+
+#: donormapping/forms.py:228 nhdb/views_excel.py:61
 msgid "District"
 msgstr "Munisipio"
 
-#: donormapping/models.py:140
+#: donormapping/models.py:162
 msgid "Organization type"
 msgstr "Tipo Organizasaun"
 
-#: donormapping/models.py:142
+#: donormapping/models.py:164
 msgid "Properties"
 msgstr "Properties"
 
-#: donormapping/models.py:143
+#: donormapping/models.py:165
 msgid "Has your organization given funding in the past year?"
 msgstr "Ita boot nia organisasaun fo fundus iha tinan kotuk?"
 
-#: donormapping/models.py:145
+#: donormapping/models.py:167
 msgid "How much (approximately) given in the past year?"
 msgstr "Favor deskreve hira?"
 
-#: donormapping/models.py:147
+#: donormapping/models.py:169
 msgid "Has your organization received funding in the past year?"
 msgstr "Ita boot nia organisasaun simu fundus iha tinan kotuk?"
 
-#: donormapping/models.py:149
+#: donormapping/models.py:171
 msgid "How much (approximately) received in the past year?"
 msgstr "Favor deskreve hira?"
 
-#: donormapping/models.py:154
+#: donormapping/models.py:176
 msgid "How do you find your recipients?"
 msgstr "Oinsa imi fahe informasaun kona ba parseiros (simu nain?)"
 
-#: donormapping/models.py:155 donormapping/models.py:159
+#: donormapping/models.py:177 donormapping/models.py:181
 msgid "If other, please write:"
 msgstr "Sei sim, favor deskreve:"
 
-#: donormapping/models.py:158
+#: donormapping/models.py:180
 msgid "How do you find your donors?"
 msgstr "Imi buka informasaun husi doadores?"
 
-#: donormapping/models.py:160
+#: donormapping/models.py:182
 msgid "e.g. Television Advertising, Radio, Newspapers"
 msgstr "Televizaun, Radio, Jornal nsst."
 
-#: donormapping/models.py:164
+#: donormapping/models.py:186
 msgid "Donor funding is difficult to find"
 msgstr "Organizasaun susar atu asesu fundus husi doadores"
 
-#: donormapping/models.py:166
+#: donormapping/models.py:188
 msgid "Recipient organisations are hard to find"
 msgstr "Susar ba organizasaun doadores atu hetan parseiros (simu nain)"
 
-#: donormapping/models.py:169
+#: donormapping/models.py:191
 msgid "Receiving funds is difficult because of transport problems"
 msgstr "Susar atu aplika ba fundus doadores tamba transporte"
 
-#: donormapping/models.py:172
+#: donormapping/models.py:194
 msgid "Applying for funds is very difficult because the process is complicated"
 msgstr ""
 "Susar atu aplika ba fundus tamba sidauk kompriende didiak prosesu aplikasaun "
 "doadores nia"
 
-#: donormapping/models.py:175
+#: donormapping/models.py:197
 msgid ""
 "Donor funding is hard to find for the sectors this organization works in"
 msgstr ""
 "Susar atu aplika ba fundus tamba sidauk apar ho doadores nia interese ba "
 "area/sectores ne'ebe organizasaun implementa"
 
-#: donormapping/models.py:180
+#: donormapping/models.py:202
 msgid "How often do you use Facebook?"
 msgstr "Dala barak ita boot uza media sosial (Facebook nsst.) ka lae?"
 
-#: donormapping/models.py:181
+#: donormapping/models.py:203
 msgid "How often do you use Gmail?"
 msgstr "Dala barak ita boot uza Email ka lae?"
 
-#: donormapping/models.py:182
+#: donormapping/models.py:204
 msgid "How often do you use Google Search?"
 msgstr "Dala barak ita boot uza \"Internet Search\" ka lae?"
 
-#: donormapping/models.py:185
+#: donormapping/models.py:207
 msgid "I have access to a computer"
 msgstr "Hau iha computador"
 
-#: donormapping/models.py:186
+#: donormapping/models.py:208
 msgid "I have access to a printer"
 msgstr "Hau iha printer"
 
-#: donormapping/models.py:187
+#: donormapping/models.py:209
 msgid "I have access to a basic mobile phone (calls and SMS) at work"
 msgstr ""
 "Hau iha telefoni basicu (bele haruka SMS maibee la bele assesu internet)"
 
-#: donormapping/models.py:188
+#: donormapping/models.py:210
 msgid "I have access to a smartphone or tablet (with internet access)"
 msgstr "Hau iha telefoni bele assesu internet"
 
@@ -204,37 +207,37 @@ msgstr "Fatin kiik"
 msgid "Hamlet"
 msgstr "Fatin kiik liu"
 
-#: library/forms.py:27
+#: library/forms.py:48
 msgid "Tag"
 msgstr "Lifuan"
 
-#: library/forms.py:46
+#: library/forms.py:64
+msgid "Organization(s)"
+msgstr "Organizasaun"
+
+#: library/forms.py:68
+msgid "Year(s)"
+msgstr "Tinan"
+
+#: library/forms.py:79
+msgid "Type(s)"
+msgstr "Tipo"
+
+#: library/forms.py:86
+msgid "Include primary sources"
+msgstr ""
+
+#: library/forms.py:95
+msgid "Language"
+msgstr "Lian"
+
+#: library/forms.py:116
 #: templates/nhdb/new_project_search/html-publication-search.html:24
 #: templates/researchhub/publication_list.html:33
 msgid "Search for Publications"
 msgstr "Buka publikasaun"
 
-#: library/forms.py:64
-msgid "Year(s)"
-msgstr "Tinan"
-
-#: library/forms.py:72
-msgid "Type(s)"
-msgstr "Tipo"
-
-#: library/forms.py:80
-msgid "Organization(s)"
-msgstr "Organizasaun"
-
-#: library/forms.py:85
-msgid "Include primary sources"
-msgstr ""
-
-#: library/forms.py:94
-msgid "Language"
-msgstr "Lian"
-
-#: library/models.py:15 templates/library/div-publication-details.html:12
+#: library/models.py:25 templates/library/div-publication-details.html:12
 #: templates/library/div-publication-details.html:37
 #: templates/library/div-publication-list.html:14
 #: templates/library/div-publication-list.html:47
@@ -245,37 +248,43 @@ msgstr "Lian"
 msgid "Year"
 msgstr "Tinan"
 
-#: library/models.py:16 nhdb/models.py:93 nhdb/models.py:239
+#: library/models.py:26 nhdb/models.py:105 nhdb/models.py:115
+#: nhdb/models.py:381
 msgid "name"
 msgstr "naran"
 
-#: library/models.py:17 nhdb/models.py:94
+#: library/models.py:27 nhdb/models.py:107 nhdb/models.py:116
 msgid "description"
 msgstr "deskripsaun"
 
-#: library/models.py:18
+#: library/models.py:28 nhdb/views_excel.py:57
 msgid "Type"
 msgstr "Tipo"
 
-#: library/models.py:36
+#: library/models.py:54
 #: templates/nhdb/new_project_search/html-publication-search.html:23
 #: templates/researchhub/publication_list.html:32
 msgid "Publications"
 msgstr "Publikasaun"
 
-#: library/models.py:105
+#: library/models.py:69
+#: templates/nhdb/new_project_search/div-publication-search.html:17
+msgid "Tags"
+msgstr "Tags"
+
+#: library/models.py:384
 msgid "Versions"
 msgstr "Version"
 
-#: library/models.py:137
+#: library/models.py:416
 msgid "Authors"
 msgstr "Autor"
 
-#: library/models.py:153
+#: library/models.py:432
 msgid "Publication Types"
 msgstr "Tipo publikasaun"
 
-#: nhdb/admin.py:19 templates/admin/constance/change_list.html:61
+#: nhdb/admin.py:20 nhdb/views_excel.py:20 nhdb/views_excel.py:56
 #: templates/library/div-publication-details.html:10
 #: templates/library/div-publication-details.html:35
 #: templates/library/div-publication-list.html:12
@@ -287,78 +296,157 @@ msgstr "Tipo publikasaun"
 msgid "Name"
 msgstr "Naran"
 
-#: nhdb/admin.py:29
+#: nhdb/admin.py:30 nhdb/admin.py:50
 msgid "First Name"
 msgstr "Naran Primeru"
 
-#: nhdb/admin.py:39
+#: nhdb/admin.py:40
 msgid "Last Name"
 msgstr "Apelidu"
 
-#: nhdb/admin.py:48 templates/nhdb/new_project_search/div-project-more.html:78
+#: nhdb/admin.py:70 templates/nhdb/new_project_search/div-project-more.html:78
 #: templates/nhdb/new_project_search/html-organisation-details.html:42
-#: templates/nhdb/organization_detail.html:230
 msgid "Staff"
 msgstr "Staff"
 
-#: nhdb/admin.py:75
+#: nhdb/admin.py:98
 msgid "No. of Projects"
 msgstr "Numeru Projetu"
 
-#: nhdb/forms.py:95 nhdb/forms.py:266 nhdb/forms.py:426
-#: nhdb/partialforms.py:193
-msgid "Sector(s)"
-msgstr "Setora"
-
-#: nhdb/forms.py:111
+#: nhdb/forms.py:218
 msgid "Search Organizations"
 msgstr "Buka organizasaun sira"
 
-#: nhdb/forms.py:145 nhdb/forms.py:493
+#: nhdb/forms.py:254
+#, fuzzy
+#| msgid "Activities"
+msgid "Activity"
+msgstr "Actividade"
+
+#: nhdb/forms.py:255
+#, fuzzy
+#| msgid "Sectors"
+msgid "Sector"
+msgstr "Sektor"
+
+#: nhdb/forms.py:256
+#, fuzzy
+#| msgid "Beneficiaries"
+msgid "Beneficiary"
+msgstr "Benefisiario"
+
+#: nhdb/forms.py:257
+#, fuzzy
+#| msgid "Organization type"
+msgid "Organization Type"
+msgstr "Tipo Organizasaun"
+
+#: nhdb/forms.py:265 nhdb/forms.py:593
 msgid "Place"
 msgstr "Fatin"
 
-#: nhdb/forms.py:258
-msgid "Locations"
-msgstr "Lokasaun"
+#: nhdb/forms.py:418
+msgid "You can add translations in these languages: "
+msgstr ""
 
-#: nhdb/forms.py:396
-msgid "Your Name"
-msgstr "Ita boot nia naran"
+#: nhdb/forms.py:543
+msgid "Sector(s)"
+msgstr "Setora"
 
-#: nhdb/forms.py:402
-msgid "Email address"
-msgstr "Email"
-
-#: nhdb/forms.py:407
-msgid "Comments"
-msgstr "Komentariu"
-
-#: nhdb/forms.py:442
+#: nhdb/forms.py:611
 msgid "Search Projects"
 msgstr "Buka projetu sira"
 
-#: nhdb/forms.py:552 templates/admin/constance/change_list.html:66
+#: nhdb/forms.py:722
 msgid "Default"
 msgstr ""
 
-#: nhdb/models.py:95
+#: nhdb/models.py:106
+#, fuzzy
+#| msgid "organizations"
+msgid "organization"
+msgstr "Organizasaun"
+
+#: nhdb/models.py:108
+#, fuzzy
+#| msgid "Email"
+msgid "email"
+msgstr "Email"
+
+#: nhdb/models.py:110
+msgid "Other purpose"
+msgstr ""
+
+#: nhdb/models.py:117
 msgid "class"
 msgstr "class"
 
-#: nhdb/models.py:240
+#: nhdb/models.py:382
 msgid "Project Description"
 msgstr "Deskripsaun projetu"
 
-#: nhdb/models.py:262
+#: nhdb/models.py:405
 msgid "Full time staff"
 msgstr ""
 
-#: nhdb/models.py:263
+#: nhdb/models.py:406
 msgid "Part time staff"
 msgstr ""
 
-#: templates/about.html:15 templates/navbar.html:46
+#: nhdb/models.py:502
+#, fuzzy
+#| msgid "Organization type"
+msgid "Organization involvement"
+msgstr "Tipo Organizasaun"
+
+#: nhdb/models.py:503
+#, fuzzy
+#| msgid "Enter notes about this project"
+msgid "Notes about this relationship"
+msgstr "Hakerek notas kona ba projetu"
+
+#: nhdb/views_excel.py:21
+#: templates/donormapping/fundingoffer_detail_ajax.html:27
+#: templates/nhdb/new_project_search/div-project-more.html:22
+msgid "Description"
+msgstr "Deskripsaun"
+
+#: nhdb/views_excel.py:22
+#, fuzzy
+#| msgid "Start"
+msgid "Start Date"
+msgstr "Comesa"
+
+#: nhdb/views_excel.py:23
+msgid "End Date"
+msgstr ""
+
+#: nhdb/views_excel.py:58 templates/donormapping/fundingoffer_detail.html:29
+#: templates/donormapping/fundingoffer_detail_ajax.html:45
+msgid "Phone"
+msgstr "Telephoni"
+
+#: nhdb/views_excel.py:59 templates/donormapping/fundingoffer_detail.html:31
+#: templates/donormapping/fundingoffer_detail_ajax.html:47
+#: templates/donormapping/index.html:32 templates/nhdb/index.html:32
+msgid "Email"
+msgstr "Email"
+
+#: nhdb/views_excel.py:60
+msgid "Addresses"
+msgstr ""
+
+#: nhdb/views_excel.py:62
+#, fuzzy
+#| msgid "District"
+msgid "Subdistrict"
+msgstr "Munisipio"
+
+#: nhdb/views_excel.py:63
+msgid "Suco"
+msgstr ""
+
+#: templates/about.html:15 templates/navbar.html:49 templates/navbar.html:50
 msgid "About Us"
 msgstr "Kona ba Ami"
 
@@ -382,7 +470,7 @@ msgstr ""
 "Favor ida contaktu Joshua Brooks at <strong>josh.vdbroek@gmail.com</strong> "
 "no <strong>admin@timordata.info</strong>"
 
-#: templates/about.html:18 templates/about.html.py:19 templates/about.html:20
+#: templates/about.html:18 templates/about.html:19 templates/about.html:20
 msgid "For more information about"
 msgstr ""
 
@@ -392,7 +480,7 @@ msgstr ""
 msgid "the main site"
 msgstr "Haree iha website"
 
-#: templates/about.html:18 templates/about.html.py:19 templates/about.html:20
+#: templates/about.html:18 templates/about.html:19 templates/about.html:20
 msgid "please contact"
 msgstr "favor ida, kontaktu"
 
@@ -401,7 +489,6 @@ msgid "projects or organization information from the NHDB"
 msgstr ""
 
 #: templates/about.html:20
-#| msgid "Library"
 msgid "the library"
 msgstr "Biblioteka"
 
@@ -422,6 +509,7 @@ msgid "National humanitarian database"
 msgstr ""
 
 #: templates/about.html:28 templates/donormapping/fundingoffer_detail.html:30
+#: templates/donormapping/fundingoffer_detail_ajax.html:46
 msgid "or"
 msgstr "no"
 
@@ -457,15 +545,10 @@ msgid "used on this site"
 msgstr "Haree iha website"
 
 #: templates/about.html:48
-#| msgid "Contact Us"
 msgid "Contact"
 msgstr "Kontaktu"
 
 #: templates/about.html:50
-#| msgid ""
-#| "The Data Center team would like to acknowledge the Department of Foreign "
-#| "Affairs and Trade for supporting the development of the Timor-Leste Data "
-#| "Center."
 msgid ""
 "The Data Center team would like to acknowledge the Australian Government for "
 "supporting the development of the Timor-Leste Data Center."
@@ -544,420 +627,9 @@ msgstr ""
 "Sei ita boot iha projetu, peskiza, publicasaun no opportunidade fundus, bele "
 "kontaktu ami."
 
-#: templates/admin/404.html:7 templates/admin/404.html.py:11
-msgid "Page not found"
-msgstr ""
-
-#: templates/admin/404.html:12
-msgid "We're sorry, but the requested page could not be found."
-msgstr ""
-
-#: templates/admin/500.html:9 templates/admin/app_index.html:11
-#: templates/admin/auth/user/change_password.html:7
-#: templates/admin/base.html:119 templates/admin/change_form.html:139
-#: templates/admin/change_list.html:142
-#: templates/admin/change_list_filter_sidebar.html:151
-#: templates/admin/constance/change_list.html:44
-#: templates/admin/csv_export_selected_confirmation.html:9
-#: templates/admin/delete_confirmation.html:13
-#: templates/admin/delete_selected_confirmation.html:13
-#: templates/admin/index.html:18 templates/admin/invalid_setup.html:9
-#: templates/admin/object_history.html:9 templates/donormapping/navbar.html:11
-#: templates/navbar.html:11
-msgid "Home"
-msgstr "Uma"
-
-#: templates/admin/500.html:10
-msgid "Server error"
-msgstr ""
-
-#: templates/admin/500.html:15
-msgid "Server error (500)"
-msgstr ""
-
-#: templates/admin/500.html:19
-msgid "Server Error <em>(500)</em>"
-msgstr ""
-
-#: templates/admin/500.html:20
-msgid ""
-"There's been an error. It's been reported to the site administrators via e-"
-"mail and should be fixed shortly. Thanks for your patience."
-msgstr ""
-
-#: templates/admin/actions.html:10
-msgid "Click here to select the objects across all pages"
-msgstr ""
-
-#: templates/admin/actions.html:10
-#, python-format
-msgid "Select all %(total_count)s %(module_name)s"
-msgstr ""
-
-#: templates/admin/actions.html:11
-msgid "Clear selection"
-msgstr ""
-
-#: templates/admin/app_index.html:13
-#, python-format
-msgid "<li>%(name)s</li>"
-msgstr ""
-
-#: templates/admin/app_index.html:30 templates/admin/change_form.html:142
-#: templates/admin/index.html:45 templates/index.html:83
-#: templates/library/index.html:18
-msgid "Add"
-msgstr "Aumenta"
-
-#: templates/admin/app_index.html:31 templates/admin/index.html:50
-msgid "Change"
-msgstr "Troka"
-
-#: templates/admin/app_index.html:38 templates/admin/index.html:59
-msgid "You don´t have permission to edit anything."
-msgstr ""
-
-#: templates/admin/auth/user/change_password.html:11
-#: templates/admin/auth/user/change_password.html:57
-#: templates/admin/base.html:90
-#| msgid "Password"
-msgid "Change password"
-msgstr "Troka password"
-
-#: templates/admin/auth/user/change_password.html:15
-#, fuzzy
-#| msgid "Password"
-msgid "Password change"
-msgstr "Password"
-
-#: templates/admin/auth/user/change_password.html:24
-#, python-format
-msgid "Enter a new password for the user <strong>%(username)s</strong>."
-msgstr ""
-
-#: templates/admin/auth/user/change_password.html:27
-#: templates/admin/change_form.html:173 templates/admin/change_list.html:223
-#: templates/admin/change_list_filter_sidebar.html:230
-#: templates/admin/login.html:34
-msgid "Please correct the error below."
-msgstr ""
-
-#: templates/admin/auth/user/change_password.html:27
-#: templates/admin/change_form.html:173 templates/admin/change_list.html:223
-#: templates/admin/change_list_filter_sidebar.html:230
-#: templates/admin/login.html:34
-msgid "Please correct the errors below."
-msgstr ""
-
-#: templates/admin/auth/user/change_password.html:34
-#| msgid "Password"
-msgid "New password"
-msgstr "Password Foun"
-
-#: templates/admin/auth/user/change_password.html:46
-#, fuzzy
-#| msgid "Password"
-msgid "Password (again)"
-msgstr "Password"
-
-#: templates/admin/auth/user/change_password.html:50
-msgid "Enter the same password as above, for verification."
-msgstr ""
-
-#: templates/admin/base.html:93
-msgid "Log out"
-msgstr ""
-
-#: templates/admin/base.html:101
-msgid "Documentation"
-msgstr "Doumentasaun"
-
-#: templates/admin/change_form.html:129
-#: templates/admin/edit_inline/stacked.html:8
-msgid "Open All Items"
-msgstr "Taka Hotu"
-
-#: templates/admin/change_form.html:130
-#: templates/admin/edit_inline/stacked.html:9
-msgid "Close All Items"
-msgstr "Loke Hotu"
-
-#: templates/admin/change_form.html:154 templates/admin/object_history.html:13
-msgid "History"
-msgstr "Istoria"
-
-#: templates/admin/change_form.html:155
-msgid "View on site"
-msgstr "Haree iha website"
-
-#: templates/admin/change_list.html:160
-#: templates/admin/change_list_filter_sidebar.html:169
-#, python-format
-msgid "Add %(name)s"
-msgstr "Tau %(name)s"
-
-#: templates/admin/change_list.html:189
-#: templates/admin/change_list_filter_sidebar.html:184
-msgid "Filter"
-msgstr "Filtru"
-
-#: templates/admin/change_list.html:250
-#: templates/admin/constance/change_list.html:110
-#: templates/admin/submit_line.html:9
-msgid "Save"
-msgstr ""
-
-#: templates/admin/change_list_results.html:19
-#, fuzzy
-#| msgid "Remove from sorting"
-msgid "Toggle sorting"
-msgstr "Hasai husi sorting"
-
-#: templates/admin/change_list_results.html:20
-#, python-format
-msgid "Sorting priority: %(priority_number)s"
-msgstr ""
-
-#: templates/admin/change_list_results.html:21
-msgid "Remove from sorting"
-msgstr "Hasai husi sorting"
-
-#: templates/admin/constance/change_list.html:71
-msgid "Value"
-msgstr ""
-
-#: templates/admin/constance/change_list.html:76
-msgid "Is modified"
-msgstr ""
-
-#: templates/admin/csv_export_selected_confirmation.html:12
-msgid "Export selection as CSV"
-msgstr ""
-
-#: templates/admin/csv_export_selected_confirmation.html:31
-msgid "Export following fields:"
-msgstr ""
-
-#: templates/admin/csv_export_selected_confirmation.html:34
-msgid "Select all"
-msgstr ""
-
-#: templates/admin/csv_export_selected_confirmation.html:54
-msgid "Back"
-msgstr ""
-
-#: templates/admin/csv_export_selected_confirmation.html:55
-msgid "Export"
-msgstr ""
-
-#: templates/admin/delete_confirmation.html:17
-#: templates/admin/submit_line.html:6
-msgid "Delete"
-msgstr "Hasai"
-
-#: templates/admin/delete_confirmation.html:27
-#, python-format
-msgid ""
-"Deleting the %(object_name)s '%(escaped_object)s' would result in deleting "
-"related objects, but your account doesn't have permission to delete the "
-"following types of objects:"
-msgstr ""
-
-#: templates/admin/delete_confirmation.html:35
-#, python-format
-msgid ""
-"Deleting the %(object_name)s '%(escaped_object)s' would require deleting the "
-"following protected related objects:"
-msgstr ""
-
-#: templates/admin/delete_confirmation.html:45
-#, fuzzy, python-format
-#| msgid ""
-#| "Are you sure you want to delete the selected %(objects_name)s? All of the "
-#| "following objects and their related items will be deleted:"
-msgid ""
-"Are you sure you want to delete the %(object_name)s \"%(escaped_object)s\"? "
-"All of the following related items will be deleted:"
-msgstr "Bele hasai %(objects_name)s? Atu hasai sasaan nebee:"
-
-#: templates/admin/delete_confirmation.html:51
-#: templates/admin/delete_selected_confirmation.html:57
-msgid "Cancel"
-msgstr "Lae"
-
-#: templates/admin/delete_confirmation.html:52
-#: templates/admin/delete_selected_confirmation.html:58
-msgid "Yes, I'm sure"
-msgstr "Sin"
-
-#: templates/admin/delete_selected_confirmation.html:16
-msgid "Delete multiple objects"
-msgstr ""
-
-#: templates/admin/delete_selected_confirmation.html:26
-#, python-format
-msgid ""
-"Deleting the selected %(objects_name)s would result in deleting related "
-"objects, but your account doesn't have permission to delete the following "
-"types of objects:"
-msgstr ""
-
-#: templates/admin/delete_selected_confirmation.html:34
-#, python-format
-msgid ""
-"Deleting the selected %(objects_name)s would require deleting the following "
-"protected related objects:"
-msgstr ""
-
-#: templates/admin/delete_selected_confirmation.html:44
-#, python-format
-msgid ""
-"Are you sure you want to delete the selected %(objects_name)s? All of the "
-"following objects and their related items will be deleted:"
-msgstr "Bele hasai %(objects_name)s? Atu hasai sasaan nebee:"
-
-#: templates/admin/edit_inline/stacked.html:10
-#: templates/admin/edit_inline/stacked.html:54
-#: templates/admin/edit_inline/tabular.html:91
-msgid "Add Item"
-msgstr "Tau"
-
-#: templates/admin/edit_inline/stacked.html:23
-#: templates/admin/edit_inline/tabular.html:64
-msgid "View on Site"
-msgstr "Haree"
-
-#: templates/admin/edit_inline/stacked.html:25
-#: templates/admin/edit_inline/tabular.html:66
-msgid "Move Item"
-msgstr "Muda"
-
-#: templates/admin/edit_inline/stacked.html:29
-#: templates/admin/edit_inline/stacked.html:34
-#: templates/admin/edit_inline/tabular.html:70
-#: templates/admin/edit_inline/tabular.html:75
-msgid "Delete Item"
-msgstr "Hasai"
-
-#: templates/admin/edit_inline/stacked.html:52
-#: templates/admin/edit_inline/tabular.html:89
-#, python-format
-msgid "Add another %(verbose_name)s"
-msgstr "Tau seluk %(verbose_name)s"
-
-#: templates/admin/edit_inline/tabular.html:9
-msgid "Add Another"
-msgstr "Tau seluk"
-
-#: templates/admin/filter.html:4 templates/admin/filter_listing.html:3
-#, python-format
-msgid "%(filter_title)s"
-msgstr ""
-
-#: templates/admin/index.html:65
-msgid "Custom Views"
-msgstr ""
-
-#: templates/admin/index.html:76
-#, fuzzy
-#| msgid "Action"
-msgid "Recent Actions"
-msgstr "Acsaun"
-
-#: templates/admin/index.html:78
-msgid "My Actions"
-msgstr "Hau-nia Acsaun"
-
-#: templates/admin/index.html:81
-msgid "None available"
-msgstr "La iha"
-
-#: templates/admin/invalid_setup.html:16
-msgid ""
-"Something's wrong with your database installation. Make sure the appropriate "
-"database tables have been created, and make sure the database is readable by "
-"the appropriate user."
-msgstr ""
-
-#: templates/admin/login.html:27
-msgid ""
-"Please contact the Belun database team if you would like to be a database "
-"maintainer but don't yet have login details"
-msgstr ""
-"Favor ida kontaktu ekipa database iha Belun sei ita preciza assesu database "
-"maibee seidauk iha user naran no password"
-
-#: templates/admin/login.html:28
-msgid "Login"
-msgstr ""
-
-#: templates/admin/login.html:64
-msgid "Forgotten your password or username?"
-msgstr ""
-
-#: templates/admin/login.html:71
-msgid "Log in"
-msgstr ""
-
-#: templates/admin/object_history.html:24
-msgid "Date/time"
-msgstr ""
-
-#: templates/admin/object_history.html:25
-#, fuzzy
-#| msgid "User name"
-msgid "User"
-msgstr "Naran User"
-
-#: templates/admin/object_history.html:26
-msgid "Action"
-msgstr "Acsaun"
-
-#: templates/admin/object_history.html:32
-msgid "DATETIME_FORMAT"
-msgstr ""
-
-#: templates/admin/object_history.html:36
-msgid "Created object"
-msgstr "Objetu halo ona"
-
-#: templates/admin/object_history.html:46
-msgid ""
-"This object doesn't have a change history. It probably wasn't added via this "
-"admin site."
-msgstr ""
-
-#: templates/admin/pagination.html:8
-#, python-format
-msgid "%(counter)s result"
-msgid_plural "%(counter)s results"
-msgstr[0] ""
-msgstr[1] ""
-
-#: templates/admin/pagination.html:13 templates/admin/pagination.html.py:15
-#, python-format
-msgid "%(full_result_count)s total"
-msgstr ""
-
-#: templates/admin/pagination.html:27
-msgid "Show all"
-msgstr "Haree hotu"
-
-#: templates/admin/submit_line.html:12
-msgid "Save as new"
-msgstr "Tau (foun)"
-
-#: templates/admin/submit_line.html:15
-msgid "Save and add another"
-msgstr "Tau nee no tau ida tan"
-
-#: templates/admin/submit_line.html:18
-msgid "Save and continue editing"
-msgstr "Tau no kontinua troka"
-
 #: templates/donormapping/alert-welcome-donormapping-list.html:5
 #: templates/donormapping/index.html:66 templates/donormapping/navbar.html:23
-#: templates/index.html:74 templates/navbar.html:23
+#: templates/index.html:45 templates/navbar.html:26
 #: templates/nhdb/index.html:66
 msgid "Donor Funding"
 msgstr "Fundus husi duadores"
@@ -978,34 +650,34 @@ msgstr ""
 "Ami atu lista opportunidades husi doadores no organizasaun mak iha fundus "
 "delaruma iha site nee entaun organizasaun lokal bele buka fundus"
 
-#: templates/donormapping/fundingoffer_detail.html:29
-msgid "Phone"
-msgstr "Telephoni"
-
-#: templates/donormapping/fundingoffer_detail.html:31
-#: templates/donormapping/index.html:32 templates/nhdb/index.html:32
-msgid "Email"
-msgstr "Email"
-
 #: templates/donormapping/fundingoffer_detail.html:33
+#: templates/donormapping/fundingoffer_detail_ajax.html:49
 msgid "Website"
 msgstr "Website"
 
 #: templates/donormapping/fundingoffer_detail.html:36
+#: templates/donormapping/fundingoffer_detail_ajax.html:52
 msgid "Fax"
 msgstr "Fax"
 
 #: templates/donormapping/fundingoffer_detail.html:38
+#: templates/donormapping/fundingoffer_detail_ajax.html:54
 msgid "Address(es)"
 msgstr ""
 
 #: templates/donormapping/fundingoffer_detail.html:46
+#: templates/donormapping/fundingoffer_detail_ajax.html:62
 msgid "Conditions"
 msgstr "Kondisaun"
 
 #: templates/donormapping/fundingoffer_detail.html:53
+#: templates/donormapping/fundingoffer_detail_ajax.html:69
 msgid "Attachments"
 msgstr "Annexo"
+
+#: templates/donormapping/fundingoffer_detail_ajax.html:17
+msgid "Summary"
+msgstr ""
 
 #: templates/donormapping/fundingsurvey_detail.html:6
 msgid "Change this survey"
@@ -1021,11 +693,10 @@ msgid "Go to the survey list"
 msgstr "Ba lista formulario"
 
 #: templates/donormapping/index.html:11 templates/donormapping/index.html:27
-#: templates/donormapping/index.html:46 templates/index.html:13
-#: templates/index.html.py:39 templates/index_background_2.html:29
-#: templates/index_background_3.html:7 templates/nhdb/index.html:11
-#: templates/nhdb/index.html.py:27 templates/nhdb/index.html:46
-#: templates/nhdb/new_project_search/base.html:10
+#: templates/donormapping/index.html:46 templates/index.html:16
+#: templates/index_background_2.html:29 templates/index_background_3.html:7
+#: templates/nhdb/index.html:11 templates/nhdb/index.html:27
+#: templates/nhdb/index.html:46 templates/nhdb/new_project_search/base.html:10
 #: templates/nhdb/new_project_search/navbar.html:11
 msgid "Timor-Leste Data Center"
 msgstr "Timor Leste Dadus Sentru"
@@ -1042,21 +713,20 @@ msgid ""
 msgstr ""
 "Projetu husi Belun hamutuk Fundasaun Alola, Fongtil no Fundasaun Mahein"
 
-#: templates/donormapping/index.html:48 templates/index.html:59
-#: templates/index.html.py:61 templates/nhdb/index.html:48
+#: templates/donormapping/index.html:48 templates/index.html:30
+#: templates/index.html:32 templates/nhdb/index.html:48
 msgid "Search"
 msgstr "Buka"
 
-#: templates/donormapping/index.html:56 templates/index.html:53
+#: templates/donormapping/index.html:56 templates/index.html:25
 #: templates/nhdb/index.html:56
 msgid "Development"
 msgstr "Dezenvolvimento"
 
 #: templates/donormapping/index.html:58 templates/donormapping/index.html:63
-#: templates/donormapping/index.html:68 templates/index.html:69
-#: templates/index.html.py:78 templates/index.html:82
-#: templates/nhdb/index.html:58 templates/nhdb/index.html.py:63
-#: templates/nhdb/index.html:68
+#: templates/donormapping/index.html:68 templates/index.html:40
+#: templates/index.html:49 templates/index.html:53 templates/nhdb/index.html:58
+#: templates/nhdb/index.html:63 templates/nhdb/index.html:68
 msgid "View"
 msgstr "Haree"
 
@@ -1064,30 +734,37 @@ msgstr "Haree"
 msgid "Research"
 msgstr "Peskiza"
 
-#: templates/donormapping/navbar.html:15 templates/navbar.html:15
-#| msgid "Search Organizations"
+#: templates/donormapping/navbar.html:11
+msgid "Home"
+msgstr "Uma"
+
+#: templates/donormapping/navbar.html:15
 msgid "Projects and Organizations"
 msgstr "Projetu no organizasaun"
 
-#: templates/donormapping/navbar.html:17 templates/index.html:59
-#: templates/navbar.html:17
+#: templates/donormapping/navbar.html:17 templates/index.html:30
+#: templates/navbar.html:21
 #: templates/nhdb/new_project_search/html-organisation-details.html:34
-#: templates/nhdb/organization_detail.html:214
+#: templates/nhdb/organization_detail.html:492
 msgid "Projects"
 msgstr "Projetu"
 
-#: templates/donormapping/navbar.html:22 templates/index.html:64
-#: templates/navbar.html:22
+#: templates/donormapping/navbar.html:22 templates/index.html:35
+#: templates/navbar.html:25
 msgid "Library"
 msgstr "Biblioteka"
 
-#: templates/geo/map.html:95
+#: templates/geo/map.html:53
 msgid "Geographic Information"
 msgstr "Informasaun kona ba rai"
 
-#: templates/index.html:80
+#: templates/index.html:51
 msgid "Funding Opportunities Survey"
 msgstr ""
+
+#: templates/index.html:54 templates/library/index.html:18
+msgid "Add"
+msgstr "Aumenta"
 
 #: templates/library/div-publication-details.html:11
 #: templates/library/div-publication-details.html:36
@@ -1110,7 +787,6 @@ msgstr "Author"
 #: templates/researchhub/div-publication-details.html:38
 #: templates/researchhub/div-publication-list.html:15
 #: templates/researchhub/div-publication-list.html:48
-#| msgid "Organization(s)"
 msgid "organization(s)"
 msgstr "Organizasaun"
 
@@ -1147,6 +823,14 @@ msgstr "Buka publikasaun"
 msgid "Add Documents"
 msgstr "Tau dokumentus seluk"
 
+#: templates/library/publication_detail.html:28
+#: templates/library/publication_detail.html:31
+#: templates/library/publication_detail.html:32
+#, fuzzy
+#| msgid "Editors"
+msgid "Edit"
+msgstr "Editors"
+
 #: templates/navbar.html:36
 msgid "Add a project"
 msgstr "Tau Projetu"
@@ -1160,8 +844,30 @@ msgid "Add a publication"
 msgstr "Tau Publikasaun"
 
 #: templates/navbar.html:41
-msgid "Add a new funding opportunity"
+#, fuzzy
+#| msgid "Add a new funding opportunity"
+msgid "Add a funding offer"
 msgstr "Tau opportunidade fundus"
+
+#: templates/navbar.html:42
+#, fuzzy
+#| msgid "make suggestions"
+msgid "Suggestions"
+msgstr "halo sugestaun"
+
+#: templates/navbar.html:46
+#, fuzzy
+#| msgid "About Us"
+msgid "About"
+msgstr "Kona ba Ami"
+
+#: templates/navbar.html:48
+msgid "History"
+msgstr "Istoria"
+
+#: templates/navbar.html:51
+msgid "Help"
+msgstr ""
 
 #: templates/nhdb/new_project_search/div-organisation-more.html:7
 #: templates/nhdb/new_project_search/div-organisation-new.html:7
@@ -1188,10 +894,6 @@ msgstr "Atividade, Benefisiariu no Setor"
 #: templates/nhdb/new_project_search/div-project-more.html:13
 msgid "Project Name"
 msgstr "Naran Projetu"
-
-#: templates/nhdb/new_project_search/div-project-more.html:22
-msgid "Description"
-msgstr "Deskripsaun"
 
 #: templates/nhdb/new_project_search/div-project-more.html:23
 msgid "Enter Project description"
@@ -1270,9 +972,57 @@ msgstr "Nee iha exemplu"
 msgid "All sectors"
 msgstr "Sektor hotu-hotu"
 
+#: templates/nhdb/new_project_search/translation.html:38
+msgid "Organization"
+msgstr "Organizasaun"
+
 #: templates/nhdb/new_project_search/translation.html:41
 msgid "Project"
 msgstr "Projetu"
+
+#: templates/nhdb/organization_detail.html:506
+#: templates/nhdb/organization_detail_ajax.html:239
+#, fuzzy
+#| msgid "Project Description"
+msgid "No project description"
+msgstr "Deskripsaun projetu"
+
+#: templates/nhdb/organization_detail_ajax.html:226
+#, fuzzy
+#| msgid "Projects"
+msgid "Active Projects"
+msgstr "Projetu"
+
+#: templates/nhdb/organization_detail_ajax.html:261
+msgid "Planned or Completed Projects"
+msgstr ""
+
+#: templates/nhdb/organization_detail_ajax.html:308
+msgid "Personnel"
+msgstr ""
+
+#: templates/nhdb/organization_list.html:178
+#: templates/nhdb/project_list.html:199
+msgid "Thanks for your interest in downloading this information!"
+msgstr ""
+
+#: templates/nhdb/organization_list.html:179
+#: templates/nhdb/project_list.html:200
+msgid "Please tell us how this information could help you."
+msgstr ""
+
+#: templates/nhdb/organization_list.html:180
+#: templates/nhdb/project_list.html:201
+msgid ""
+"This information isn't used to identify you, but only help us to make our "
+"services better."
+msgstr ""
+
+#: templates/nhdb/organizationsuggestions.html:6
+#, fuzzy
+#| msgid "Organization type"
+msgid "New Organizations Suggested"
+msgstr "Tipo Organizasaun"
 
 #: templates/nhdb/personal-details-form-modal.html:10
 msgid ""
@@ -1286,12 +1036,191 @@ msgstr ""
 "perguntas seluk."
 
 #: templates/nhdb/personal-details-form-modal.html:11
+#: templates/nhdb/personal-details-form-project-modal.html:11
 msgid ""
 "Please let us know your name and email address and if you want, you can add "
 "a comment about why you think these changes should be made"
 msgstr ""
 "Favor id hakerek ita bo'ot nia naran no email. Ita bele tau commentariu, "
 "maibee la preciza."
+
+#: templates/nhdb/personal-details-form-project-modal.html:10
+#, fuzzy
+#| msgid ""
+#| "If you're involved with this project or organization, you are welcome to "
+#| "suggest changes to our records. Within a day or two database staff will "
+#| "approve your changes or get in touch with you by email if we have any "
+#| "questions"
+msgid ""
+"If you're involved with this project, you are welcome to suggest changes to "
+"our records. Within a day or two database staff will approve your changes or "
+"get in touch with you by email if we have any questions"
+msgstr ""
+"Sei ita hatene projetu nee, bele halo sugestaun. Iha loron ida no rua ema "
+"husi ekipa DB atu approve ita nia sugestaun no kontaktu ita sei ami iha "
+"perguntas seluk."
+
+#: templates/registration/login.html:27
+msgid ""
+"Please contact the Belun database team if you would like to be a database "
+"maintainer but don't yet have login details"
+msgstr ""
+"Favor ida kontaktu ekipa database iha Belun sei ita preciza assesu database "
+"maibee seidauk iha user naran no password"
+
+#: templates/registration/login.html:28
+msgid "Login"
+msgstr ""
+
+#: templates/registration/login.html:34
+msgid "Please correct the error below."
+msgstr ""
+
+#: templates/registration/login.html:34
+msgid "Please correct the errors below."
+msgstr ""
+
+#: templates/registration/login.html:64
+msgid "Forgotten your password or username?"
+msgstr ""
+
+#: templates/registration/login.html:71
+msgid "Log in"
+msgstr ""
+
+#~ msgid "Locations"
+#~ msgstr "Lokasaun"
+
+#~ msgid "Your Name"
+#~ msgstr "Ita boot nia naran"
+
+#~ msgid "Email address"
+#~ msgstr "Email"
+
+#~ msgid "Comments"
+#~ msgstr "Komentariu"
+
+#~ msgid "Change"
+#~ msgstr "Troka"
+
+#~| msgid "Password"
+#~ msgid "Change password"
+#~ msgstr "Troka password"
+
+#, fuzzy
+#~| msgid "Password"
+#~ msgid "Password change"
+#~ msgstr "Password"
+
+#~| msgid "Password"
+#~ msgid "New password"
+#~ msgstr "Password Foun"
+
+#, fuzzy
+#~| msgid "Password"
+#~ msgid "Password (again)"
+#~ msgstr "Password"
+
+#~ msgid "Documentation"
+#~ msgstr "Doumentasaun"
+
+#~ msgid "Open All Items"
+#~ msgstr "Taka Hotu"
+
+#~ msgid "Close All Items"
+#~ msgstr "Loke Hotu"
+
+#~ msgid "View on site"
+#~ msgstr "Haree iha website"
+
+#~ msgid "Add %(name)s"
+#~ msgstr "Tau %(name)s"
+
+#~ msgid "Filter"
+#~ msgstr "Filtru"
+
+#, fuzzy
+#~| msgid "Remove from sorting"
+#~ msgid "Toggle sorting"
+#~ msgstr "Hasai husi sorting"
+
+#~ msgid "Remove from sorting"
+#~ msgstr "Hasai husi sorting"
+
+#~ msgid "Delete"
+#~ msgstr "Hasai"
+
+#, fuzzy
+#~| msgid ""
+#~| "Are you sure you want to delete the selected %(objects_name)s? All of "
+#~| "the following objects and their related items will be deleted:"
+#~ msgid ""
+#~ "Are you sure you want to delete the %(object_name)s \"%(escaped_object)s"
+#~ "\"? All of the following related items will be deleted:"
+#~ msgstr "Bele hasai %(objects_name)s? Atu hasai sasaan nebee:"
+
+#~ msgid "Cancel"
+#~ msgstr "Lae"
+
+#~ msgid "Yes, I'm sure"
+#~ msgstr "Sin"
+
+#~ msgid ""
+#~ "Are you sure you want to delete the selected %(objects_name)s? All of the "
+#~ "following objects and their related items will be deleted:"
+#~ msgstr "Bele hasai %(objects_name)s? Atu hasai sasaan nebee:"
+
+#~ msgid "Add Item"
+#~ msgstr "Tau"
+
+#~ msgid "View on Site"
+#~ msgstr "Haree"
+
+#~ msgid "Move Item"
+#~ msgstr "Muda"
+
+#~ msgid "Delete Item"
+#~ msgstr "Hasai"
+
+#~ msgid "Add another %(verbose_name)s"
+#~ msgstr "Tau seluk %(verbose_name)s"
+
+#~ msgid "Add Another"
+#~ msgstr "Tau seluk"
+
+#, fuzzy
+#~| msgid "Action"
+#~ msgid "Recent Actions"
+#~ msgstr "Acsaun"
+
+#~ msgid "My Actions"
+#~ msgstr "Hau-nia Acsaun"
+
+#~ msgid "None available"
+#~ msgstr "La iha"
+
+#, fuzzy
+#~| msgid "User name"
+#~ msgid "User"
+#~ msgstr "Naran User"
+
+#~ msgid "Action"
+#~ msgstr "Acsaun"
+
+#~ msgid "Created object"
+#~ msgstr "Objetu halo ona"
+
+#~ msgid "Show all"
+#~ msgstr "Haree hotu"
+
+#~ msgid "Save as new"
+#~ msgstr "Tau (foun)"
+
+#~ msgid "Save and add another"
+#~ msgstr "Tau nee no tau ida tan"
+
+#~ msgid "Save and continue editing"
+#~ msgstr "Tau no kontinua troka"
 
 #~ msgid "Project Sectors"
 #~ msgstr "Setora projetu "
@@ -1360,9 +1289,6 @@ msgstr ""
 
 #~ msgid "This project has no notes. Click here to type"
 #~ msgstr "Projectu seidauk iha"
-
-#~ msgid "Start"
-#~ msgstr "Comesa"
 
 #~ msgid "End"
 #~ msgstr "Remata"

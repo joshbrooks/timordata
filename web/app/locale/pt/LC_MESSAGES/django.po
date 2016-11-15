@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-28 06:56+0000\n"
+"POT-Creation-Date: 2016-11-15 09:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,155 +18,173 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: belun/settings.py:37 belun/settings.py:40 belun/settings_original.py:37
-#: belun/settings_original.py:40 belun/settings_production.py:21
-#: belun/settings_production.py:24
+#: belun/settings.py:27 belun/settings.py:31 belun/settings.py:38
+#: belun/settings_development.py:27 belun/settings_development.py:31
+#: belun/settings_development.py:38
 msgid "Tetun"
 msgstr ""
 
-#: belun/settings.py:41 belun/settings_original.py:41
-#: belun/settings_production.py:25
+#: belun/settings.py:32 belun/settings.py:39 belun/settings_development.py:32
+#: belun/settings_development.py:39
 msgid "English"
 msgstr ""
 
-#: belun/settings.py:42 belun/settings_original.py:42
-#: belun/settings_production.py:26
+#: belun/settings.py:33 belun/settings.py:40 belun/settings_development.py:33
+#: belun/settings_development.py:40
 msgid "Portugese"
 msgstr ""
 
-#: belun/settings.py:43 belun/settings_original.py:43
-#: belun/settings_production.py:27
+#: belun/settings.py:34 belun/settings.py:41 belun/settings_development.py:34
+#: belun/settings_development.py:41
 msgid "Indonesian"
 msgstr ""
 
-#: donormapping/forms.py:31
+#: donormapping/forms.py:32
 msgid "Questions for Recipients"
 msgstr ""
 
-#: donormapping/forms.py:41
+#: donormapping/forms.py:42
 msgid "Questions for Donors"
 msgstr ""
 
-#: donormapping/forms.py:49
+#: donormapping/forms.py:50
 msgid "Technology Access"
 msgstr ""
 
-#: donormapping/forms.py:72
-msgid "Organization"
-msgstr ""
-
-#: donormapping/forms.py:77 library/models.py:51
-msgid "Tags"
-msgstr ""
-
-#: donormapping/forms.py:129 library/forms.py:35
-msgid "Sectors"
-msgstr ""
-
-#: donormapping/forms.py:136 nhdb/forms.py:100 nhdb/forms.py:431
-#: nhdb/partialforms.py:198
-msgid "Beneficiaries"
-msgstr ""
-
-#: donormapping/forms.py:144 nhdb/forms.py:105 nhdb/forms.py:436
-#: nhdb/partialforms.py:203
-msgid "Activities"
-msgstr ""
-
-#: donormapping/forms.py:172 nhdb/forms.py:256
+#: donormapping/forms.py:181 nhdb/views_excel.py:24
+#: templates/donormapping/navbar.html:18 templates/index.html:32
+#: templates/navbar.html:22
+#: templates/nhdb/new_project_search/div-project-details.html:22
+#: templates/nhdb/new_project_search/div-project-more-noninteractive.html:47
+#: templates/nhdb/new_project_search/div-project-more.html:72
+#: templates/nhdb/organization_detail.html:508
+#: templates/nhdb/organization_detail_ajax.html:240
 msgid "Organizations"
 msgstr ""
 
-#: donormapping/forms.py:177
+#: donormapping/forms.py:186 library/forms.py:56
+#: templates/donormapping/fundingoffer_detail.html:12
+#: templates/donormapping/fundingoffer_detail_ajax.html:11
+#: templates/donormapping/fundingoffer_list_old.html:63
+#: templates/nhdb/organization_detail.html:449
+#: templates/nhdb/organization_detail_ajax.html:205
+#: templates/nhdb/project_detail.html:171
+#: templates/nhdb/project_detail_ajax.html:174
+msgid "Sectors"
+msgstr ""
+
+#: donormapping/forms.py:193 nhdb/forms.py:548
+#: templates/donormapping/fundingoffer_detail.html:14
+#: templates/donormapping/fundingoffer_detail_ajax.html:13
+#: templates/donormapping/fundingoffer_list_old.html:64
+#: templates/nhdb/organization_detail.html:430
+#: templates/nhdb/organization_detail_ajax.html:186
+#: templates/nhdb/project_detail.html:172
+#: templates/nhdb/project_detail_ajax.html:175
+msgid "Beneficiaries"
+msgstr ""
+
+#: donormapping/forms.py:201 nhdb/forms.py:553
+#: templates/donormapping/fundingoffer_detail.html:13
+#: templates/donormapping/fundingoffer_detail_ajax.html:12
+#: templates/donormapping/fundingoffer_list_old.html:62
+#: templates/nhdb/organization_detail.html:411
+#: templates/nhdb/organization_detail_ajax.html:167
+#: templates/nhdb/project_detail.html:170
+#: templates/nhdb/project_detail_ajax.html:173
+msgid "Activities"
+msgstr ""
+
+#: donormapping/forms.py:228 nhdb/views_excel.py:61
 msgid "District"
 msgstr ""
 
-#: donormapping/models.py:140
+#: donormapping/models.py:162
 msgid "Organization type"
 msgstr ""
 
-#: donormapping/models.py:142
+#: donormapping/models.py:164
 msgid "Properties"
 msgstr ""
 
-#: donormapping/models.py:143
+#: donormapping/models.py:165
 msgid "Has your organization given funding in the past year?"
 msgstr ""
 
-#: donormapping/models.py:145
+#: donormapping/models.py:167
 msgid "How much (approximately) given in the past year?"
 msgstr ""
 
-#: donormapping/models.py:147
+#: donormapping/models.py:169
 msgid "Has your organization received funding in the past year?"
 msgstr ""
 
-#: donormapping/models.py:149
+#: donormapping/models.py:171
 msgid "How much (approximately) received in the past year?"
 msgstr ""
 
-#: donormapping/models.py:154
+#: donormapping/models.py:176
 msgid "How do you find your recipients?"
 msgstr ""
 
-#: donormapping/models.py:155 donormapping/models.py:159
+#: donormapping/models.py:177 donormapping/models.py:181
 msgid "If other, please write:"
 msgstr ""
 
-#: donormapping/models.py:158
+#: donormapping/models.py:180
 msgid "How do you find your donors?"
 msgstr ""
 
-#: donormapping/models.py:160
+#: donormapping/models.py:182
 msgid "e.g. Television Advertising, Radio, Newspapers"
 msgstr ""
 
-#: donormapping/models.py:164
+#: donormapping/models.py:186
 msgid "Donor funding is difficult to find"
 msgstr ""
 
-#: donormapping/models.py:166
+#: donormapping/models.py:188
 msgid "Recipient organisations are hard to find"
 msgstr ""
 
-#: donormapping/models.py:169
+#: donormapping/models.py:191
 msgid "Receiving funds is difficult because of transport problems"
 msgstr ""
 
-#: donormapping/models.py:172
+#: donormapping/models.py:194
 msgid "Applying for funds is very difficult because the process is complicated"
 msgstr ""
 
-#: donormapping/models.py:175
+#: donormapping/models.py:197
 msgid ""
 "Donor funding is hard to find for the sectors this organization works in"
 msgstr ""
 
-#: donormapping/models.py:180
+#: donormapping/models.py:202
 msgid "How often do you use Facebook?"
 msgstr ""
 
-#: donormapping/models.py:181
+#: donormapping/models.py:203
 msgid "How often do you use Gmail?"
 msgstr ""
 
-#: donormapping/models.py:182
+#: donormapping/models.py:204
 msgid "How often do you use Google Search?"
 msgstr ""
 
-#: donormapping/models.py:185
+#: donormapping/models.py:207
 msgid "I have access to a computer"
 msgstr ""
 
-#: donormapping/models.py:186
+#: donormapping/models.py:208
 msgid "I have access to a printer"
 msgstr ""
 
-#: donormapping/models.py:187
+#: donormapping/models.py:209
 msgid "I have access to a basic mobile phone (calls and SMS) at work"
 msgstr ""
 
-#: donormapping/models.py:188
+#: donormapping/models.py:210
 msgid "I have access to a smartphone or tablet (with internet access)"
 msgstr ""
 
@@ -182,140 +200,832 @@ msgstr ""
 msgid "Hamlet"
 msgstr ""
 
-#: library/forms.py:27
+#: library/forms.py:48
 msgid "Tag"
 msgstr ""
 
-#: library/forms.py:46
-msgid "Search for Publications"
-msgstr ""
-
 #: library/forms.py:64
-msgid "Year(s)"
-msgstr ""
-
-#: library/forms.py:72
-msgid "Type(s)"
-msgstr ""
-
-#: library/forms.py:80
 msgid "Organization(s)"
 msgstr ""
 
-#: library/forms.py:85
+#: library/forms.py:68
+msgid "Year(s)"
+msgstr ""
+
+#: library/forms.py:79
+msgid "Type(s)"
+msgstr ""
+
+#: library/forms.py:86
 msgid "Include primary sources"
 msgstr ""
 
-#: library/forms.py:94
+#: library/forms.py:95
 msgid "Language"
 msgstr ""
 
-#: library/models.py:15
+#: library/forms.py:116
+#: templates/nhdb/new_project_search/html-publication-search.html:24
+#: templates/researchhub/publication_list.html:33
+msgid "Search for Publications"
+msgstr ""
+
+#: library/models.py:25 templates/library/div-publication-details.html:12
+#: templates/library/div-publication-details.html:37
+#: templates/library/div-publication-list.html:14
+#: templates/library/div-publication-list.html:47
+#: templates/researchhub/div-publication-details.html:12
+#: templates/researchhub/div-publication-details.html:37
+#: templates/researchhub/div-publication-list.html:14
+#: templates/researchhub/div-publication-list.html:47
 msgid "Year"
 msgstr ""
 
-#: library/models.py:16 nhdb/models.py:93 nhdb/models.py:239
+#: library/models.py:26 nhdb/models.py:105 nhdb/models.py:115
+#: nhdb/models.py:381
 msgid "name"
 msgstr ""
 
-#: library/models.py:17 nhdb/models.py:94
+#: library/models.py:27 nhdb/models.py:107 nhdb/models.py:116
 msgid "description"
 msgstr ""
 
-#: library/models.py:18
+#: library/models.py:28 nhdb/views_excel.py:57
 msgid "Type"
 msgstr ""
 
-#: library/models.py:36
+#: library/models.py:54
+#: templates/nhdb/new_project_search/html-publication-search.html:23
+#: templates/researchhub/publication_list.html:32
 msgid "Publications"
 msgstr ""
 
-#: library/models.py:105
+#: library/models.py:69
+#: templates/nhdb/new_project_search/div-publication-search.html:17
+msgid "Tags"
+msgstr ""
+
+#: library/models.py:384
 msgid "Versions"
 msgstr ""
 
-#: library/models.py:137
+#: library/models.py:416
 msgid "Authors"
 msgstr ""
 
-#: library/models.py:153
+#: library/models.py:432
 msgid "Publication Types"
 msgstr ""
 
-#: nhdb/admin.py:19
+#: nhdb/admin.py:20 nhdb/views_excel.py:20 nhdb/views_excel.py:56
+#: templates/library/div-publication-details.html:10
+#: templates/library/div-publication-details.html:35
+#: templates/library/div-publication-list.html:12
+#: templates/library/div-publication-list.html:45
+#: templates/researchhub/div-publication-details.html:10
+#: templates/researchhub/div-publication-details.html:35
+#: templates/researchhub/div-publication-list.html:12
+#: templates/researchhub/div-publication-list.html:45
 msgid "Name"
 msgstr ""
 
-#: nhdb/admin.py:29
+#: nhdb/admin.py:30 nhdb/admin.py:50
 msgid "First Name"
 msgstr ""
 
-#: nhdb/admin.py:39
+#: nhdb/admin.py:40
 msgid "Last Name"
 msgstr ""
 
-#: nhdb/admin.py:48
+#: nhdb/admin.py:70 templates/nhdb/new_project_search/div-project-more.html:78
+#: templates/nhdb/new_project_search/html-organisation-details.html:42
 msgid "Staff"
 msgstr ""
 
-#: nhdb/admin.py:75
+#: nhdb/admin.py:98
 msgid "No. of Projects"
 msgstr ""
 
-#: nhdb/forms.py:95 nhdb/forms.py:266 nhdb/forms.py:426
-#: nhdb/partialforms.py:193
-msgid "Sector(s)"
-msgstr ""
-
-#: nhdb/forms.py:111
+#: nhdb/forms.py:218
 msgid "Search Organizations"
 msgstr ""
 
-#: nhdb/forms.py:145 nhdb/forms.py:493
+#: nhdb/forms.py:254
+msgid "Activity"
+msgstr ""
+
+#: nhdb/forms.py:255
+msgid "Sector"
+msgstr ""
+
+#: nhdb/forms.py:256
+#, fuzzy
+msgid "Beneficiary"
+msgstr "Projectu (Portugese)"
+
+#: nhdb/forms.py:257
+msgid "Organization Type"
+msgstr ""
+
+#: nhdb/forms.py:265 nhdb/forms.py:593
 msgid "Place"
 msgstr ""
 
-#: nhdb/forms.py:258
-msgid "Locations"
+#: nhdb/forms.py:418
+msgid "You can add translations in these languages: "
 msgstr ""
 
-#: nhdb/forms.py:396
-msgid "Your Name"
+#: nhdb/forms.py:543
+msgid "Sector(s)"
 msgstr ""
 
-#: nhdb/forms.py:402
-msgid "Email address"
-msgstr ""
-
-#: nhdb/forms.py:407
-msgid "Comments"
-msgstr ""
-
-#: nhdb/forms.py:442
+#: nhdb/forms.py:611
 #, fuzzy
 #| msgid "Projects"
 msgid "Search Projects"
 msgstr "Projectu (Portugese)"
 
-#: nhdb/forms.py:552
+#: nhdb/forms.py:722
 msgid "Default"
 msgstr ""
 
-#: nhdb/models.py:95
+#: nhdb/models.py:106
+msgid "organization"
+msgstr ""
+
+#: nhdb/models.py:108
+msgid "email"
+msgstr ""
+
+#: nhdb/models.py:110
+msgid "Other purpose"
+msgstr ""
+
+#: nhdb/models.py:117
 msgid "class"
 msgstr ""
 
-#: nhdb/models.py:240
+#: nhdb/models.py:382
 #, fuzzy
 msgid "Project Description"
 msgstr "Projectu (Portugese)"
 
-#: nhdb/models.py:262
+#: nhdb/models.py:405
 msgid "Full time staff"
 msgstr ""
 
-#: nhdb/models.py:263
+#: nhdb/models.py:406
 msgid "Part time staff"
+msgstr ""
+
+#: nhdb/models.py:502
+msgid "Organization involvement"
+msgstr ""
+
+#: nhdb/models.py:503
+msgid "Notes about this relationship"
+msgstr ""
+
+#: nhdb/views_excel.py:21
+#: templates/donormapping/fundingoffer_detail_ajax.html:27
+#: templates/nhdb/new_project_search/div-project-more.html:22
+#, fuzzy
+msgid "Description"
+msgstr "Projectu (Portugese)"
+
+#: nhdb/views_excel.py:22
+msgid "Start Date"
+msgstr ""
+
+#: nhdb/views_excel.py:23
+msgid "End Date"
+msgstr ""
+
+#: nhdb/views_excel.py:58 templates/donormapping/fundingoffer_detail.html:29
+#: templates/donormapping/fundingoffer_detail_ajax.html:45
+msgid "Phone"
+msgstr ""
+
+#: nhdb/views_excel.py:59 templates/donormapping/fundingoffer_detail.html:31
+#: templates/donormapping/fundingoffer_detail_ajax.html:47
+#: templates/donormapping/index.html:32 templates/nhdb/index.html:32
+msgid "Email"
+msgstr ""
+
+#: nhdb/views_excel.py:60
+msgid "Addresses"
+msgstr ""
+
+#: nhdb/views_excel.py:62
+msgid "Subdistrict"
+msgstr ""
+
+#: nhdb/views_excel.py:63
+msgid "Suco"
+msgstr ""
+
+#: templates/about.html:15 templates/navbar.html:49 templates/navbar.html:50
+msgid "About Us"
+msgstr ""
+
+#: templates/about.html:17
+msgid "If you would like to"
+msgstr ""
+
+#: templates/about.html:17
+msgid "make suggestions"
+msgstr ""
+
+#: templates/about.html:17
+msgid "about adding to the Data Center"
+msgstr ""
+
+#: templates/about.html:17
+msgid ""
+"please contact Joshua Brooks at <strong>josh.vdbroek@gmail.com</strong> or "
+"<strong>admin@timordata.info</strong>"
+msgstr ""
+
+#: templates/about.html:18 templates/about.html:19 templates/about.html:20
+msgid "For more information about"
+msgstr ""
+
+#: templates/about.html:18
+msgid "the main site"
+msgstr ""
+
+#: templates/about.html:18 templates/about.html:19 templates/about.html:20
+msgid "please contact"
+msgstr ""
+
+#: templates/about.html:19
+msgid "projects or organization information from the NHDB"
+msgstr ""
+
+#: templates/about.html:20
+msgid "the library"
+msgstr ""
+
+#: templates/about.html:23
+msgid ""
+"The Timor-Leste Data Center was developed by an NGO network consisting of "
+"Belun, the Alola Foundation, Fundasaun Mahein, Fongtil, and the Asia "
+"Foundation. It is a repository of project, research and donor information "
+"for the public on Timor-Leste."
+msgstr ""
+
+#: templates/about.html:25
+msgid "National humanitarian database"
+msgstr ""
+
+#: templates/about.html:28 templates/donormapping/fundingoffer_detail.html:30
+#: templates/donormapping/fundingoffer_detail_ajax.html:46
+msgid "or"
+msgstr ""
+
+#: templates/about.html:29
+msgid "Search for organizations and projects in Timor-Leste."
+msgstr ""
+
+#: templates/about.html:35
+msgid ""
+"With continued support from a number of development agencies and NGOs, we "
+"are regularly adding to the online library of research, media releases, "
+"program documents relevant to Timor-Leste."
+msgstr ""
+
+#: templates/about.html:42
+msgid ""
+"Search this database for available funding opportunities and instructions on "
+"how to apply."
+msgstr ""
+
+#: templates/about.html:48
+msgid "Many thanks to"
+msgstr ""
+
+#: templates/about.html:48
+msgid "for the artwork"
+msgstr ""
+
+#: templates/about.html:48
+msgid "used on this site"
+msgstr ""
+
+#: templates/about.html:48
+msgid "Contact"
+msgstr ""
+
+#: templates/about.html:50
+msgid ""
+"The Data Center team would like to acknowledge the Australian Government for "
+"supporting the development of the Timor-Leste Data Center."
+msgstr ""
+
+#: templates/about.html:51
+msgid "Disclaimer"
+msgstr ""
+
+#: templates/about.html:54
+msgid "Online Library Content"
+msgstr ""
+
+#: templates/about.html:56
+msgid ""
+"Permission has been granted from individual author/s or organization/s to "
+"publish the research available on the Online Library. While we endeavor to "
+"keep the information up to date and accurate, we do not take responsibility "
+"for the reliability, suitability or completeness of the website information."
+msgstr ""
+
+#: templates/about.html:59
+msgid ""
+"Through this website you are able to access and download a number of "
+"research-based publications and media releases. The Data Center team does "
+"not have any control over the nature or content of these publications and "
+"does not imply any recommendations or endorse the views expressed in them."
+msgstr ""
+
+#: templates/about.html:62
+msgid ""
+"The Data Center team strongly encourages full and thorough citations and "
+"referencing."
+msgstr ""
+
+#: templates/about.html:67
+msgid ""
+"The Timor-Leste Data Center team would like to recognize internal "
+"translators, Google Translate and Tetum Translator (translate.tetumdili.com) "
+"for enabling this website to be available in Tetun, English, Portuguese and "
+"Indonesian."
+msgstr ""
+
+#: templates/about.html:69
+msgid ""
+"Automated and human translation cannot guarantee accuracy, therefore the "
+"translation of the website content will not be entirely correct. The Data "
+"Center will not be held accountable for any consequences that may arise from "
+"the translations provided by the Google Translate or Tetum Translator."
+msgstr ""
+
+#: templates/about.html:71
+msgid ""
+"The content of this site originated in English. Data on this site was "
+"collected in its original form, regardless of language. By choosing a "
+"language from the Google Translate menu, the user accepts the legal "
+"implications of any shortcomings or differences in the translation. The Data "
+"Center does not guarantee the accuracy of the translated content and is not "
+"responsible for any event resulting from the use of translation. By choosing "
+"a language from the language menu, the user agrees to withhold all liability "
+"and/or damage that may occur to the user by depending on or using the "
+"translation by Google or Tetum Translator."
+msgstr ""
+
+#: templates/about.html:73
+msgid "Contact Us"
+msgstr ""
+
+#: templates/about.html:76
+msgid ""
+"If you have any projects, research, or funding opportunities you would like "
+"published on the Data Center, please feel free to contact us."
+msgstr ""
+
+#: templates/donormapping/alert-welcome-donormapping-list.html:5
+#: templates/donormapping/index.html:66 templates/donormapping/navbar.html:23
+#: templates/index.html:45 templates/navbar.html:26
+#: templates/nhdb/index.html:66
+msgid "Donor Funding"
+msgstr ""
+
+#: templates/donormapping/alert-welcome-donormapping-list.html:7
+msgid ""
+"The donor funding website is maintained by staff from Belun with support "
+"from Oxfam"
+msgstr ""
+
+#: templates/donormapping/alert-welcome-donormapping-list.html:9
+msgid ""
+"We try to list all donor opportunities and organizations which regularly "
+"have funding available on this site so that local NGO's with projects can "
+"find funding"
+msgstr ""
+
+#: templates/donormapping/fundingoffer_detail.html:33
+#: templates/donormapping/fundingoffer_detail_ajax.html:49
+msgid "Website"
+msgstr ""
+
+#: templates/donormapping/fundingoffer_detail.html:36
+#: templates/donormapping/fundingoffer_detail_ajax.html:52
+msgid "Fax"
+msgstr ""
+
+#: templates/donormapping/fundingoffer_detail.html:38
+#: templates/donormapping/fundingoffer_detail_ajax.html:54
+msgid "Address(es)"
+msgstr ""
+
+#: templates/donormapping/fundingoffer_detail.html:46
+#: templates/donormapping/fundingoffer_detail_ajax.html:62
+msgid "Conditions"
+msgstr ""
+
+#: templates/donormapping/fundingoffer_detail.html:53
+#: templates/donormapping/fundingoffer_detail_ajax.html:69
+msgid "Attachments"
+msgstr ""
+
+#: templates/donormapping/fundingoffer_detail_ajax.html:17
+msgid "Summary"
+msgstr ""
+
+#: templates/donormapping/fundingsurvey_detail.html:6
+msgid "Change this survey"
+msgstr ""
+
+#: templates/donormapping/fundingsurvey_detail.html:7
+#: templates/donormapping/fundingsurvey_list.html:48
+msgid "Add another survey"
+msgstr ""
+
+#: templates/donormapping/fundingsurvey_detail.html:8
+msgid "Go to the survey list"
+msgstr ""
+
+#: templates/donormapping/index.html:11 templates/donormapping/index.html:27
+#: templates/donormapping/index.html:46 templates/index.html:16
+#: templates/index_background_2.html:29 templates/index_background_3.html:7
+#: templates/nhdb/index.html:11 templates/nhdb/index.html:27
+#: templates/nhdb/index.html:46 templates/nhdb/new_project_search/base.html:10
+#: templates/nhdb/new_project_search/navbar.html:11
+msgid "Timor-Leste Data Center"
+msgstr ""
+
+#: templates/donormapping/index.html:35 templates/nhdb/index.html:35
+#: templates/nhdb/new_project_search/navbar.html:21
+msgid "Password"
+msgstr ""
+
+#: templates/donormapping/index.html:47 templates/nhdb/index.html:47
+msgid ""
+"A joint project of Belun, Alola Foundation, Fongtil, The Asia Foundation and "
+"Fundasaun Mahein"
+msgstr ""
+
+#: templates/donormapping/index.html:48 templates/index.html:30
+#: templates/index.html:32 templates/nhdb/index.html:48
+msgid "Search"
+msgstr ""
+
+#: templates/donormapping/index.html:56 templates/index.html:25
+#: templates/nhdb/index.html:56
+msgid "Development"
+msgstr ""
+
+#: templates/donormapping/index.html:58 templates/donormapping/index.html:63
+#: templates/donormapping/index.html:68 templates/index.html:40
+#: templates/index.html:49 templates/index.html:53 templates/nhdb/index.html:58
+#: templates/nhdb/index.html:63 templates/nhdb/index.html:68
+msgid "View"
+msgstr ""
+
+#: templates/donormapping/index.html:61 templates/nhdb/index.html:61
+msgid "Research"
+msgstr ""
+
+#: templates/donormapping/navbar.html:11
+msgid "Home"
+msgstr ""
+
+#: templates/donormapping/navbar.html:15
+#, fuzzy
+msgid "Projects and Organizations"
+msgstr "Projectu (Portugese)"
+
+#: templates/donormapping/navbar.html:17 templates/index.html:30
+#: templates/navbar.html:21
+#: templates/nhdb/new_project_search/html-organisation-details.html:34
+#: templates/nhdb/organization_detail.html:492
+#, fuzzy
+#| msgid "Projects"
+msgid "Projects"
+msgstr "Projectu (Portugese)"
+
+#: templates/donormapping/navbar.html:22 templates/index.html:35
+#: templates/navbar.html:25
+msgid "Library"
+msgstr ""
+
+#: templates/geo/map.html:53
+msgid "Geographic Information"
+msgstr ""
+
+#: templates/index.html:51
+msgid "Funding Opportunities Survey"
+msgstr ""
+
+#: templates/index.html:54 templates/library/index.html:18
+msgid "Add"
+msgstr ""
+
+#: templates/library/div-publication-details.html:11
+#: templates/library/div-publication-details.html:36
+#: templates/library/div-publication-details.html:58
+#: templates/library/div-publication-list.html:13
+#: templates/library/div-publication-list.html:46
+#: templates/researchhub/div-publication-details.html:11
+#: templates/researchhub/div-publication-details.html:36
+#: templates/researchhub/div-publication-details.html:58
+#: templates/researchhub/div-publication-list.html:13
+#: templates/researchhub/div-publication-list.html:46
+msgid "Author(s)"
+msgstr ""
+
+#: templates/library/div-publication-details.html:13
+#: templates/library/div-publication-details.html:38
+#: templates/library/div-publication-list.html:15
+#: templates/library/div-publication-list.html:48
+#: templates/researchhub/div-publication-details.html:13
+#: templates/researchhub/div-publication-details.html:38
+#: templates/researchhub/div-publication-list.html:15
+#: templates/researchhub/div-publication-list.html:48
+msgid "organization(s)"
+msgstr ""
+
+#: templates/library/div-publication-details.html:49
+#: templates/nhdb/new_project_search/div-project-details.html:19
+#: templates/researchhub/div-publication-details.html:49
+msgid "No description provided"
+msgstr ""
+
+#: templates/library/div-publication-details.html:54
+#: templates/researchhub/div-publication-details.html:54
+msgid "organizations"
+msgstr ""
+
+#: templates/library/div-publication-details.html:56
+#: templates/researchhub/div-publication-details.html:56
+msgid "No organizations"
+msgstr ""
+
+#: templates/library/div-publication-details.html:60
+#: templates/researchhub/div-publication-details.html:60
+msgid "No authors"
+msgstr ""
+
+#: templates/library/index.html:10
+msgid "Information"
+msgstr ""
+
+#: templates/library/index.html:12
+#, fuzzy
+#| msgid "Projects"
+msgid "Search Publications"
+msgstr "Projectu (Portugese)"
+
+#: templates/library/index.html:16
+msgid "Add Documents"
+msgstr ""
+
+#: templates/library/publication_detail.html:28
+#: templates/library/publication_detail.html:31
+#: templates/library/publication_detail.html:32
+msgid "Edit"
+msgstr ""
+
+#: templates/navbar.html:36
+#, fuzzy
+msgid "Add a project"
+msgstr "Projectu (Portugese)"
+
+#: templates/navbar.html:37
+#, fuzzy
+#| msgid "Projects"
+msgid "Add an organization"
+msgstr "Projectu (Portugese)"
+
+#: templates/navbar.html:39
+#, fuzzy
+#| msgid "Projects"
+msgid "Add a publication"
+msgstr "Projectu (Portugese)"
+
+#: templates/navbar.html:41
+msgid "Add a funding offer"
+msgstr ""
+
+#: templates/navbar.html:42
+msgid "Suggestions"
+msgstr ""
+
+#: templates/navbar.html:46
+msgid "About"
+msgstr ""
+
+#: templates/navbar.html:48
+msgid "History"
+msgstr ""
+
+#: templates/navbar.html:51
+msgid "Help"
+msgstr ""
+
+#: templates/nhdb/new_project_search/div-organisation-more.html:7
+#: templates/nhdb/new_project_search/div-organisation-new.html:7
+#: templates/nhdb/new_project_search/person/div-more.html:4
+#: templates/nhdb/new_project_search/person/div-new.html:5
+msgid "Main Properties"
+msgstr ""
+
+#: templates/nhdb/new_project_search/div-project-details.html:23
+msgid "Author"
+msgstr ""
+
+#: templates/nhdb/new_project_search/div-project-details.html:24
+msgid "Editors"
+msgstr ""
+
+#: templates/nhdb/new_project_search/div-project-more-noninteractive.html:65
+#: templates/nhdb/new_project_search/div-project-more.html:84
+msgid "Activities, Beneficiaries and Involvement"
+msgstr ""
+
+#: templates/nhdb/new_project_search/div-project-more.html:13
+#, fuzzy
+msgid "Project Name"
+msgstr "Projectu (Portugese)"
+
+#: templates/nhdb/new_project_search/div-project-more.html:23
+#, fuzzy
+msgid "Enter Project description"
+msgstr "Projectu (Portugese)"
+
+#: templates/nhdb/new_project_search/div-project-more.html:31
+msgid "Notes"
+msgstr ""
+
+#: templates/nhdb/new_project_search/div-project-more.html:32
+msgid "Enter notes about this project"
+msgstr ""
+
+#: templates/nhdb/new_project_search/div-project-search.html:10
+msgid ""
+"Enter words or phrases separated by a comma. Projects containing any of "
+"these words will be included in the search."
+msgstr ""
+
+#: templates/nhdb/new_project_search/div-publication-search.html:10
+msgid "Name / Description contains:"
+msgstr ""
+
+#: templates/nhdb/new_project_search/div-publication-search.html:12
+msgid ""
+"Enter words or phrases separated by a comma. Publications containing any of "
+"these words in tht title will be included in the search."
+msgstr ""
+
+#: templates/nhdb/new_project_search/div-publication-search.html:19
+msgid ""
+"Enter words or phrases separated by a comma. Publications tagged with any of "
+"these words will be included in the search."
+msgstr ""
+
+#: templates/nhdb/new_project_search/div-publication-search.html:24
+#, fuzzy
+#| msgid "Projects"
+msgid "Publication types"
+msgstr "Projectu (Portugese)"
+
+#: templates/nhdb/new_project_search/div-publication-search.html:32
+msgid "From year"
+msgstr ""
+
+#: templates/nhdb/new_project_search/div-publication-search.html:39
+msgid "To year"
+msgstr ""
+
+#: templates/nhdb/new_project_search/div-publication-search.html:62
+#: templates/nhdb/new_project_search/div-publication-search.html:66
+msgid "Start typing to search"
+msgstr ""
+
+#: templates/nhdb/new_project_search/html-organisation-details.html:30
+msgid "Contact Details"
+msgstr ""
+
+#: templates/nhdb/new_project_search/html-publication-search.html:24
+msgid "in the collection curated by The Asia Foundation"
+msgstr ""
+
+#: templates/nhdb/new_project_search/navbar.html:18
+msgid "User name"
+msgstr ""
+
+#: templates/nhdb/new_project_search/translation.html:32
+msgid "This is an example"
+msgstr ""
+
+#: templates/nhdb/new_project_search/translation.html:35
+msgid "All sectors"
+msgstr ""
+
+#: templates/nhdb/new_project_search/translation.html:38
+msgid "Organization"
+msgstr ""
+
+#: templates/nhdb/new_project_search/translation.html:41
+#, fuzzy
+msgid "Project"
+msgstr "Projectu (Portugese)"
+
+#: templates/nhdb/organization_detail.html:506
+#: templates/nhdb/organization_detail_ajax.html:239
+#, fuzzy
+msgid "No project description"
+msgstr "Projectu (Portugese)"
+
+#: templates/nhdb/organization_detail_ajax.html:226
+#, fuzzy
+#| msgid "Projects"
+msgid "Active Projects"
+msgstr "Projectu (Portugese)"
+
+#: templates/nhdb/organization_detail_ajax.html:261
+msgid "Planned or Completed Projects"
+msgstr ""
+
+#: templates/nhdb/organization_detail_ajax.html:308
+msgid "Personnel"
+msgstr ""
+
+#: templates/nhdb/organization_list.html:178
+#: templates/nhdb/project_list.html:199
+msgid "Thanks for your interest in downloading this information!"
+msgstr ""
+
+#: templates/nhdb/organization_list.html:179
+#: templates/nhdb/project_list.html:200
+msgid "Please tell us how this information could help you."
+msgstr ""
+
+#: templates/nhdb/organization_list.html:180
+#: templates/nhdb/project_list.html:201
+msgid ""
+"This information isn't used to identify you, but only help us to make our "
+"services better."
+msgstr ""
+
+#: templates/nhdb/organizationsuggestions.html:6
+msgid "New Organizations Suggested"
+msgstr ""
+
+#: templates/nhdb/personal-details-form-modal.html:10
+msgid ""
+"If you're involved with this project or organization, you are welcome to "
+"suggest changes to our records. Within a day or two database staff will "
+"approve your changes or get in touch with you by email if we have any "
+"questions"
+msgstr ""
+
+#: templates/nhdb/personal-details-form-modal.html:11
+#: templates/nhdb/personal-details-form-project-modal.html:11
+msgid ""
+"Please let us know your name and email address and if you want, you can add "
+"a comment about why you think these changes should be made"
+msgstr ""
+
+#: templates/nhdb/personal-details-form-project-modal.html:10
+msgid ""
+"If you're involved with this project, you are welcome to suggest changes to "
+"our records. Within a day or two database staff will approve your changes or "
+"get in touch with you by email if we have any questions"
+msgstr ""
+
+#: templates/registration/login.html:27
+msgid ""
+"Please contact the Belun database team if you would like to be a database "
+"maintainer but don't yet have login details"
+msgstr ""
+
+#: templates/registration/login.html:28
+msgid "Login"
+msgstr ""
+
+#: templates/registration/login.html:34
+msgid "Please correct the error below."
+msgstr ""
+
+#: templates/registration/login.html:34
+msgid "Please correct the errors below."
+msgstr ""
+
+#: templates/registration/login.html:64
+msgid "Forgotten your password or username?"
+msgstr ""
+
+#: templates/registration/login.html:71
+msgid "Log in"
 msgstr ""
 
 #, fuzzy
@@ -323,49 +1033,5 @@ msgstr ""
 #~ msgstr "Projectu (Portugese)"
 
 #, fuzzy
-#~ msgid "Project Beneficiaries"
-#~ msgstr "Projectu (Portugese)"
-
-#, fuzzy
 #~ msgid "Project Activities"
-#~ msgstr "Projectu (Portugese)"
-
-#, fuzzy
-#~| msgid "Projects"
-#~ msgid "Projects"
-#~ msgstr "Projectu (Portugese)"
-
-#, fuzzy
-#~| msgid "Projects"
-#~ msgid "Search Publications"
-#~ msgstr "Projectu (Portugese)"
-
-#, fuzzy
-#~ msgid "Add a project"
-#~ msgstr "Projectu (Portugese)"
-
-#, fuzzy
-#~| msgid "Projects"
-#~ msgid "Add a publication"
-#~ msgstr "Projectu (Portugese)"
-
-#, fuzzy
-#~ msgid "Project Name"
-#~ msgstr "Projectu (Portugese)"
-
-#, fuzzy
-#~ msgid "Description"
-#~ msgstr "Projectu (Portugese)"
-
-#, fuzzy
-#~ msgid "Enter Project description"
-#~ msgstr "Projectu (Portugese)"
-
-#, fuzzy
-#~| msgid "Projects"
-#~ msgid "Publication types"
-#~ msgstr "Projectu (Portugese)"
-
-#, fuzzy
-#~ msgid "Project"
 #~ msgstr "Projectu (Portugese)"
