@@ -22,6 +22,7 @@ xlsxwriter
 psycopg2
 ghostscript
 uwsgi
+wand
 
 # django-datatrans
 # mysqlclient
