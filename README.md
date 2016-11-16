@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/joshbrooks/timordata/badge.svg)](https://coveralls.io/github/joshbrooks/timordata)
+
 # timordata
 
 This GIT repository is the home of the Timor-Leste Data Center. This is a database application to track projects,
