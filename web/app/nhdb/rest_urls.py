@@ -12,7 +12,7 @@ from nhdb.serializers import ProjectSerializer, ProjectPersonSerializer, \
     ProjectPropertiesSerializerByID, ProjectImageSerializer, PropertyTagSerializer, ProjectTypeSerializer, \
     ExcelDownloadFeedbackSerializer
 from rest_framework.pagination import PageNumberPagination
-from django_filters.rest_framework import DjangoFilterBackend
+# from django_filters.rest_framework import DjangoFilterBackend
 
 
 class UpdateModelViewSet(
@@ -67,7 +67,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class ProjectViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
-    filter_backends = (filters.OrderingFilter, DjangoFilterBackend)
+    # filter_backends = (filters.OrderingFilter, DjangoFilterBackend)
     ordering_fields = ('verified', 'name')
     filter_fields = ('activity', 'sector', 'organization', 'beneficiary')
 
