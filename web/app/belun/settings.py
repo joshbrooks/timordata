@@ -84,7 +84,7 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    'debug_toolbar',
+    # 'debug_toolbar',
 
     # Contributed apps
     'rest_framework',

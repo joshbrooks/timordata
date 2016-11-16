@@ -12,7 +12,7 @@
 
      <div class="container-fluid"><div class="row">
 
-     {% for category, tag_count in dashboard.items %}<div class="col col-sm-6 col-xs-12 col-md-4 col-lg-3">
+     {% for category, tag_count in dashboard.items %}<div class="col col-sm-6 col-xs-12 col-md-4 col-lg-3  dashboard-table-container">
              <table class="table table-condensed">
             <caption>{{category}}</caption>
             <tbody>
@@ -24,9 +24,7 @@
                 <td>{{tag}}</td> <td>{{count}}</td>
                 {% endif %}
             </tr>
-
      {% endfor %}
-
             </tbody>
         </table>
      </div>{% endfor %}</div></div>
