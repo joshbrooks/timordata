@@ -1,28 +1,27 @@
-from rest_framework.renderers import JSONRenderer
-from rest_framework.response import Response
-import json
-__author__ = 'josh'
-
 from django.conf.urls import url, include
 from django.contrib.auth.models import User
+from rest_framework import filters
 from rest_framework import routers, serializers, mixins, viewsets
 from nhdb.models import Project, ProjectPerson, ProjectOrganization, ProjectPlace, Organization, \
     OrganizationPlace, Person, ProjectImage, PropertyTag, ProjectType, ExcelDownloadFeedback
-from nhdb.serializers import SimpleProjectSerializer as ProjectSerializer, ProjectPersonSerializer, TestProjectSerializer, \
+from nhdb.serializers import ProjectSerializer, ProjectPersonSerializer, \
+    TestProjectSerializer, \
     ProjectOrganizationSerializer, ProjectPlaceSerializer, OrganizationSerializer, PersonSerializer, \
-    OrganizationPlaceSerializer, Project_ProjectOrganizationSerializer, Project_ProjectPlaceSerializer, \
-    ProjectPropertiesSerializer, Project_ProjectPersonSerializer, OrganizationOrganizationPlaceSerializer, \
+    OrganizationPlaceSerializer, ProjectProjectOrganizationSerializer, ProjectProjectPlaceSerializer, \
+    ProjectPropertiesSerializer, ProjectProjectPersonSerializer, OrganizationOrganizationPlaceSerializer, \
     ProjectPropertiesSerializerByID, ProjectImageSerializer, PropertyTagSerializer, ProjectTypeSerializer, \
     ExcelDownloadFeedbackSerializer
 from rest_framework.pagination import PageNumberPagination
+from django_filters.rest_framework import DjangoFilterBackend
 
 
-class UpdateModelViewSet(#mixins.CreateModelMixin,
-                   mixins.RetrieveModelMixin,
-                   mixins.UpdateModelMixin,
-                   mixins.DestroyModelMixin,
-                   mixins.ListModelMixin,
-                   viewsets.GenericViewSet):
+class UpdateModelViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
     """
     A viewset that provides default `create()`, `retrieve()`, `update()`,
     `partial_update()`, `destroy()` and `list()` actions.
@@ -30,12 +29,13 @@ class UpdateModelViewSet(#mixins.CreateModelMixin,
     pass
 
 
-class NoDeleteModelViewSet(mixins.CreateModelMixin,
-                   mixins.RetrieveModelMixin,
-                   mixins.UpdateModelMixin,
-                   # mixins.DestroyModelMixin,
-                   mixins.ListModelMixin,
-                   viewsets.GenericViewSet):
+class NoDeleteModelViewSet(
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
     """
     A viewset that provides default `create()`, `retrieve()`, `update()`,
     `partial_update()`, and `list()` actions.
@@ -66,8 +66,17 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
-    queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+    filter_backends = (filters.OrderingFilter, DjangoFilterBackend)
+    ordering_fields = ('verified', 'name')
+    filter_fields = ('activity', 'sector', 'organization', 'beneficiary')
+
+    def get_queryset(self):
+        queryset = Project.objects.all()
+        queryset = queryset.prefetch_related(
+            'beneficiary', 'sector', 'activity', 'organization'
+        )
+        return queryset
 
 
 class ProjectProjectPersonViewSet(viewsets.ModelViewSet):
@@ -117,17 +126,17 @@ class OrganizationViewSet(viewsets.ModelViewSet):
 
 class ProjectProjectOrganizationViewSet(NoDeleteModelViewSet):
     queryset = Project.objects.all()
-    serializer_class = Project_ProjectOrganizationSerializer
+    serializer_class = ProjectProjectOrganizationSerializer
 
 
 class ProjectProjectPlaceViewset(NoDeleteModelViewSet):
     queryset = Project.objects.all()
-    serializer_class = Project_ProjectPlaceSerializer
+    serializer_class = ProjectProjectPlaceSerializer
 
 
 class ProjectProjectPersonViewset(NoDeleteModelViewSet):
     queryset = Project.objects.all()
-    serializer_class = Project_ProjectPersonSerializer
+    serializer_class = ProjectProjectPersonSerializer
 
 
 class ProjectImageViewSet(viewsets.ModelViewSet):
@@ -153,7 +162,7 @@ class ExcelDownloadFeedbackViewSet(viewsets.ModelViewSet):
 router = routers.DefaultRouter()
 router.register(r'user', UserViewSet, 'user')
 
-router.register(r'project', ProjectViewSet)
+router.register(r'project', ProjectViewSet, base_name='projects')
 router.register(r'projectperson', ProjectProjectPersonViewSet)
 router.register(r'projectplace', ProjectPlaceViewSet)
 router.register(r'propertytag', PropertyTagViewSet)
@@ -165,12 +174,14 @@ router.register(r'projecttype', ProjectTypeViewSet, base_name='projecttype')
 router.register(r'person', PersonViewSet, base_name='person')
 router.register(r'exceldownloadfeedback', ExcelDownloadFeedbackViewSet)
 
-router.register(r'projectprojectorganization', ProjectProjectOrganizationViewSet, base_name='projectprojectorganization')
+router.register(r'projectprojectorganization', ProjectProjectOrganizationViewSet,
+                base_name='projectprojectorganization')
 router.register(r'projectprojectplace', ProjectProjectPlaceViewset, base_name='projectprojectplace')
 router.register(r'projectprojectperson', ProjectProjectPersonViewset, base_name='projectprojectperson')
 router.register(r'organization', OrganizationViewSet, base_name='organization')
 router.register(r'organizationplace', OrganizationPlaceViewset, base_name='organizationplace')
-router.register(r'organizationorganizationplace', OrganizationOrganizationPlaceViewset, base_name='organizationorganizationplace')
+router.register(r'organizationorganizationplace', OrganizationOrganizationPlaceViewset,
+                base_name='organizationorganizationplace')
 
 urlpatterns = [
     url(r'^', include(router.urls, namespace='rest')),

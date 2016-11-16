@@ -56,25 +56,18 @@ def object_index(queryset):
 
 def project_dashboard_info(projects, prefetch=True):
     dashboard = {}
-    dashboard['district'] = {}
 
-    k = {'ACT': 'activity', 'BEN': 'beneficiary', 'INV': 'sector'}
+    from collections import Counter
 
-    for i in PropertyTag.objects.filter(path__in=k.keys()):
-        name = k.get(i.path)
-        dashboard[i] = {}
-        filter = {'project_%s__in' % name: projects}
-        anno = Count('project_%s' % name)
-        # dashboard[i][pt] = pt.project_activity__count
+    projects = projects.prefetch_related('activity', 'beneficiary', 'sector')
 
-        for pt in PropertyTag.objects.all() \
-                .filter(**filter) \
-                .annotate(anno):
-            dashboard[i][pt] = getattr(pt, 'project_%s__count' % name)
+    dashboard['activity'] = dict(Counter(projects.values_list('activity__name', flat=True)))
+    dashboard['beneficiary'] = dict(Counter(projects.values_list('beneficiary__name', flat=True)))
+    dashboard['sector'] = dict(Counter(projects.values_list('sector__name', flat=True)))
 
-    pplist = ProjectPlace.objects.filter(project__in=projects).values_list('project__id', 'place__path')
-    for name, path in District.objects.values_list('name', 'path'):
-        dashboard['district'][name] = len(set([(i[0], i[1][:3]) for i in pplist if i[1][:3] == path]))
+    project_places = projects.values_list('id', 'projectplace__place__path')
+    project_districts = [(project_id, place_code[:3]) for project_id, place_code in project_places if place_code is not None]
+    dashboard['district'] = dict(Counter([place_code for project_id, place_code in set(project_districts)]))
 
     return dashboard
 
@@ -1229,3 +1222,17 @@ def form(request, model=None, form='main'):
 def project_verification(request):
     context = {'projects': Project.objects.order_by('-verified')}
     return render(request, 'nhdb/project_verification.html', context)
+
+
+def lookup_tables(request):
+    '''
+    Returns a JSON dict of lookup id/names for certain fields
+    :param request:
+    :return:
+    '''
+
+    lookups = {
+        'organization': [(str(o), o.id) for o in Organization.objects.all()],
+        'properties': [(str(o), o.id) for o in PropertyTag.objects.all()],
+    }
+    return HttpResponse(json.dumps(lookups, indent=1), content_type='application/json')

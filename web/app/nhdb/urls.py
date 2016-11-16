@@ -94,4 +94,5 @@ urlpatterns = [
     url(r'^downloadexcel/$', views.downloadexcel, name='downloadexcel'),
     url(r'^downloadexcel/list/', views.ExcelDownloadFeedbackList.as_view(), name='downloadexcel_list'),
 
+    url(r'^lookup_tables/', views.lookup_tables, name='lookup_tables'),
 ]

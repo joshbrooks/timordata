@@ -3,7 +3,6 @@ from rest_framework import serializers
 from nhdb.models import Organization, Project, ProjectOrganization, ProjectPerson, Person, ProjectPlace, \
     PropertyTag, OrganizationPlace, ProjectImage, ProjectType, ExcelDownloadFeedback
 from geo.models import AdminArea, Suco
-from rest_framework.reverse import reverse
 
 
 class SimpleProjectSerializer(serializers.ModelSerializer):
@@ -12,13 +11,29 @@ class SimpleProjectSerializer(serializers.ModelSerializer):
         exclude = ('activity', 'beneficiary', 'sector', 'place', 'person', 'organization')
 
 
+class OrganizationSerializer(serializers.ModelSerializer):
+    # place = serializers.RelatedField(many=True)
+
+    class Meta:
+        model = Organization
+        fields = ('name', 'id')
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = (
+            'name', 'description', 'startdate', 'enddate', 'verified', 'status',
+            'organization', 'beneficiary', 'sector', 'activity',
+        )
+
+
 class SimplePersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
 
 
 class PersonSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Person
 
@@ -43,9 +58,11 @@ class PropertyTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = PropertyTag
 
+
 class ProjectTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectType
+
 
 class ExcelDownloadFeedbackSerializer(serializers.ModelSerializer):
     class Meta:
@@ -62,12 +79,6 @@ class PlaceSerializer(serializers.ModelSerializer):
         model = AdminArea
         fields = ('pcode', 'path', 'name')
 
-
-class OrganizationSerializer(serializers.ModelSerializer):
-    # place = serializers.RelatedField(many=True)
-
-    class Meta:
-        model = Organization
 
 class TestProjectSerializer(serializers.ModelSerializer):
     activity = serializers.SlugRelatedField(
@@ -175,13 +186,12 @@ class ProjectPlaceSerializer(serializers.ModelSerializer):
         return obj.place.__unicode__()
 
 
-class Project_ProjectPlaceSerializer(serializers.ModelSerializer):
+class ProjectProjectPlaceSerializer(serializers.ModelSerializer):
     projectplace_set = ProjectPlaceSerializer(many=True)
 
     class Meta:
         model = Project
         fields = ('projectplace_set',)
-
 
     def create(self, validated_data):
         pass
@@ -210,14 +220,12 @@ class Project_ProjectPlaceSerializer(serializers.ModelSerializer):
         return instance
 
 
-
-class Project_ProjectPersonSerializer(serializers.ModelSerializer):
+class ProjectProjectPersonSerializer(serializers.ModelSerializer):
     projectperson_set = ProjectPersonSerializer(many=True)
 
     class Meta:
         model = Project
         fields = ('projectperson_set',)
-
 
     def create(self, validated_data):
         pass
@@ -246,7 +254,7 @@ class Project_ProjectPersonSerializer(serializers.ModelSerializer):
         return instance
 
 
-class Project_ProjectOrganizationSerializer(serializers.ModelSerializer):
+class ProjectProjectOrganizationSerializer(serializers.ModelSerializer):
     projectorganization_set = ProjectOrganizationSerializer(many=True, validators=[])
 
     class Meta:
@@ -276,7 +284,7 @@ class PointField(serializers.Field):
             return None
 
         lat, lng = obj.y, obj.x
-        return "%f,%f"%(lng, lat)
+        return "%f,%f" % (lng, lat)
 
     def to_internal_value(self, data):
         if not data:
@@ -293,7 +301,7 @@ class PointField(serializers.Field):
 class OrganizationPlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrganizationPlace
-        fields = ('description','phone','email','id','organization','point')
+        fields = ('description', 'phone', 'email', 'id', 'organization', 'point')
 
     point = PointField()
 
@@ -325,8 +333,8 @@ class OrganizationOrganizationPlaceSerializer(serializers.ModelSerializer):
             else:
                 pp = OrganizationPlace(organization=instance)
 
-            for fieldName in ['point','description','phone','email','organization']:
-                setattr(pp,fieldName, p.get(fieldName))
+            for fieldName in ['point', 'description', 'phone', 'email', 'organization']:
+                setattr(pp, fieldName, p.get(fieldName))
                 pp.place = p.get('place')
                 pp.organization = p.get('organization')
                 pp.point = p.get('point')

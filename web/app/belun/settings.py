@@ -1,20 +1,13 @@
-"""
-Django settings for belun project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.7/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.7/ref/settings/
-"""
-from settings_secret import SECRET_KEY, DEBUG, CRISPY_FAIL_SILENTLY, DATABASES, ALLOWED_HOSTS # Keep this out of the git repository
+from settings_secret import SECRET_KEY, DEBUG, CRISPY_FAIL_SILENTLY, DATABASES, ALLOWED_HOSTS
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-# Add Tetun as a selectable language along with ID, EN and PT language codes
+
 from django.utils.translation import gettext_noop
+import json
 import django.conf.locale
 from django.conf import global_settings
 
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+# Add Tetun as a selectable language along with ID, EN and PT language codes
 EXTRA_LANG_INFO = {
     'tet': {
         u'bidi': False,
@@ -32,21 +25,20 @@ LANGUAGES = (
     ('en', gettext_noop('English')),
     ('pt', gettext_noop('Portugese')),
     ('id', gettext_noop('Indonesian')),
-    )
+)
 
 LANGUAGES_FIX_ID = (
     ('tet', gettext_noop('Tetun')),
     ('en', gettext_noop('English')),
     ('pt', gettext_noop('Portugese')),
     ('ind', gettext_noop('Indonesian')),
-    )
-
+)
 
 LANG_INFO = dict(django.conf.locale.LANG_INFO.items() + EXTRA_LANG_INFO.items())
 django.conf.locale.LANG_INFO = LANG_INFO
 
 LOCALE_PATHS = (
-    os.path.join(os.path.dirname(__file__),'..','locale'),
+    os.path.join(os.path.dirname(__file__), '..', 'locale'),
 )
 
 CACHES = {
@@ -61,13 +53,12 @@ CACHES = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["templates/",],
+        'DIRS': ["templates/", ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
                 # list if you haven't customized them:
-                'django.core.context_processors.request',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.debug',
@@ -83,7 +74,7 @@ TEMPLATES = [
 
 INSTALLED_APPS = (
     'grappelli',
-    'modeltranslation', # Keep this above admin!!
+    'modeltranslation',  # Keep this above admin!!
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -93,7 +84,7 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    'debug_toolbar',
+    # 'debug_toolbar',
 
     # Contributed apps
     'rest_framework',
@@ -112,7 +103,7 @@ INSTALLED_APPS = (
 
 )
 
-SITE_ID = 1 # For flatpages
+SITE_ID = 1  # For flatpages
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
@@ -127,7 +118,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
 
-
     # Caching
     # 'django.middleware.cache.UpdateCacheMiddleware',
     # 'django.middleware.common.CommonMiddleware',
@@ -141,7 +131,6 @@ CACHE_MIDDLEWARE_KEY_PREFIX = 'timordata.info'
 ROOT_URLCONF = 'belun.urls'
 
 WSGI_APPLICATION = 'belun.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
@@ -176,7 +165,7 @@ GRAPPELLI_AUTOCOMPLETE_SEARCH_FIELDS = {
         "project": ("id__iexact", "name__icontains",),
         "publication": ("id__iexact", "name__icontains",),
         "propertytag": ("name__icontains",),
-        },
+    },
     "donormapping": {
         'fundingoffer': ('name__icontains',)
     },
@@ -186,9 +175,7 @@ GRAPPELLI_AUTOCOMPLETE_SEARCH_FIELDS = {
     }
 }
 
-
-INTERNAL_IPS = ['127.0.0.1','172.18.0.1']
-
+INTERNAL_IPS = ['127.0.0.1', '172.18.0.1']
 
 GRAPPELLI_ADMIN_TITLE = "Timor-Leste Data Center"
 
@@ -209,10 +196,11 @@ CKEDITOR_CONFIGS = {
     },
     'awesome_ckeditor': {
         'toolbar': [["Format", "Bold", "Italic", "Underline", "Strike", "SpellChecker"],
-                ['NumberedList', 'BulletedList', "Indent", "Outdent", 'JustifyLeft', 'JustifyCenter',
-                 'JustifyRight', 'JustifyBlock'],
-                ["Image", "Table", "Link", "Unlink", "Anchor", "SectionLink", "Subscript", "Superscript"], ['Undo', 'Redo'], ["Source"],
-                ["Maximize"]],
+                    ['NumberedList', 'BulletedList', "Indent", "Outdent", 'JustifyLeft', 'JustifyCenter',
+                     'JustifyRight', 'JustifyBlock'],
+                    ["Image", "Table", "Link", "Unlink", "Anchor", "SectionLink", "Subscript", "Superscript"],
+                    ['Undo', 'Redo'], ["Source"],
+                    ["Maximize"]],
     },
     'default': {
         'toolbar': 'full',
@@ -227,7 +215,7 @@ AUTHENTICATION_BACKENDS = (
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 100,
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination'
 
 }

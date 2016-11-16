@@ -8,25 +8,22 @@ from donormapping import rest_urls as donormapping_rest_urls
 from rest_framework_swagger import urls as rest_framework_swagger_urls
 from suggest import urls as suggest_urls
 
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.contrib import admin
-admin.autodiscover()
 from belun import views
 from nhdb import urls as nhdb_urls
-from belun. views import selecttwo, chosen ,selecttwo_create
+from belun. views import selecttwo, chosen, selecttwo_create
 from belun.flatpage_trans import flatpage_translation
 from library.views import thumbnail as th
-from django.views.decorators.cache import cache_page
 from django.conf import settings
-from views_authentication import logmein, logmeout
-
 from django.contrib.auth import views as auth_views
+admin.autodiscover()
 
 urlpatterns = [
 
     url(r'^accounts/login/$', auth_views.login),
     url(r'^accounts/logout/$', auth_views.logout),
-    url(r'^login/$',  auth_views.login, name="login"),
+    url(r'^login/$', auth_views.login, name="login"),
     url(r'^logout/', auth_views.logout, name='logout'),
     url(r'^flatpages/flatpages/$', views.flatpagelist, name='flatpage'),
     url(r'^flatpage/(?P<pk>[0-9]+)$', views.FlatpageDetail.as_view(), name='flatpage'),
