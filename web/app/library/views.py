@@ -1,22 +1,16 @@
-import json
-from django.core.urlresolvers import reverse
-from django.db.models import F, Count, Q
+from django.apps import apps
+from django.db.models import Count, Q
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.shortcuts import render
-from django.template import RequestContext
-from django.utils.safestring import mark_safe
-from nhdb.models import PropertyTag, Organization
-import os
-from suggest.models import Suggest, AffectedInstance
-from tables import PublicationTable, VersionTable
-from models import Author, Publication, Pubtype, Tag, Version
-from django_tables2 import SingleTableView, RequestConfig
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django_tables2 import SingleTableView
+from django.utils.translation import ugettext_lazy as _
+
 from forms import *
-import warnings
-from library import forms as library_forms, forms_delete as library_forms_delete
-from django.apps import apps
+from nhdb.models import Organization
+from suggest.models import Suggest, AffectedInstance
+from tables import VersionTable
 
 
 def index(request):
@@ -32,7 +26,6 @@ def thumbnail(request, app_name, model_name, pk, res=150):
 
 
 def publicationlist(request):
-
     # Prefetching some links speeds up rendering time - greatly!
     prefetch = ['versions', 'pubtype', 'organization', 'author']
 
@@ -92,7 +85,7 @@ def publicationlist(request):
 
             objects = objects.filter(**filters).filter(languages).distinct()
 
-        except ValueError, e:
+        except ValueError as e:
             raise
 
         text = GET.get('q.text') or GET.get('text')
@@ -116,31 +109,20 @@ def publicationlist(request):
 
         return objects
 
-    def dashboard(request, objects):
+    def dashboard(publications=None):
+        if publications is None:
+            publications = Publication.objects.all()
         dashboard = {}
+        from collections import Counter
+        publications = publications.prefetch_related('versions__tag__name', 'versions__sector__name', 'org')
 
-        # Count response for each individual tag
+        tags = list(publications.values_list('versions__tag__name', flat=True))
+        organizations = publications.values_list('organization__name', flat=True)
+        sectors = publications.values_list('versions__sector__name', flat=True)
 
-        if len(request.GET.getlist('tag__id')) > 1:
-            dashboard['tags'] = {}
-            for tag_id in request.GET.getlist('tag__id'):
-                tag = Tag.objects.get(pk=tag_id)
-                dashboard['tags'][tag.name] = objects.filter(versions__tag=tag).distinct().count()
-
-        if len(request.GET.getlist('sector__path')) > 1:
-            dashboard[PropertyTag.objects.get(path='INV')] = {}
-            for tag_id in request.GET.getlist('sector__path'):
-                tag = PropertyTag.objects.get(path=tag_id)
-                dashboard[PropertyTag.objects.get(path='INV')][tag] = objects.filter(
-                    versions__sector=tag).distinct().count()
-
-        if len(request.GET.getlist('org')) > 1:
-            orgs = Organization.objects.filter(pk__in=request.GET.getlist('org')).filter(
-                publication__in=objects).annotate(
-                    num_publications=Count('publication'))
-            dashboard['organizations'] = {}
-            for o in orgs:
-                dashboard['organizations'][o] = o.num_publications
+        dashboard[_('Tag')] = dict(Counter(tags))
+        dashboard[_('Organization')] = dict(Counter(organizations))
+        dashboard[_('Sector')] = dict(Counter(sectors))
         return dashboard
 
     context = {
@@ -151,7 +133,7 @@ def publicationlist(request):
             'sector__path': PropertyTag.objects.filter(path__startswith='INV.'),
             'pubtype': [{'value': p.pk, 'label': p.name} for p in Pubtype.objects.exclude(code='PRI')],
             'org': [{'value': o.pk, 'label': u'{}'.format(o.name)} for o in Organization.objects.annotate(
-                    num_publications=Count('publication')).filter(num_publications__gt=0)],
+                num_publications=Count('publication')).filter(num_publications__gt=0)],
         },
         'activefilters': {}
     }
@@ -165,155 +147,9 @@ def publicationlist(request):
     context['object_class_count'] = Publication.objects.count()
 
     context['object_list'] = object_list(request, prefetch)
+    context['dashboard'] = dashboard(context['object_list'])
 
     return render(request, 'library/publication_list.html', context)
-
-
-class xPublicationList(SingleTableView):
-    model = Publication
-    table_class = PublicationTable
-    table_pagination = {'per_page': 50}
-
-    def get_context_data(self, **kwargs):
-        context = super(xPublicationList, self).get_context_data(**kwargs)
-        context['lang'] = self.request.LANGUAGE_CODE
-
-        context['filters'] = {
-            'language_id': [{'value': s[0], 'label': s[1]} for s in settings.LANGUAGES_FIX_ID],
-            'tag__id': Tag.objects.all(),
-            'sector__path': PropertyTag.objects.filter(path__startswith='INV.'),
-            'pubtype': [{'value': p.pk, 'label': p.name} for p in Pubtype.objects.exclude(code='PRI')],
-            'org': [{'value': o.pk, 'label': u'{}'.format(o.name)} for o in Organization.objects.annotate(
-                    num_publications=Count('publication')).filter(num_publications__gt=0)],
-        }
-
-        context['activefilters'] = {}
-
-        for f in context['filters'].keys():
-
-            if self.request.GET.getlist(f) != []:
-                context['activefilters'][f] = self.request.GET.getlist(f)
-
-        # ID numbers need to be numeric
-
-        for f in 'tag__id', 'org':
-            if self.request.GET.getlist(f) != []:
-                try:
-                    context['activefilters'][f] = [int(i) for i in context['activefilters'][f]]
-                except ValueError, e:
-                    pass
-
-        if len(self.request.GET.getlist('org')) > 0:
-            try:
-                context['org'] = Organization.objects.filter(pk__in=self.request.GET.getlist('org'))
-            except ValueError:
-                context['org'] = Organization.objects.none()
-        context['activefilters']['primarysource'] = self.request.GET.get('primarysource') or 'false'
-        context['dashboard'] = self.get_dashboard(context['object_list'])
-        context['object_class_count'] = xPublicationList.model.objects.count()
-
-        return context
-
-    def get_dashboard(self, objects):
-        dashboard = {}
-
-        # Count response for each individual tag
-
-        if len(self.request.GET.getlist('tag__id')) > 1:
-            dashboard['tags'] = {}
-            for tag_id in self.request.GET.getlist('tag__id'):
-                tag = Tag.objects.get(pk=tag_id)
-                dashboard['tags'][tag.name] = objects.filter(versions__tag=tag).distinct().count()
-
-        if len(self.request.GET.getlist('sector__path')) > 1:
-            dashboard[PropertyTag.objects.get(path='INV')] = {}
-            for tag_id in self.request.GET.getlist('sector__path'):
-                tag = PropertyTag.objects.get(path=tag_id)
-                dashboard[PropertyTag.objects.get(path='INV')][tag] = objects.filter(
-                    versions__sector=tag).distinct().count()
-
-        if len(self.request.GET.getlist('org')) > 1:
-            orgs = Organization.objects.filter(pk__in=self.request.GET.getlist('org')).filter(
-                publication__in=objects).annotate(
-                    num_publications=Count('publication'))
-            dashboard['organizations'] = {}
-            for o in orgs:
-                dashboard['organizations'][o] = o.num_publications
-        return dashboard
-
-    def get_queryset(self):
-        GET = self.request.GET
-        filters = {}
-        params = ('org', 'pubtype')
-        version_params = ('tag__id',)
-        version_filter_terms = ("sector__path", "activity__path", "beneficiary__path")
-
-        for param in version_params:
-
-            if GET.getlist(param):
-                filters['versions__' + param + '__in'] = GET.getlist(param)
-
-        for param in params:
-
-            if GET.getlist(param):
-
-                # Rewrite shorthand requests here
-                if param == 'org':
-                    _param = 'organization'
-                else:
-                    _param = param
-
-                filters[_param + '__in'] = GET.getlist(param)
-
-        years = GET.getlist('year')
-        if years:
-            param = 'year'
-            if len(years) == 1:
-                filters[param + '__in'] = GET.getlist(param)
-            elif len(years) >= 2:
-                filters[param + '__gte'] = min([int(i) for i in GET.getlist(param)])
-                filters[param + '__lte'] = max([int(i) for i in GET.getlist(param)])
-
-        for term in version_filter_terms:
-            if GET.getlist(term):
-                filters["versions__" + term + '__in'] = [PropertyTag.separatestring(i).upper() for i in
-                                                         self.request.GET.getlist(term)]
-
-        languages = Q()
-        language_ids = GET.getlist('language_id')
-        for language_id in language_ids:
-            kw = {'versions__title_' + language_id + '__isnull': False,
-                  'versions__title_' + language_id + '__icontains': ' '}
-            languages = languages | Q(**kw)
-        try:
-
-            objects = Publication.objects.filter(**filters).filter(languages).distinct()
-
-        except ValueError, e:
-            objects = Publication.objects.all()
-
-        text = GET.get('q.text') or GET.get('text')
-        if text:
-            q = Q()
-            for lang, lang_name in LANGUAGES_FIX_ID:
-                for fieldname in ['name', 'description', 'versions__description', 'versions__title']:
-                    k = {fieldname + '_' + lang + '__icontains': text}
-                    q = q | Q(**k)
-            # raise AssertionError, q
-            objects = objects.filter(q)
-
-        primarysource = self.request.GET.get('primarysource') or 'false'
-
-        if primarysource == 'false':  # Default
-            objects = objects.exclude(pubtype='PRI')
-        if primarysource == 'true':
-            pass
-        if primarysource == 'only':
-            objects = objects.filter(pubtype='PRI')
-
-        return objects.prefetch_related('author') \
-            .prefetch_related('organization') \
-            .prefetch_related('pubtype')
 
 
 def project_table_excel(request):
@@ -398,7 +234,6 @@ def version_thumbnail(request, version_pk, language='en'):
 
     try:
         v = Version.objects.get(pk=version_pk)
-        print kw
         t = v.thumbnail(language=language, **kw)
         if t.get('image-errors'):
             raise AssertionError('Could not generate thumbnail: %s' % t['image-errors'])
@@ -425,62 +260,6 @@ def suggested_publication(request, suggestion_pk):
 
 class PublicationDetail(DetailView):
     model = Publication
-
-    # def get_context_data(self, **kwargs):
-    #     context = super(PublicationDetail, self).get_context_data(**kwargs)
-    #
-    #     context['versions'] = {}
-    #     languagecodes = ['en','tet','pt','id']
-    #
-    #     for v in self.object.versions.all():
-    #         context['versions'][v.id] = {}
-    #         count = 0
-    #         any_upload_exists = False
-    #         for lc in languagecodes:
-    #             if not v.has_language(lc):
-    #                 continue
-    #             count = count+1
-    #             upload =  getattr(v, 'upload_%s' % lc)
-    #             cover =  getattr(v, 'cover_%s' % lc)
-    #             if upload.name:
-    #                 upload_exists = True
-    #                 any_upload_exists = True
-    #             else:
-    #                 upload_exists = False
-    #
-    #             version_details = {
-    #                 'pk':v.pk,
-    #                 'upload':upload,
-    #                 'url': getattr(v, 'url_%s' % lc),
-    #                 'upload_exists': upload_exists,
-    #                 'cover': getattr(v, 'cover_%s' % lc),
-    #                 'title': getattr(v, 'title_%s' % lc),
-    #                 # 'thumb': v.thumbnail_to_res(languages=[lc]),
-    #                 'description': getattr(v, 'description_%s' % lc),
-    #                 'staticthumbnailurl': u'/media/publication_pages/150/{}/{}_0.jpg'.format(lc, os.path.splitext(os.path.split(upload.name)[1])[0])
-    #             }
-    #             try:
-    #                 if getattr(v, 'cover_%s' % lc) \
-    #                 and getattr(v, 'cover_%s' % lc) != '' \
-    #                 and os.path.exists(v.cover_en.path):
-    #                     version_details['staticthumbnailurl'] = u'/media/publication_covers/150/{}/{}.jpg'.format(lc, os.path.splitext(os.path.split(cover.name)[1])[0])
-    #             except ValueError: # Occurs when a file is not associated with the field
-    #                 pass
-    #
-    #             context['versions'][v.id][lc] = version_details
-    #         for lc in context['versions'][v.id].keys():
-    #             if count == 1:
-    #                 context['versions'][v.id][lc]['class'] = 'col-lg-12 col-sm-12 col-xs-12'
-    #             if count == 2:
-    #                 context['versions'][v.id][lc]['class'] = 'col-lg-6 col-sm-6 col-xs-12'
-    #             if count == 3:
-    #                 context['versions'][v.id][lc]['class'] = 'col-lg-4 col-sm-4 col-xs-12'
-    #             if count == 4:
-    #                 context['versions'][v.id][lc]['class'] = 'col-lg-3 col-sm-3 col-xs-12'
-    #
-    #             if any_upload_exists:
-    #                 context['versions'][v.id][lc]['class'] += 'with-image'
-    #     return context
 
 
 def publicationdashboard(request):
