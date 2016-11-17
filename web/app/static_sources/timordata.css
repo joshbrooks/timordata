@@ -1,0 +1,76 @@
+
+.dashboard-table-container {
+    max-height: 800px;
+    overflow-y:auto;
+}
+
+.box_textshadow{
+    color: white;
+    text-shadow:
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000;
+    margin-top:0;
+    margin-bottom:0;
+    font-size: 80%;
+    padding-top:10px;
+    background:url('/static/backgrounds/background_min.jpg') bottom left no-repeat #586c8f;
+    height:250px;
+}
+
+.box_textshadow h1 {
+    font-size:50px;
+    }
+
+.language-button-image {
+    width: 40px;
+    height: 20px;
+}
+
+.btn-language {
+    border-width: 0;
+    padding: 2px;
+}
+
+.btn-language on {
+    border-color: forestgreen;
+}
+
+.projectimage-container{
+    position:relative;
+}
+
+.projectimage-container .projectimage-toolbar{
+    display:none;
+}
+
+.projectimage-container:hover .projectimage-toolbar{
+    display:block;
+}
+
+
+.projectimage-toolbar{
+    position:absolute;
+    bottom:2px;
+    right:2px;
+}
+
+.language-button-image {
+    width:40px;
+    }
+
+
+.fullscreen .modal-dialog  {
+  width: 98%;
+  height: 92%;
+  margin: 0;
+  padding: 0;
+}
+
+.fullscreen .modal-content  {
+  height: auto;
+  min-height: 99%;
+  border-radius: 0;
+}
+

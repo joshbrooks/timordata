@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load static from staticfiles %}
 {% load crispy_forms_tags %}
 
 {% block script %}
-      <script src="{{ STATIC_URL }}require.js" data-main="{{ STATIC_URL }}selectize_require.js"></script>
+      <script src="{% static 'require.js' %}" data-main="{% static 'selectize_require.js' %}"></script>
 {% endblock script %}
  {% block style %} 
-	<link href="{{ STATIC_URL }}selectize/css/selectize.bootstrap3.css" rel="stylesheet">
+	<link href="{% static 'selectize/css/selectize.bootstrap3.css' %}" rel="stylesheet">
 {% endblock style %}
 
 {% block content %}

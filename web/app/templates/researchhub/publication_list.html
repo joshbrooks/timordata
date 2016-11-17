@@ -2,18 +2,18 @@
 {% load i18n %}
 {% load render_table from django_tables2 %}
 {% load crispy_forms_tags %}
-
+{% load static from staticfiles %}
 {% block headertext%}
 Projects
 {% endblock %}
 
 
 {% block script %}
-      <script src="{{ STATIC_URL }}require.js" data-main="{{ STATIC_URL }}selectize_require.js"></script>
+      <script src="{% static 'require.js' %}" data-main="{% static 'selectize_require.js' %}"></script>
 {% endblock script %}
  {% block style %} 
-    <link href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}selectize/css/selectize.bootstrap3.css" rel="stylesheet">
+    <link href="{% static 'django_tables2/themes/paleblue/css/screen.css' %}" rel="stylesheet">
+    <link href="{% static 'selectize/css/selectize.bootstrap3.css' %}" rel="stylesheet">
     <style>
     ul.pagination {
         border-radius: 0px;
@@ -23,7 +23,7 @@ Projects
 {% endblock style %}
 
 {% block resources %}
-    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}jquery.dataTables.min.js"></script>
+    <script language="javascript" type="text/javascript" src="{% static 'jquery.dataTables.min.js' %}"></script>
 {% endblock resources%}
 
 {% block content %}

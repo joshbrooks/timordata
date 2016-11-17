@@ -4,9 +4,11 @@ import os
 import subprocess
 import warnings
 from itertools import product
+from collections import Counter
 
 from crispy_forms.utils import render_crispy_form
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q, Count
 from django.forms import modelformset_factory
@@ -52,24 +54,6 @@ def object_index(queryset):
         except IndexError:
             _index[pk]['last'] = pks[-1]
     return _index
-
-
-def project_dashboard_info(projects, prefetch=True):
-    dashboard = {}
-
-    from collections import Counter
-
-    projects = projects.prefetch_related('activity', 'beneficiary', 'sector')
-
-    dashboard['activity'] = dict(Counter(projects.values_list('activity__name', flat=True)))
-    dashboard['beneficiary'] = dict(Counter(projects.values_list('beneficiary__name', flat=True)))
-    dashboard['sector'] = dict(Counter(projects.values_list('sector__name', flat=True)))
-
-    project_places = projects.values_list('id', 'projectplace__place__path')
-    project_districts = [(project_id, place_code[:3]) for project_id, place_code in project_places if place_code is not None]
-    dashboard['district'] = dict(Counter([place_code for project_id, place_code in set(project_districts)]))
-
-    return dashboard
 
 
 def index(request):
@@ -432,6 +416,7 @@ def get_organization_queryset(request, filter_parameter='q'):
 
 
 def get_projects_page(request, filter_parameter='q'):
+
     def translatedfilter(parameters, filter_values, filter_type="icontains"):
 
         # For compatibility with "django-modeltranslation" expand a nonspecific filter such as "name" to "name_en",
@@ -855,41 +840,6 @@ def projectcsv_nutrition(request):
     return response
 
 
-def projectdashboard(request):
-    c = {}
-    tags = {}
-    projects = get_projects_page(request, paginate=False)
-    projectpks = projects.values_list('pk', flat=True)
-    propertytags = PropertyTag.objects.select_related('project')
-
-    # Construct a dictionary of tag path, tag name, and project count
-    for tag_path, link in (('BEN', 'beneficiary'), ('ACT', 'activity'), ('INV', 'sector')):
-        link_name = 'project_' + link
-        tag = propertytags.get(path=tag_path)
-        filters = {link_name + '__pk__in'.format(link_name): projectpks, 'path__startswith': tag_path + '.'}
-        tags[tag.name_en] = list(
-            propertytags.filter(**filters).annotate(count=Count(link_name)).values('name', 'path',
-                                                                                   'count').order_by(
-                'name'))
-
-        # tags[tag.name_en].append({'name': 'none', 'count': Project.objects.annotate(c = Count(link)).filter(c=0).count(), 'path':None})
-
-    status = {}
-    for i in ProjectStatus.objects.filter(project__pk__in=projectpks).annotate(c=Count('project')):
-        status[i.description] = i.c
-
-    c['json'] = json.dumps({
-        'tags': tags,
-        'status': status
-    })
-
-    c['projects'] = projects
-    c['places'], c['max_projects'] = projectplaces(request)
-
-    return render(request, 'nhdb/project_dashboard.html', c)
-    # return HttpResponse(json.dumps(c), content_type="application/json")
-
-
 def projectplaces(request):
     """
     Return a JSON-encoded list of places and the number of projects filtered by GET parameters
@@ -921,6 +871,25 @@ def get_client_ip(request):
 
 
 def projectlist(request):
+
+    def project_dashboard_info(projects):
+        dashboard = {}
+
+
+
+        projects = projects.prefetch_related('activity', 'beneficiary', 'sector')
+
+        dashboard['activity'] = dict(Counter(projects.values_list('activity__name', flat=True)))
+        dashboard['beneficiary'] = dict(Counter(projects.values_list('beneficiary__name', flat=True)))
+        dashboard['sector'] = dict(Counter(projects.values_list('sector__name', flat=True)))
+
+        project_places = projects.values_list('id', 'projectplace__place__path')
+        project_districts = [(project_id, place_code[:3]) for project_id, place_code in project_places if
+                             place_code is not None]
+        dashboard['district'] = dict(Counter([place_code for project_id, place_code in set(project_districts)]))
+
+        return dashboard
+
     c = {}
     req = request
     getlist = req.GET.getlist
@@ -995,7 +964,6 @@ def projectlist(request):
     c['object_list_count'] = object_list.count()
     c['dashboard'] = project_dashboard_info(object_list)
     c['table'] = ProjectTable(
-        # paginated.object_list.prefetch_related('organization', 'sector', 'status')
         object_list.prefetch_related('organization', 'sector', 'status')
     )
     c['table'].paginate(page=get('page', 1), per_page=get('per_page', 50))
@@ -1231,8 +1199,25 @@ def lookup_tables(request):
     :return:
     '''
 
-    lookups = {
-        'organization': [(str(o), o.id) for o in Organization.objects.all()],
-        'properties': [(str(o), o.id) for o in PropertyTag.objects.all()],
-    }
-    return HttpResponse(json.dumps(lookups, indent=1), content_type='application/json')
+    lookups = [
+        {
+            'name': 'project',
+            'app': 'nhdb',
+            'model': 'project',
+            'fields': ('name', 'pk')
+        },
+        {
+            'name': 'organization',
+            'app': 'nhdb',
+            'model': 'organization',
+            'fields': ('name', 'pk')
+        }
+    ]
+
+    returns = {}
+    for lookup in lookups:
+        contenttype = ContentType.objects.get(app_label=lookup['app'], model=lookup['model'])
+        objects = contenttype.get_all_objects_for_this_type()
+        returns[lookup['model']] = list(objects.values(*lookup['fields']))
+
+    return HttpResponse(json.dumps(returns), content_type='application/json')

@@ -17,7 +17,7 @@ class SuggestTable(Table):
 
     class Meta:
         model = Suggest
-        attrs = {"class": "paleblu"}
+        attrs = {"class": "paleblue"}
         fields = (
         'description', 'data', 'user_name', 'suggestDate', 'approvalDate', 'email_obfs', 'url', 'children', 'parent')
 

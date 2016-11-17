@@ -31,6 +31,10 @@ class Publication(models.Model):
     author = models.ManyToManyField('Author', blank=True)
     country = models.ManyToManyField('geo.World', blank=True)
     location = models.ManyToManyField(AdminArea, blank=True)
+    tag = models.ManyToManyField('Tag', blank=True)
+    sector = models.ManyToManyField(
+        'nhdb.PropertyTag', blank=True,
+        limit_choices_to={'path__startswith': "INV."})
 
     def __unicode__(self):
         if self.name:
@@ -232,24 +236,24 @@ class Version(models.Model):
     """
 
     def __unicode__(self):
-
-        presentation_field = 'title'
-
-        r = getattr(self, presentation_field)
-        langs = []
-        for l in self.get_translated_fields(presentation_field):
-
-            v = getattr(self, l)
-
-            if v is not None and v != '':
-                langs.append(v)
-        if langs:
-            r = r + u'{}'.format(','.join(langs))
-
-        if r:
-            return unidecode(r)
-        else:
-            return u"No title"
+        return 'Version'
+        # presentation_field = 'title'
+        #
+        # r = getattr(self, presentation_field)
+        # langs = []
+        # for l in self.get_translated_fields(presentation_field):
+        #
+        #     v = getattr(self, l)
+        #
+        #     if v is not None and v != '':
+        #         langs.append(v)
+        # if langs:
+        #     r = r + u'{}'.format(','.join(langs))
+        #
+        # if r:
+        #     return unidecode(r)
+        # else:
+        #     return u"No title"
 
     @classmethod
     def get_translated_fields(cls, prefix='title'):
@@ -361,7 +365,7 @@ class Version(models.Model):
     url = models.CharField(max_length=256, null=True, blank=True)
     tag = models.ManyToManyField('Tag', blank=True)
     sector = models.ManyToManyField(
-        'nhdb.PropertyTag', blank=True, related_name="publication_sector",
+        'nhdb.PropertyTag', blank=True, related_name="version_sector",
         limit_choices_to={'path__startswith': "INV."})
     activity = models.ManyToManyField(
         'nhdb.PropertyTag', blank=True, related_name="publication_activity",

@@ -8,13 +8,13 @@ from django_tables2 import LinkColumn, Column, Table
 class FundingSurveyTable(tables.Table):
     class Meta:
         model = FundingSurvey
-        attrs = {"class": "paleblu"}
+        attrs = {"class": "paleblue"}
 
 
 class DonorSurveyResponseTable(tables.Table):
     class Meta:
         model = DonorSurveyResponse
-        attrs = {"class": "paleblu"}
+        attrs = {"class": "paleblue"}
 
 
 class FundingOfferTable(tables.Table):
@@ -41,4 +41,4 @@ class FundingOfferTable(tables.Table):
     class Meta:
         model = FundingOffer
         fields = ('title', 'activity')
-        attrs = {"class": "paleblu"}
+        attrs = {"class": "paleblue"}

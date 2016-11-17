@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load static from staticfiles %}
 <div role="navigation" class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -37,7 +38,7 @@
 
           <label for="lang_{{ language.code }}" style="margin-top:15px;">
             <input id="lang_{{ language.code }}" type="radio" name="language" value="{{ language.code }}" {% if language.code == request.LANGUAGE_CODE %}checked selected{% endif %}>
-            <img style="width:40px; height:20px;" src="{{ STATIC_URL }}locales/{{language.code}}.png" alt="Change to {{language.code}}">
+            <img style="width:40px; height:20px;" src="{% static 'locales/{{language.code}}.png' %}" alt="Change to {{language.code}}">
           </label>{% endfor %}
 
           <button class="btn btn-primary btn-xs">Change</button>

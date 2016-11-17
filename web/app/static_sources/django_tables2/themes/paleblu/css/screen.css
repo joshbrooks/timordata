@@ -1,0 +1,127 @@
+table.paleblu {
+    border-collapse: collapse;
+    border-color: #CCC;
+    border: 1px solid #DDD;
+}
+
+table.paleblu,
+table.paleblu +  ul.pagination {
+    font: normal 11px/14px 'Lucida Grande', Verdana, Helvetica, Arial, sans-serif;
+}
+
+table.paleblu a:link,
+table.paleblu a:visited,
+table.paleblu + ul.pagination > li > a {
+    color: #5B80B2;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+table.paleblu a:hover {
+    color: #036;
+}
+
+table.paleblu td,
+table.paleblu th {
+    padding: 5px;
+    line-height: 13px;
+    border-bottom: 1px solid #EEE;
+    border-left: 1px solid #DDD;
+    text-align: left;
+}
+
+table.paleblu thead th:first-child,
+table.paleblu thead td:first-child {
+    border-left: none !important;
+}
+
+table.paleblu thead th,
+table.paleblu thead td {
+    background: #FCFCFC url(../img/header-bg.png) left bottom repeat-x;
+    border-bottom: 1px solid #DDD;
+    padding: 2px 5px;
+    font-size: 11px;
+    vertical-align: middle;
+    color: #666;
+}
+
+table.paleblu thead th > a:link,
+table.paleblu thead th > a:visited {
+    color: #666;
+}
+
+table.paleblu thead th.orderable > a {
+    padding-right: 20px;
+    background: url(../img/arrow-inactive-up.png) right center no-repeat;
+}
+table.paleblu thead th.orderable.asc > a {
+    background-image: url(../img/arrow-active-up.png);
+}
+table.paleblu thead th.orderable.desc > a {
+    background-image: url(../img/arrow-active-down.png);
+}
+
+table.paleblu tr.odd {
+    background-color: #EDF3FE;
+}
+
+table.paleblu tr.even {
+    background-color: white;
+}
+
+table.paleblu + ul.pagination {
+    background: white url(../img/pagination-bg.gif) left 180% repeat-x;
+    overflow: auto;
+    margin: 0;
+    padding: 10px;
+    border: 1px solid #DDD;
+    list-style: none;
+}
+
+table.paleblu + ul.pagination > li {
+    float: left;
+    line-height: 22px;
+    margin-left: 10px;
+}
+
+table.paleblu + ul.pagination > li:first-child {
+    margin-left: 0;
+}
+
+table.paleblu + ul.pagination > li.cardinality {
+    float: right;
+    color: #8d8d8d;
+}
+
+table.paleblu > tbody > tr > td > span.true,
+table.paleblu > tbody > tr > td > span.false {
+    background-position: top left;
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 10px;
+    overflow: hidden;
+    text-indent: -200px;
+    width: 10px;
+}
+
+table.paleblu > tbody > tr > td > .missing {
+    background: transparent url(../img/missing.png) right center no-repeat;
+    color: #717171;
+    padding-right: 20px;
+}
+
+table.paleblu > tbody > tr > td > .missing:hover {
+    color: #333;
+}
+
+table.paleblu > tbody > tr > td > span.true {
+    background-image: url(../img/true.gif);
+}
+
+table.paleblu > tbody > tr > td > span.false {
+    background-image: url(../img/false.gif);
+}
+
+div.table-container {
+    display: inline-block;
+}

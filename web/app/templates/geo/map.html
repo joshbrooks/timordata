@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% load i18n %}
-
+{% load static from staticfiles %}
 {% block script %}
      {{block.super}}
-    <link rel="stylesheet" href="{{ STATIC_URL }}leaflet/leaflet.css" />
-    <!--<script src="{{ STATIC_URL }}leaflet/leaflet.js"></script>-->
-    <!--<script src="{{ STATIC_URL }}leaflet/leaflet.utfgrid.js"></script>-->
-    <!--<script src="{{ STATIC_URL }}leaflet/leaflet.ajax.min.js"></script>-->
-    <!--<script src="{{ STATIC_URL }}leaflet/leaflet.wms.js"></script>-->
-    <script src="{{ STATIC_URL }}leaflet-location-setter.js"></script>
+    <link rel="stylesheet" href="{% static 'leaflet/dist/leaflet.css' %}" />
+    <!--<script src="{% static 'leaflet/dist/leaflet.js' %}"></script>-->
+    <!--<script src="{% static 'leaflet/leaflet.utfgrid.js' %}"></script>-->
+    <!--<script src="{% static 'leaflet/leaflet.ajax.min.js' %}"></script>-->
+    <!--<script src="{% static 'leaflet/leaflet.wms.js' %}"></script>-->
+    <script src="{% static 'leaflet-location-setter.js' %}"></script>
 
 {% endblock script %}
 {% block style %}

@@ -6,7 +6,8 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django_tables2 import SingleTableView
 from django.utils.translation import ugettext_lazy as _
-
+from rest_framework import viewsets
+from library import serializers
 from forms import *
 from nhdb.models import Organization
 from suggest.models import Suggest, AffectedInstance
@@ -383,3 +384,18 @@ class VersionUpdate(UpdateView):
 class VersionList(SingleTableView):
     model = Version
     table_class = VersionTable
+
+
+class PublicationViewSet(viewsets.ModelViewSet):
+    queryset = Publication.objects.all()
+    serializer_class = serializers.PublicationSerializer
+
+    ordering_fields = ('verified', 'name', 'author', 'organization')
+    filter_fields = ('name', 'pubtype')
+
+    def get_queryset(self):
+        queryset = Publication.objects.all()
+        queryset = queryset.prefetch_related(
+            'author', 'organization'
+        )
+        return queryset

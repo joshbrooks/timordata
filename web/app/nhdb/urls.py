@@ -37,7 +37,6 @@ project = [
     # url(r'^$', views.ProjectList.as_view(), name='list'),
     url(r'^$', views.projectlist, name='list'),
     # url(r'^table/$', views.ProjectList.as_view(template_name='nhdb/project_list_table.html'), name='list_as_table'),
-    url(r'^dashboard/$', views.projectdashboard, name='dashboard'),
     url(r'^places/$', views.projectplaces, name='places'),
     url(r'^xls$', views_excel.project, name='list_as_excel'),
     url(r'^csv/$', views.projectcsv, name='csv'),

@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-
+{% load static from staticfiles %}
 {% block extra_css %}
-	<link rel="stylesheet" href="{{ STATIC_URL }}/dataTables.css" />
+	<link rel="stylesheet" href="{% static '/dataTables.css' %}" />
 {% endblock extra_css %}
 
 {% block resources %}
-     <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}jquery.dataTables.min.js"></script>
+     <script language="javascript" type="text/javascript" src="{% static 'jquery.dataTables.min.js' %}"></script>
 {% endblock resources%}
 
 {% block script %}

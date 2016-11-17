@@ -5,6 +5,10 @@ from django.utils.translation import gettext_noop
 import json
 import django.conf.locale
 from django.conf import global_settings
+# The top directory for this project. Contains requirements/, manage.py,
+# and README.rst, a liga_inan_project directory with settings etc (see
+# PROJECT_PATH), as well as a directory for each Django app added to this
+# project.
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Add Tetun as a selectable language along with ID, EN and PT language codes
@@ -148,7 +152,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = ['/var/www/html/static/']
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'bower_components'),
+    os.path.join(BASE_DIR, 'static_sources')
+)
+
+
 MEDIA_ROOT = '/var/www/html/media/'
 MEDIA_URL = '/media/'
 
@@ -225,7 +235,6 @@ DATE_FORMAT = 'Y-m-d'
 SELECT2_BOOTSTRAP = True
 AUTO_RENDER_SELECT2_STATICS = False
 
-STATIC_ROOT = "/var/www/html/static/new/"
 try:
     from settings_local import *
 except ImportError:

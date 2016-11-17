@@ -25,8 +25,8 @@
     </div>
 
       <form class="navbar-form navbar-right" role="form" action="{% url 'set_language' %}" method="post" autocomplete="off">{%csrf_token%}{% get_language_info_list for LANGUAGES as languages %}{% for language in languages %}{% if language.code != request.LANGUAGE_CODE %}
-          <button name="language" class="btn btn-default" style="border-width:0; padding:2px;" value="{{ language.code }}"><img style="width:40px; height:20px; filter:gray; filter:grayscale(1); -webkit-filter: grayscale(1)" src="{{ STATIC_URL }}locales/{{ language.code }}.png" alt="Change to tet"></button>{% else %}
-          <button name="language" class="btn btn-success" style="border-width:0; padding:2px;" value="{{ language.code }}"><img style="width:40px; height:20px;" src="{{ STATIC_URL }}locales/{{ language.code }}.png" alt="Change to tet"></button>{% endif %}{% endfor%}
+          <button name="language" class="btn btn-default" style="border-width:0; padding:2px;" value="{{ language.code }}"><img style="width:40px; height:20px; filter:gray; filter:grayscale(1); -webkit-filter: grayscale(1)" src="{% static 'locales/{{ language.code }}.png' %}" alt="Change to tet"></button>{% else %}
+          <button name="language" class="btn btn-success" style="border-width:0; padding:2px;" value="{{ language.code }}"><img style="width:40px; height:20px;" src="{% static 'locales/{{ language.code }}.png' %}" alt="Change to tet"></button>{% endif %}{% endfor%}
       </form>
     </div><!--/.nav-collapse -->
   </div><!--/.container-fluid -->

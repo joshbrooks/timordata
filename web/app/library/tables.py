@@ -15,7 +15,7 @@ class VersionTable(tables.Table):
 
     class Meta:
         model = Version
-        attrs = {"class": "paleblu"}
+        attrs = {"class": "paleblue"}
 
 
 class PublicationTable(tables.Table):
@@ -25,7 +25,7 @@ class PublicationTable(tables.Table):
 
     class Meta:
         # model = Publication
-        attrs = {"class": "paleblu"}
+        attrs = {"class": "paleblue"}
         fields = ('publication', 'year')
 
     # pk = tables.LinkColumn('library:publication:detail', args=[A('pk')])

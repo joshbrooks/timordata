@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load static from staticfiles %}
 {% comment "Description of content" %}
 
 Base Bootstrap Template
@@ -28,22 +29,20 @@ Base Bootstrap Template
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" type="image/png" href="{{ STATIC_URL }}favicon.png">
-    <link rel="icon" type="image/png" href="{{ STATIC_URL }}favicon.png" />{% endblock %}
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}" />{% endblock %}
     <title>{% block title %}Timor Development Data &middot;{% endblock title %}</title>
 
     {% block css %}
-      <link href="{{ STATIC_URL }}font-awesome.min.css" rel="stylesheet">
+      <link href="{% static 'font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
     {% if media.css %}{% for css_url in media.css %}
-      <link href="{{ STATIC_URL }}{{ css_url }}" rel="stylesheet">
+      <link href="{% static '{{ css_url }}' %}" rel="stylesheet">
     {% endfor %}{% endif %}
-      <link href="{{ STATIC_URL }}bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet">
-      <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="{% static 'bootstrap-modal/css/bootstrap-modal-bs3patch.css' %}" rel="stylesheet">
+      <link href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
     {% endblock css %}
 
-    {% block style %}{# Use "style" block to add custom CSS files to a template like so #}
-    {% comment %}
-    <link href="/static/path/to/my/css/my_css.css" rel="stylesheet"> {% endcomment %}
+    {% block style %}
     {% endblock style %}
 
   </head>
@@ -68,8 +67,8 @@ Base Bootstrap Template
     </div>
   {% endblock footer %}
 
-    <script src="{{ STATIC_URL }}jquery.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js"></script>
+    <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
    <script>
     $(document).ready(function(){
         $('form#mysuggestions input[name=name]').val(localStorage.user_name)

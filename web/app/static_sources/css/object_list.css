@@ -1,0 +1,110 @@
+
+    div#image-container img {
+        padding:5px;
+        border:1px solid gray;
+    }
+    div#image-container img:hover {
+        padding:4px;
+        border:2px solid dodgerblue;
+    }
+    ul.pagination {
+        border-radius: 0;
+        display: block;
+    }
+    .datacenter-search-form {
+        background-color:#FFD;
+        padding:5px;
+        border-radius: 5px;
+        margin-bottom:10px;
+    }
+        .like-table { display: table; }
+.like-table>* { display: table-row; }
+
+.like-table .row {
+    height: 25px;}
+
+.like-table>*>* { display: table-cell; border:1px solid #d3d3d3;}
+            .small-flag {width:25px; margin-right:5px; top:5px; left:5px;}
+
+            #object-list-container {
+    overflow-y:scroll;}
+
+
+#rightpane, .sidebar {
+    max-height:100%;
+}
+
+        li.object.active>* {
+            color:white;
+        }
+    /*Stop "jump" when showing hidden select box*/
+    select[multiple],select[size]{ height:20px;}
+
+    #search {
+        height:auto;
+    }
+#debugQueryTable{
+    display: none;
+}
+
+#imagemodal img {
+    max-width:100%;
+}
+
+#object_list{
+    position:relative;
+}
+
+.Zebra_DatePicker.dp_visible {
+    z-index: 1099;
+}
+.sticky {
+      position:fixed;
+      top:0;
+      height:50px;
+    background: white;
+    z-index: 1;
+}
+
+    .like-table { display: table; }
+.like-table>* { display: table-row; }
+
+.like-table .row {
+    height: 25px;}
+
+.like-table>*>* { display: table-cell; border:1px solid #d3d3d3;}
+
+th span.table-vertical-header {
+  padding: 0 .5em;
+  /*writing-mode: tb-rl;*/
+  /*filter: flipv fliph;*/
+  -webkit-transform:rotate(-90deg);
+  white-space:nowrap;
+  display:block;
+}
+
+.vertical {
+  padding: 0 .5em;
+  -webkit-transform:rotate(90deg);
+  -moz-transform:rotate(90deg);
+  white-space:nowrap;
+  display:block;
+}
+
+.select2-container{
+    z-index:9999;
+}
+
+.small-alerts .alert {
+    margin:5px;
+    padding:5px;
+}
+
+
+
+.search-form label {
+    white-space: normal;
+}
+    #modaldeleteform .modal-body form .controls{
+        display:none;
+    }

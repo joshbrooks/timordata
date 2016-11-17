@@ -1,18 +1,19 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load static from staticfiles %}
 {% load crispy_forms_tags %}
 {% load django_select2_tags %}
 {% get_current_language as LANGUAGE_CODE %}
 
 {% block script %}
      {{block.super}}
-    <script src="{{ STATIC_URL }}leaflet/leaflet.js"></script>
-    <script src="{{ STATIC_URL }}leaflet/leaflet.utfgrid.js"></script>
-    <script src="{{ STATIC_URL }}leaflet/leaflet.ajax.min.js"></script>
-    <script src="{{ STATIC_URL }}organizationplace.js"></script>
-    <script src="{{ STATIC_URL }}placeenvelopes.js"></script>
-    <script src="{{ STATIC_URL }}organizationsuggestion.js"></script>
-    <script src="{{ STATIC_URL }}simply-toast/simply-toast.min.js"></script>
+    <script src="{% static 'leaflet/leaflet.js' %}"></script>
+    <script src="{% static 'leaflet/leaflet.utfgrid.js' %}"></script>
+    <script src="{% static 'leaflet/leaflet.ajax.min.js' %}"></script>
+    <script src="{% static 'organizationplace.js' %}"></script>
+    <script src="{% static 'placeenvelopes.js' %}"></script>
+    <script src="{% static 'organizationsuggestion.js' %}"></script>
+    <script src="{% static 'simply-toast/simply-toast.min.js' %}"></script>
     <script>
         {% autoescape off %}
         window.initialFeatures = {{initialFeatures}}
@@ -60,8 +61,8 @@
 
 {% block style %}
 {{block.super}}
-<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/leaflet.css" />
-<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/Control.SimpleMarkers.css" />
+<link rel="stylesheet" href="{% static 'leaflet/dist/leaflet.css' %}" />
+<link rel="stylesheet" href="{% static 'leaflet/Control.SimpleMarkers.css' %}" />
 <style>
 #map {
     height:256px;

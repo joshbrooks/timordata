@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load render_table from django_tables2 %}
 {% load crispy_forms_tags %}
-
+{% load static from staticfiles %}
 
 {% block script %}
 {{block.super}}
@@ -39,7 +39,7 @@ $(document).ready(function(){
 
 
 
-<script src="{{ STATIC_URL }}suggestionlist.js"></script>
+<script src="{% static 'suggestionlist.js' %}"></script>
 {% endblock %}
 
 {% if not request.user.is_authenticated %}

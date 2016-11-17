@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load static from staticfiles %}
 
 <div class="container-fluid"><div class="row small-alerts">
 
@@ -51,25 +52,26 @@
          <h4>Verified: {{object.verified}}</h4>
     <h4>Description</h4>{% autoescape off %}
     <div class="alert {% if not object.description_en %}alert-warning{%else%}alert-info{%endif%}">
-        <img class="language-button-image" src="{{ STATIC_URL }}locales/en{% if not object.description_en %}_bw{%endif%}.png">
+        <img class="language-button-image" src="{% if object.description_en %}{% static 'locales/en.png' %}{% else %}{% static 'locales/en_bw.png' %}{% endif %}">
         {{object.description_en|default:"No description in English"}}
     </div>
 
     <div class="alert {% if not object.description_tet %}alert-warning{%else%}alert-info{%endif%}">
-        <img class="language-button-image" src="{{ STATIC_URL }}locales/tet{% if not object.description_tet %}_bw{%endif%}.png">
+        <img class="language-button-image" src="{% if object.description_tet %}{% static 'locales/tet.png' %}{% else %}{% static 'locales/tet_bw.png' %}{% endif %}">
         {{object.description_tet|default:"La iha deskripsaun iha Tetun"}}
     </div>
 
     <div class="alert {% if not object.description_pt %}alert-warning{%else%}alert-info{%endif%}">
-        <img class="language-button-image" src="{{ STATIC_URL }}locales/pt{% if not object.description_pt %}_bw{%endif%}.png">
+        <img class="language-button-image" src="{% if object.description_pt %}{% static 'locales/pt.png' %}{% else %}{% static 'locales/pt_bw.png' %}{% endif %}">
         {{object.description_pt|default:"No description in Portugese"}}
     </div>
 
     <div class="alert {% if not object.description_id %}alert-warning{%else%}alert-info{%endif%}">
-        <img class="language-button-image" src="{{ STATIC_URL }}locales/id{% if not object.description_id %}_bw{%endif%}.png">
+        <img class="language-button-image" src="{% if object.description_ind %}{% static 'locales/ind.png' %}{% else %}{% static 'locales/ind_bw.png' %}{% endif %}">
+        {{object.description_id|default:"No description in Indonesian"}}
+    </div>
 
-        {{object.description_id|default:"No description in Indonesian"}}</div>
-        {% endautoescape %}
+    {% endautoescape %}
 
 
     {% if not object.active %}
@@ -149,7 +151,7 @@
         <tr><th>Publications / Files</th>
             <td>
             {% for k,j in object.filecounts.items %}
-            <img class="small-flag" src="{{ STATIC_URL }}locales/{{k}}.png" alt="{{k}}">{{j}}
+            <img class="small-flag" src="{% static 'locales/{{k}}.png' %}" alt="{{k}}">{{j}}
             {% endfor %}
             </td>
         </tr>
@@ -295,10 +297,10 @@
             <div class="row"  style="border:1px solid gray; border-radius: 5px; padding: 5px;">{% for i in object.publication_set.all %}
                 <div class="col col-lg-6 col-sm-12">
                 <h5>{{i}}</h5>{% for v in i.versions.all %}
-                    {% if v.title_en %}<p><img class="small-flag" src="{{ STATIC_URL }}locales/en.png" alt="en">{{v.title_en}}{{v.description_en|default:""}} {% if v.upload_en %}<a href="{{v.upload_en.url}}">Download</a>{%endif %} {% if v.url_en %}<a href="{{v.url_en}}">Link</a>{%endif %}</p>{% endif %}
-                    {% if v.title_pt %}<p><img class="small-flag" src="{{ STATIC_URL }}locales/pt.png" alt="pt">{{v.title_pt}}{{v.description_pt|default:""}} {% if v.upload_pt %}<a href="{{v.upload_pt.url}}">Download</a>{%endif %} {% if v.url_pt %}<a href="{{v.url_pt}}">Link</a>{% endif %}</p>{% endif %}
-                    {% if v.title_tet %}<p><img class="small-flag" src="{{ STATIC_URL }}locales/tet.png" alt="tet">{{v.title_tet}}{{v.description_tet|default:""}}{% if v.upload_tet %}<a href="{{v.upload_tet.url}}">Download</a>{%endif %} {% if v.url_tet %}<a href="{{v.url_tet}}">Link</a>{% endif %}</p>{% endif %}
-                    {% if v.title_id %}<p><img class="small-flag" src="{{ STATIC_URL }}locales/id.png" alt="id">{{v.title_id}}{{v.description_id|default:""}} {% if v.upload_id %}<a href="{{v.upload_id.url}}">Download</a>{%endif %} {% if v.url_id %}<a href="{{v.url_id}}">Link</a>{% endif %}</p>{% endif %}
+                    {% if v.title_en %}<p><img class="small-flag" src="{% static 'locales/en.png' %}" alt="en">{{v.title_en}}{{v.description_en|default:""}} {% if v.upload_en %}<a href="{{v.upload_en.url}}">Download</a>{%endif %} {% if v.url_en %}<a href="{{v.url_en}}">Link</a>{%endif %}</p>{% endif %}
+                    {% if v.title_pt %}<p><img class="small-flag" src="{% static 'locales/pt.png' %}" alt="pt">{{v.title_pt}}{{v.description_pt|default:""}} {% if v.upload_pt %}<a href="{{v.upload_pt.url}}">Download</a>{%endif %} {% if v.url_pt %}<a href="{{v.url_pt}}">Link</a>{% endif %}</p>{% endif %}
+                    {% if v.title_tet %}<p><img class="small-flag" src="{% static 'locales/tet.png' %}" alt="tet">{{v.title_tet}}{{v.description_tet|default:""}}{% if v.upload_tet %}<a href="{{v.upload_tet.url}}">Download</a>{%endif %} {% if v.url_tet %}<a href="{{v.url_tet}}">Link</a>{% endif %}</p>{% endif %}
+                    {% if v.title_id %}<p><img class="small-flag" src="{% static 'locales/id.png' %}" alt="id">{{v.title_id}}{{v.description_id|default:""}} {% if v.upload_id %}<a href="{{v.upload_id.url}}">Download</a>{%endif %} {% if v.url_id %}<a href="{{v.url_id}}">Link</a>{% endif %}</p>{% endif %}
                 <hr>{% endfor %}
                 </div>{% endfor %}
             </div>{% endif %}

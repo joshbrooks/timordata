@@ -10,14 +10,14 @@ __author__ = 'josh'
 class ProjectPersonTable(Table):
     class Meta:
         model = ProjectPerson
-        attrs = {"class": "paleblu"}
+        attrs = {"class": "paleblue"}
         exclude = ('project',)
 
 
 class PersonTable(Table):
     class Meta:
         model = Person
-        attrs = {"class": "paleblu"}
+        attrs = {"class": "paleblue"}
         exclude = ('title',)
 
     def render_email(self, value, record):
@@ -32,7 +32,7 @@ class PersonTable(Table):
 class PersonProjectTable(Table):
     class Meta:
         model = ProjectPerson
-        attrs = {"class": "paleblu"}
+        attrs = {"class": "paleblue"}
         exclude = ('person',)
 
 
@@ -43,7 +43,7 @@ class OrganizationTable(Table):
         'description', 'description_en', 'description_tet', 'description_pt', 'description_id',
         'stafffulltime', 'staffparttime')
 
-        attrs = {"class": "paleblu"}
+        attrs = {"class": "paleblue"}
 
     organization_phone = Column(accessor='contact.phoneprimary')
     email = Column()
@@ -61,7 +61,7 @@ class OrganizationTable(Table):
 class ProjectTable(Table):
     class Meta:
         model = Project
-        attrs = {"class": "paleblu"}
+        attrs = {"class": "paleblue"}
         fields = ('name', 'startdate', 'enddate', 'verified', 'status')
 
     sector = Column()
@@ -83,6 +83,6 @@ class ProjectTable(Table):
 class PropertyTagTable(Table):
     class Meta:
         model = PropertyTag
-        attrs = {"class": "paleblu"}
+        attrs = {"class": "paleblue"}
 
     id = LinkColumn('nhdb:propertytag:update', args=[A('pk')])

@@ -1,0 +1,7 @@
+
+.waiting{ padding: 0; display: inline-block; }
+.waiting-element{ margin: 0 2px 2px 0; background-color: #ccc;
+    width: 10px; height: 20px; display: inline-block;}
+.waiting-play-0{ margin-bottom: 0; background-color: #999; }
+.waiting-play-1{ margin-bottom: 1px; background-color: #aaa; }
+.waiting-play-2{ margin-bottom: 2px; background-color: #bbb; }

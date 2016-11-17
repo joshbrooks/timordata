@@ -1,8 +1,9 @@
 {% extends 'nhdb/new_project_search/base.html' %}
 {% load i18n %}
+{% load static from staticfiles %}
 {% block script %}
 
-<script src="{{ STATIC_URL }}require.js" data-main="{{ STATIC_URL }}projects.require.js"></script>
+<script src="{% static 'require.js' %}" data-main="{% static 'projects.require.js' %}"></script>
 
 
 {% endblock script %}
@@ -258,7 +259,7 @@ object#alphasvg {
 
   <span id="results-container">
     <div class="result" style="height:300px; display:none;">
-      <img src="{{ STATIC_URL }}default.svg" class="loading">
+      <img src="{% static 'default.svg' %}" class="loading">
     </div>
   </span>
 

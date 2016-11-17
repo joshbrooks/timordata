@@ -1,6 +1,7 @@
 from django.conf.urls import url, include
-from library import views
+from rest_framework import routers
 
+from library import views
 
 publication = [
     # url(r'^$', views.PublicationList.as_view(), name='list'),
@@ -25,7 +26,6 @@ version = [
     url(r'(?P<pk>[0-9]+)/edit/$', views.VersionUpdate.as_view(), name='edit'),
     url(r'^(?P<pk>\d+)/delete/$', views.VersionDelete.as_view(), name='delete'),
 
-
     # NGINX thumbnail not found: Redirects to library view
     url(r'^thumbnail_nginx/$',
         views.version_thumbnail_nginx, name='nginx_thumbnail'),
@@ -37,6 +37,8 @@ untl = [
     url(r'^$', views.publicationlist, name='list'),
 ]
 
+library_router = routers.SimpleRouter()
+library_router.register('publication', views.PublicationViewSet)
 
 urlpatterns = [
     url(r'^$', views.index, name="index"),
@@ -44,5 +46,6 @@ urlpatterns = [
     url(r'^untl/', include(untl, namespace='untl')),
     url(r'^version/', include(version, namespace='version')),
     url(r'^form/(?P<model>\w+)/$', views.form, name="form"),
-    url(r'^form/(?P<model>\w+)/(?P<form>\w+)/$', views.form, name="form")
+    url(r'^form/(?P<model>\w+)/(?P<form>\w+)/$', views.form, name="form"),
+    url(r'^api/', include(library_router.urls))
 ]

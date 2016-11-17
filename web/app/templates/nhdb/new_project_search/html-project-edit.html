@@ -1,14 +1,14 @@
 {% extends 'nhdb/new_project_search/base.html' %}
 {% load i18n %}
-
+{% load static from staticfiles %}
 
 {% block script %}{% if p %}
-  <script src="{{ STATIC_URL }}require.js" data-main="/require.project.js"></script>{% endif%}
+  <script src="{% static 'require.js' %}" data-main="/require.project.js"></script>{% endif%}
 {% endblock %}
 {% block style %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}datatables/media/css/dataTables.bootstrap.css">
-    <link rel="stylesheet" href="{{ STATIC_URL }}/selectize.js/dist/css/selectize.bootstrap3.css">
-    <link rel="stylesheet" href="{{ STATIC_URL }}/css/zebra/default.css">
+    <link rel="stylesheet" href="{% static 'datatables/media/css/dataTables.bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static '/selectize.js/dist/css/selectize.bootstrap3.css' %}">
+    <link rel="stylesheet" href="{% static '/css/zebra/default.css' %}">
 <style>
 input.property-add, input.property-remove {
   width: 0px;
@@ -19,7 +19,7 @@ input.property-add:checked + label:after {
 content: "";
 width: 20px;
 height: 20px;
-background:url("{{ STATIC_URL }}images/add.png");
+background:url("{% static 'images/add.png' %}");
 display: inline-block;
 }
 
@@ -27,7 +27,7 @@ input.property-remove:checked + label:after {
 content: "";
 width: 20px;
 height: 20px;
-background: url("{{ STATIC_URL }}images/edit-delete.png");
+background: url("{% static 'images/edit-delete.png' %}");
 display: inline-block;
 }
         

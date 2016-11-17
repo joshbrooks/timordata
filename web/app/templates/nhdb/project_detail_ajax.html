@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load static from staticfiles %}
 {% load crispy_forms_tags %}
 <div class="container-fluid">
 <div class="row small-alerts" style="margin-bottom:40px;">
@@ -40,22 +41,22 @@
     <h4>Verified: {{object.verified}}</h4>
     <h4>Description</h4>{% autoescape off %}
     <div class="alert {% if not object.description_en %}alert-warning{%else%}alert-info{%endif%}">
-        <img class="language-button-image" src="{{ STATIC_URL }}locales/en{% if not object.description_en %}_bw{%endif%}.png">
+        <img class="language-button-image" src="{% if object.description_en %}{% static 'locales/en.png' %}{% else %}{% static 'locales/en_bw.png' %}{% endif %}">
         {{object.description_en|default:"No description in English"}}
     </div>
 
     <div class="alert {% if not object.description_tet %}alert-warning{%else%}alert-info{%endif%}">
-        <img class="language-button-image" src="{{ STATIC_URL }}locales/tet{% if not object.description_tet %}_bw{%endif%}.png">
+        <img class="language-button-image" src="{% if object.description_tet %}{% static 'locales/tet.png' %}{% else %}{% static 'locales/tet_bw.png' %}{% endif %}">
         {{object.description_tet|default:"La iha deskripsaun iha Tetun"}}
     </div>
 
     <div class="alert {% if not object.description_pt %}alert-warning{%else%}alert-info{%endif%}">
-        <img class="language-button-image" src="{{ STATIC_URL }}locales/pt{% if not object.description_pt %}_bw{%endif%}.png">
+        <img class="language-button-image" src="{% if object.description_pt %}{% static 'locales/pt.png' %}{% else %}{% static 'locales/pt_bw.png' %}{% endif %}">
         {{object.description_pt|default:"No description in Portugese"}}
     </div>
 
     <div class="alert {% if not object.description_id %}alert-warning{%else%}alert-info{%endif%}">
-        <img class="language-button-image" src="{{ STATIC_URL }}locales/id{% if not object.description_id %}_bw{%endif%}.png">
+        <img class="language-button-image" src="{% if object.description_ind %}{% static 'locales/ind.png' %}{% else %}{% static 'locales/ind_bw.png' %}{% endif %}">
         {{object.description_id|default:"No description in Indonesian"}}
     </div>
 
@@ -147,7 +148,7 @@
         {% if object.has_locations %}
         <img src="{{object.image_overlay_url}}&width=500&height=300" style="max-width:100%; width:500px">
         {% else %}
-        <img src="{{ STATIC_URL }}img/location-none.jpg" style="max-width:100%; width:500px">
+        <img src="{% static 'img/location-none.jpg' %}" style="max-width:100%; width:500px">
 
         {% endif %}
     </div>

@@ -1,5 +1,5 @@
 {% load i18n %}
-
+{% load static from staticfiles %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -10,10 +10,10 @@
       <meta name="author" content="Joshua Brooks">
       <title>{%block title%} National Humanitarian / Development Project Database {%endblock title%}</title>
 {% block script %}
-      <script src="{{ STATIC_URL }}require.js" data-main="{{ STATIC_URL }}bootstrap_require.js"></script>
+      <script src="{% static 'require.js' %}" data-main="{% static 'bootstrap_require.js' %}"></script>
 {% endblock script %}
-      <link href="{{ STATIC_URL }}/jqueryui/css/ui-lightness/jquery-ui-1.10.4.min.css" rel="stylesheet">
-      <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="{% static '/jqueryui/css/ui-lightness/jquery-ui-1.10.4.min.css' %}" rel="stylesheet">
+      <link href="{% static '/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
       <style>
         form#changelanguage label > input{ /* HIDE RADIO */
           display:none;

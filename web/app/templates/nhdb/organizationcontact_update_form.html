@@ -1,18 +1,19 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+{% load static from staticfiles %}
 
  {% block style %} 
-	<link href="{{ STATIC_URL }}zebra/css/bootstrap.css" rel="stylesheet">
+	<link href="{% static 'zebra/css/bootstrap.css' %}" rel="stylesheet">
 {% endblock style %}
 
 
 {% block script %}
-      <script src="{{ STATIC_URL }}require.js" data-main="{{ STATIC_URL }}zebra_bootstrap_require.js"></script>
+      <script src="{% static 'require.js' %}" data-main="{% static 'zebra_bootstrap_require.js' %}"></script>
 {% endblock script %}
 
 {% block content %}
 
-      <script src="{{ STATIC_URL }}require.js" data-main="{{ STATIC_URL }}zebra_bootstrap_require.js"></script>
+      <script src="{% static 'require.js' %}" data-main="{% static 'zebra_bootstrap_require.js' %}"></script>
 {% crispy form %}
 
 

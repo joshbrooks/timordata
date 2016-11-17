@@ -1,4 +1,5 @@
 {% extends "object_list.html" %}
+{% load static from staticfiles %}
 {% load i18n %}
 {% load cache %}
 {% load render_table from django_tables2 %}
@@ -6,7 +7,7 @@
 {% block title %}{{block.super}} Organizations {% endblock title %}
 {% block script %}
     {{block.super}}
-<script type="text/javascript" src="{{ STATIC_URL }}leaflet-organizationplace.js"></script>
+<script type="text/javascript" src="{% static 'leaflet-organizationplace.js' %}"></script>
 
 <script>
     $(document).ready(function() {

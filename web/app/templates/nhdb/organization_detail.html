@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load static from staticfiles %}
 
 
 
 {% block style %}
-<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/leaflet.css"/>
+<link rel="stylesheet" href="{% static 'leaflet/dist/leaflet.css' %}"/>
 <style>
 /*
  * Side navigation
@@ -181,10 +182,10 @@ th span.table-vertical-header {
 
 {% block script %}
      {{block.super}}
-    <script src="{{ STATIC_URL }}leaflet/leaflet.js"></script>
-    <script src="{{ STATIC_URL }}leaflet/leaflet.utfgrid.js"></script>
-    <script src="{{ STATIC_URL }}leaflet/leaflet.ajax.min.js"></script>
-    <!--<script src="{{ STATIC_URL }}leaflet/leaflet.wms.js"></script>-->
+    <script src="{% static 'leaflet/leaflet.js' %}"></script>
+    <script src="{% static 'leaflet/leaflet.utfgrid.js' %}"></script>
+    <script src="{% static 'leaflet/leaflet.ajax.min.js' %}"></script>
+    <!--<script src="{% static 'leaflet/leaflet.wms.js' %}"></script>-->
     <script>{% autoescape off %}
         window.initialFeatures = {{initialFeatures}}
 
@@ -392,7 +393,7 @@ th span.table-vertical-header {
         <tr><th>Publications / Files</th>
             <td>
             {% for k,j in object.filecounts.items %}
-            <img class="small-flag" src="{{ STATIC_URL }}locales/{{k}}.png" alt="{{k}}">{{j}}
+            <img class="small-flag" src="{% static 'locales/{{k}}.png' %}" alt="{{k}}">{{j}}
             {% endfor %}
             </td>
         </tr>
@@ -534,10 +535,10 @@ th span.table-vertical-header {
             <div class="row"  style="border:1px solid gray; border-radius: 5px; padding: 5px;">{% for i in object.publication_set.all %}
                 <div class="col col-lg-6 col-sm-12">
                 <h5>{{i}}</h5>{% for v in i.versions.all %}
-        {% if v.title_en %}<p><img class="small-flag" src="{{ STATIC_URL }}locales/en.png" alt="en">{{v.title_en}}{{v.description_en|default:""}} {% if v.upload_en %}<a href="{{v.upload_en.url}}">Download</a>{%endif %} {% if v.url_en %}<a href="{{v.url_en}}">Link</a>{%endif %}</p>{% endif %}
-        {% if v.title_pt %}<p><img class="small-flag" src="{{ STATIC_URL }}locales/pt.png" alt="pt">{{v.title_pt}}{{v.description_pt|default:""}} {% if v.upload_pt %}<a href="{{v.upload_pt.url}}">Download</a>{%endif %} {% if v.url_pt %}<a href="{{v.url_pt}}">Link</a>{% endif %}</p>{% endif %}
-        {% if v.title_tet %}<p><img class="small-flag" src="{{ STATIC_URL }}locales/tet.png" alt="tet">{{v.title_tet}}{{v.description_tet|default:""}}{% if v.upload_tet %}<a href="{{v.upload_tet.url}}">Download</a>{%endif %} {% if v.url_tet %}<a href="{{v.url_tet}}">Link</a>{% endif %}</p>{% endif %}
-        {% if v.title_id %}<p><img class="small-flag" src="{{ STATIC_URL }}locales/id.png" alt="id">{{v.title_id}}{{v.description_id|default:""}} {% if v.upload_id %}<a href="{{v.upload_id.url}}">Download</a>{%endif %} {% if v.url_id %}<a href="{{v.url_id}}">Link</a>{% endif %}</p>{% endif %}
+        {% if v.title_en %}<p><img class="small-flag" src="{% static 'locales/en.png' %}" alt="en">{{v.title_en}}{{v.description_en|default:""}} {% if v.upload_en %}<a href="{{v.upload_en.url}}">Download</a>{%endif %} {% if v.url_en %}<a href="{{v.url_en}}">Link</a>{%endif %}</p>{% endif %}
+        {% if v.title_pt %}<p><img class="small-flag" src="{% static 'locales/pt.png' %}" alt="pt">{{v.title_pt}}{{v.description_pt|default:""}} {% if v.upload_pt %}<a href="{{v.upload_pt.url}}">Download</a>{%endif %} {% if v.url_pt %}<a href="{{v.url_pt}}">Link</a>{% endif %}</p>{% endif %}
+        {% if v.title_tet %}<p><img class="small-flag" src="{% static 'locales/tet.png' %}" alt="tet">{{v.title_tet}}{{v.description_tet|default:""}}{% if v.upload_tet %}<a href="{{v.upload_tet.url}}">Download</a>{%endif %} {% if v.url_tet %}<a href="{{v.url_tet}}">Link</a>{% endif %}</p>{% endif %}
+        {% if v.title_id %}<p><img class="small-flag" src="{% static 'locales/id.png' %}" alt="id">{{v.title_id}}{{v.description_id|default:""}} {% if v.upload_id %}<a href="{{v.upload_id.url}}">Download</a>{%endif %} {% if v.url_id %}<a href="{{v.url_id}}">Link</a>{% endif %}</p>{% endif %}
                 <hr>{% endfor %}
                 </div>{% endfor %}
             </div>{% endif %}
