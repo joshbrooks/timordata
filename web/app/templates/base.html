@@ -1,5 +1,7 @@
 {% load i18n %}
 {% load static from staticfiles %}
+{% load js_reverse %}
+
 {% comment "Description of content" %}
 
 Base Bootstrap Template
@@ -32,7 +34,9 @@ Base Bootstrap Template
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.png' %}">
     <link rel="icon" type="image/png" href="{% static 'favicon.png' %}" />{% endblock %}
     <title>{% block title %}Timor Development Data &middot;{% endblock title %}</title>
-
+    <script src="{% static 'riot/riot+compiler.min.js' %}"></script>
+    <script src="{% static 'RiotControl/riotcontrol.js' %}"></script>
+   <script src="{% static 'lodash/dist/lodash.min.js' %}"></script>
     {% block css %}
       <link href="{% static 'font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
     {% if media.css %}{% for css_url in media.css %}
@@ -66,9 +70,14 @@ Base Bootstrap Template
     </footer>
     </div>
   {% endblock footer %}
-
     <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
     <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'cookies-js/dist/cookies.js' %}"></script>
+    <script src="{% static 'js/ajax_csrf.js' %}"></script>
+    <script type="text/javascript" charset="utf-8">
+    {% js_reverse_inline %}
+    </script>
+
    <script>
     $(document).ready(function(){
         $('form#mysuggestions input[name=name]').val(localStorage.user_name)

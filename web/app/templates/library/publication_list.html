@@ -1,35 +1,38 @@
 {% extends "object_list.html" %}
+{% load static from staticfiles %}
 {% load i18n %}
 {% load cache %}
 {% load render_table from django_tables2 %}
 {% load crispy_forms_tags %}
 {% block title %}{{block.super}} Publications {% endblock title %}
 
-{% block tab_first %}
-<h4>Library Search</h4>
+{% block script %}
+<script type="riot/tag">
+{% include 'tags/library-publicationtable.html' %}
+</script>
+<script type="riot/tag">
+{% include 'tags/library-dashboard.html' %}
+</script>
+<script type="text/javascript" src="{% static 'stores/publicationstore.js' %}"></script>
+<script>
+var stores = {};
 
-     <p><strong>{{object_list.count}} Publications</strong> found with this search</p>
+$( document ).ready( function() {
 
-     <div class="container-fluid"><div class="row">
+    stores.publicationStore = new PublicationStore();
+    RiotControl.addStore(stores.publicationStore);
+    riot.mount('library-publicationtable')
+    riot.mount('library-dashboard')
+    stores.publicationStore.trigger('reload');
+})
 
-     {% for category, tag_count in dashboard.items %}<div class="col col-sm-6 col-xs-12 col-md-4 col-lg-3  dashboard-table-container">
-             <table class="table table-condensed">
-            <caption>{{category}}</caption>
-            <tbody>
-        {% for tag, count in tag_count.items %}
 
-            <tr>{% if tag.path in activefilters %}
-                <td><strong>{{tag}}</strong></td> <td><strong>{{count}}</strong></td>
-                {% else %}
-                <td>{{tag}}</td> <td>{{count}}</td>
-                {% endif %}
-            </tr>
-     {% endfor %}
-            </tbody>
-        </table>
-     </div>{% endfor %}</div></div>
+
+</script>
 {% endblock %}
 
+{% block tab_first %}
+{% endblock %}
 
 {% block tab_second %}
 <div>
@@ -122,43 +125,8 @@
     </div>
 </div>
 
-    <table class="table table-bordered table-condensed">
-        <thead>
-        <tr>
-            <th>
-                Publication
-            </th>
-            <th>
-                Type
-            </th>
-            <th>
-                Year
-            </th>
-            <th>
-                Organization(s)
-            </th>
-            <th>
-                Author(s)
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        {%  for publication in object_list %}
-
-            <tr>
-                <td><a href="#object={{ publication.id }}">{{ publication }}</a></td>
-                <td>{{  publication.pubtype }}</td>
-                <td>{{ publication.year }}</td>
-                <td>{%  for organization in publication.organization.all %}{%  autoescape off %}
-                    <a href="{% url 'nhdb:organization:list' %}#object={{ organization.id }}">{{ organization }}</a> {% if not forloop.last %}, <br> {%  endif %}
-                {%  endautoescape %}
-                {%  endfor %}
-                <td>{{ publication.author.all|join:',' }}</td>
-            </tr>
-
-        {%  endfor %}
-        </tbody>
-    </table>
+    <library-dashboard></library-dashboard>
+    <library-publicationtable></library-publicationtable>
 
 
 

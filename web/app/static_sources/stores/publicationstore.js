@@ -1,0 +1,165 @@
+function PublicationStore() {
+    var store = this;
+    riot.observable(store);
+    store.publications = [];
+    store.url_function = Urls['library:publication-list'];
+    store.url = store.url_function();
+    store.url_args = {};
+    store.per_page = 25;
+    store.current_page = 1;
+    store.last_page = 1;
+    store.filters = {};
+    store.current_sort = 'name';
+    store.current_sort_reverse = false;
+
+    store.sort = {
+        name: function(){
+            if (store.current_sort != 'name') {
+                store.current_sort = 'name';
+                store.refresh_data();
+            }
+        },
+        year: function() {
+            if (store.current_sort != 'year') {
+                store.current_sort = 'year';
+                store.refresh_data();
+            }
+        },
+        reverse: function() {
+            store.current_sort_reverse = !store.current_sort_reverse;
+        }
+    };
+
+    store.filter = function(){
+        // _(stores.publicationStore.data.results).filter(function(f){return _.some(f.organization, ['pk',89])} ).value()
+        var results = _(store.initial_data.results);
+        var apply_filter = function(r, filter, filter_value){
+            return _(r).filter(function(result){return _.some(result[filter],{pk: filter_value})});
+        };
+        for (var filter in store.filters){
+            results = apply_filter(results, filter, store.filters[filter]);
+        }
+        return results.value();
+    };
+
+    store.refresh_data = function(){
+        
+        var organization;
+        var sector;
+        var author;
+        var tag;
+        var counts = {};
+        var listed = {};
+        var filtered_results;
+        var sorted_results;
+        var paginated_results;
+        var first_result;
+        var last_result;
+
+        store.data = store.initial_data;
+        filtered_results = store.filter();
+        store.listed = {};
+        store.counts = {};
+        
+        organization = _.flatten(_.map(filtered_results, 'organization'));
+        counts.organization = _.countBy(organization, 'name');
+        listed.organization = _.uniqBy(organization, 'pk');
+
+        author = _.flatten(_.map(filtered_results, 'author'));
+        counts.author = _.countBy(author, 'name');
+        listed.author = _.uniqBy(author, 'pk');
+        
+        sector = _.flatten(_.map(filtered_results, 'sector'));
+        counts.sector = _.countBy(sector, 'name');
+        listed.sector = _.uniqBy(sector, 'pk');
+        
+        tag = _.flatten(_.map(filtered_results, 'tag'));
+        counts.tag = _.countBy(tag, 'name');
+        listed.tag = _.uniqBy(tag, 'pk');
+
+        store.counts = counts;
+        store.listed = listed;
+
+        sorted_results = _(filtered_results).sortBy(store.current_sort);
+
+        if (store.current_sort_reverse){
+            sorted_results = _(filtered_results).reverse();
+        }
+
+        store.last_page = Math.floor(sorted_results.value().length / store.per_page) + 1;
+        store.current_page = Math.min(store.current_page, store.last_page);
+        store.current_page = Math.max(store.current_page, 1);
+        first_result = (store.current_page - 1) * store.per_page;
+        last_result = (store.current_page + 0) * store.per_page;
+
+        paginated_results = _(sorted_results).slice(first_result, last_result);
+        store.results = paginated_results.value();
+        store.trigger('publications_refreshed')
+
+    };
+
+    store.find = function (object_type, object_id){
+        return _(store.listed[object_type]).find({pk:object_id})
+    };
+
+    store.find_by_name = function (object_type, object_name){
+        return _(store.listed[object_type]).find({name:object_name})
+    };
+
+    store.add_filter = function(name, pk){
+        store.filters[name] = pk;
+        store.refresh_data();
+    };
+
+    store.set_filter = {
+        clear: function (e) {
+            _.unset(store.filters, e.item.key);
+            store.trigger('refresh')
+        },
+        clearAll: function () {
+            store.filters = {};
+            store.trigger('refresh')
+        },
+        organization: function (e) {
+            store.add_filter('organization', e.item.organization.pk);
+        },
+        author: function (e) {
+            store.add_filter('author', e.item.author.pk);
+        },
+        tag: function (e) {
+            store.add_filter('tag', e.item.tag.pk);
+        },
+        sector: function (e) {
+            store.add_filter('sector', e.item.sector.pk);
+        }
+    };
+
+    store.page = {
+        first: function() {store.current_page = 1; store.refresh_data();},
+        next: function() {store.current_page += 1; store.refresh_data();},
+        previous: function() {store.current_page -= 1; store.refresh_data();},
+        last: function() {store.current_page = store.last_page; store.refresh_data();}
+    };
+
+
+    store.on('refresh', function() {
+        store.refresh_data();
+    });
+
+    store.on('reload', function () {
+        var xhr = $.ajax({
+            dataType: 'json',
+            contentType: 'application/json',
+            method: 'GET',
+            url: store.url + '?' + decodeURIComponent($.param(store.url_args)),
+            headers: {'X-CSRFTOKEN': Cookies.get('csrftoken')}
+        });
+        xhr.done(function(returned_data){
+            console.log('success');
+            store.initial_data = returned_data;
+            store.refresh_data();
+        })
+    });
+
+}
+

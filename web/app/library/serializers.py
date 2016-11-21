@@ -92,6 +92,12 @@ class AuthorSerializer(ForeignKeySerializer):
         fields = ('pk', 'name', 'displayname')
 
 
+class TagSerializer(ForeignKeySerializer):
+
+    class Meta:
+        model = Tag
+        fields = ('pk', 'name')
+
 class AuthorAllowsNames(serializers.PrimaryKeyRelatedField):
 
     def to_internal_value(self, data):
@@ -118,14 +124,19 @@ class PublicationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Publication
-        fields = ('name', 'organization', 'pubtype', 'year', 'organization', 'author')
+        fields = ('name', 'organization', 'pubtype', 'year', 'organization', 'author', 'sector', 'tag',
+                  'description')
 
     organization = OrganizationSerializer(many=True, allow_null=True, required=False)
     author = AuthorSerializer(many=True, allow_null=True, required=False)
+    sector = SectorSerializer(many=True, allow_null=True, required=False)
+    tag = TagSerializer(many=True, allow_null=True, required=False)
 
     def update(self, instance, validated_data):
         instance.organization = validated_data.pop('organization')
         instance.author = validated_data.pop('author')
+        instance.sector = validated_data.pop('sector')
+        instance.tag = validated_data.pop('tag')
         super(PublicationSerializer, self).update(instance, validated_data)
         instance = self.Meta.model.objects.get(pk=instance.pk)
         return instance

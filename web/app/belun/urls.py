@@ -3,7 +3,7 @@ from geo import urls as geo_urls
 from library import urls as library_urls
 from suggest import rest_urls as suggest_rest_urls
 from nhdb import rest_urls as nhdb_rest_urls
-from library import rest_urls as library_rest_urls
+# from library import rest_urls as library_rest_urls
 from donormapping import rest_urls as donormapping_rest_urls
 from rest_framework_swagger import urls as rest_framework_swagger_urls
 from suggest import urls as suggest_urls
@@ -51,7 +51,7 @@ urlpatterns = [
 
     url(r'^rest/nhdb/', include(nhdb_rest_urls, namespace="nhdb_rest")),
     url(r'^rest/suggest/', include(suggest_rest_urls)),
-    url(r'^rest/library/', include(library_rest_urls)),
+    # url(r'^rest/library/', include(library_rest_urls)),
     url(r'^rest/donormapping/', include(donormapping_rest_urls)),
 
     url(r'^docs/', include(rest_framework_swagger_urls)),

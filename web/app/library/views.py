@@ -1,12 +1,16 @@
+import django_filters
 from django.apps import apps
 from django.db.models import Count, Q
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django_filters.filterset import BaseFilterSet
 from django_tables2 import SingleTableView
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
 from library import serializers
 from forms import *
 from nhdb.models import Organization
@@ -41,7 +45,7 @@ def publicationlist(request):
 
     logger.info(prefetch)
 
-    def object_list(request, prefetch=('versions', 'pubtype', 'organization')):
+    def object_list(request, prefetch=('versions', 'sectors', 'tags', 'pubtype', 'organization')):
         objects = Publication.objects.all().prefetch_related(*prefetch)
         GET = request.GET
         filters = {}
@@ -115,15 +119,17 @@ def publicationlist(request):
             publications = Publication.objects.all()
         dashboard = {}
         from collections import Counter
-        publications = publications.prefetch_related('versions__tag__name', 'versions__sector__name', 'org')
+        publications = publications.prefetch_related('tag', 'sector', 'author', 'org')
 
-        tags = list(publications.values_list('versions__tag__name', flat=True))
+        tags = list(publications.values_list('tag__name', flat=True))
         organizations = publications.values_list('organization__name', flat=True)
-        sectors = publications.values_list('versions__sector__name', flat=True)
+        sectors = publications.values_list('sector__name', flat=True)
+        authors = publications.values_list('author__name', flat=True)
 
         dashboard[_('Tag')] = dict(Counter(tags))
         dashboard[_('Organization')] = dict(Counter(organizations))
         dashboard[_('Sector')] = dict(Counter(sectors))
+        dashboard[_('Author')] = dict(Counter(authors))
         return dashboard
 
     context = {
@@ -386,16 +392,30 @@ class VersionList(SingleTableView):
     table_class = VersionTable
 
 
+class OrganizationInFilter(django_filters.rest_framework.FilterSet):
+    organization = django_filters.ModelMultipleChoiceFilter(
+        name="organization__id",
+        to_field_name="id",
+        queryset=Organization.objects.all()
+    )
+
+    class Meta:
+        model = Publication
+        fields = ('name', 'pubtype', 'author', 'sector', 'tag')
+
+
 class PublicationViewSet(viewsets.ModelViewSet):
     queryset = Publication.objects.all()
     serializer_class = serializers.PublicationSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
-    ordering_fields = ('verified', 'name', 'author', 'organization')
-    filter_fields = ('name', 'pubtype')
+    ordering_fields = ('name', 'year')
+    # filter_fields = ('name', 'pubtype', 'author', 'organization__id__in', 'sector', 'tag')
+    filter_class = OrganizationInFilter
 
     def get_queryset(self):
         queryset = Publication.objects.all()
         queryset = queryset.prefetch_related(
-            'author', 'organization'
+            'author', 'organization', 'sector', 'tag'
         )
         return queryset

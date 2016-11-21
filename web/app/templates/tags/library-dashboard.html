@@ -1,0 +1,41 @@
+<library-dashboard>
+
+    <div class="container" if="{_.size(store.filters) > 0}">
+        <div class="row">
+            <div class="alert alert-info">
+                <div class="col col-xs-12"><h4>Results have been filtered</h4></div>
+                <div class="row" each="{key, value in store.filters}">
+                    <div class="col col-xs-2">{key} </div>
+                    <div class="col col-xs-5">
+                        <a href="#"> {store.find(key, value).name}</a> <button class="btn btn-xs" onclick="{store.set_filter.clear}">Clear</button>
+                    </div>
+                </div>
+                <button class="btn btn-info btn-sm" onclick="{store.set_filter.clearAll}">Show all results</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col col-sm-6 col-xs-12 col-md-4 col-lg-3 dashboard-table" each="{category, data in store.counts}">
+                <table class="table table-condensed">
+                    <caption>{ category }</caption>
+                    <tbody>
+                    <tr each="{name, number in data}">
+                        <td onclick="{filter_by_category}">{ name }</td> <td>{ number }</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <style>
+        library-dashboard .dashboard-table {
+            max-height: 550px;
+            overflow-y: scroll;
+        }
+
+    </style>
+
+    {%  include "tags/library-dashboard.js" %}
+</library-dashboard>
