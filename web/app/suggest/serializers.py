@@ -1,9 +1,5 @@
-import json
 from rest_framework import serializers
-
-__author__ = 'josh'
-
-from models import Suggest, AffectedInstance, _get_model
+from models import Suggest, AffectedInstance
 
 
 class AffectedInstanceSerializer(serializers.ModelSerializer):
@@ -13,7 +9,6 @@ class AffectedInstanceSerializer(serializers.ModelSerializer):
 
 
 class SuggestSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Suggest
 
@@ -28,7 +23,7 @@ class SuggestSerializer(serializers.ModelSerializer):
             for i in instances:
                 if i['primary'] and i['model_name']:
                     break
-                raise AssertionError ('You must pass a primary model name with primary=True specified!')
+                raise AssertionError('You must pass a primary model name with primary=True specified!')
 
         for i in instances:
             AffectedInstance.objects.create(suggestion=s, **i)
@@ -43,21 +38,21 @@ class SuggestSerializer(serializers.ModelSerializer):
         except KeyError:
             pass
 
-
-
-        #  Action to take on the creation of a model
+        # Action to take on the creation of a model
         #  The request must include a created model PK
-        if instance.action in ('CM', 'UM') and validated_data.get('state') == 'A':
+        if instance.action == 'CM' and validated_data.get('state') == 'A':
             ai = instance.primary
             ai.model_pk = self.initial_data.get('created_model_pk', None)
-            assert ai.model_pk, "created model_pk not given! Initial data was %s"%(self.initial_data)
+            assert ai.model_pk, "created model_pk not given! Initial data was %s" % (self.initial_data)
             # ai.model_pk = self.context['request'].POST['created_model_pk']
             ai.save()
 
+        elif instance.action == 'UM' and validated_data.get('state') == 'A':
+            pass
 
         elif instance.action == 'DM' and validated_data['state'] == 'A':
             try:
-                ai = AffectedInstance.objects.get(suggestion = instance, primary=True)
+                ai = AffectedInstance.objects.get(suggestion=instance, primary=True)
                 ai.remove()
             except:
                 pass
@@ -70,7 +65,7 @@ class SuggestSerializer(serializers.ModelSerializer):
             pass
 
         else:
-            raise NotImplementedError, '{} {}'.format(instance.action, validated_data['state'])
+            raise NotImplementedError('{} {}'.format(instance.action, validated_data['state']))
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
