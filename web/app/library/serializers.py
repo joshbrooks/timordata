@@ -1,9 +1,6 @@
 import json
 from nhdb.models import Organization
-from rest_framework import serializers, fields
-from rest_framework.exceptions import ValidationError
-from django.core.exceptions import ValidationError as DjangoValidationError
-from rest_framework.serializers import get_validation_error_detail
+from rest_framework import serializers
 from models import Publication, Pubtype, Version, Author, Tag
 
 __author__ = 'josh'
