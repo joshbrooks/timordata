@@ -419,3 +419,9 @@ class PublicationViewSet(viewsets.ModelViewSet):
             'author', 'organization', 'sector', 'tag'
         )
         return queryset
+
+
+class PublicationVersionsViewSet(viewsets.ModelViewSet):
+    queryset = Publication.objects.all()
+    serializer_class = serializers.PublicationVersionsSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)

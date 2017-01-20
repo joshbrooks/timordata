@@ -62,19 +62,19 @@ function PublicationStore() {
         store.counts = {};
         
         organization = _.flatten(_.map(filtered_results, 'organization'));
-        counts.organization = _.countBy(organization, 'name');
+        counts.organization = _.map(_.countBy(organization, 'name'), function(i, j){return {'name':j, 'count':i}});
         listed.organization = _.uniqBy(organization, 'pk');
 
         author = _.flatten(_.map(filtered_results, 'author'));
-        counts.author = _.countBy(author, 'name');
+        counts.author = _.map(_.countBy(author, 'name'), function(i, j){return {'name':j, 'count':i}});
         listed.author = _.uniqBy(author, 'pk');
         
         sector = _.flatten(_.map(filtered_results, 'sector'));
-        counts.sector = _.countBy(sector, 'name');
+        counts.sector = _.map(_.countBy(sector, 'name'), function(i, j){return {'name':j, 'count':i}});
         listed.sector = _.uniqBy(sector, 'pk');
         
         tag = _.flatten(_.map(filtered_results, 'tag'));
-        counts.tag = _.countBy(tag, 'name');
+        counts.tag = _.map(_.countBy(tag, 'name'), function(i, j){return {'name':j, 'count':i}});
         listed.tag = _.uniqBy(tag, 'pk');
 
         store.counts = counts;
@@ -96,6 +96,22 @@ function PublicationStore() {
         store.results = paginated_results.value();
         store.trigger('publications_refreshed')
 
+    };
+
+    store.more_data = function(result, tag) {
+        console.log('getting more data for result')
+        var xhr = $.ajax({
+            dataType: 'json',
+            contentType: 'application/json',
+            method: 'GET',
+            url: Urls['library:publication_versions_list']()+result.id+ '/',
+            headers: {'X-CSRFTOKEN': Cookies.get('csrftoken')}
+        });
+        xhr.done(function(returned_data){
+            result.more_data = returned_data;
+            debugger;
+            tag.update();
+        })
     };
 
     store.find = function (object_type, object_id){

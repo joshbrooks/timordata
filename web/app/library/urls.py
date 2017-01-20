@@ -38,7 +38,8 @@ untl = [
 ]
 
 library_router = routers.SimpleRouter()
-library_router.register('publication', views.PublicationViewSet)
+library_router.register('publication', views.PublicationViewSet, base_name='publication')
+library_router.register('publication-versions', views.PublicationVersionsViewSet, base_name='publication-versions')
 
 urlpatterns = [
     url(r'^$', views.index, name="index"),

@@ -1,4 +1,4 @@
-{% extends "object_list.html" %}
+{% extends "base.html" %}
 {% load static from staticfiles %}
 {% load i18n %}
 {% load cache %}
@@ -25,105 +25,9 @@ $( document ).ready( function() {
     riot.mount('library-dashboard')
     stores.publicationStore.trigger('reload');
 })
-
-
-
 </script>
-{% endblock %}
-
-{% block tab_first %}
-{% endblock %}
-
-{% block tab_second %}
-<div>
- <button class="btn btn-default btn-sm" type="button" data-autohide="false" data-toggle="offcanvas" data-target="#search-form-container" data-placement="left"><span class="glyphicon glyphicon-edit"></span>Search</button>
-
-    <div id="search-form-container" class="offcanvas navmenu navmenu-default navmenu-fixed-left">
-    <button class="btn btn-default btn-block" type="button" data-toggle="offcanvas" data-target="#search-form-container">&laquo;Hide</button>
-
-
-        <form class="form-horizontal search-form">
-            <div class="form-group">
-
-                <label for="search-form-tags" class="col-sm-3 control-label">Tags</label>
-                <div class="col-sm-9">
-                    <select style="width:100%;" id="search-form-tags" class="auto-select2" name="tag__id" multiple=multiple>
-                        {% for a in filters.tag__id %}
-                            <option value="{{a.pk}}" {% if a.pk in activefilters.tag__id %}selected="selected"{%endif%}>{{a}}</option> {% endfor %}
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Text</label>
-                <div class="col-sm-9">
-                    <input class="form-control" name="q.text"/>
-                </div>
-            </div>
-
-            <div class="form-group">
-            <label class="col-sm-3 control-label">Sector</label>
-                <div class="col-sm-9">
-                    <select style="width:100%;" class="auto-select2 form-control" multiple="multiple" name="sector__path">{% for a in filters.sector__path %}
-                        <option {% if a.path in activefilters.sector__path %}selected=selected{% endif %} value="{{a.path}}">{{a}}</option> {%endfor %}
-                    </select>
-                </div>
-              </div>
-
-            <div class="form-group">
-            <label class="col-sm-3 control-label">Languages</label>
-                <div class="col-sm-9">
-                <select style="width:100%;" class="auto-select2 form-control" multiple="multiple"  name="language_id">{% for a in filters.language_id %}
-                    <option {% if a.value in activefilters.language_id %}selected=selected{% endif %} value="{{a.value}}">{{a.label}}</option> {%endfor %}
-                </select>
-
-             </div>
-             </div>
-             <div class="form-group">
-            <label class="col-sm-3 control-label">Type</label>
-                 <div class="col-sm-9">
-                <select style="width:100%;" class="auto-select2 form-control" multiple="multiple"  name="pubtype">{% for a in filters.pubtype %}
-                    <option {% if a.value in activefilters.pubtype %}selected=selected{% endif %} value="{{a.value}}">{{a.label}}</option> {%endfor %}
-                </select>
-
-            </div>
-            </div>
-
-            <div class="form-group">
-            <label class="col-sm-3 control-label">Org(s)</label>
-                <div class="col-sm-9">
-                    <select style="width:100%" name="org" id="search-form-organization" data-selecturl="/selecttwo/nhdb/organization/name/icontains/" multiple="multiple">
-                        {% for i in org %}
-                        <option value="{{i.pk}}" selected=selected>{{i}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <em> Primary sources are original material like newspaper articles</em>
-            </div>
-            <div class="col-sm-12">
-                <label class="radio-inline">
-                    <input type="radio" name="primarysource" value="false" {% if activefilters.primarysource == 'false' %} checked=checked {%endif %}> No primary sources
-                </label>
-            </div>
-
-            <div class="col-sm-12">
-                <label class="radio-inline">
-                    <input type="radio" name="primarysource" value="true" {% if activefilters.primarysource == 'true' %} checked=checked {%endif %}> Include primary sources
-                </label>
-            </div>
-
-            <div class="col-sm-12">
-                <label class="radio-inline">
-                    <input type="radio" name="primarysource" value="only" {% if activefilters.primarysource == 'only' %} checked=checked {%endif %}> Only primary sources
-                </label>
-            </div>
-
-            <button type="submit" class="btn btn-block">Search</button>
-        </form>
-    </div>
-</div>
+    {% endblock %}
+{%  block content %}
 
     <library-dashboard></library-dashboard>
     <library-publicationtable></library-publicationtable>

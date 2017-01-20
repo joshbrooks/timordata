@@ -98,6 +98,7 @@ class TagSerializer(ForeignKeySerializer):
         model = Tag
         fields = ('pk', 'name')
 
+
 class AuthorAllowsNames(serializers.PrimaryKeyRelatedField):
 
     def to_internal_value(self, data):
@@ -124,7 +125,7 @@ class PublicationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Publication
-        fields = ('name', 'organization', 'pubtype', 'year', 'organization', 'author', 'sector', 'tag',
+        fields = ('id', 'name', 'organization', 'pubtype', 'year', 'organization', 'author', 'sector', 'tag',
                   'description')
 
     organization = OrganizationSerializer(many=True, allow_null=True, required=False)
@@ -142,20 +143,24 @@ class PublicationSerializer(serializers.ModelSerializer):
         return instance
 
 
-class PubtypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Pubtype
-
-
 class VersionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Version
+        fields = ('id', 'cover', 'upload', 'title')
 
     def create(self, validated_data):
         v = Version.objects.create(**validated_data)
         return v
 
 
-class TagSerializer(serializers.ModelSerializer):
+class PublicationVersionsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Tag
+        model = Publication
+        fields = ('id', 'versions',)
+
+    versions = VersionSerializer(many=True, allow_null=True, required=False)
+
+
+class PubtypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pubtype

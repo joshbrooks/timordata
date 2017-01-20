@@ -1,0 +1,99 @@
+<library-publicationtable>
+
+    <div class="row">
+
+        <ul class="pagination">
+          <li class="{disabled: store.current_page == 1}"><a href="#" onclick="{store.page.first}">&laquo;&laquo;First</a></li>
+          <li class="{disabled: store.current_page == 1}"><a href="#" onclick="{store.page.previous}">&laquo;Previous</a></li>
+          <li class="{disabled: store.current_page == store.last_page}"><a href="#" onclick="{store.page.next}">&raquo;Next</a></li>
+          <li class="{disabled: store.current_page == store.last_page}"><a href="#" onclick="{store.page.last}">&raquo;&raquo;Last</a></li>
+        </ul>
+        Page {store.current_page} of {store.last_page}
+
+        Sort by:
+        <button class="btn btn-xs {disabled: store.current_sort == 'name'}" onclick="{store.sort.name}">Name</button>
+        <button class="btn btn-xs {disabled: store.current_sort == 'year'}" onclick="{store.sort.year}">Year</button>
+        <button class="btn btn-xs {active: store.current_sort_reverse}" onclick="{store.sort.reverse}">Reverse</button>
+    </div>
+
+    <div class="row" each="{result in store.results}">
+        <virtual if="{_.indexOf(expanded, result.id) != -1}">
+
+            <div class="col col-xs-10"><h4>{result.name}</h4></div>
+            <div class="col col-xs-2"><button type="button" class="btn btn-xs btn-default"  style="float:right;" onclick="{toggle_expand_result}">Less</button></div>
+            <div class="clearfix"></div>
+            <div class="col col-xs-2">Publication Type</div><div class="col col-xs-10">{result.pubtype}</div>
+            <div class="col col-xs-2">Year</div><div class="col col-xs-10">{result.year}</div>
+            <div class="col col-xs-2">Description</div><div class="col col-xs-10"><p if="{result.description}">{result.description}</p><p if="{!result.description}"><em>No description</em></p></div>
+            <div class="clearfix"></div>
+
+            <div class="col col-xs-2">Organizations</div>
+                <div class="col col-xs-10">
+                    <div class="row">
+                        <virtual each="{organization in result.organization}">
+                            <div class="col col-xs-6 col-md-4 col-lg-3"><p><a href="#" onclick="{store.set_filter.organization}">{organization.name}</a></p></div>
+                        </virtual>
+                    </div>
+                </div>
+            <div class="clearfix"></div>
+
+            <div class="col col-xs-2">Authors</div>
+                <div class="col col-xs-10">
+                    <div class="row">
+                        <virtual each="{author in result.author}">
+                            <div class="col col-xs-6 col-md-4 col-lg-3"><p><a href="#" onclick="{store.set_filter.author}">{author.name}</a></p></div>
+                        </virtual>
+                    </div>
+                </div>
+            <div class="clearfix"></div>
+
+            <div class="col col-xs-2">Sectors</div>
+                <div class="col col-xs-10">
+                    <div class="row">
+                        <virtual each="{sector in result.sector}">
+                            <div class="col col-xs-6 col-md-4 col-lg-3"><p><a href="#" onclick="{store.set_filter.sector}">{sector.name}</a></p></div>
+                        </virtual>
+                    </div>
+                </div>
+            <div class="clearfix"></div>
+
+            <div class="col col-xs-2">Tags</div>
+                <div class="col col-xs-10">
+                    <div class="row">
+                        <virtual each="{tag in result.tag}">
+                            <div class="col col-xs-6 col-md-4 col-lg-3"><p><a href="#" onclick="{store.set_filter.tag}">{tag.name}</a></p></div>
+                        </virtual>
+                    </div>
+                </div>
+            <div class="clearfix"></div>
+
+            <div class="col col-xs-2">Moar</div>
+                <div class="col col-xs-10">
+                    <div class="row">
+                        <a each="{version in result.more_data.versions}" href="{version.upload}">
+                            <img if="{version.cover}" src="{version.cover}" width="150" height="150">
+                        </a>
+                    </div>
+                </div>
+            <div class="clearfix"></div>
+
+            <hr/>
+        </virtual>
+        <virtual if="{_.indexOf(expanded, result.id) == -1}">
+            <div class="col col-xs-10"><h4>{result.name}<span class="small"> {result.pubtype}, {result.year}</span></h4></div><div class="col col-xs-2"><button type="button" class="btn btn-xs btn-default" style="float:right;" onclick="{toggle_expand_result}">More</button></div>
+        </virtual>
+
+    </div>
+
+
+
+    <style>
+        library-publicationtable a[disabled] {
+            color: gray;
+        }
+
+    </style>
+
+    {%  include "tags/library-publicationtable.js" %}
+
+</library-publicationtable>
