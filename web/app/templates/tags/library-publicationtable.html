@@ -24,7 +24,8 @@
             <div class="col col-xs-12"  onclick="{toggle_expand_result}"><h4>{result.name}</h4></div>
             <div class="clearfix"></div>
 
-            <div class="col col-xs-12"><loading-spinner if="{result.request.readyState == 1}"></loading-spinner>
+            <div class="col col-xs-12">
+                <loading-spinner if="{result.request.readyState == 1}"></loading-spinner>
                 <p if="{result.request.json.description}">{result.request.json.description.en || result.request.json.description.tet  || result.request.json.description.ind  || result.request.json.description.pt }</p>
                 <p if="{!result.request.json.description && result.request.readyState == 4}"><em>No description</em></p>
 
@@ -50,9 +51,22 @@
             <div class="col col-xs-2"></div>
                 <div class="col col-xs-10">
                     <div class="row">
-                        <a each="{version in result.request.json.versions}" href="{version.upload}">
-                            <img if="{version.cover}" src="{version.cover}" width="150" height="150">
-                        </a>
+                        <div class="col col-xs-2" each="{version in result.request.json.versions}" >
+
+                            <a if="{version._exists}" href="{version.upload}">
+                                <img if="{version.cover}" src="{version.cover}" width="150" height="150">
+                            </a>
+                           <span if="{!version._exists}">
+                               <p>{version.name}</p>
+                                <p class="alert alert-error">
+                                    <strong>Sorry</strong>
+                                    This document seems to be missing from the system
+
+                                    {JSON.stringify(version)}
+
+                                </p>
+                            </span>
+                        </div>
                     </div>
                 </div>
             <div class="clearfix"></div>

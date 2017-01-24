@@ -116,6 +116,10 @@ function PublicationStore() {
         })
     };
 
+    store.version_languages = function(version) {
+      return _(version.upload).toPairs().filter(function(o){return o[1] !== null}).fromPairs().value()
+    };
+
     store.find = function (object_type, object_id){
         return _(store.listed[object_type]).find({pk:object_id})
     };
@@ -172,7 +176,7 @@ function PublicationStore() {
         store.message="Loading data...";
         store.initial_data = [];
         store.data = [];
-        store.trigger('publications_refreshed')
+        store.trigger('publications_refreshed');
         var xhr = $.ajax({
             dataType: 'json',
             contentType: 'application/json',

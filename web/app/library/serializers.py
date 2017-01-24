@@ -170,6 +170,9 @@ def file_object_info(obj):
 
 
 class FileObjectField(serializers.Field):
+    def to_internal_value(self, data):
+        raise NotImplementedError
+
     def to_representation(self, obj):
         return file_object_info(obj)
 

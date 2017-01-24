@@ -11,4 +11,5 @@ export REQUESTS=5000
 export WSGIFILE=wsgi.py
 export DJANGO_SETTINGS_MODULE=${APPNAME}.settings
 export VIRTUALENV=/home/josh/.virtualenvs/timordata
+# nohup \
 uwsgi --ini uwsgi.template.ini 

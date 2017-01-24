@@ -158,7 +158,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static_sources')
 )
 
-
+STATIC_ROOT = '/tmp/static/'
 MEDIA_ROOT = '/var/www/html/media/'
 MEDIA_URL = '/media/'
 
