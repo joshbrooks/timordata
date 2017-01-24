@@ -1,0 +1,143 @@
+[uWSGI] getting INI configuration from uwsgi.template.ini
+[uwsgi-static] added mapping for /static => /home/josh/projects/timordata/timordata/web/app/static_sources
+[uwsgi-static] added mapping for /static => /home/josh/projects/timordata/timordata/web/app/bower_components
+*** Starting uWSGI 2.0.13.1 (64bit) on [Tue Jan 24 11:39:06 2017] ***
+compiled with version: 5.4.0 20160609 on 05 September 2016 10:37:48
+os: Linux-4.4.0-21-generic #37-Ubuntu SMP Mon Apr 18 18:33:37 UTC 2016
+nodename: josh-MacBookPro
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 4
+current working directory: /home/josh/projects/timordata/timordata/web
+writing pidfile to /tmp/master_timordata.pid
+detected binary path: /usr/local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+chdir() to /home/josh/projects/timordata/timordata/web/app
+your processes number limit is 29970
+your memory page size is 4096 bytes
+ *** WARNING: you have enabled harakiri without post buffering. Slow upload could be rejected on post-unbuffered webservers *** 
+detected max file descriptor number: 1024
+building mime-types dictionary from file /etc/mime.types...552 entry found
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to UNIX address /home/josh/projects/timordata/timordata/web/sockets/belun.uwsgisocket fd 3
+Python version: 2.7.12 (default, Jul  1 2016, 15:12:24)  [GCC 5.4.0 20160609]
+Set PythonHome to /home/josh/.virtualenvs/timordata
+*** Python threads support is disabled. You can enable it with --enable-threads ***
+Python main interpreter initialized at 0x1072850
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 436608 bytes (426 KB) for 5 cores
+*** Operational MODE: preforking ***
+added /home/josh/projects/timordata/timordata/web/app/ to pythonpath.
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x1072850 pid: 25059 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 25059)
+spawned uWSGI worker 1 (pid: 25090, cores: 1)
+spawned uWSGI worker 2 (pid: 25091, cores: 1)
+spawned uWSGI worker 3 (pid: 25092, cores: 1)
+spawned uWSGI worker 4 (pid: 25093, cores: 1)
+spawned uWSGI worker 5 (pid: 25094, cores: 1)
+SIGINT/SIGQUIT received...killing workers...
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+worker 5 buried after 1 seconds
+goodbye to uWSGI.
+[uWSGI] getting INI configuration from uwsgi.template.ini
+[uwsgi-static] added mapping for /static => /home/josh/projects/timordata/timordata/web/app/static_sources
+[uwsgi-static] added mapping for /static => /home/josh/projects/timordata/timordata/web/app/bower_components
+*** Starting uWSGI 2.0.13.1 (64bit) on [Tue Jan 24 11:39:15 2017] ***
+compiled with version: 5.4.0 20160609 on 05 September 2016 10:37:48
+os: Linux-4.4.0-21-generic #37-Ubuntu SMP Mon Apr 18 18:33:37 UTC 2016
+nodename: josh-MacBookPro
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 4
+current working directory: /home/josh/projects/timordata/timordata/web
+writing pidfile to /tmp/master_timordata.pid
+detected binary path: /usr/local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+chdir() to /home/josh/projects/timordata/timordata/web/app
+your processes number limit is 29970
+your memory page size is 4096 bytes
+ *** WARNING: you have enabled harakiri without post buffering. Slow upload could be rejected on post-unbuffered webservers *** 
+detected max file descriptor number: 1024
+building mime-types dictionary from file /etc/mime.types...552 entry found
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to UNIX address /home/josh/projects/timordata/timordata/web/sockets/belun.uwsgisocket fd 3
+Python version: 2.7.12 (default, Jul  1 2016, 15:12:24)  [GCC 5.4.0 20160609]
+Set PythonHome to /home/josh/.virtualenvs/timordata
+*** Python threads support is disabled. You can enable it with --enable-threads ***
+Python main interpreter initialized at 0x1ce0880
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 436608 bytes (426 KB) for 5 cores
+*** Operational MODE: preforking ***
+added /home/josh/projects/timordata/timordata/web/app/ to pythonpath.
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x1ce0880 pid: 25114 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 25114)
+spawned uWSGI worker 1 (pid: 25150, cores: 1)
+spawned uWSGI worker 2 (pid: 25151, cores: 1)
+spawned uWSGI worker 3 (pid: 25152, cores: 1)
+spawned uWSGI worker 4 (pid: 25153, cores: 1)
+spawned uWSGI worker 5 (pid: 25154, cores: 1)
+the input device is not a TTY
+Gracefully killing worker 5 (pid: 25154)...
+Gracefully killing worker 4 (pid: 25153)...
+Gracefully killing worker 3 (pid: 25152)...
+Gracefully killing worker 2 (pid: 25151)...
+Gracefully killing worker 1 (pid: 25150)...
+...gracefully killing workers...
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+worker 5 buried after 1 seconds
+binary reloading uWSGI...
+chdir() to /home/josh/projects/timordata/timordata/web
+closing all non-uwsgi socket fds > 2 (max_fd = 1024)...
+found fd 3 mapped to socket 0 (/home/josh/projects/timordata/timordata/web/sockets/belun.uwsgisocket)
+running /usr/local/bin/uwsgi
+[uWSGI] getting INI configuration from uwsgi.template.ini
+[uwsgi-static] added mapping for /static => /home/josh/projects/timordata/timordata/web/app/static_sources
+[uwsgi-static] added mapping for /static => /home/josh/projects/timordata/timordata/web/app/bower_components
+*** Starting uWSGI 2.0.13.1 (64bit) on [Tue Jan 24 02:42:15 2017] ***
+compiled with version: 5.4.0 20160609 on 05 September 2016 10:37:48
+os: Linux-4.4.0-21-generic #37-Ubuntu SMP Mon Apr 18 18:33:37 UTC 2016
+nodename: josh-MacBookPro
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 4
+current working directory: /home/josh/projects/timordata/timordata/web
+detected binary path: /usr/local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+chdir() to /home/josh/projects/timordata/timordata/web/app
+your processes number limit is 29970
+your memory page size is 4096 bytes
+ *** WARNING: you have enabled harakiri without post buffering. Slow upload could be rejected on post-unbuffered webservers *** 
+detected max file descriptor number: 1024
+building mime-types dictionary from file /etc/mime.types...552 entry found
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 inherited UNIX address /home/josh/projects/timordata/timordata/web/sockets/belun.uwsgisocket fd 3
+Python version: 2.7.12 (default, Jul  1 2016, 15:12:24)  [GCC 5.4.0 20160609]
+Set PythonHome to /home/josh/.virtualenvs/timordata
+*** Python threads support is disabled. You can enable it with --enable-threads ***
+Python main interpreter initialized at 0xf784a0
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 436608 bytes (426 KB) for 5 cores
+*** Operational MODE: preforking ***
+added /home/josh/projects/timordata/timordata/web/app/ to pythonpath.
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0xf784a0 pid: 25114 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+gracefully (RE)spawned uWSGI master process (pid: 25114)
+spawned uWSGI worker 1 (pid: 26081, cores: 1)
+spawned uWSGI worker 2 (pid: 26082, cores: 1)
+spawned uWSGI worker 3 (pid: 26083, cores: 1)
+spawned uWSGI worker 4 (pid: 26084, cores: 1)
+spawned uWSGI worker 5 (pid: 26085, cores: 1)

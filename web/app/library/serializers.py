@@ -1,8 +1,11 @@
 import json
+import os
+
 from nhdb.models import Organization, PropertyTag
 from rest_framework import serializers, fields
 from rest_framework.exceptions import ValidationError
 from django.core.exceptions import ValidationError as DjangoValidationError
+from django.conf import settings
 from rest_framework.serializers import get_validation_error_detail
 from models import Publication, Pubtype, Version, Author, Tag
 
@@ -126,7 +129,7 @@ class PublicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publication
         fields = ('id', 'name', 'organization', 'pubtype', 'year', 'organization', 'author', 'sector', 'tag',
-                  'description')
+                  )
 
     organization = OrganizationSerializer(many=True, allow_null=True, required=False)
     author = AuthorSerializer(many=True, allow_null=True, required=False)
@@ -143,10 +146,84 @@ class PublicationSerializer(serializers.ModelSerializer):
         return instance
 
 
+def file_object_info(obj):
+    try:
+        return {
+            'size': obj.size,
+            'name': obj.name,
+            'valid': True,
+            'path': obj.path,
+        }
+
+    except ValueError as error:
+        return None
+
+    except (IOError, OSError) as error:
+        return {
+            'size': 0,
+            'name': '',
+            '_valid': False,
+            'path': obj.path,
+            '_exists': os.path.exists(obj.path),
+            '_error': u'%s' % error
+        }
+
+
+class FileObjectField(serializers.Field):
+    def to_representation(self, obj):
+        return file_object_info(obj)
+
+
+class TranslatedFileObjectField(serializers.Field):
+
+    def to_representation(self, obj):
+        instance = obj.instance
+        d = {}
+        for language in settings.LANGUAGES_FIX_ID:
+            field_name = '%s_%s' % (self.field_name, language[0])
+            field = getattr(instance, field_name)
+            d[language[0]] = file_object_info(field)
+        return d
+
+    def to_internal_value(self, obj):
+        raise NotImplementedError(obj)
+
+
+class ModelTranslatedField(serializers.Field):
+
+    def __init__(self):
+        super(ModelTranslatedField, self).__init__()
+
+    def to_representation(self, obj):
+        parent = self.parent
+        instance = self.parent.instance
+        # raise AssertionError((self.parent.fields['title_tet'], dir(self.parent)))
+        fields = self.parent.fields
+        d = {}
+        for language in settings.LANGUAGES_FIX_ID:
+            field_name = '%s_%s' % (self.field_name, language[0])
+            field = fields.get(field_name)
+            d[language[0]] = field
+        return d
+
+    def to_internal_value(self, obj):
+        raise NotImplementedError(obj)
+
+
 class VersionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Version
-        fields = ('id', 'cover', 'upload', 'title')
+        fields = ['id', 'title', 'upload', 'cover']
+
+    upload = TranslatedFileObjectField()
+    cover = TranslatedFileObjectField()
+
+    title = ModelTranslatedField()
+    #
+    # def to_representation(self, instance):
+    #     r = super(VersionSerializer, self).to_representation(instance)
+    #     r['title'] = r['title'] or dict(('%s' % (language[0]), None) for language in settings.LANGUAGES_FIX_ID)
+    #     return r
 
     def create(self, validated_data):
         v = Version.objects.create(**validated_data)
@@ -154,11 +231,18 @@ class VersionSerializer(serializers.ModelSerializer):
 
 
 class PublicationVersionsSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        r = super(PublicationVersionsSerializer, self).to_representation(instance)
+        r['description'] = r['description'] or dict(('%s' % (language[0]), None) for language in settings.LANGUAGES_FIX_ID)
+        return r
+
     class Meta:
         model = Publication
-        fields = ('id', 'versions',)
+        fields = ['id', 'versions', 'description']
 
     versions = VersionSerializer(many=True, allow_null=True, required=False)
+    description = ModelTranslatedField()
 
 
 class PubtypeSerializer(serializers.ModelSerializer):

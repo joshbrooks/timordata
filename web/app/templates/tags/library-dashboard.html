@@ -1,26 +1,25 @@
 <library-dashboard>
+
+    <div class="row"  if="{store.message}">
+         <div class="col col-md-12 col-xs-12">
+            <div class="alert alert-info">
+                <p>{store.message} <loading-spinner></loading-spinner></p>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
-        <div class="col col-sm-6 col-xs-12 col-md-4 col-lg-3" if="{_.size(store.filters) > 0}">
-        <div class="alert alert-info">
-            <h4>Results have been filtered</h4>
-            <table class="table">
-                <thead>
-                    <tr><th>Filter by</th><th>Where the result is</th></tr>
-                </thead>
-                <tr each="{key, value in store.filters}">
-                    <td class="col col-xs-2">{key} </td>
-                    <td class="col col-xs-5">
-                        <a href="#"> {store.find(key, value).name}</a> <button class="btn btn-xs" onclick="{store.set_filter.clear}">Clear</button>
-                    </td>
-                </tr>
-            </table>
-            <button class="btn btn-info btn-sm" onclick="{store.set_filter.clearAll}">Show all results</button>
-        </div>
-        </div>
         <div class="col col-sm-6 col-xs-12 col-md-4 col-lg-3 dashboard-table" each="{category, data in store.counts}">
             <table class="table table-condensed">
-                <caption>{ category }</caption>
+                <caption>{ category } </caption>
                 <tbody>
+
+                <tr if="{store.find(category, store.filters[category]).name}">
+                    <td colspan="2">
+                        <em>Filtered to</em> <strong>{store.find(category, store.filters[category]).name}</strong><button class="btn btn-xs btn-info" onclick="{store.set_filter.clear}">X</button>
+                    </td>
+                </tr>
+
                 <tr>
                     <td>
 

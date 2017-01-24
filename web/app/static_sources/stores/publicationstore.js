@@ -16,22 +16,24 @@ function PublicationStore() {
         name: function(){
             if (store.current_sort != 'name') {
                 store.current_sort = 'name';
-                store.refresh_data();
+                store.trigger('refresh')
             }
+            else (store.sort.reverse());
         },
         year: function() {
             if (store.current_sort != 'year') {
                 store.current_sort = 'year';
                 store.refresh_data();
             }
+            else (store.sort.reverse());
         },
         reverse: function() {
             store.current_sort_reverse = !store.current_sort_reverse;
+            store.refresh_data();
         }
     };
 
     store.filter = function(){
-        // _(stores.publicationStore.data.results).filter(function(f){return _.some(f.organization, ['pk',89])} ).value()
         var results = _(store.initial_data.results);
         var apply_filter = function(r, filter, filter_value){
             return _(r).filter(function(result){return _.some(result[filter],{pk: filter_value})});
@@ -55,6 +57,7 @@ function PublicationStore() {
         var paginated_results;
         var first_result;
         var last_result;
+        var order;
 
         store.data = store.initial_data;
         filtered_results = store.filter();
@@ -80,11 +83,9 @@ function PublicationStore() {
         store.counts = counts;
         store.listed = listed;
 
-        sorted_results = _(filtered_results).sortBy(store.current_sort);
+        order = store.current_sort_reverse ? 'desc' : 'asc';
 
-        if (store.current_sort_reverse){
-            sorted_results = _(filtered_results).reverse();
-        }
+        sorted_results = _(filtered_results).orderBy(store.current_sort, order);
 
         store.last_page = Math.floor(sorted_results.value().length / store.per_page) + 1;
         store.current_page = Math.min(store.current_page, store.last_page);
@@ -94,22 +95,23 @@ function PublicationStore() {
 
         paginated_results = _(sorted_results).slice(first_result, last_result);
         store.results = paginated_results.value();
+        store.message = '';
         store.trigger('publications_refreshed')
-
     };
 
     store.more_data = function(result, tag) {
-        console.log('getting more data for result')
-        var xhr = $.ajax({
+        console.log('getting more data for result');
+
+        result.request = $.ajax({
             dataType: 'json',
             contentType: 'application/json',
             method: 'GET',
             url: Urls['library:publication_versions_list']()+result.id+ '/',
             headers: {'X-CSRFTOKEN': Cookies.get('csrftoken')}
         });
-        xhr.done(function(returned_data){
-            result.more_data = returned_data;
-            debugger;
+
+        result.request.done(function(){
+            result.request.json = JSON.parse(result.request.responseText);
             tag.update();
         })
     };
@@ -127,9 +129,13 @@ function PublicationStore() {
         store.refresh_data();
     };
 
+    store.clear_filter = function(e) {
+        store.set_filter.clear(e.item.category)
+    };
+
     store.set_filter = {
         clear: function (e) {
-            _.unset(store.filters, e.item.key);
+            _.unset(store.filters, e.item.key || e.item.category);
             store.trigger('refresh')
         },
         clearAll: function () {
@@ -163,6 +169,10 @@ function PublicationStore() {
     });
 
     store.on('reload', function () {
+        store.message="Loading data...";
+        store.initial_data = [];
+        store.data = [];
+        store.trigger('publications_refreshed')
         var xhr = $.ajax({
             dataType: 'json',
             contentType: 'application/json',

@@ -18,7 +18,7 @@
         var id = e.item.result.id;
         if (_.indexOf(tag.expanded, id) == -1){
             tag.expanded.push(id);
-            if (e.item.result.versions === undefined) {
+            if (e.item.result.request === undefined) {
                 tag.store.more_data(e.item.result, tag)
             }
 

@@ -13,6 +13,9 @@
 <script type="riot/tag">
 {% include 'tags/library-dashboard.html' %}
 </script>
+<script type="riot/tag">
+{% include 'tags/loading-spinner.html' %}
+</script>
 <script type="text/javascript" src="{% static 'stores/publicationstore.js' %}"></script>
 <script>
 var stores = {};
@@ -23,12 +26,12 @@ $( document ).ready( function() {
     RiotControl.addStore(stores.publicationStore);
     riot.mount('library-publicationtable')
     riot.mount('library-dashboard')
+    riot.mount('loading-spinner')
     stores.publicationStore.trigger('reload');
 })
 </script>
     {% endblock %}
 {%  block content %}
-
     <library-dashboard></library-dashboard>
     <library-publicationtable></library-publicationtable>
 
