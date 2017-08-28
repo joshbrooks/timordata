@@ -8,6 +8,7 @@ djangorestframework
 django-rest-swagger
 django-filter
 django-tables2
+django-js-reverse
 ipython
 pillow
 python-dateutil
