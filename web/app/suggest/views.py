@@ -228,7 +228,7 @@ def suggestcreate(request):
     warnings = []
     s = Suggest()
     s.user_id = request.user.pk
-    s.user_name = request.user.__unicode__()
+    s.user_name = request.user.__str__()
 
     if request.POST.get('data'):
         data = json.loads(request.POST.get('data'))

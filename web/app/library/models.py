@@ -32,9 +32,9 @@ class Publication(models.Model):
     country = models.ManyToManyField('geo.World', blank=True)
     location = models.ManyToManyField(AdminArea, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         if self.name:
-            return unidecode('{}'.format(self.name))
+            return u'{}'.format(self.name)
         else:
             return str(None)
 
@@ -59,7 +59,7 @@ class Tag(models.Model):
     'Keywords' or 'Tags' for a particular project
     """
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     name = models.CharField(max_length=64, unique=True)
@@ -231,7 +231,7 @@ class Version(models.Model):
     This allows a single "publication" to have "versions" in different languages
     """
 
-    def __unicode__(self):
+    def __str__(self):
 
         presentation_field = 'title'
 
@@ -396,7 +396,7 @@ class Author(models.Model):
 
         return "{}, {}".format(fn, formatted_ini)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def savesortname(self):
@@ -421,7 +421,7 @@ class Pubtype(models.Model):
     Describes an object based on its type (eg newsletter, report...)
     """
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     code = models.CharField(max_length=3, primary_key=True)

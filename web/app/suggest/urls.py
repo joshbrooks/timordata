@@ -28,4 +28,4 @@ urlpatterns = [
     url(r'^(?P<model_name>[a-z_]+)/(?P<model_pk>[0-9]+)/$', views.suggestlist, name='suggest_model'),
     url(r'^(?P<model_name>[a-z_]+)/$', views.suggestlist, name='suggest_model_name'),
 
-    ]
+]

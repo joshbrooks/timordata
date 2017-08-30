@@ -10,7 +10,6 @@ from nhdb.forms import Project, ProjectForm
 from django.test.client import Client
 
 
-
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -23,18 +22,18 @@ def create_suggestion(data, code=201, client=None):
     create_post = c.post('/suggest/suggest/', data)
 
     if create_post.status_code != code:
-        raise AssertionError('Expected code %s, got code %s  /n Error message was %s'%(code, create_post.status_code, create_post.content))
+        raise AssertionError('Expected code %s, got code %s  /n Error message was %s' % (code, create_post.status_code, create_post.content))
 
-    s = Suggest.objects.get(pk = json.loads(create_post.content)['id'])
+    s = Suggest.objects.get(pk=json.loads(create_post.content)['id'])
     assert s.state == 'W'
 
     for i in s.affectedinstance_set.all():
-        logger.info('%s -- %s -- %s -- %s' %(i.model_name, i.suggestion_id, i.model_pk, i.primary))
+        logger.info('%s -- %s -- %s -- %s' % (i.model_name, i.suggestion_id, i.model_pk, i.primary))
 
     return s
 
 
-def affirm(suggestion,  code=201, client=None):
+def affirm(suggestion, code=201, client=None):
 
     if not client:
         client = Client()
@@ -49,7 +48,7 @@ def affirm(suggestion,  code=201, client=None):
         return
     # We need to manually set the AffectedInstance pk
     p = suggestion.primary
-    p.model_pk =json.loads(r.content)['id']
+    p.model_pk = json.loads(r.content)['id']
     p.save()
     # REQUIRED!!! Set this:
     assert suggestion.state == 'A'
@@ -62,41 +61,42 @@ class NewProjectTestCase(TestCase):
 
     def setUp(self):
         s = Suggest.objects.create(
-                name='Test case user',
-                email='test@josh.com',
-                description='Create a New Project',
-                user_name='josh',
-                user_id=1,
-                state='W',
-                action='CM',
-                is_hidden=False,
-                data='{"status": "A", "startdate": "2014-10-01", "enddate": null, "notes_id": null, "description_id": null, "description_pt": null, "stafffulltime": "2", "description_en": "Create monitoring for goverment program and ONG in Municipiu Aileu", "staffparttime": "2", "projecttype": null, "name_tet": null, "name_id": null, "notes_pt": null, "description_tet": null, "notes_tet": null, "name_en": "Advocacy and Monitoring", "name_pt": null, "notes_en": null}',
-                url='/rest/nhdb/project',
-                method='POST')
-        s.affectedinstance_set.add(AffectedInstance(model_name='nhdb_project', model_pk = None, primary=True))
+            name='Test case user',
+            email='test@josh.com',
+            description='Create a New Project',
+            user_name='josh',
+            user_id=1,
+            state='W',
+            action='CM',
+            is_hidden=False,
+            data='{"status": "A", "startdate": "2014-10-01", "enddate": null, "notes_id": null, "description_id": null, "description_pt": null, "stafffulltime": "2", "description_en": "Create monitoring for goverment program and ONG in Municipiu Aileu", "staffparttime": "2", "projecttype": null, "name_tet": null, "name_id": null, "notes_pt": null, "description_tet": null, "notes_tet": null, "name_en": "Advocacy and Monitoring", "name_pt": null, "notes_en": null}',
+            url='/rest/nhdb/project',
+            method='POST')
+        s.affectedinstance_set.add(AffectedInstance(model_name='nhdb_project', model_pk=None, primary=True))
         suggestion_pk = s.pk
         suggestion__pk = '_{}_'.format(s.pk)
 
         # This second suggestion should alter the project after it has been created
         addOrg = Suggest.objects.create(
-                name='josh',
-                email='me@testt.com',
-                description='Add an organization to this project',
-                user_name='josh',
-                user_id=1,
-                state='W',
-                action='CM',
-                is_hidden=False,
-                method='POST',
-                data='{"project": "' + suggestion__pk + '", "organization": "89", "notes": "add Belun", "organizationclass": "P"}',
-                url='/rest/nhdb/project/{}/'.format(suggestion__pk)
+            name='josh',
+            email='me@testt.com',
+            description='Add an organization to this project',
+            user_name='josh',
+            user_id=1,
+            state='W',
+            action='CM',
+            is_hidden=False,
+            method='POST',
+            data='{"project": "' + suggestion__pk + '", "organization": "89", "notes": "add Belun", "organizationclass": "P"}',
+            url='/rest/nhdb/project/{}/'.format(suggestion__pk)
         )
-        addOrg.affectedinstance_set.add(AffectedInstance(model_name='nhdb_organization', model_pk = None, primary=True))
+        addOrg.affectedinstance_set.add(AffectedInstance(model_name='nhdb_organization', model_pk=None, primary=True))
         ai = AffectedInstance(model_name="nhdb_project", model_pk='_{}_')
 
+
 project_test_data = {
-            '_method': 'POST',
-            '_url': '/rest/nhdb/project/',
+    '_method': 'POST',
+    '_url': '/rest/nhdb/project/',
             '_action': 'CM',
             '_description': 'Create a new project in the database',
             '_affected_instance_primary': 'nhdb_project',
@@ -122,19 +122,19 @@ project_test_data = {
 
 class SuggestProjectFormTestCase(TestCase):
 
-    fixtures = ['projectstatus.json','organizationclass', 'projectorganizationclass.json']
+    fixtures = ['projectstatus.json', 'organizationclass', 'projectorganizationclass.json']
 
     def setUp(self):
-        u = User.objects.create_user('josh', 'josh.vdbroek@gmail.com','test')
+        u = User.objects.create_user('josh', 'josh.vdbroek@gmail.com', 'test')
         u.is_staff = True
         u.save()
 
     def test_suggestion_update(self):
 
         c = Client()
-        response = c.post('/suggest/suggest/',project_test_data )
+        response = c.post('/suggest/suggest/', project_test_data)
 
-        s = Suggest.objects.get(pk = json.loads(response.content)['id'])
+        s = Suggest.objects.get(pk=json.loads(response.content)['id'])
 
         assert int(response.status_code) == 201, 'Response code was %s' % response.status_code
         test_form = ProjectForm(project=s)
@@ -146,10 +146,10 @@ class SuggestProjectFormTestCase(TestCase):
 
         c = Client()
         c.login(username='josh', password='test')
-        response = c.post('/suggest/suggest/',project_test_data)
-        s = Suggest.objects.get(pk = json.loads(response.content)['id'])
+        response = c.post('/suggest/suggest/', project_test_data)
+        s = Suggest.objects.get(pk=json.loads(response.content)['id'])
         # Generate a 'post' request from the suggestion data
-        p = c.post(s.url, {'_content':s.data, '_content_type':'application/json'})
+        p = c.post(s.url, {'_content': s.data, '_content_type': 'application/json'})
         assert int(p.status_code) == 201, 'Response code was %s' % response.status_code
 
     def test_new_project_form(self):
@@ -173,7 +173,7 @@ class SuggestProjectFormTestCase(TestCase):
         Test whether we can retrieve an object instance based on the model name and data parameter
         :return:
         """
-        o = Organization(name = "My organization")
+        o = Organization(name="My organization")
         o.save()
         p = Project(name="My new project")
         p.save()
@@ -187,27 +187,26 @@ class SuggestProjectFormTestCase(TestCase):
             '_name': 'Josh',
             '_email': 'josh.vdbroek@gmail.com',
             '_comment': '',
-            'organization':str(o.pk),
-            'project':str(p.pk),
-            'organizationclass':'P'
+            'organization': str(o.pk),
+            'project': str(p.pk),
+            'organizationclass': 'P'
         }
         c = Client()
         response = c.post('/suggest/suggest/', projectorganization_test_data)
         c.login(username='josh', password='test')
-        s = Suggest.objects.get(pk = json.loads(response.content)['id'])
+        s = Suggest.objects.get(pk=json.loads(response.content)['id'])
         # Generate a 'post' request from the suggestion data
 
         s.follow('organization')
         s.follow('project')
         s.follow('organizationclass')
 
-        p = c.post(s.url, {'_content':s.data, '_content_type':'application/json'})
+        p = c.post(s.url, {'_content': s.data, '_content_type': 'application/json'})
         if int(p.status_code) != 201:
             logger.info('Response code was %s', p.status_code)
             logger.info(p.content)
 
     def test_suggestion_ManyToManyLink(self):
-
         """
         Test whether we can set up a chained link
 
@@ -239,7 +238,6 @@ class SuggestProjectFormTestCase(TestCase):
 
             PropertyTag.objects.get_or_create(path='BEN', name='Beneficiary', description='Beneficiary')
 
-
             return create_suggestion({
                 '_method': 'POST',
                 '_url': '/rest/nhdb/propertytag/',
@@ -267,17 +265,17 @@ class SuggestProjectFormTestCase(TestCase):
                 '_email': 'josh.vdbroek@gmail.com',
                 '_comment': '',
                 'title': 'TEST Funding Offer',
-                'organization': '_%s_'%(org_suggestion.pk),
+                'organization': '_%s_' % (org_suggestion.pk),
                 'amount': 1,
-                'description':'Hi',
+                'description': 'Hi',
                 'has_many': 'beneficiary',
-                'beneficiary':['_%s_'%(ben_suggestion.pk),]
+                'beneficiary': ['_%s_' % (ben_suggestion.pk), ]
             })
 
         c.login(username='josh', password='test')
         ben_suggestion = create_beneficiary()
         org_suggestion = create_organization()
-        funding_suggestion = create_funding_offer(org_suggestion,ben_suggestion )
+        funding_suggestion = create_funding_offer(org_suggestion, ben_suggestion)
 
         # Trying to "accept"this change should return a 400 code as there are unfinished suggestions first
         affirm(funding_suggestion, code=400, client=c)

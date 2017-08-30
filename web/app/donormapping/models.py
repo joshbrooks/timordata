@@ -21,7 +21,7 @@ def isRichField(test):
 
 
 class FundingOffer(models.Model):
-    def __unicode__(self):
+    def __str__(self):
 
         return self.title
 
@@ -72,7 +72,7 @@ class DonorAnnouncement(models.Model):
     Information about announcements made about donor funding concerning Timor Leste
     '''
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     date = models.DateField()
@@ -92,11 +92,11 @@ class DonorSurveyResponse(models.Model):
     @property
     def organization_display(self):
         if self.organization:
-            return self.organization.__unicode__()
+            return self.organization.__str__()
         else:
             return self.organizationname
 
-    def __unicode__(self):
+    def __str__(self):
         return '{} - {} - {}'.format(self.organization_display, self.survey_date, self.get_response_display())
 
     OPTION_RESPONSE = (
@@ -119,7 +119,7 @@ class FundingSurveyInfoMethods(models.Model):
     partner organisations
     """
 
-    def __unicode__(self):
+    def __str__(self):
         return self.description
 
     description = models.CharField(max_length=200)
@@ -134,7 +134,7 @@ class FundingSurvey(models.Model):
     about funding opportunities in TimorLeste
     """
 
-    def __unicode__(self):
+    def __str__(self):
         return '{}'.format(self.organizationname)
 
     def get_absolute_url(self):

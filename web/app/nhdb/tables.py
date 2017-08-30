@@ -55,7 +55,7 @@ class OrganizationTable(Table):
         change_url = urlresolvers.reverse('admin:nhdb_project_change', args=[A('pk')])
         # detail_url = urlresolvers.reverse('nhdb:project:detail', kwargs={'pk': record.pk})
         detail_url = '#object=' + str(record.pk)
-        return mark_safe('<a href="{}">{}</a><br><span class="table-organization-description">{}</span>'.format(detail_url, value, record.description or ''))
+        return mark_safe(u'<a href="{}">{}</a><br><span class="table-organization-description">{}</span>'.format(detail_url, value, record.description or ''))
 
 
 class ProjectTable(Table):
@@ -72,12 +72,12 @@ class ProjectTable(Table):
 
     def render_organization(self, value):
 
-        pattern = '<a href="/nhdb/organization/?q=active.true#object={organization.pk}">{organization.name}({organization.orgtype_id})</a>'
+        pattern = u'<a href="/nhdb/organization/?q=active.true#object={organization.pk}">{organization.name}({organization.orgtype_id})</a>'
         return mark_safe('<br>'.join([pattern.format(organization=organization) for organization in value.all()]))
 
     def render_name(self, value, record):
         detail_url = '#object=' + str(record.pk)
-        return mark_safe('<a href="{}">{}</a><br><span class="table-project-description">{}</span>'.format(detail_url, value, record.description or ''))
+        return mark_safe(u'<a href="{}">{}</a><br><span class="table-project-description">{}</span>'.format(detail_url, value, record.description or ''))
 
 
 class PropertyTagTable(Table):

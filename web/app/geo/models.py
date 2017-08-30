@@ -26,7 +26,7 @@ class AdminArea(MP_Lite):
     separator = '.'
     steps = 3
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def selectlist_repr(self):
@@ -67,7 +67,7 @@ class AdminArea(MP_Lite):
 
 class Suco(AdminArea):
 
-    def __unicode__(self):
+    def __str__(self):
         return 'Suco {}'.format(self.name)
 
     def selectlist_repr(self):
@@ -89,7 +89,7 @@ class Suco(AdminArea):
 
 
 class Subdistrict(AdminArea):
-    def __unicode__(self):
+    def __str__(self):
         return 'Subdistrict {}'.format(self.name)
 
     def selectlist_repr(self):
@@ -104,7 +104,7 @@ class Subdistrict(AdminArea):
 
 
 class District(AdminArea):
-    def __unicode__(self):
+    def __str__(self):
         return 'Postu Admin. {}'.format(self.name)
 
     def selectlist_repr(self):
@@ -118,7 +118,7 @@ class Road(models.Model):
     highway = models.CharField(max_length=255, null=True)
     route = models.CharField(max_length=255, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -136,7 +136,7 @@ class World(models.Model):
     geom = models.MultiPolygonField(srid=4326, null=True, blank=True)
     objects = models.GeoManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @staticmethod
@@ -168,5 +168,5 @@ class PlaceAlternate(models.Model):
     geom = models.MultiPolygonField(srid=32751)
     objects = models.GeoManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name

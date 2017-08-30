@@ -132,7 +132,7 @@ def publicationlist(request):
             'tag__id': Tag.objects.all(),
             'sector__path': PropertyTag.objects.filter(path__startswith='INV.'),
             'pubtype': [{'value': p.pk, 'label': p.name} for p in Pubtype.objects.exclude(code='PRI')],
-            'org': [{'value': o.pk, 'label': '{}'.format(o.name)} for o in Organization.objects.annotate(
+            'org': [{'value': o.pk, 'label': u'{}'.format(o.name)} for o in Organization.objects.annotate(
                 num_publications=Count('publication')).filter(num_publications__gt=0)],
         },
         'activefilters': {}

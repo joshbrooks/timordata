@@ -129,7 +129,7 @@ class AffectedInstance(models.Model):
     # TODO: Make compatible with non integer PK's
     # model_pk_string = models.CharField(max_length=10, null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
 
         return 'From suggestion {} to change {} {} {}'.format(self.suggestion.id, self.model_name, self.model_pk,
                                                               self.primary)
@@ -193,7 +193,7 @@ class Suggest(models.Model):
     Intended to integrate with the Django REST framework for a one-click "approve" option for models
     '''
 
-    def __unicode__(self):
+    def __str__(self):
         # This is going to be different for each model
         # However if there is a "name", we can use that
         if self.action == 'CM':
