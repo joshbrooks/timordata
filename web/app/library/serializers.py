@@ -50,6 +50,7 @@ class PublicationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Publication
+        fields = '__all__'
 
     organization = OrganizationAllowsNames(many=True, queryset=Organization.objects.all(), allow_null=True, required=False)
     author = AuthorAllowsNames(many=True, queryset=Author.objects.all(), allow_null=True, required=False)
@@ -58,11 +59,12 @@ class PublicationSerializer(serializers.ModelSerializer):
 class PubtypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pubtype
-
+        fields = '__all__'
 
 class VersionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Version
+        fields = '__all__'
 
     def create(self, validated_data):
         v = Version.objects.create(**validated_data)
@@ -72,8 +74,10 @@ class VersionSerializer(serializers.ModelSerializer):
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
+        fields = '__all__'
 
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
+        fields = '__all__'

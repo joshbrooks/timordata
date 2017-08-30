@@ -62,17 +62,17 @@ class PropertyTagSerializer(serializers.ModelSerializer):
 class ProjectTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectType
-
+        fields = '__all__'
 
 class ExcelDownloadFeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExcelDownloadFeedback
-
+        fields = '__all__'
 
 class ProjectOrganizationPersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-
+        fields = '__all__'
 
 class PlaceSerializer(serializers.ModelSerializer):
     class Meta:

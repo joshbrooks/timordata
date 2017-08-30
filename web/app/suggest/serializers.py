@@ -11,6 +11,7 @@ class AffectedInstanceSerializer(serializers.ModelSerializer):
 class SuggestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Suggest
+        fields = '__all__'
 
     def create(self, validated_data):
 
