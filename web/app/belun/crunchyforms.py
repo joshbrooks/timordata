@@ -1,6 +1,6 @@
 __author__ = 'josh'
 
-from settings import LANGUAGES_FIX_ID
+from .settings import LANGUAGES_FIX_ID
 from crispy_forms.bootstrap import TabHolder, Tab
 from crispy_forms.layout import Layout, Submit, HTML, Field, Div, Fieldset, ButtonHolder
 from django.utils.translation import ugettext_lazy as _

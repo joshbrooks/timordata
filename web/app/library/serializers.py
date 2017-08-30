@@ -1,7 +1,7 @@
 import json
 from nhdb.models import Organization
 from rest_framework import serializers
-from models import Publication, Pubtype, Version, Author, Tag
+from .models import Publication, Pubtype, Version, Author, Tag
 
 __author__ = 'josh'
 
@@ -28,7 +28,7 @@ class AuthorAllowsNames(serializers.PrimaryKeyRelatedField):
 
     def to_internal_value(self, data):
 
-        if isinstance(data, basestring):
+        if isinstance(data, str):
 
             # Check that a "suggestion" hasn't been accidentally passed thru
             assert not (data.startswith('_') and data.endswith('_'))

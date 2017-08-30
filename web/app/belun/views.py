@@ -9,8 +9,9 @@ from django.template import Context
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView
 from django_tables2 import SingleTableView
-from settings import LANGUAGES_FIX_ID
+from .settings import LANGUAGES_FIX_ID
 from suggest.models import Suggest
+import collections
 
 language_codes = [i[0] for i in LANGUAGES_FIX_ID]
 def index(request):
@@ -92,7 +93,7 @@ def selecttwo(request, app_name='library', model_name='tag', filter_field='name'
 
         if hasattr(r, 'selectlist_repr'):
             text = getattr(r, 'selectlist_repr')
-            if callable(text):
+            if isinstance(text, collections.Callable):
                 text = text()
 
         else:

@@ -32,11 +32,11 @@ class AdminArea(MP_Lite):
     def selectlist_repr(self):
 
         if 1 < self.pcode < 100:
-            return u'Postu Admin. %s'%self
+            return 'Postu Admin. %s'%self
         elif 100 < self.pcode < 10000:
-            return u'Subdistrito. %s'%self
+            return 'Subdistrito. %s'%self
         elif self.pcode > 10000:
-            return u'Suco. %s'%self
+            return 'Suco. %s'%self
 
 
     # class Meta:
@@ -69,10 +69,10 @@ class AdminArea(MP_Lite):
 class Suco(AdminArea):
 
     def __unicode__(self):
-        return u'Suco {}'.format(self.name)
+        return 'Suco {}'.format(self.name)
 
     def selectlist_repr(self):
-        return u'%s'%self
+        return '%s'%self
 
     @property
     def subdistrict(self):
@@ -90,10 +90,10 @@ class Suco(AdminArea):
 
 class Subdistrict(AdminArea):
     def __unicode__(self):
-        return u'Subdistrict {}'.format(self.name)
+        return 'Subdistrict {}'.format(self.name)
 
     def selectlist_repr(self):
-        return u'%s'%self
+        return '%s'%self
 
     @property
     def district(self):
@@ -104,10 +104,10 @@ class Subdistrict(AdminArea):
 
 class District(AdminArea):
     def __unicode__(self):
-        return u'Postu Admin. {}'.format(self.name)
+        return 'Postu Admin. {}'.format(self.name)
 
     def selectlist_repr(self):
-        return u'%s'%self
+        return '%s'%self
 
 
 class Road(models.Model):

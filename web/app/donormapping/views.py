@@ -111,7 +111,7 @@ def get_model_choice_counts(field_object, include_zero=True):
         # Raise an error on primary keys - not suitable for summarising
 
         if isinstance(field_object, django.db.models.fields.AutoField):
-            raise TypeError, """Can't call this function on this type of field"""
+            raise TypeError("""Can't call this function on this type of field""")
 
         elif isinstance(field_object, fields.NullBooleanField):
             choices = ((None, 'No answer'), (True, 'True'), (False, 'False'))
@@ -137,7 +137,7 @@ def get_model_choice_counts(field_object, include_zero=True):
     counts = modelclass.objects.all().values_list(field_object.name).annotate(Count(field_object.name))
     if not counts:
         return [None,None]
-    label_codes, values = zip(*counts)  # Creates two separate lists: label and values
+    label_codes, values = list(zip(*counts))  # Creates two separate lists: label and values
 
     if not choices:
         return
@@ -189,7 +189,7 @@ class Flot():
 
         if returntype == 'categories':
             # Returns a ziplist of label and data
-            datasets = zip(self._labels, self._data)
+            datasets = list(zip(self._labels, self._data))
 
         elif returntype == 'pie':
             # Pie chart wants labels
@@ -205,7 +205,7 @@ class Flot():
                     datasets.append({'label': '{}'.format(label), 'data': '{}'.format(data)})
 
         else:
-            raise TypeError, "Invalid return"
+            raise TypeError("Invalid return")
             # Default action
             # data = {'labels':'{}'.format(self._labels),'data':'{}'.format(self._data)}
 
@@ -259,7 +259,7 @@ class FundingSurveyList(SingleTableView):
                 continue
             try:
                 data, labels = (get_model_choice_counts(field_object))
-            except TypeError, e:
+            except TypeError as e:
                 logging.error("Field type error {}".format(e))
                 continue
             if data is None or labels is None:
@@ -272,7 +272,7 @@ class FundingSurveyList(SingleTableView):
 
         for parent in label_lists:
             parent = ','.join(parent)
-            if parent not in response.keys():
+            if parent not in list(response.keys()):
                 response[parent] = []
 
                 for index, child in enumerate(label_lists):
@@ -282,7 +282,7 @@ class FundingSurveyList(SingleTableView):
                         qa.extend(data_lists[index])
                         response[parent].append(qa)
 
-        for k, v in response.items():
+        for k, v in list(response.items()):
             context['test'].append({'response': k.split(','), 'questions': v})
         # raise AssertionError(context['test'])
         return context

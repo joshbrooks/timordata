@@ -36,8 +36,8 @@ class PublicationTable(tables.Table):
 
     def render_organization(self, value):
 
-        pattern = u'<a href="/nhdb/organization/?q=active.true#object={organization.pk}">{organization.name}({organization.orgtype_id})</a>'
-        return mark_safe(u'<br>'.join([pattern.format(organization=organization) for organization in value.all()]))
+        pattern = '<a href="/nhdb/organization/?q=active.true#object={organization.pk}">{organization.name}({organization.orgtype_id})</a>'
+        return mark_safe('<br>'.join([pattern.format(organization=organization) for organization in value.all()]))
 
     @property
     def language_ids(self):
@@ -84,7 +84,7 @@ class PublicationTable(tables.Table):
         hide_versions_after = 5
         extra = version_count - hide_versions_after
         detail_url = '#object='+str(record.pk)
-        returns = u'<strong>{}</strong><a href={}> More &raquo;</a><br>'\
+        returns = '<strong>{}</strong><a href={}> More &raquo;</a><br>'\
             .format(record.__unicode__(), detail_url)
 
         return ''

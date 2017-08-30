@@ -20,7 +20,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
         try:
             cls.selenium = WebDriver()
         except:
-            print "WebDriver had a problem, skipping interaction tests"
+            print("WebDriver had a problem, skipping interaction tests")
             cls.selenium=None
             return
 

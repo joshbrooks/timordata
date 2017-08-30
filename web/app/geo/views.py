@@ -103,7 +103,7 @@ def search(request, model="adminarea", languages='en'):
     Additional GET parameters: 'fields' and 'search'
     """
 
-    if isinstance(model, basestring):
+    if isinstance(model, str):
         model = get_model('geo', model)
         assert hasattr(model, 'objects'), 'Please pass a model instance or name to this function'
 

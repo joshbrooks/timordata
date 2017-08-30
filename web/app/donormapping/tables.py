@@ -35,7 +35,7 @@ class FundingOfferTable(tables.Table):
 
     def render_title(self, value, record):
         detail_url = '#object='+str(record.pk)
-        return mark_safe(u'<a href="{}">{}</a><br><span class="table-organization-description"><em>{}</em></span>'.format(
+        return mark_safe('<a href="{}">{}</a><br><span class="table-organization-description"><em>{}</em></span>'.format(
             detail_url, value, record.organization.name))
 
     class Meta:

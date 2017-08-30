@@ -96,7 +96,7 @@ class DonorSurveyResponse(models.Model):
             return self.organizationname
 
     def __unicode__(self):
-        return u'{} - {} - {}'.format(self.organization_display, self.survey_date, self.get_response_display())
+        return '{} - {} - {}'.format(self.organization_display, self.survey_date, self.get_response_display())
 
     OPTION_RESPONSE = (
         ('ND', 'No (works directly with local partners)'),
@@ -133,7 +133,7 @@ class FundingSurvey(models.Model):
     about funding opportunities in TimorLeste
     """
     def __unicode__(self):
-        return u'{}'.format(self.organizationname)
+        return '{}'.format(self.organizationname)
 
     def get_absolute_url(self):
         return reverse('donormapping:survey:detail', kwargs={'pk': self.pk})

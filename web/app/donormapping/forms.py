@@ -2,7 +2,7 @@
 from django import forms
 from django.db.models import Count
 from geo.models import District
-from models import FundingOffer, FundingSurvey, FundingOfferDocument
+from .models import FundingOffer, FundingSurvey, FundingOfferDocument
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit, Field, Fieldset, HTML, Hidden
 from django.utils.translation import ugettext_lazy as _
@@ -119,7 +119,7 @@ class FundingOfferForm(SuggestionForm):
         super(FundingOfferForm, self).__init__(_instance=_instance, *args, **kwargs)
 
         if isinstance(self.fundingoffer, FundingOffer):
-            self.fields['organization'].choices = [(self.fundingoffer.organization.pk, u'%s'%self.fundingoffer.organization)]
+            self.fields['organization'].choices = [(self.fundingoffer.organization.pk, '%s'%self.fundingoffer.organization)]
         elif isinstance(self.fundingoffer, Suggest):
             o = Organization.objects.get(self.fundingoffer.follow('organization'))
         else:
@@ -162,7 +162,7 @@ class FundingOfferForm(SuggestionForm):
                 )
             ])
 
-        except Exception, e:
+        except Exception as e:
             helper = FormHelper()
             helper.layout = Layout()
             helper.layout.extend([HTML('''<div class="alert alert-{}" role="alert">{}</div>'''.format('warning', e.message))])
@@ -184,14 +184,14 @@ class FundingOfferSearchForm(forms.Form):
         self.fields['inv'] = forms.MultipleChoiceField(
             required=False,
             label=_("Sectors"),
-            choices=[(i.lowerpathstring(), u'{} ({})'.format(i.name, i.count)) for i in
+            choices=[(i.lowerpathstring(), '{} ({})'.format(i.name, i.count)) for i in
                      PropertyTag.objects.get(path="INV").get_children().annotate(
                          count=Count('fundingoffer_sector')).order_by('name') if i.count > 0]
         )
         self.fields['ben'] = forms.MultipleChoiceField(
             required=False,
             label=_("Beneficiaries"),
-            choices=[(i.lowerpathstring(), u'{} ({})'.format(i.name, i.count)) for i in
+            choices=[(i.lowerpathstring(), '{} ({})'.format(i.name, i.count)) for i in
                      PropertyTag.objects.get(path="BEN").get_children().annotate(
                          count=Count('fundingoffer_beneficiary')).order_by('name') if i.count > 0]
         )
@@ -199,7 +199,7 @@ class FundingOfferSearchForm(forms.Form):
         self.fields['act'] = forms.MultipleChoiceField(
             required=False,
             label=_("Activities"),
-            choices=[(i.lowerpathstring(), u'{} ({})'.format(i.name, i.count)) for i in
+            choices=[(i.lowerpathstring(), '{} ({})'.format(i.name, i.count)) for i in
                      PropertyTag.objects.get(path="ACT").get_children().annotate(
                          count=Count('fundingoffer_activity')).order_by('name') if i.count > 0]
         )
