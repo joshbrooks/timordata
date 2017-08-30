@@ -27,8 +27,8 @@ class FundingSurveyForm(forms.ModelForm):
                          'organizationname',
                          'organisationtype',
                          'properties',
-            ), css_class="col-md-12 well"
-            ),
+                         ), css_class="col-md-12 well"
+                ),
             Div(Fieldset(_('Questions for Recipients'),
                          'fundingreceived',
                          'fundingrecvamt',
@@ -38,7 +38,7 @@ class FundingSurveyForm(forms.ModelForm):
                          'qtransport',
                          'qprocess',
                          'qdonorsector',
-            ), css_class='col-md-6 well'),
+                         ), css_class='col-md-6 well'),
             Div(Fieldset(_('Questions for Donors'),
                          'fundinggiven',
                          'fundinggiveamt',
@@ -46,7 +46,7 @@ class FundingSurveyForm(forms.ModelForm):
                          'fundinggivemethod',
                          'qrecipients',
 
-            ), css_class="col-md-5 col-md-offset-1 well"),
+                         ), css_class="col-md-5 col-md-offset-1 well"),
             Div(Fieldset(_('Technology Access'),
                          'usefacebook',
                          'usegmail',
@@ -56,7 +56,7 @@ class FundingSurveyForm(forms.ModelForm):
                 'hasmobile',
                 'hassmartphone',
                 css_class="col-md-5 col-md-offset-1 well"
-            ), Div(Submit('submit', 'Submit'), css_class="col-md-12"))
+                ), Div(Submit('submit', 'Submit'), css_class="col-md-12"))
 
     class Meta:
         model = FundingSurvey
@@ -82,10 +82,10 @@ class FundingOfferDocumentForm(SuggestionForm):
         super(FundingOfferDocumentForm, self).__init__(_instance=_instance, *args, **kwargs)
 
         if fundingoffer:
-            if isinstance(fundingoffer,Suggest):
-                self.fields['offer'].choices = [('_%s_'%(fundingoffer.pk), fundingoffer)]
-            elif isinstance(fundingoffer,FundingOffer):
-                self.fields['offer'].choices = [('%s'%(fundingoffer.pk), fundingoffer)]
+            if isinstance(fundingoffer, Suggest):
+                self.fields['offer'].choices = [('_%s_' % (fundingoffer.pk), fundingoffer)]
+            elif isinstance(fundingoffer, FundingOffer):
+                self.fields['offer'].choices = [('%s' % (fundingoffer.pk), fundingoffer)]
 
     @property
     def helper(self):
@@ -119,7 +119,7 @@ class FundingOfferForm(SuggestionForm):
         super(FundingOfferForm, self).__init__(_instance=_instance, *args, **kwargs)
 
         if isinstance(self.fundingoffer, FundingOffer):
-            self.fields['organization'].choices = [(self.fundingoffer.organization.pk, '%s'%self.fundingoffer.organization)]
+            self.fields['organization'].choices = [(self.fundingoffer.organization.pk, '%s' % self.fundingoffer.organization)]
         elif isinstance(self.fundingoffer, Suggest):
             o = Organization.objects.get(self.fundingoffer.follow('organization'))
         else:
@@ -130,13 +130,13 @@ class FundingOfferForm(SuggestionForm):
 
         create_organization_elements = {
             'data_add_selecturl': '/selecttwo/nhdb/project/name/icontains',
-            'data_add_modalurl':  '/nhdb/form/organization/main/',
+            'data_add_modalurl': '/nhdb/form/organization/main/',
             'data_add_modalselector': '#stack2',
             'data_add_displayfield': 'name'
         }
 
         select_kwargs = {
-            'wrapper_class' : "col-lg-12 col-md-12 col-sm-12",
+            'wrapper_class': "col-lg-12 col-md-12 col-sm-12",
             'style': "padding-left:20px; padding-right:20px;"}
 
         try:
@@ -153,11 +153,11 @@ class FundingOfferForm(SuggestionForm):
                 ),
                 Div(
                     Fieldset('Target Sector, Activity and Beneficiary',
-                         Field('sector', **select_kwargs),
-                         Field('activity', **select_kwargs),
-                         Field('beneficiary',**select_kwargs),
-                         css_class="row"
-                    )
+                             Field('sector', **select_kwargs),
+                             Field('activity', **select_kwargs),
+                             Field('beneficiary', **select_kwargs),
+                             css_class="row"
+                             )
 
                 )
             ])
@@ -216,10 +216,10 @@ class FundingOfferSearchForm(forms.Form):
                          Field('act', wrapper_class=self.helper.wrapper_class),
                          Field('inv', wrapper_class=self.helper.wrapper_class),
                          Field('ben', wrapper_class=self.helper.wrapper_class),
-            ),
+                         ),
                 Submit('search', u_('Search'), css_class="btn btn-info btn"),
                 css_class='col-md-12 well'
-            )
+                )
         )
 
     try:

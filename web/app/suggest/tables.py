@@ -9,6 +9,7 @@ from suggest.models import Suggest
 
 __author__ = 'josh'
 
+
 class SuggestTable(Table):
     email_obfs = Column()
     id = Column()
@@ -19,19 +20,19 @@ class SuggestTable(Table):
         model = Suggest
         attrs = {"class": "paleblu"}
         fields = (
-        'description', 'data', 'user_name', 'suggestDate', 'approvalDate', 'email_obfs', 'url', 'children', 'parent')
+            'description', 'data', 'user_name', 'suggestDate', 'approvalDate', 'email_obfs', 'url', 'children', 'parent')
 
     def render_data(self, value, record):
         novalues = []
-        r = u'<table>'
-        for k, v in record.changes.items():
+        r = '<table>'
+        for k, v in list(record.changes.items()):
             if v:
-                r += u"\n\t<tr><td>{}</td><td>{}</td></tr>".format(k, v)
+                r += "\n\t<tr><td>{}</td><td>{}</td></tr>".format(k, v)
             else:
                 novalues.append(k)
-        r += u'\n</table>'
+        r += '\n</table>'
         if novalues:
-            r += u'No data for: {}'.format(', '.join(novalues))
+            r += 'No data for: {}'.format(', '.join(novalues))
 
         return mark_safe(r)
 
@@ -40,7 +41,7 @@ class SuggestTable(Table):
         # detail_url = urlresolvers.reverse('nhdb:project:detail', kwargs={'pk': record.pk})
 
         detail_url = '#object=' + str(record.pk)
-        returns = u'<a href="{}">{}</a>'.format(detail_url, value)
+        returns = '<a href="{}">{}</a>'.format(detail_url, value)
         #
         # for i in record.children():
         #     if i.prepare['ready']:
@@ -52,8 +53,8 @@ class SuggestTable(Table):
 
     def render_children(self, value):
 
-        pattern = u'<a href="#object={i.pk}">{i}</a>'
-        return mark_safe(u''.join([pattern.format(i=link) for link in value.all()]))
+        pattern = '<a href="#object={i.pk}">{i}</a>'
+        return mark_safe(''.join([pattern.format(i=link) for link in value.all()]))
         #
         # r = ''
         # for i in value:
@@ -63,28 +64,28 @@ class SuggestTable(Table):
 
     def render_parent(self, value):
 
-        pattern = u'<a href="#object={i.pk}">{i}</a>'
-        return mark_safe(u''.join([pattern.format(i=link) for link in value.all()]))
+        pattern = '<a href="#object={i.pk}">{i}</a>'
+        return mark_safe(''.join([pattern.format(i=link) for link in value.all()]))
 
         r = ''
         for i in value:
             detail_url = '#object=' + str(i.pk)
-            r += u'<p><a href="{}">{}</a></p>'.format(detail_url, i)
+            r += '<p><a href="{}">{}</a></p>'.format(detail_url, i)
         return mark_safe(r)
 
     def render_url(self, value, record):
         p = record.prepare
-        cancelform = get_template('suggest/forms/cancel.html').render({'record':record})
+        cancelform = get_template('suggest/forms/cancel.html').render({'record': record})
         if not p['ready']:
             f = "<p> Can't apply changes yet.<br> {} </p>".format(p['exception'])
-            notreadyform = get_template('suggest/forms/not_ready.html').render({'record':record})
+            notreadyform = get_template('suggest/forms/not_ready.html').render({'record': record})
             return mark_safe(notreadyform + cancelform)
 
         if record.state == 'W':
             if record.method == 'DELETE':
-                form = get_template('suggest/forms/delete.html').render({'record':record})
+                form = get_template('suggest/forms/delete.html').render({'record': record})
             else:
-                form = get_template('suggest/forms/main.html').render({'record':record})
+                form = get_template('suggest/forms/main.html').render({'record': record})
             return mark_safe(form + cancelform)
 
         elif record.state == 'A':

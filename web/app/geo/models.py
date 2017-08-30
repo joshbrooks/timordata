@@ -32,12 +32,11 @@ class AdminArea(MP_Lite):
     def selectlist_repr(self):
 
         if 1 < self.pcode < 100:
-            return 'Postu Admin. %s'%self
+            return 'Postu Admin. %s' % self
         elif 100 < self.pcode < 10000:
-            return 'Subdistrito. %s'%self
+            return 'Subdistrito. %s' % self
         elif self.pcode > 10000:
-            return 'Suco. %s'%self
-
+            return 'Suco. %s' % self
 
     # class Meta:
     #     abstract = True
@@ -63,7 +62,7 @@ class AdminArea(MP_Lite):
     "name": "%s",
     "pcode": "%s"
   }
-}'''%(self.envelope.geojson, self.name, self.pcode)
+}''' % (self.envelope.geojson, self.name, self.pcode)
 
 
 class Suco(AdminArea):
@@ -72,7 +71,7 @@ class Suco(AdminArea):
         return 'Suco {}'.format(self.name)
 
     def selectlist_repr(self):
-        return '%s'%self
+        return '%s' % self
 
     @property
     def subdistrict(self):
@@ -88,12 +87,13 @@ class Suco(AdminArea):
         except District.DoesNotExist:
             return None
 
+
 class Subdistrict(AdminArea):
     def __unicode__(self):
         return 'Subdistrict {}'.format(self.name)
 
     def selectlist_repr(self):
-        return '%s'%self
+        return '%s' % self
 
     @property
     def district(self):
@@ -102,12 +102,13 @@ class Subdistrict(AdminArea):
         except District.DoesNotExist:
             return None
 
+
 class District(AdminArea):
     def __unicode__(self):
         return 'Postu Admin. {}'.format(self.name)
 
     def selectlist_repr(self):
-        return '%s'%self
+        return '%s' % self
 
 
 class Road(models.Model):
@@ -126,7 +127,6 @@ class World(models.Model):
     '''
     Countries of the world, not simplified, in EPSG:4326
     '''
-
 
     class Meta:
         ordering = ['name']

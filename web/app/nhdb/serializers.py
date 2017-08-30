@@ -64,15 +64,18 @@ class ProjectTypeSerializer(serializers.ModelSerializer):
         model = ProjectType
         fields = '__all__'
 
+
 class ExcelDownloadFeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExcelDownloadFeedback
         fields = '__all__'
 
+
 class ProjectOrganizationPersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = '__all__'
+
 
 class PlaceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -148,7 +151,7 @@ class SuggestedChangeSerializer(serializers.ModelSerializer):
         '''
         returns = []
 
-        for name, field in self.fields.items():
+        for name, field in list(self.fields.items()):
             if hasattr(field, 'queryset'):
                 m = '.'.join([field.queryset.model._meta.app_label, field.queryset.model._meta.model_name])
                 returns.append((m, self.data.get(name)))

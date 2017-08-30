@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class AlphabetFilter(admin.SimpleListFilter):
     def lookups(self, request, model_admin):
-        return zip(string.uppercase, string.uppercase)
+        return list(zip(string.uppercase, string.uppercase))
 
 
 class NameListFilter(AlphabetFilter):
@@ -73,7 +73,7 @@ class NumberOfStaffFilter(admin.SimpleListFilter):
     def lookups(self, request, model_admin):
         count = ['0', '2', '5', '10', '20', 'gt20']
         labels = ['None', '0 to 2', '2 to 5', '5 to 10', '10 to 20', 'More than 20']
-        return zip(count, labels)
+        return list(zip(count, labels))
 
     def queryset(self, request, queryset):
 
@@ -94,6 +94,7 @@ class NumberOfStaffFilter(admin.SimpleListFilter):
         else:
             return queryset
 
+
 class NumberOfProjectsFilter(admin.SimpleListFilter):
     title = _('No. of Projects')
     parameter_name = 'projects'
@@ -101,7 +102,7 @@ class NumberOfProjectsFilter(admin.SimpleListFilter):
     def lookups(self, request, model_admin):
         count = [0, 2, 5, 10, 20, 'gt20']
         labels = ['None', '0 to 2', '2 to 5', '5 to 10', '10 to 20', 'More than 20']
-        return zip(count, labels)
+        return list(zip(count, labels))
 
     def queryset(self, request, queryset):
 
@@ -130,7 +131,7 @@ class PersonAdmin(admin.ModelAdmin):
     autocomplete_lookup_fields = {
         'fk': ['organization']
     }
-    list_filter = (PersonFirstNameListFilter,)#, PersonLastNameListFilter)
+    list_filter = (PersonFirstNameListFilter,)  # , PersonLastNameListFilter)
 
     # form = PersonInlineAdminForm
 
@@ -147,7 +148,7 @@ class ProjOrgInline(admin.TabularInline):
 
 
 class ProjectAdmin(TranslationAdmin):
-    search_fields = ('name','name_en')
+    search_fields = ('name', 'name_en')
     raw_id_fields = ('sector', 'activity', 'beneficiary')
     autocomplete_lookup_fields = {
         'm2m': ['sector', 'activity', 'beneficiary'],
@@ -167,7 +168,7 @@ class OrganizationAdmin(TranslationAdmin):
         model = ProjectOrganization
         autocomplete_lookup_fields = {
             # 'm2m': ['sector', 'activity', 'beneficiary'],
-            'fk':['project']}
+            'fk': ['project']}
         raw_id_fields = ("project", "organization")
         radio_fields = {'organizationclass': admin.HORIZONTAL}
         extra = 1

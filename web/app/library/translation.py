@@ -8,7 +8,7 @@ class PublicationTranslationOptions(TranslationOptions):
 
 
 class VersionTranslationOptions(TranslationOptions):
-    fields = ('description','title','upload','cover','url')
+    fields = ('description', 'title', 'upload', 'cover', 'url')
 
 
 class PubtypeTranslationOptions(TranslationOptions):

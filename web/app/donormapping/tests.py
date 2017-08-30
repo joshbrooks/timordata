@@ -6,8 +6,10 @@ from suggest.models import Suggest
 from suggest.tests import create_suggestion, affirm
 from suggest.tests import logger
 
+
 def serialize_to_post(text):
     return serialize_dict_to_post(json.loads(text))
+
 
 def serialize_dict_to_post(d):
     _d = {}
@@ -17,8 +19,8 @@ def serialize_dict_to_post(d):
 
 
 # Create your tests here.
-fundingoffer_test_data = {"name":"csrfmiddlewaretoken","value":"0dc9Yijn1WVElLGDW2DvT79ir0X9Gbtt"},{"name":"_method","value":"POST"},{"name":"_url","value":"/rest/donormapping/fundingoffer/"},{"name":"_action","value":"CM"},{"name":"_description","value":"Create a new funding offer in the database"},{"name":"_affected_instance_primary","value":"donormapping_fundingoffer"},{"name":"__formtype","value":"Create Form"},{"name":"_next","value":"/suggest/#object=_suggestion_"},{"name":"title","value":"My FundingOffer"},{"name":"organization","value":"89"},{"name":"amount","value":"131231"},{"name":"description","value":"Hellow"},{"name":"sector","value":"15"},{"name":"sector","value":"20"},{"name":"sector","value":"21"},{"name":"activity","value":"2"},{"name":"activity","value":"5"},{"name":"activity","value":"8"},{"name":"beneficiary","value":"40"},{"name":"beneficiary","value":"45"},{"name":"_name","value":"Josh"},{"name":"_email","value":"josh.vdbroek@gmail.com"},{"name":"_comment","value":""}
-document_data = {"name":"csrfmiddlewaretoken","value":"0dc9Yijn1WVElLGDW2DvT79ir0X9Gbtt"},{"name":"_method","value":"POST"},{"name":"_url","value":"/rest/donormapping/fundingofferdocument/"},{"name":"_action","value":"CM"},{"name":"_description","value":"Create a new funding offer document in the database"},{"name":"_affected_instance_primary","value":"donormapping_fundingofferdocument"},{"name":"__formtype","value":"Create Form"},{"name":"_next","value":"/suggest/#object=_suggestion_"},{"name":"description","value":"test"},{"name":"offer","value":"_1_"},{"name":"_name","value":"Josh"},{"name":"_email","value":"josh.vdbroek@gmail.com"},{"name":"_comment","value":""}
+fundingoffer_test_data = {"name": "csrfmiddlewaretoken", "value": "0dc9Yijn1WVElLGDW2DvT79ir0X9Gbtt"}, {"name": "_method", "value": "POST"}, {"name": "_url", "value": "/rest/donormapping/fundingoffer/"}, {"name": "_action", "value": "CM"}, {"name": "_description", "value": "Create a new funding offer in the database"}, {"name": "_affected_instance_primary", "value": "donormapping_fundingoffer"}, {"name": "__formtype", "value": "Create Form"}, {"name": "_next", "value": "/suggest/#object=_suggestion_"}, {"name": "title", "value": "My FundingOffer"}, {"name": "organization", "value": "89"}, {"name": "amount", "value": "131231"}, {"name": "description", "value": "Hellow"}, {"name": "sector", "value": "15"}, {"name": "sector", "value": "20"}, {"name": "sector", "value": "21"}, {"name": "activity", "value": "2"}, {"name": "activity", "value": "5"}, {"name": "activity", "value": "8"}, {"name": "beneficiary", "value": "40"}, {"name": "beneficiary", "value": "45"}, {"name": "_name", "value": "Josh"}, {"name": "_email", "value": "josh.vdbroek@gmail.com"}, {"name": "_comment", "value": ""}
+document_data = {"name": "csrfmiddlewaretoken", "value": "0dc9Yijn1WVElLGDW2DvT79ir0X9Gbtt"}, {"name": "_method", "value": "POST"}, {"name": "_url", "value": "/rest/donormapping/fundingofferdocument/"}, {"name": "_action", "value": "CM"}, {"name": "_description", "value": "Create a new funding offer document in the database"}, {"name": "_affected_instance_primary", "value": "donormapping_fundingofferdocument"}, {"name": "__formtype", "value": "Create Form"}, {"name": "_next", "value": "/suggest/#object=_suggestion_"}, {"name": "description", "value": "test"}, {"name": "offer", "value": "_1_"}, {"name": "_name", "value": "Josh"}, {"name": "_email", "value": "josh.vdbroek@gmail.com"}, {"name": "_comment", "value": ""}
 
 
 class NewSuggestionTestCase(TestCase):
@@ -52,9 +54,9 @@ class SuggestDocumentTestCase(TestCase):
         """
         orgtype = OrganizationClass(code="LNGO", orgtype='Local NGO')
         orgtype.save()
-        Organization(pk = 89, name='Belun', orgtype = orgtype).save()
-        instance = Suggest.objects.get(affectedinstance__model_name = 'donormapping_fundingofferdocument')
-        related = Suggest.objects.get( affectedinstance__model_name = 'donormapping_fundingoffer')
+        Organization(pk=89, name='Belun', orgtype=orgtype).save()
+        instance = Suggest.objects.get(affectedinstance__model_name='donormapping_fundingofferdocument')
+        related = Suggest.objects.get(affectedinstance__model_name='donormapping_fundingoffer')
         references = instance.references()
         references_instances = [i[1] for i in references]
         try:
@@ -67,4 +69,3 @@ class SuggestDocumentTestCase(TestCase):
             raise
 
         assert ref == related
-

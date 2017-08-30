@@ -15,7 +15,8 @@ from suggest.models import Suggest, AffectedInstance, SuggestUpload
 from suggest.serializers import SuggestSerializer
 from suggest.tables import SuggestTable
 from suggest.forms import SuggestionForm, SuggestDeleteForm, SuggestionDeleteForm
-import logging, sys
+import logging
+import sys
 logger = logging.getLogger('suggest.views')
 logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.StreamHandler(sys.stderr))
@@ -80,7 +81,7 @@ def suggestlist(request, model_name=None, model_pk=None):
     model_pk = model_pk or g('model_pk')
 
     context = {
-        'return_url' : g('return_url'),
+        'return_url': g('return_url'),
         'model_name': model_name,
         'model_pk': model_pk,
         'email': g('email')
@@ -89,7 +90,7 @@ def suggestlist(request, model_name=None, model_pk=None):
     context['filters'] = {
         'model_name': set(AffectedInstance.objects.all().values_list('model_name', flat=True)),
         'action': Suggest._meta.get_field('action').choices,
-        'state' : Suggest._meta.get_field('state').choices,
+        'state': Suggest._meta.get_field('state').choices,
         'user_name': set(Suggest.objects.all().values_list('user_name', flat=True)),
     }
 
@@ -102,11 +103,11 @@ def suggestlist(request, model_name=None, model_pk=None):
 
     if model_name and model_pk:
         try:
-            a, m = model_name.split('_') # "eg nhdb_project" -> ['nhdb', 'project']
+            a, m = model_name.split('_')  # "eg nhdb_project" -> ['nhdb', 'project']
         except ValueError:
-            raise ValueError, "Expected an underscored app_project name eg nhdb_project -> ['nhdb', 'project']. Got %s"%g(model_name)
+            raise ValueError("Expected an underscored app_project name eg nhdb_project -> ['nhdb', 'project']. Got %s" % g(model_name))
         context['model'] = apps.get_model(a, m)
-        context['object'] = context['model'].objects.get(pk = model_pk)
+        context['object'] = context['model'].objects.get(pk=model_pk)
 
         if not context['return_url']:
             try:
@@ -114,7 +115,7 @@ def suggestlist(request, model_name=None, model_pk=None):
             except:
                 pass
 
-    context['tabs'] = {'first':{'disabled':True}}
+    context['tabs'] = {'first': {'disabled': True}}
 
     filters = {
         'affectedinstance__model_name': model_name,
@@ -126,7 +127,7 @@ def suggestlist(request, model_name=None, model_pk=None):
         'is_hidden': False
     }
 
-    for k, v in filters.items():
+    for k, v in list(filters.items()):
         if v is None or v == [] or v == [None]:
             filters.pop(k)
 
@@ -134,7 +135,7 @@ def suggestlist(request, model_name=None, model_pk=None):
         .filter(**filters)\
         .distinct()\
         .prefetch_related('affectedinstance_set',)\
-        .order_by(request.GET.get('sort','-id'))
+        .order_by(request.GET.get('sort', '-id'))
 
     context['table'] = SuggestTable(queryset)
     context['table'].paginate(page=g('page', 1), per_page=g('per_page', 20))
@@ -171,14 +172,13 @@ def suggestdelete(request, pk):
     :param pk:
     :return:
     """
-    context = {'form': SuggestionDeleteForm(instance = Suggest.objects.get(pk=pk))}
+    context = {'form': SuggestionDeleteForm(instance=Suggest.objects.get(pk=pk))}
     return render(request, 'suggest/crispy_form.html', context)
 
 
 @csrf_exempt
 @require_POST
 def suggestcreate(request):
-
     """
     Create a suggested change to information in the database
     This interfaces with the django-rest API to provide a way to "confirm" changes to database data
@@ -220,7 +220,7 @@ def suggestcreate(request):
             model_pk = None
         if model_pk == 'None':
             model_pk = None
-        if isinstance(model_pk, basestring) and model_pk.startswith('_'):
+        if isinstance(model_pk, str) and model_pk.startswith('_'):
             model_pk = None
 
         return AffectedInstance(model_name=model_name, model_pk=model_pk, primary=True)
@@ -239,7 +239,7 @@ def suggestcreate(request):
 
     meta_fields.extend(list(set(request.POST.getlist('has_many'))))
 
-    for key, value in request.POST.items():
+    for key, value in list(request.POST.items()):
 
         if key.startswith('__') or key in meta_fields:
             continue
@@ -277,16 +277,16 @@ def suggestcreate(request):
     if s.method != 'DELETE':
         s.data = json.dumps(data)
     try:
-        s.skip_signal=True
+        s.skip_signal = True
         s.save()
-    except Exception, e:
+    except Exception as e:
         raise
 
-    for field_name, file in request.FILES.items():
+    for field_name, file in list(request.FILES.items()):
         SuggestUpload(suggestion=s, field_name=field_name, upload=file).save()
 
     if not request.POST.getlist('_affected_instance_primary'):
-        raise AssertionError, 'Affected instance should be supplied'
+        raise AssertionError('Affected instance should be supplied')
         pass
 
     if warnings:
@@ -298,7 +298,7 @@ def suggestcreate(request):
     if return_url:
         get_params = {}
         for i in request.POST.getlist('return_param'):
-            get_params[i] = '_%s_'%(s.id)
+            get_params[i] = '_%s_' % (s.id)
         for i in request.POST.getlist('return_param_passthrough'):
             name, value = i.split(' ')
             get_params[name] = value
@@ -315,7 +315,7 @@ def suggestcreate(request):
 
     for field in m.get_fields():
         if field.__class__.__name__ in ['FileField', 'ImageField', 'TranslationFileField', 'TranslationImageField']:
-            clear_file_field = field.name+'-clear'
+            clear_file_field = field.name + '-clear'
             if clear_file_field in request.POST:
                 data[clear_file_field] = True
                 continue
@@ -330,9 +330,9 @@ def suggestcreate(request):
     assert s.state == 'W'
 
     try:
-        s.skip_signal=False
+        s.skip_signal = False
         s.save()
-    except Exception, e:
+    except Exception as e:
         raise
 
     s.save()

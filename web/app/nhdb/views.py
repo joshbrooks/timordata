@@ -28,7 +28,7 @@ from nhdb.tables import OrganizationTable, ProjectTable, PropertyTagTable, Proje
     PersonTable
 from rest_framework.parsers import JSONParser
 from suggest.models import Suggest
-from views_helpers import projectset_filter, orgset_filter
+from .views_helpers import projectset_filter, orgset_filter
 
 import logging
 
@@ -568,7 +568,7 @@ def organizationlist(request, pk=None):
         'type': [{'value': 'orgtype.{}'.format(o.pk), 'label': o} for o in OrganizationClass.objects.all()]
     }
 
-    if g.values() == []:
+    if list(g.values()) == []:
         context['form'] = OrganizationSearchForm()
     else:
         context['form'] = OrganizationSearchForm(request.GET)
@@ -789,7 +789,7 @@ def projectcsv(request):
         row = [p.id, p.name, p.description, p.startdate, p.enddate, p.notes, p.status, p.projecttype]
         parse = enumerate(row)
         for index, content in parse:
-            if isinstance(content, unicode):
+            if isinstance(content, str):
                 row[index] = content.encode('utf-8')
 
         writer.writerow(row)
@@ -832,8 +832,8 @@ def projectcsv_nutrition(request):
         sec_list = ', '.join(p.sector.values_list('name', flat=True))
         person_list = []
         for person in p.person.all():
-            person_list.append(u'{} - {} - {}'.format(person.name, person.contact.email or "No email",
-                                                      person.contact.phone or "No phone"))
+            person_list.append('{} - {} - {}'.format(person.name, person.contact.email or "No email",
+                                                     person.contact.phone or "No phone"))
 
         person_list = ', '.join(person_list)
 
@@ -847,7 +847,7 @@ def projectcsv_nutrition(request):
 
         parse = enumerate(row)
         for index, content in parse:
-            if isinstance(content, unicode):
+            if isinstance(content, str):
                 row[index] = content.encode('utf-8')
 
         writer.writerow(row)

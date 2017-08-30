@@ -230,5 +230,3 @@ STATICFILES_DIRS = ['/home/josh/Desktop/timordata_media/static']
 MEDIA_ROOT = '/home/josh/Desktop/timordata_media/media'
 MEDIA_URL = '/media/'
 # STATIC_ROOT = '/home/josh/Desktop/timordata_media/collect/'
-
-

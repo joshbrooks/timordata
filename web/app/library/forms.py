@@ -16,19 +16,20 @@ from belun.settings import LANGUAGES_FIX_ID
 
 create_author_elements = {
     'data_add_selecturl': '/selecttwo/library/author/name/icontains',
-    'data_add_modalurl':  '/library/form/author/main/',
+    'data_add_modalurl': '/library/form/author/main/',
     'data_add_displayfield': 'name'
 }
 create_organization_elements = {
     'data_add_selecturl': '/selecttwo/nhdb/organization/name/icontains',
-    'data_add_modalurl':  '/nhdb/form/organization/main/',
+    'data_add_modalurl': '/nhdb/form/organization/main/',
     'data_add_displayfield': 'name'
 }
 create_pubtype_elements = {
     'data_add_selecturl': '/selecttwo/library/pubtype/name/icontains',
-    'data_add_modalurl':  '/library/form/pubtype/main/',
+    'data_add_modalurl': '/library/form/pubtype/main/',
     'data_add_displayfield': 'name'
 }
+
 
 class PublicationSearchForm(forms.Form):
 
@@ -45,45 +46,43 @@ class PublicationSearchForm(forms.Form):
         except:
             tag_id_choices = []
         self.fields['tag__id'] = MultipleChoiceField(
-                label=_("Tag"),
-                required=False,
-                choices=tag_id_choices,
-                initial=tag_id_choices
+            label=_("Tag"),
+            required=False,
+            choices=tag_id_choices,
+            initial=tag_id_choices
         )
 
         self.fields['sector__path'] = forms.MultipleChoiceField(
-                required=False,
-                label=_("Sectors"),
-                choices=[(i.lowerpathstring(), i.name) for i in PropertyTag.objects.filter(path__startswith="INV.")]
+            required=False,
+            label=_("Sectors"),
+            choices=[(i.lowerpathstring(), i.name) for i in PropertyTag.objects.filter(path__startswith="INV.")]
         )
 
         self.fields['organization'] = forms.MultipleChoiceField(
-                choices=Publication.objects.all().select_related('organization').values_list(
-                        'organization__pk', 'organization__name').distinct().order_by('organization__name'),
-                required=False,
-                label=_("Organization(s)")
+            choices=Publication.objects.all().select_related('organization').values_list(
+                'organization__pk', 'organization__name').distinct().order_by('organization__name'),
+            required=False,
+            label=_("Organization(s)")
         )
         self.fields['year'] = forms.MultipleChoiceField(
-                required=False,
-                label=_("Year(s)"),
-                choices=Publication.objects.order_by(
-                        'year').values_list('year', 'year').distinct(),
-                help_text="Select two years to find all publications between them",
+            required=False,
+            label=_("Year(s)"),
+            choices=Publication.objects.order_by(
+                'year').values_list('year', 'year').distinct(),
+            help_text="Select two years to find all publications between them",
         )
     text = forms.CharField(required=False)
 
-
-
     pubtype = forms.MultipleChoiceField(
-            required=False,
-            label=_("Type(s)"),
-            # choices=Pubtype.objects.all().excdlude(code='pri').values_list('pk', 'name')
-            choices=[]
+        required=False,
+        label=_("Type(s)"),
+        # choices=Pubtype.objects.all().excdlude(code='pri').values_list('pk', 'name')
+        choices=[]
     )
 
     primary = forms.BooleanField(
-            required=False,
-            label=_("Include primary sources")
+        required=False,
+        label=_("Include primary sources")
     )
     # location = forms.MultipleChoiceField(
     #     label=_('Location'),
@@ -92,9 +91,9 @@ class PublicationSearchForm(forms.Form):
     # )
 
     language_id = forms.MultipleChoiceField(
-            label=_('Language'),
-            required=False,
-            choices=LANGUAGES_FIX_ID
+        label=_('Language'),
+        required=False,
+        choices=LANGUAGES_FIX_ID
     )
 
     # country = forms.MultipleChoiceField(
@@ -113,19 +112,19 @@ class PublicationSearchForm(forms.Form):
         helper.form_method = 'get'
         helper.wrapper_class = 'form-group-sm col-lg-6 col-md-6 col-sm-12 row'
         helper.layout = Layout(
-                Fieldset(_("Search for Publications"),
-                         Field('tag__id', wrapper_class=helper.wrapper_class,
-                               data_selecturl="/selecttwo/library/tag/name/icontains/"),
-                         Field('text', wrapper_class=helper.wrapper_class),
-                         Field('organization', wrapper_class=helper.wrapper_class),
-                         Field('sector__path', wrapper_class=helper.wrapper_class),
-                         # Field('inv', wrapper_class=self.helper.wrapper_class),
-                         Field('pubtype', wrapper_class=helper.wrapper_class),
-                         Field('language_id', wrapper_class=helper.wrapper_class),
-                         Field('year', wrapper_class=helper.wrapper_class, attrs={'maxItems': 2}),
-                         Field('primary', wrapper_class=helper.wrapper_class),
-                         ),
-                Submit('search', u_('Search'), css_class="btn btn-success btn"),
+            Fieldset(_("Search for Publications"),
+                     Field('tag__id', wrapper_class=helper.wrapper_class,
+                           data_selecturl="/selecttwo/library/tag/name/icontains/"),
+                     Field('text', wrapper_class=helper.wrapper_class),
+                     Field('organization', wrapper_class=helper.wrapper_class),
+                     Field('sector__path', wrapper_class=helper.wrapper_class),
+                     # Field('inv', wrapper_class=self.helper.wrapper_class),
+                     Field('pubtype', wrapper_class=helper.wrapper_class),
+                     Field('language_id', wrapper_class=helper.wrapper_class),
+                     Field('year', wrapper_class=helper.wrapper_class, attrs={'maxItems': 2}),
+                     Field('primary', wrapper_class=helper.wrapper_class),
+                     ),
+            Submit('search', u_('Search'), css_class="btn btn-success btn"),
         )
         return helper
 
@@ -150,7 +149,7 @@ class PublicationForm(SuggestionForm):
 
     class Meta:
         model = Publication
-        exclude=[]
+        exclude = []
 
     def __init__(self, publication=None, *args, **kwargs):
         super(PublicationForm, self).__init__(publication, *args, **kwargs)
@@ -159,7 +158,7 @@ class PublicationForm(SuggestionForm):
     @property
     def helper(self):
         helper = self.get_helper()
-        a = [AccordionGroup(n, "name_"+c, "description_"+c) for c, n in LANGUAGES_FIX_ID]
+        a = [AccordionGroup(n, "name_" + c, "description_" + c) for c, n in LANGUAGES_FIX_ID]
         helper.layout.extend([
             'year',
             Field('pubtype',
@@ -178,7 +177,7 @@ class PublicationOrganizationForm(SuggestionForm):
     def __init__(self, publication, *args, **kwargs):
         super(PublicationOrganizationForm, self).__init__(publication, *args, **kwargs)
         self.instance = publication
-        self.set_field_opts(name=['organization'], instance = self.instance)
+        self.set_field_opts(name=['organization'], instance=self.instance)
 
     @property
     def helper(self):
@@ -201,7 +200,7 @@ class PublicationAuthorForm(SuggestionForm):
     def __init__(self, publication=None, *args, **kwargs):
         super(PublicationAuthorForm, self).__init__(_instance=publication, *args, **kwargs)
         self.instance = publication
-        self.set_field_opts(name=['author'], instance = self.instance)
+        self.set_field_opts(name=['author'], instance=self.instance)
 
     @property
     def helper(self):

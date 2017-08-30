@@ -24,6 +24,7 @@ from .tables import FundingOfferTable, FundingSurveyTable, DonorSurveyResponseTa
 from .admin import FundingOfferAdmin
 from datetime import datetime
 
+
 def fundingofferlist(request):
 
     #
@@ -45,10 +46,10 @@ def fundingofferlist(request):
     }
 
     context['tabs'] = {
-        'first':{'name':'About'},
-        'second':{},
-        'third':{},
-        'fourth':{}
+        'first': {'name': 'About'},
+        'second': {},
+        'third': {},
+        'fourth': {}
     }
 
     filter_parameter = 'q'
@@ -59,17 +60,17 @@ def fundingofferlist(request):
 
     qs = FundingOffer.objects.all()
     if get.getlist('organization'):
-        qs = qs.filter(organization__pk__in =get.getlist('organization') )
+        qs = qs.filter(organization__pk__in=get.getlist('organization'))
     for _f in get.getlist(filter_parameter):
 
         if _f.lower().startswith('inv.'):
-            inv = inv|Q(sector__path=_f.upper())
+            inv = inv | Q(sector__path=_f.upper())
         elif _f.lower().startswith('act.'):
-            act = act|Q(activity__path=_f.upper())
+            act = act | Q(activity__path=_f.upper())
         elif _f.lower().startswith('ben.'):
-            ben = ben|Q(beneficiary__path=_f.upper())
+            ben = ben | Q(beneficiary__path=_f.upper())
         elif _f.lower().startswith('district'):
-            district = district|Q(place__path__startswith=_f.split('.')[1].upper())
+            district = district | Q(place__path__startswith=_f.split('.')[1].upper())
 
     qs = qs.filter(inv).filter(ben).\
         filter(act).filter(district).distinct()
@@ -77,16 +78,16 @@ def fundingofferlist(request):
     if request.GET.get('expired') != 'True':
         qs = qs.exclude(application_end_date__lt=datetime.today().date())
 
-    qs = qs.prefetch_related('activity','beneficiary','sector','organization')
+    qs = qs.prefetch_related('activity', 'beneficiary', 'sector', 'organization')
 
     context['table'] = FundingOfferTable(qs)
 
-
     return render(request, 'donormapping/fundingoffer_list.html', context)
+
 
 class DonorSurveyResponseView(SingleTableView):
     model = DonorSurveyResponse
-    table_class=DonorSurveyResponseTable
+    table_class = DonorSurveyResponseTable
 
 
 class FundingOfferCreate(CreateView):
@@ -136,7 +137,7 @@ def get_model_choice_counts(field_object, include_zero=True):
 
     counts = modelclass.objects.all().values_list(field_object.name).annotate(Count(field_object.name))
     if not counts:
-        return [None,None]
+        return [None, None]
     label_codes, values = list(zip(*counts))  # Creates two separate lists: label and values
 
     if not choices:
@@ -154,6 +155,7 @@ def get_model_choice_counts(field_object, include_zero=True):
             labels.append(label)
             data.append(count)
     return data, labels
+
 
 class Flot():
     '''
@@ -181,7 +183,6 @@ class Flot():
 
         else:
             return None
-
 
     @property
     def data(self):
@@ -269,7 +270,6 @@ class FundingSurveyList(SingleTableView):
             data_lists.append(data)
             question_list.append(question_text)
 
-
         for parent in label_lists:
             parent = ','.join(parent)
             if parent not in list(response.keys()):
@@ -301,11 +301,11 @@ def form(request, model, form):
         m_name = m._meta.model_name
 
         if g(m_name):
-            args[m_name] = m.objects.get(pk = g(m_name))
+            args[m_name] = m.objects.get(pk=g(m_name))
 
         # Use an underscore to indicate a suggestion ID
-        if g('_'+m_name):
-            args[m_name] = Suggest.objects.get(pk = g('_'+m_name))
+        if g('_' + m_name):
+            args[m_name] = Suggest.objects.get(pk=g('_' + m_name))
 
     # if model in args:
     #     args['instance'] = args[model]

@@ -34,44 +34,44 @@ from geo.models import AdminArea as Place, AdminArea
 
 
 import MySQLdb
-from mappings import Mapping
+from .mappings import Mapping
 
 m = Mapping()
 
 # New Data to be loaded:
 # Target beneficiaries
 
-property_queries = {'projectpartners':"""
+property_queries = {'projectpartners': """
 SELECT DISTINCT fkProjectId, fkPartnerOrganizationId FROM tblprojectpartners
 WHERE fkProjectId IN (SELECT pkProjectId from tblnewprojects)
 AND fkPartnerOrganizationId IN (SELECT pkOrganizationId from tblneworganizations);""",
-                    'ben':"""
+                    'ben': """
 SELECT DISTINCT fkProjectID, fkTargetBeneficiariesId from tblprojecttargetbeneficiaries
 where fkProjectID is not null
 and fkProjectId in (SELECT pkProjectId from tblnewprojects)
 and fkTargetBeneficiariesId is not null
 """,
                     'act':
-"""
+                    """
 SELECT DISTINCT fkProjectID, fkMainActivitieId from tblprojectmainactivities
 where fkProjectID is not null
 and fkProjectId in (SELECT pkProjectId from tblnewprojects)
 and fkMainActivitieId is not null
 """,
-                    'inv':"""
+                    'inv': """
 select fkProjectId, fkAreaOfInvolvmentsId
 from tblprojectareaofinvolvments
 where fkProjectId is not null
 and fkProjectId in (SELECT pkProjectId from tblnewprojects)
 and fkAreaOfInvolvmentsId is not null"""
 
-}
+                    }
 
 dbsettings = {
     'user': 'root',
     'passwd': 'duck',
     'db': 'development',
-    'host': 'source' # host_ip
+    'host': 'source'  # host_ip
 }
 
 db = MySQLdb.connect(**dbsettings)
@@ -88,7 +88,7 @@ def _d(string):
     else:
         try:
             return string.decode("latin-1").encode("utf-8")
-        except Exception, e:
+        except Exception as e:
             logging.warn('Ran into a string which could not be handled - {}'.format(string))
 
 
@@ -120,10 +120,10 @@ def mysql_timestamp_to_date(timestamp):
     except:
         try:
             return datetime.datetime.strptime(datestring, dateformat_).date()
-        except Exception, e:
+        except Exception as e:
             try:
                 return datetime.datetime.strptime(datestring, dateformat__).date()
-            except Exception, e:
+            except Exception as e:
                 logging.warn('{} Ran into a timestamp which could not be handled - {}. Blank date returned.'.format(e, timestamp))
                 return None
 
@@ -146,19 +146,19 @@ def setup():
 
     logging.info('Starting setup')
 
-    for key, kw in m.orgtype.items():
+    for key, kw in list(m.orgtype.items()):
         oc, created = OrganizationClass.objects.get_or_create(code=kw['code'])
         if created:
             oc.orgtype = kw.get('orgtype')
             oc.save()
 
-    for key, kw in m.projectstatus.items():
+    for key, kw in list(m.projectstatus.items()):
         ps, created = ProjectStatus.objects.get_or_create(code=kw.get('code'))
         if created:
             ps.description = kw.get('description')
             ps.save()
 
-    for key, kw in m.projectorganizationclass.items():
+    for key, kw in list(m.projectorganizationclass.items()):
         pc, created = ProjectOrganizationClass.objects.get_or_create(code=kw.get('code'))
         if created:
             pc.description = kw.get('description')
@@ -187,19 +187,19 @@ def importorganizations():
             organization, created = Organization.objects.get_or_create(pk=row.get('pkOrganizationId'), orgtype=orgtype)
             organization.pk = row.get('pkOrganizationId')
             organization.name = row.get('name').decode("latin-1").encode("utf-8")
-            organization.phoneprimary=row.get('primaryPhone')
-            organization.phonesecondary=row.get('secondaryPhone')
-            organization.fax=row.get('faxNumber')
-            organization.email=row.get('email')
-            organization.web=row.get('web')
-            organization.facebook=row.get('facebook')
-            organization.verified=mysql_timestamp_to_date(row.get('verified'))
+            organization.phoneprimary = row.get('primaryPhone')
+            organization.phonesecondary = row.get('secondaryPhone')
+            organization.fax = row.get('faxNumber')
+            organization.email = row.get('email')
+            organization.web = row.get('web')
+            organization.facebook = row.get('facebook')
+            organization.verified = mysql_timestamp_to_date(row.get('verified'))
 
             if row.get('OrgStatus') == 2:
                 organization.active = False
 
             organization.save()
-        except Exception, e:
+        except Exception as e:
             logging.warn("Experienced an error creating Organization /n {}".format(row))
             logging.warn(e)
         row = FetchOneAssoc(c)
@@ -212,21 +212,21 @@ def importpersons():
     for pk, first, last, name, title, org_id, phone, mobile, email, verified in c.fetchall():
 
         try:
-            organization_id = Organization.objects.get(pk = org_id)
+            organization_id = Organization.objects.get(pk=org_id)
         except Organization.DoesNotExist:
             organization_id = None
 
         if phone:
 
             if mobile:
-                phone = mobile+','+phone
+                phone = mobile + ',' + phone
 
         else:
 
             if mobile:
                 phone = mobile
 
-        p, created = Person.objects.get_or_create(pk = pk)
+        p, created = Person.objects.get_or_create(pk=pk)
         p.name = _d(name)
         p.first = _d(first)
         p.last = _d(last)
@@ -237,7 +237,7 @@ def importpersons():
         p.organization_id = organization_id
         try:
             p.save()
-        except Exception, e:
+        except Exception as e:
             logging.warn("Experienced an error creating Person /n {}".format((pk, first, last, name, title, org_id)))
             logging.warn(e)
 
@@ -281,7 +281,7 @@ def importprojectpartners():
                 organization_id=oid, project_id=pid, organizationclass_id='A'
             )
             po.save()
-        except Exception, e:
+        except Exception as e:
             logging.warn(e)
 
 
@@ -298,9 +298,9 @@ def projectproperties():
             tag = PropertyTag.objects.get(path=d['path'])
             Project.objects.get(pk=pid).beneficiary.add(tag)
 
-        except Exception, e:
+        except Exception as e:
             logging.warn(e)
-            logging.warn('Project id {}, Beneficary ID {}'.format(pid,benid))
+            logging.warn('Project id {}, Beneficary ID {}'.format(pid, benid))
 
     c.execute(property_queries['act'])
 
@@ -312,9 +312,9 @@ def projectproperties():
                 continue
             tag = PropertyTag.objects.get(path=d['path'])
             Project.objects.get(pk=pid).activity.add(tag)
-        except Exception, e:
+        except Exception as e:
             logging.warn(e)
-            logging.warn('Project id {}, Activity ID {}'.format(pid,actid))
+            logging.warn('Project id {}, Activity ID {}'.format(pid, actid))
 
     c.execute(property_queries['inv'])
 
@@ -326,9 +326,10 @@ def projectproperties():
                 continue
             tag = PropertyTag.objects.get(path=d['path'])
             Project.objects.get(pk=pid).sector.add(tag)
-        except Exception, e:
+        except Exception as e:
             logging.warn(e)
-            logging.warn('Project id {}, Inv ID {}'.format(pid,invid))
+            logging.warn('Project id {}, Inv ID {}'.format(pid, invid))
+
 
 def projectpersons():
     ProjectPerson.objects.all().delete()
@@ -347,10 +348,9 @@ def projectpersons():
         try:
             ProjectPerson.objects.get_or_create(project_id=project_id, person_id=person_id, is_primary=primary)
             person_ids.append(person_id)
-        except Exception, e:
+        except Exception as e:
             logging.warn(e)
             continue
-
 
 
 def coalesce(test_values, valid_values):
@@ -398,33 +398,33 @@ def organizationplace():
     SELECT fkOrganizationId, fkSucosCode, fkSubDistrictCode,fkDistrictCode, discription, primaryPhone, email FROM tblorgaddresses, tblneworganizations WHERE fkOrganizationId = pkOrganizationId
     AND fkOrganizationId IN (SELECT pkOrganizationId from tblneworganizations)
     '''
-    )
+              )
 
     for oid, pcodea, pcodeb, pcodec, desc, phone, email in c.fetchall():
-        place_id=coalesce((pcodea, pcodeb, pcodec), m.pcodes)
+        place_id = coalesce((pcodea, pcodeb, pcodec), m.pcodes)
         try:
-            point = AdminArea.objects.get(pk = place_id).geom.centroid
-        except AdminArea.DoesNotExist, e:
+            point = AdminArea.objects.get(pk=place_id).geom.centroid
+        except AdminArea.DoesNotExist as e:
             point = GEOSGeometry('POINT(125.653 8.405)'),
             logging.warn('{} {} {}'.format(e, oid, 'This organization needs its location updated'))
             continue
 
         try:
-            organization = Organization.objects.get(pk = oid)
-        except Organization.DoesNotExist, e:
+            organization = Organization.objects.get(pk=oid)
+        except Organization.DoesNotExist as e:
             logging.warn('{} {} {}'.format(e, oid, 'This organization is not in the new database'))
             continue
 
         try:
             OrganizationPlace(
-                organization = organization,
-                description = _d(desc),
-                point = point,
-                phone = phone,
-                email = email
+                organization=organization,
+                description=_d(desc),
+                point=point,
+                phone=phone,
+                email=email
             ).save()
 
-        except Exception, e:
+        except Exception as e:
             logging.warn('{} {} {}'.format(e, oid, desc))
 
 

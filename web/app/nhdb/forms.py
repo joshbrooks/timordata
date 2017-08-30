@@ -127,7 +127,7 @@ class OrganizationDescriptionForm(SuggestionForm):
         current_text = getattr(self.organization, 'description_' + self._language)
 
         helper.layout.extend([
-            HTML(u'<p><b>Currently:</b> %s</p>' % (current_text)),
+            HTML('<p><b>Currently:</b> %s</p>' % (current_text)),
             Field('description_{}'.format(self._language)),
         ])
 
@@ -189,7 +189,7 @@ def get_adminarea_list():
     placechoices = []
     try:
         for place in apps.get_model('geo', 'adminarea').objects.order_by('path').values_list('pk', 'name'):
-            placechoices.append((place[0], mark_safe(u'{}{}'.format(indent(place[1]), place[1]))))
+            placechoices.append((place[0], mark_safe('{}{}'.format(indent(place[1]), place[1]))))
     except:
         pass
     return placechoices
@@ -215,8 +215,8 @@ class OrganizationSearchForm(forms.Form):
 
         helper.layout = Layout(
 
-                Div(Fieldset(_('Search Organizations'),
-                             HTML('''<div class="btn-group"  data-toggle="button">
+            Div(Fieldset(_('Search Organizations'),
+                         HTML('''<div class="btn-group"  data-toggle="button">
                               <a class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="collapse" href="#div_id_act">
                                 Activities
                               </a>
@@ -236,17 +236,17 @@ class OrganizationSearchForm(forms.Form):
                                 Organization name
                               </a>
                             </div>'''),
-                             Field('name', wrapper_class="collapse"),
-                             Field('act', data_selecttwo='true', css_class='select2_auto', wrapper_class="collapse"),
-                             Field('inv', data_selecttwo='true', css_class='select2_auto', wrapper_class="collapse"),
-                             Field('ben', data_selecttwo='true', css_class='select2_auto', wrapper_class="collapse"),
+                         Field('name', wrapper_class="collapse"),
+                         Field('act', data_selecttwo='true', css_class='select2_auto', wrapper_class="collapse"),
+                         Field('inv', data_selecttwo='true', css_class='select2_auto', wrapper_class="collapse"),
+                         Field('ben', data_selecttwo='true', css_class='select2_auto', wrapper_class="collapse"),
 
-                             Field('orgtype', wrapper_class="collapse"),
-                             Field('pcode', wrapper_class="collapse"),
-                             # Field('inactive'),
-                             ),
-                    Submit('search', u_('Search'), css_class="btn btn-success btn"),
-                    )
+                         Field('orgtype', wrapper_class="collapse"),
+                         Field('pcode', wrapper_class="collapse"),
+                         # Field('inactive'),
+                         ),
+                Submit('search', u_('Search'), css_class="btn btn-success btn"),
+                )
         )
 
         return helper
@@ -257,14 +257,14 @@ class OrganizationSearchForm(forms.Form):
     orgtype = forms.MultipleChoiceField(label=_('Organization Type'), required=False)
 
     name = forms.CharField(
-            required=False,
-            label='Name')
+        required=False,
+        label='Name')
 
     pcode = forms.MultipleChoiceField(
-            required=False,
-            label=_("Place"),
+        required=False,
+        label=_("Place"),
 
-            help_text="Limit the search to active organizations in these places",
+        help_text="Limit the search to active organizations in these places",
     )
 
 
@@ -302,7 +302,7 @@ class ProjectpropertiesForm(SuggestionForm):
             Hidden('has_many', 'sector'),
             Hidden('has_many', 'beneficiary'),
             FormActions(
-                    Submit('__action', 'Update'),
+                Submit('__action', 'Update'),
             )
         ])
 
@@ -375,7 +375,7 @@ def translation_accordion(field_list=(), instance=None):
     for language_code, lanuage_name in LANGUAGES_FIX_ID:
         fields = []
         for field_name in field_list:
-            field_name_trans = u'{}_{}'.format(field_name, language_code)
+            field_name_trans = '{}_{}'.format(field_name, language_code)
             if instance:
                 fields.append(Field(field_name_trans, value=getattr(instance, field_name_trans, '') or ''))
             else:
@@ -472,9 +472,9 @@ class BaseSuggestionForm(forms.Form):
         self.helper.form_class = 'form-inline suggestionform-base'
 
         self.helper.layout = Layout(
-                'name',
-                'email',
-                'comment',
+            'name',
+            'email',
+            'comment',
         )
         self.helper.field_template = 'bootstrap3/layout/inline_field.html'
 
@@ -495,7 +495,7 @@ class ProjectorganizationForm(SuggestionForm):
         self.organization = organization
 
         if projectorganization and isinstance(projectorganization, Suggest):
-            for i, j in projectorganization.data_jsonify().items():
+            for i, j in list(projectorganization.data_jsonify().items()):
                 if i in self.fields:
                     self.fields[i].initial = j
 
@@ -514,8 +514,8 @@ class ProjectorganizationForm(SuggestionForm):
 
         if self.project is None:
             helper.layout.append(
-                    Field('project', data_selecturl='/selecttwo/nhdb/project/name/icontains', placeholder='project',
-                          style='width:75%;'))
+                Field('project', data_selecturl='/selecttwo/nhdb/project/name/icontains', placeholder='project',
+                      style='width:75%;'))
 
         if self.organization is None:
             helper.layout.append(Field('organization', data_selecturl='/selecttwo/nhdb/organization/name/icontains',
@@ -539,60 +539,60 @@ class ProjectSearchForm(forms.Form):
         super(ProjectSearchForm, self).__init__(*args, **kwargs)
 
         self.fields['inv'] = forms.MultipleChoiceField(
-                required=False,
-                label=_('Sector(s)'),
-                choices=[(i.lowerpathstring(), i.name) for i in PropertyTag.objects.filter(path__startswith="INV.")]
+            required=False,
+            label=_('Sector(s)'),
+            choices=[(i.lowerpathstring(), i.name) for i in PropertyTag.objects.filter(path__startswith="INV.")]
         )
         self.fields['ben'] = forms.MultipleChoiceField(
-                required=False,
-                label=_("Beneficiaries"),
-                choices=[(i.lowerpathstring(), i.name) for i in PropertyTag.objects.filter(path__startswith="BEN.")]
+            required=False,
+            label=_("Beneficiaries"),
+            choices=[(i.lowerpathstring(), i.name) for i in PropertyTag.objects.filter(path__startswith="BEN.")]
         )
         self.fields['act'] = forms.MultipleChoiceField(
-                required=False,
-                label=_("Activities"),
-                choices=[(i.lowerpathstring(), i.name) for i in PropertyTag.objects.filter(path__startswith="ACT.")]
+            required=False,
+            label=_("Activities"),
+            choices=[(i.lowerpathstring(), i.name) for i in PropertyTag.objects.filter(path__startswith="ACT.")]
         )
 
     name = forms.CharField(
-            required=False,
-            max_length=100,
-            label="Search text"
+        required=False,
+        max_length=100,
+        label="Search text"
     )
     status = forms.MultipleChoiceField(
-            required=False,
-            label="Status",
-            choices=getchoices(ProjectStatus, 'code', 'description')
+        required=False,
+        label="Status",
+        choices=getchoices(ProjectStatus, 'code', 'description')
     )
 
     organization = forms.TypedChoiceField(
-            required=False
+        required=False
     )
 
     orgtype = forms.MultipleChoiceField(
-            required=False,
-            label="Organization types",
-            choices=getchoices(OrganizationClass, 'pk', 'orgtype')
-            # choices=[(i.pk, i.orgtype) for i in OrganizationClass.objects.all()]
+        required=False,
+        label="Organization types",
+        choices=getchoices(OrganizationClass, 'pk', 'orgtype')
+        # choices=[(i.pk, i.orgtype) for i in OrganizationClass.objects.all()]
     )
 
     enddateafter = forms.DateField(
-            initial=datetime.strftime(datetime.today(), '%Y-%m-%d'),
-            required=False,
-            label="Ends after date")
+        initial=datetime.strftime(datetime.today(), '%Y-%m-%d'),
+        required=False,
+        label="Ends after date")
 
     startdateafter = forms.DateField(
-            required=False,
-            label="Starts after date")
+        required=False,
+        label="Starts after date")
 
     nullenddate = forms.BooleanField(required=False, label="Allow empty end date?")
     nullstartdate = forms.BooleanField(required=False, label="Allow empty start date?")
 
     pcode = forms.MultipleChoiceField(
-            required=False,
-            label=_("Place"),
-            choices=get_adminarea_list(),
-            help_text="Limit the search to active organizations in these districts",
+        required=False,
+        label=_("Place"),
+        choices=get_adminarea_list(),
+        help_text="Limit the search to active organizations in these districts",
     )
 
     @property
@@ -608,20 +608,20 @@ class ProjectSearchForm(forms.Form):
 
         helper.layout = Layout(
 
-                Div(Fieldset(_('Search Projects'),
-                             Field('name', wrapper_class=wc),
-                             Field('act', css_class="", wrapper_class=wc),
-                             Field('inv', css_class="", wrapper_class=wc),
-                             Field('ben', css_class="", wrapper_class=wc),
-                             Field('inactive', css_class="", wrapper_class=wc),
-                             Field('status', css_class="", wrapper_class=wc),
-                             Field('orgtype', css_class="applyselectize", wrapper_class=wc),
-                             Field('enddateafter', css_class="datepicker", wrapper_class=wc),
-                             Field('startdateafter', css_class="datepicker", wrapper_class=wc),
-                             Field('pcode', wrapper_class=wc)
-                             ),
-                    Submit('search', u_('Search'), css_class="btn btn-success btn"),
-                    )
+            Div(Fieldset(_('Search Projects'),
+                         Field('name', wrapper_class=wc),
+                         Field('act', css_class="", wrapper_class=wc),
+                         Field('inv', css_class="", wrapper_class=wc),
+                         Field('ben', css_class="", wrapper_class=wc),
+                         Field('inactive', css_class="", wrapper_class=wc),
+                         Field('status', css_class="", wrapper_class=wc),
+                         Field('orgtype', css_class="applyselectize", wrapper_class=wc),
+                         Field('enddateafter', css_class="datepicker", wrapper_class=wc),
+                         Field('startdateafter', css_class="datepicker", wrapper_class=wc),
+                         Field('pcode', wrapper_class=wc)
+                         ),
+                Submit('search', u_('Search'), css_class="btn btn-success btn"),
+                )
         )
 
         return helper
@@ -701,7 +701,6 @@ class CollapsibleTranslationFieldset():
         self.default_fields = default_fields
 
     def toggles(self):
-
         """
         Return an HTML button for a Layout object which will toggle a fieldset when pressed
         :param title:
@@ -711,8 +710,8 @@ class CollapsibleTranslationFieldset():
         returns = []
         for code, label in self.languages:
             returns.append(HTML(
-                    '''<a class="btn btn-xs btn-default" data-toggle="collapse" href="#collapsible-{}" aria-expanded="false">{} </a>'''.format(
-                            code, label)))
+                '''<a class="btn btn-xs btn-default" data-toggle="collapse" href="#collapsible-{}" aria-expanded="false">{} </a>'''.format(
+                    code, label)))
         return returns
 
     def fieldsets(self, collapsible=True, css_class="row col-md-4"):
@@ -756,8 +755,8 @@ class PropertyTagForm(SuggestionForm):
         helper = self.get_helper()
         helper.form_class = 'form-inline'
         helper.layout.extend(
-                Field('path'),
-                Accordion(*[AccordionGroup(n, "name_" + c, "description_" + c) for c, n in LANGUAGES_FIX_ID])
+            Field('path'),
+            Accordion(*[AccordionGroup(n, "name_" + c, "description_" + c) for c, n in LANGUAGES_FIX_ID])
         )
         return helper
 
@@ -789,7 +788,7 @@ class ProjectPersonForm(SuggestionForm):
         helper.layout.append(Field('project', data_selecturl='/selecttwo/nhdb/project/name/icontains',
                                    wrapper_class=self.get_wrapper_class('project')))
         helper.layout.append(
-                Field('person', data_selecturl='/selecttwo/nhdb/person/name/icontains', **create_person_elements))
+            Field('person', data_selecturl='/selecttwo/nhdb/person/name/icontains', **create_person_elements))
         self.fields['person'].choices = []
         return helper
 
@@ -880,6 +879,5 @@ class ProjectTypeForm(SuggestionForm):
         helper.layout.extend(['description'])
         helper.layout.extend([])
         return helper
-
 
         # ---------------- Auto Generated Forms ---------------

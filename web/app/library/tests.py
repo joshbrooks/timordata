@@ -36,11 +36,12 @@ class Fox(object):
     '''
     Fox is an abstraction around Selenium web testing
     '''
+
     def __init__(self):
         try:
             self.fox = WebDriver()
         except:
-            print "No web server detected; skipping web tests"
+            print("No web server detected; skipping web tests")
             self.fox = None
 
     def login(self, page='/login', name='josh', password='josh', t=5):
@@ -126,7 +127,7 @@ class FoxCase(StaticLiveServerTestCase):
         except RuntimeError:
             cls.fox = None
             return
-        u = User.objects.create_user('josh', 'josh.vdbroek@gmail.com','test')
+        u = User.objects.create_user('josh', 'josh.vdbroek@gmail.com', 'test')
         u.is_staff = True
         u.save()
 
@@ -154,7 +155,7 @@ class SeleniumPublicationInteractionTestCase(FoxCase):
             fox.get('%s%s' % (self.live_server_url, '/library/publication/#object=1'))
 
             fox.click(css_author)
-            if isinstance(names, basestring):
+            if isinstance(names, str):
                 names = [names]
             for name in names:
                 fox.click(add_author)
@@ -182,7 +183,7 @@ class SeleniumPublicationInteractionTestCase(FoxCase):
             # Load the nearest
             # val('#div_id_organization .select2-search__field', 'bel')
 
-            if isinstance(names, basestring):
+            if isinstance(names, str):
                 names = [names]
             for name in names:
                 fox.click(add_author)
@@ -194,14 +195,13 @@ class SeleniumPublicationInteractionTestCase(FoxCase):
         add_author(['Joshua Brooks', 'New Author'])
 
 
-
 class VersionThumbnailsTestCase(StaticLiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
         super(VersionThumbnailsTestCase, cls).setUpClass()
         cls.selenium = WebDriver()
-        u = User.objects.create_user('josh', 'josh.vdbroek@gmail.com','test')
+        u = User.objects.create_user('josh', 'josh.vdbroek@gmail.com', 'test')
         u.is_staff = True
         u.save()
 
@@ -212,13 +212,13 @@ class VersionThumbnailsTestCase(StaticLiveServerTestCase):
 
     def testVersionThumbnail(self):
         v = models.Version(
-            publication = models.Publication.objects.create(
-                    name = 'test', pubtype = models.Pubtype.objects.create(
-                            code='RPT', name="Report")
+            publication=models.Publication.objects.create(
+                name='test', pubtype=models.Pubtype.objects.create(
+                    code='RPT', name="Report")
             ),
-            upload_en = File(file('/home/josh/Documents/test.png')),
-            upload_tet = File(file('/home/josh/Documents/test.png')),
-            cover_pt = File(file('/home/josh/Documents/test.png'))
+            upload_en=File(file('/home/josh/Documents/test.png')),
+            upload_tet=File(file('/home/josh/Documents/test.png')),
+            cover_pt=File(file('/home/josh/Documents/test.png'))
         )
         v.save()
 
@@ -254,7 +254,7 @@ class FormsTestCase(TestCase):
         PropertyTag.objects.create(path="INV.SEC", name="Security")
         World.objects.create(name="Timor Leste", iso3="TLS").save()
 
-        u = User.objects.create_user('josh', 'josh.vdbroek@gmail.com','test')
+        u = User.objects.create_user('josh', 'josh.vdbroek@gmail.com', 'test')
         u.is_staff = True
         u.save()
 
@@ -263,8 +263,8 @@ class FormsTestCase(TestCase):
         c.login(username='josh', password='test')
         render_crispy_form(forms.PubtypeForm())
         affirm(create_suggestion(data={
-            'code':'RPT',
-            'name':'Report'
+            'code': 'RPT',
+            'name': 'Report'
         }), client=c)
 
     def test_searchform(self):
@@ -275,10 +275,10 @@ class FormsTestCase(TestCase):
         #     f = PublicationDeleteForm()
 
         publication = models.Publication.objects.create(
-                name='Test',
-                pubtype=models.Pubtype.objects.create(
-                        code="REP",
-                        name="Report")
+            name='Test',
+            pubtype=models.Pubtype.objects.create(
+                code="REP",
+                name="Report")
         )
 
         f = forms.PublicationDeleteForm(publication=publication)
@@ -317,10 +317,10 @@ class FormsTestCase(TestCase):
             f = forms.VersionForm()
 
         f = forms.VersionForm(publication=models.Publication.objects.create(
-                name='Test',
-                pubtype=models.Pubtype.objects.create(
-                        code="REP",
-                        name="Report")
+            name='Test',
+            pubtype=models.Pubtype.objects.create(
+                code="REP",
+                name="Report")
         )
         )
         assert f.helper
@@ -328,11 +328,11 @@ class FormsTestCase(TestCase):
 
     def test_publicationauthor_form_with_publication(self):
 
-        f = forms.PublicationAuthorForm(publication = models.Publication.objects.create(
-                name='Test publication',
-                pubtype=models.Pubtype.objects.create(
-                    code="REP",
-                    name="Report")
+        f = forms.PublicationAuthorForm(publication=models.Publication.objects.create(
+            name='Test publication',
+            pubtype=models.Pubtype.objects.create(
+                code="REP",
+                name="Report")
         )
         )
         assert f.helper
@@ -343,12 +343,12 @@ class FormsTestCase(TestCase):
             f = forms.VersionForm(publication=None)
 
         v = models.Version.objects.create(
-                publication=models.Publication.objects.create(
-                        name='Test',
-                        pubtype=models.Pubtype.objects.create(
-                                code="REP",
-                                name="Report")
-                ), description='Test'
+            publication=models.Publication.objects.create(
+                name='Test',
+                pubtype=models.Pubtype.objects.create(
+                    code="REP",
+                    name="Report")
+            ), description='Test'
         )
 
         f = forms.VersionForm(version=v)
@@ -358,44 +358,44 @@ class FormsTestCase(TestCase):
     def test_add_author_suggestion(self):
 
         v = models.Version.objects.create(
-                publication=models.Publication.objects.create(
-                        name='Test',
-                        pubtype=models.Pubtype.objects.create(
-                                code="REP",
-                                name="Report")
-                ), description='Test'
+            publication=models.Publication.objects.create(
+                name='Test',
+                pubtype=models.Pubtype.objects.create(
+                    code="REP",
+                    name="Report")
+            ), description='Test'
         )
 
         p = v.publication
 
         p.author.add(models.Author.objects.create(name="Josh", displayname="Josh"))
         submission = {
-            '_url':'/rest/library/author/',
-            '_action':'CM',
-            '_description':'Create a new author in the database',
-            '_affected_instance_primary':'library_author',
-            '__formtype':'Create Form',
-            '_next':'/suggest/#object=_suggestion_',
-            'name':'New Author',
-            'displayname':'Author, New',
-            '_name':'Josh',
-            '_email':'josh.vdbroek@gmail.com',
-            '_comment':''}
+            '_url': '/rest/library/author/',
+            '_action': 'CM',
+            '_description': 'Create a new author in the database',
+            '_affected_instance_primary': 'library_author',
+            '__formtype': 'Create Form',
+            '_next': '/suggest/#object=_suggestion_',
+            'name': 'New Author',
+            'displayname': 'Author, New',
+            '_name': 'Josh',
+            '_email': 'josh.vdbroek@gmail.com',
+            '_comment': ''}
 
         suggest = create_suggestion(submission)
-        
+
         suggest_another = create_suggestion({
-            '_method':'PATCH',
-            '_url':'/rest/library/publication/%s/'%(p.pk),
-            '_action':'UM',
-            '_description':'Modify a publication (%s) in the database'%(p),
-            '__formtype':'Update Form',
-            'has_many':('organization','author','country','location'),
-            '_affected_instance_primary':'library_publication %s'%(p.pk),
-            'author':('13','_%s_'%(suggest.pk),),
-            '_name':'Josh',
-            '_email':'josh.vdbroek@gmail.com',
-            '_comment':''})
+            '_method': 'PATCH',
+            '_url': '/rest/library/publication/%s/' % (p.pk),
+            '_action': 'UM',
+            '_description': 'Modify a publication (%s) in the database' % (p),
+            '__formtype': 'Update Form',
+            'has_many': ('organization', 'author', 'country', 'location'),
+            '_affected_instance_primary': 'library_publication %s' % (p.pk),
+            'author': ('13', '_%s_' % (suggest.pk),),
+            '_name': 'Josh',
+            '_email': 'josh.vdbroek@gmail.com',
+            '_comment': ''})
 
         # Fire off a Suggestion for a new Author
 
@@ -404,15 +404,16 @@ class PublicationAuthorTestCase(TestCase):
     '''
     Check the creation and modification of a Publication Suggestion
     '''
+
     def test_suggested_publication_forms(self):
         from library.forms import PublicationOrganizationForm, PublicationForm, PublicationAuthorForm
         s = Suggest(
-            data = '{"description_id": null, "description_tet": null, "year": "2015", "description_en": null, "pubtype": "BK", "name_tet": null, "name_id": null, "description_pt": null, "name_en": "The Alo Release", "name_pt": null}',
-            url = "/rest/library/publication/"  # Django-REST API URL to push the change to when it's approved
-            )
-        s.skip_signal=True
+            data='{"description_id": null, "description_tet": null, "year": "2015", "description_en": null, "pubtype": "BK", "name_tet": null, "name_id": null, "description_pt": null, "name_en": "The Alo Release", "name_pt": null}',
+            url="/rest/library/publication/"  # Django-REST API URL to push the change to when it's approved
+        )
+        s.skip_signal = True
         s.save()
-        AffectedInstance.objects.create(model_name = 'library_publication', primary=True, suggestion=s)
+        AffectedInstance.objects.create(model_name='library_publication', primary=True, suggestion=s)
         with open('/tmp/library.tests.PublicationAuthorTestCase.test_suggested_publication_forms.html', 'w') as f:
             f.write('''
             <html><head>
@@ -428,7 +429,6 @@ class PublicationAuthorTestCase(TestCase):
             f.write('</body></html>')
 
 # --- Obsolete tests
-
 
 
 class PublicationImportTestCase():
@@ -447,11 +447,11 @@ class PublicationImportTestCase():
         source_file = os.path.join(source_directory, 'situation_review.csv')
 
         ewer_pub = models.Publication.objects.get_or_create(
-                name="ATRES/EWER",
-                name_en="Belun EWER situation review",
-                name_tet="ATRES Revista Situasaun",
-                pubtype=models.Pubtype.objects.get(name="Report"),
-                year=0
+            name="ATRES/EWER",
+            name_en="Belun EWER situation review",
+            name_tet="ATRES Revista Situasaun",
+            pubtype=models.Pubtype.objects.get(name="Report"),
+            year=0
         )[0]
 
         ewer_pub.sector.add(PropertyTag.objects.get(name="Security"))
@@ -462,7 +462,7 @@ class PublicationImportTestCase():
         reader = csv.DictReader(open(source_file, 'r'))
 
         for r in reader:
-            print r
+            print(r)
             version = {
                 'title_en': r['title_en'],
                 'title_tet': r['title_tet'],
@@ -481,16 +481,16 @@ class PublicationImportTestCase():
             for tag_text in [i.strip().lower() for i in r['tags'].split(',')]:
                 v.tag.add(models.Tag.objects.get_or_create(name=tag_text)[0])
 
-            print version
+            print(version)
 
     def test_import_trirep(self):
 
         trimester_report_publication = models.Publication.objects.get_or_create(
-                name="ATRES/EWER",
-                name_en="Belun Trimester Report",
-                name_tet="Relatoriu Trimestral",
-                pubtype=models.Pubtype.objects.get(name="Report"),
-                year=0
+            name="ATRES/EWER",
+            name_en="Belun Trimester Report",
+            name_tet="Relatoriu Trimestral",
+            pubtype=models.Pubtype.objects.get(name="Report"),
+            year=0
         )[0]
 
         trimester_report_publication.sector.add(PropertyTag.objects.get(name="Security"))
@@ -504,7 +504,7 @@ class PublicationImportTestCase():
         reader = csv.DictReader(open(source_file, 'r'))
 
         for r in reader:
-            print r
+            print(r)
             version = {
                 'title_en': r['title_en'],
                 'title_tet': r['title_tet'],
@@ -536,10 +536,10 @@ class PublicationImportTestCase():
         for r in reader:
 
             policybrief = models.Publication.objects.get_or_create(
-                    name="Policy Brief",
-                    name_en=r['title_en'],
-                    name_tet=r['title_tet'],
-                    pubtype=models.Pubtype.objects.get(name="Report")
+                name="Policy Brief",
+                name_en=r['title_en'],
+                name_tet=r['title_tet'],
+                pubtype=models.Pubtype.objects.get(name="Report")
             )[0]
 
             policybrief.sector.add(PropertyTag.objects.get(name="Security"))
@@ -588,11 +588,11 @@ class PublicationImportTestCase():
 
             pubtype = models.Pubtype.objects.get_or_create(code=anti_vowel(r['type']).upper()[0:3], name=r['type'])[0]
             publication = models.Publication.objects.get_or_create(
-                    name=title,
-                    name_en=r['title_en'],
-                    name_tet=r['title_tet'],
-                    name_pt=r['title_pt'],
-                    pubtype=pubtype
+                name=title,
+                name_en=r['title_en'],
+                name_tet=r['title_tet'],
+                name_pt=r['title_pt'],
+                pubtype=pubtype
             )[0]
 
             version = {
@@ -604,10 +604,10 @@ class PublicationImportTestCase():
             v = models.Version.objects.create(**version)
 
             if r['upload_en']:
-                file_en = File(open(os.path.join(source_directory, u'{}.pdf'.format(r['upload_en'])), 'rb'))
+                file_en = File(open(os.path.join(source_directory, '{}.pdf'.format(r['upload_en'])), 'rb'))
                 v.upload_en.save(r['upload_en'] + '.pdf', file_en, save=True)
             if r['upload_tet']:
-                file_tet = File(open(os.path.join(source_directory, u'{}.pdf'.format(r['upload_tet'])), 'rb'))
+                file_tet = File(open(os.path.join(source_directory, '{}.pdf'.format(r['upload_tet'])), 'rb'))
                 v.upload_tet.save(r['upload_tet'] + '.pdf', file_tet, save=True)
             if r['upload_pt']:
                 filename_pt = os.path.join(source_directory, r['upload_pt'] + '.pdf')
@@ -715,7 +715,7 @@ class PublicationImportTestCase():
                     ratio = 0
                     filename = ''
 
-                    search_string = u"{} {} {}".format(r['org'], r['year'], unidecode(r[title]))
+                    search_string = "{} {} {}".format(r['org'], r['year'], unidecode(r[title]))
 
                     for i in file_names:
                         _ratio = fuzzywuzzy.fuzz.token_sort_ratio(unidecode(i), search_string)
@@ -733,14 +733,14 @@ class PublicationImportTestCase():
                         if r[title] not in titles_matched:
                             r[upload] = '?'
 
-        print len(successes)
+        print(len(successes))
 
-        print len(no_match)
+        print(len(no_match))
 
-        print len(file_names)
+        print(len(file_names))
 
-        print file_names
-        print titles_unmatched
+        print(file_names)
+        print(titles_unmatched)
 
         for i in file_names:
             os.symlink(file_names[i], os.path.join(data_dir, 'UN', 'no_match', i))
@@ -756,11 +756,11 @@ class PublicationImportTestCase():
 
             pubtype = models.Pubtype.objects.get_or_create(code=anti_vowel(r['type']).upper()[0:3], name=r['type'])[0]
             publication = models.Publication.objects.get_or_create(
-                    name=r['title_en'] or r['title_tet'] or r['title_pt'],
-                    name_en=r['title_en'],
-                    name_tet=r['title_tet'],
-                    name_pt=r['title_pt'],
-                    pubtype=pubtype
+                name=r['title_en'] or r['title_tet'] or r['title_pt'],
+                name_en=r['title_en'],
+                name_tet=r['title_tet'],
+                name_pt=r['title_pt'],
+                pubtype=pubtype
             )[0]
 
             version = {
@@ -804,11 +804,11 @@ class PublicationImportTestCase():
 
             pubtype = models.Pubtype.objects.get_or_create(code=anti_vowel(r['type']).upper()[0:3], name=r['type'])[0]
             publication = models.Publication.objects.get_or_create(
-                    name=r['title_en'] or r['title_tet'] or r['title_pt'],
-                    name_en=r['title_en'],
-                    name_tet=r['title_tet'],
-                    name_pt=r['title_pt'],
-                    pubtype=pubtype
+                name=r['title_en'] or r['title_tet'] or r['title_pt'],
+                name_en=r['title_en'],
+                name_tet=r['title_tet'],
+                name_pt=r['title_pt'],
+                pubtype=pubtype
             )[0]
 
             version = {
@@ -851,9 +851,9 @@ class PublicationImportTestCase():
 
         for year in [2009, 2010, 2011, 2012, 2013, 2014]:
             blog = models.Publication(
-                    name="Fundasaun Mahein blogs (%s)" % year,
-                    pubtype=pubtype,
-                    year=year)
+                name="Fundasaun Mahein blogs (%s)" % year,
+                pubtype=pubtype,
+                year=year)
             blog.save()
             blog.sector.add(PropertyTag.objects.get(name="Security"))
             blog.organization.add(Organization.objects.get_or_create(name="Fundasaun Mahein", orgtype_id="UNKN")[0])
@@ -881,5 +881,4 @@ class PublicationImportTestCase():
             v.url = r['url']
             v.save()
 
-            print v
-
+            print(v)

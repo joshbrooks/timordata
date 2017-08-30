@@ -30,6 +30,7 @@ class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
+
 router = routers.DefaultRouter()
 router.register(r'publication', PublicationViewSet)
 router.register(r'pubtype', PubtypeViewSet)

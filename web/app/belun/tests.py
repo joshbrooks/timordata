@@ -21,7 +21,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
             cls.selenium = WebDriver()
         except:
             print("WebDriver had a problem, skipping interaction tests")
-            cls.selenium=None
+            cls.selenium = None
             return
 
     @classmethod
@@ -47,4 +47,3 @@ class MySeleniumTests(StaticLiveServerTestCase):
         fox.get('https://localhost/nhdb/project/?q=status.A#object=24536')
         fox.find_element_by_css_selector('[data-canvas]').click()
         fox.find_element_by_class_name('edit-link').click()
-

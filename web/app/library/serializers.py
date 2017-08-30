@@ -15,7 +15,7 @@ class OrganizationAllowsNames(serializers.PrimaryKeyRelatedField):
             try:
                 return Organization.objects.get(name=data).pk
             except Organization.DoesNotExist:
-                name = data.replace('__new__','')
+                name = data.replace('__new__', '')
                 o = Organization(name=name, orgtype_id='None')
                 o.save()
                 return o.pk
@@ -36,7 +36,7 @@ class AuthorAllowsNames(serializers.PrimaryKeyRelatedField):
             if data.isdigit():
                 return self.get_queryset().get(pk=data)
             else:
-                name = data.replace('__new__','')
+                name = data.replace('__new__', '')
                 return Author.objects.get_or_create(name=name)[0].pk
 
         elif isinstance(data, int):
@@ -60,6 +60,7 @@ class PubtypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pubtype
         fields = '__all__'
+
 
 class VersionSerializer(serializers.ModelSerializer):
     class Meta:

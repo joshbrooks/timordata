@@ -20,11 +20,12 @@ class TranslationTabs():
     """
     Render a set of CrispyForm Tab objects
     """
+
     def __init__(self, languages=LANGUAGES_FIX_ID, fieldnames=('name', 'description')):
 
         self.tabs = []
         for language in languages:
-            fieldnames_with_language = [f+'_'+language[0] for f in fieldnames]
+            fieldnames_with_language = [f + '_' + language[0] for f in fieldnames]
             fields = [Field(fieldname_with_language) for fieldname_with_language in fieldnames_with_language]
             # fields = [render_field(fieldname_with_language) for fieldname_with_language in fieldnames_with_language]
             self.tabs.append(Tab(_(language[1]), *fields))

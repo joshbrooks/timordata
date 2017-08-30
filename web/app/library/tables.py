@@ -83,7 +83,7 @@ class PublicationTable(tables.Table):
         version_count = record.versions.count()
         hide_versions_after = 5
         extra = version_count - hide_versions_after
-        detail_url = '#object='+str(record.pk)
+        detail_url = '#object=' + str(record.pk)
         returns = '<strong>{}</strong><a href={}> More &raquo;</a><br>'\
             .format(record.__unicode__(), detail_url)
 

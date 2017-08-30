@@ -1,1 +1,1 @@
-from mp_lite import MP_Lite
+from .mp_lite import MP_Lite

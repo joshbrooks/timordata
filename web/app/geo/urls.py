@@ -11,4 +11,4 @@ urlpatterns = [
     url(r'^placeconvexhulls/', views.placeconvexhulls, name='placeconvexhulls'),
     url(r'^projectplace/(?P<project_pk>\d+)/', views.projectplace, name='projectplace'),
     url(r'^search/(?P<model>\w+)/$', views.search, name="search"),
-    ]
+]

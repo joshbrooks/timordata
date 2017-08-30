@@ -32,7 +32,7 @@ __all__ = [
 
 def unisafe(inputstring):
     try:
-        return u'{}'.format(inputstring)
+        return '{}'.format(inputstring)
     except UnicodeEncodeError:
         try:
             return unidecode(inputstring)
@@ -330,7 +330,7 @@ class ProjectImage(models.Model):
     def __str__(self):
         try:
             if self.project:
-                return u'Image from project {} - {}'.format(self.project, self.description)
+                return 'Image from project {} - {}'.format(self.project, self.description)
             else:
                 return None
         except Exception as e:
@@ -526,12 +526,12 @@ class ProjectPerson(models.Model):
         try:
 
             if self.is_primary:
-                return u'{} as primary contact of {}'.format(self.person, self.project)
-            return u'{} as contact of {}'.format(self.person, self.project)
+                return '{} as primary contact of {}'.format(self.person, self.project)
+            return '{} as contact of {}'.format(self.person, self.project)
 
         except Exception as e:
             try:
-                return u'contact of {}'.format(self.project)
+                return 'contact of {}'.format(self.project)
             except Exception as e:
                 return 'Error in formatting: {}'.format(e.message)
 
@@ -547,7 +547,7 @@ class ProjectPlace(models.Model):
         if self.description:
             return self.description
         elif self.place.name:
-            return u'{}, {}'.format(
+            return '{}, {}'.format(
                 self.project.name, self.place.name)
         else:
             return '?'
@@ -620,7 +620,7 @@ class OrganizationPlace(models.Model):
         if self.description:
             return self.description
         elif self.organization and self.point:
-            return u'Office or location for {}'.format(self.organization)
+            return 'Office or location for {}'.format(self.organization)
 
     organization = models.ForeignKey('nhdb.Organization', null=True, blank=False)
     description = models.CharField(max_length=256, null=True, blank=True)
