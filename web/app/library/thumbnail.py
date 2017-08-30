@@ -13,6 +13,7 @@ from wand.image import Image
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+
 def make_thumbnail_gs(file_path, thumbnail_path, res, page):
     """
     This is significantly faster for pdf files
@@ -25,19 +26,20 @@ def make_thumbnail_gs(file_path, thumbnail_path, res, page):
  # 1 index for gs
     args = [
         "gs",
-        "-dFirstPage="+str(page+1),
-        "-dLastPage="+str(page+1),
+        "-dFirstPage=" + str(page + 1),
+        "-dLastPage=" + str(page + 1),
         "-dNOPAUSE", "-dSAFER",
         "-sDEVICE=jpeg",
         "-o", thumbnail_path,
         "-c", ".setpdfwrite",
-        "-f",  file_path,
-        "-r"+ str(res),
+        "-f", file_path,
+        "-r" + str(res),
 
-        ]
+    ]
     subprocess.call(args)
-    #ghostscript.Ghostscript(*args)
+    # ghostscript.Ghostscript(*args)
     return thumbnail_path
+
 
 def make_thumbnail(file_path, thumbnail_path, res, page):
     # Workaround for "unicodeEncodeError"
@@ -72,7 +74,7 @@ def make_thumbnail(file_path, thumbnail_path, res, page):
                 img.format = 'jpg'
                 img.background_color = Color('white')
                 img.alpha_channel = 'remove'
-                img.resize(width = w, height=h)
+                img.resize(width=w, height=h)
                 logger.debug('Save {} -> {}'.format(file_path, thumbnail_path))
 
                 img.save(filename=thumbnail_path)
@@ -82,10 +84,10 @@ def make_thumbnail(file_path, thumbnail_path, res, page):
                 img.format = 'jpg'
                 img.background_color = Color('white')
                 img.alpha_channel = 'remove'
-                img.resize(width = w, height=h)
+                img.resize(width=w, height=h)
                 logger.debug('Save {} -> {}'.format(file_path, thumbnail_path))
                 img.save(filename=thumbnail_path)
-    except Exception, e:
+    except Exception as e:
         logger.exception(e.message)
 
     if temp_file and os.path.exists(temp_file.name):
@@ -95,14 +97,14 @@ def make_thumbnail(file_path, thumbnail_path, res, page):
     return thumbnail_path
 
 
-def make_thumbnail_convert(file_path, thumbnail_path, res, page = 0, _format='jpg'):
-    if isinstance(page, basestring):
+def make_thumbnail_convert(file_path, thumbnail_path, res, page=0, _format='jpg'):
+    if isinstance(page, str):
         if page in [0, '0', 'cover']:
             file_path = '{}[0]'.format(file_path, page)
         else:
             file_path = '{}[{}]'.format(file_path, page)
 
     call = ['convert', file_path, '-resize', '{}'.format(res), '{}:{}'.format(_format, thumbnail_path)]
-    print call
+    print(call)
     subprocess.call(call)
     return thumbnail_path

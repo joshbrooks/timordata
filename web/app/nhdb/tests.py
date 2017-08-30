@@ -1,6 +1,7 @@
 import json
 
-import logging, sys
+import logging
+import sys
 
 from crispy_forms.utils import render_crispy_form
 from django.contrib.auth.models import User
@@ -34,6 +35,7 @@ def serialize_to_post(text):
         d[i['name']] = i['value']
     return d
 
+
 serialized_organization_suggestion = '[{"name":"csrfmiddlewaretoken","value":"0dc9Yijn1WVElLGDW2DvT79ir0X9Gbtt"},{"name":"_method","value":"POST"},{"name":"_url","value":"/rest/nhdb/organization/"},{"name":"_action","value":"CM"},{"name":"_description","value":"Create a new organization in the database"},{"name":"_affected_instance_primary","value":"nhdb_organization"},{"name":"__formtype","value":"Create Form"},{"name":"_next","value":"/suggest/#object=_suggestion_"},{"name":"name","value":"My Organization"},{"name":"orgtype","value":"LNGO"},{"name":"stafffulltime","value":""},{"name":"staffparttime","value":""},{"name":"_name","value":"Josh"},{"name":"_email","value":"josh.vdbroek@gmail.com"},{"name":"_comment","value":""}]'
 
 
@@ -64,17 +66,17 @@ class ProjectTestCase(FoxCase):
 
     def test_project_suggest(self):
         fox = self.fox
-        self.fox.get(self.live_server_url+'/nhdb/project')
+        self.fox.get(self.live_server_url + '/nhdb/project')
         fox.clickx("//*[contains(text(), 'Management')]")
         fox.click('[data-modalurl="/nhdb/form/project/main/"]')
         fox.click('#english')
-        fox.form('project-form', (('name_en', 'National Database Project'),('description_en', 'Providing information about NGOs and projects in Timor')))
+        fox.form('project-form', (('name_en', 'National Database Project'), ('description_en', 'Providing information about NGOs and projects in Timor')))
         fox.click('button[data-fromurl="/nhdb/form/project/main/"]')
-        fox.get(self.live_server_url+'/suggest/?state=W')
+        fox.get(self.live_server_url + '/suggest/?state=W')
         fox.login()
-        fox.get(self.live_server_url+'/suggest/?state=W')
+        fox.get(self.live_server_url + '/suggest/?state=W')
         fox.click('form.restInteraction .btn-primary')
-        fox.get(self.live_server_url+'/nhdb/project/?object=1')
+        fox.get(self.live_server_url + '/nhdb/project/?object=1')
 
 
 class SuggestOrganizationFormTestCase(TestCase):
@@ -99,7 +101,7 @@ class SuggestOrganizationFormTestCase(TestCase):
 
     def setUp(self):
 
-        u = User.objects.create_user('josh', 'josh.vdbroek@gmail.com','test')
+        u = User.objects.create_user('josh', 'josh.vdbroek@gmail.com', 'test')
         u.is_staff = True
         u.save()
 
@@ -122,7 +124,7 @@ class SuggestOrganizationFormTestCase(TestCase):
         c = Client()
         response = c.post('/suggest/suggest/', serialize_to_post(serialized_organization_suggestion))
 
-        s = Suggest.objects.get(pk = json.loads(response.content)['id'])
+        s = Suggest.objects.get(pk=json.loads(response.content)['id'])
 
         assert int(response.status_code) == 201, 'Response code was %s' % response.status_code
         test_form = OrganizationForm(organization=s)
@@ -135,7 +137,7 @@ class SuggestOrganizationFormTestCase(TestCase):
 
     def test_organization_update(self):
 
-        f = OrganizationForm(organization = Organization.objects.first())
+        f = OrganizationForm(organization=Organization.objects.first())
         with open(html_output_test, 'a') as _test:
             _test.write(header('Update Organization Form'))
             _test.write(render_crispy_form(f))
@@ -201,7 +203,7 @@ class DeleteFormTestCase(TestCase):
 class ProjectTypeFormTestCase(TestCase):
 
     def setUp(self):
-        u = User.objects.create_user('josh', 'josh.vdbroek@gmail.com','test')
+        u = User.objects.create_user('josh', 'josh.vdbroek@gmail.com', 'test')
         u.is_staff = True
         u.save()
 
@@ -217,7 +219,7 @@ class ProjectTypeFormTestCase(TestCase):
         c = Client()
         c.login(username='josh', password='test')
 
-        affirm(create_suggestion(data = {
+        affirm(create_suggestion(data={
             '_method': 'POST',
             '_url': '/rest/nhdb/projecttype/',
             '_action': 'CM',
@@ -227,8 +229,8 @@ class ProjectTypeFormTestCase(TestCase):
             '_name': 'Josh',
             '_email': 'josh.vdbroek@gmail.com',
             '_comment': '',
-            'description':'Humanitarian'
-        }), client = c)
+            'description': 'Humanitarian'
+        }), client=c)
 
         formclass = ProjectTypeForm
         f = formclass(projecttype=ProjectType.objects.last())

@@ -1,4 +1,4 @@
-from settings_secret import SECRET_KEY, DEBUG, CRISPY_FAIL_SILENTLY, DATABASES, ALLOWED_HOSTS
+from .settings_secret import SECRET_KEY, DEBUG, CRISPY_FAIL_SILENTLY, DATABASES, ALLOWED_HOSTS
 import os
 
 from django.utils.translation import gettext_noop
@@ -10,10 +10,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Add Tetun as a selectable language along with ID, EN and PT language codes
 EXTRA_LANG_INFO = {
     'tet': {
-        u'bidi': False,
-        u'code': 'tet',
-        u'name': 'Tetun',
-        u'name_local': u'Tetun',
+        'bidi': False,
+        'code': 'tet',
+        'name': 'Tetun',
+        'name_local': 'Tetun',
     },
 }
 
@@ -34,7 +34,7 @@ LANGUAGES_FIX_ID = (
     ('ind', gettext_noop('Indonesian')),
 )
 
-LANG_INFO = dict(django.conf.locale.LANG_INFO.items() + EXTRA_LANG_INFO.items())
+LANG_INFO = dict(list(django.conf.locale.LANG_INFO.items()) + list(EXTRA_LANG_INFO.items()))
 django.conf.locale.LANG_INFO = LANG_INFO
 
 LOCALE_PATHS = (
@@ -225,8 +225,8 @@ DATE_FORMAT = 'Y-m-d'
 SELECT2_BOOTSTRAP = True
 AUTO_RENDER_SELECT2_STATICS = False
 
-STATIC_ROOT = "/var/www/html/static/new/"
-try:
-    from settings_local import *
-except ImportError:
-    pass
+STATIC_URL = '/static/'
+STATICFILES_DIRS = ['/home/josh/Desktop/timordata_media/static']
+MEDIA_ROOT = '/home/josh/Desktop/timordata_media/media'
+MEDIA_URL = '/media/'
+# STATIC_ROOT = '/home/josh/Desktop/timordata_media/collect/'

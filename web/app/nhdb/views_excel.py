@@ -100,7 +100,7 @@ def organization(request, object_list=None):
         sheet.write(row, 3, object.email)
 
         if object.primary_contact_person:
-            sheet.write(row, 4, u'{}'.format(object.primary_contact_person.first() or ''))
+            sheet.write(row, 4, '{}'.format(object.primary_contact_person.first() or ''))
 
         address_row = 0
         for organizationplace in object.organizationplace_set.all():

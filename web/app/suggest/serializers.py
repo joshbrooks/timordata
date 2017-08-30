@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models import Suggest, AffectedInstance
+from .models import Suggest, AffectedInstance
 
 
 class AffectedInstanceSerializer(serializers.ModelSerializer):
@@ -68,7 +68,7 @@ class SuggestSerializer(serializers.ModelSerializer):
         else:
             raise NotImplementedError('{} {}'.format(instance.action, validated_data['state']))
 
-        for attr, value in validated_data.items():
+        for attr, value in list(validated_data.items()):
             setattr(instance, attr, value)
         instance.save()
         instance.set_uploaded_files()

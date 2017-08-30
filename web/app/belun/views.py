@@ -9,10 +9,13 @@ from django.template import Context
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView
 from django_tables2 import SingleTableView
-from settings import LANGUAGES_FIX_ID
+from .settings import LANGUAGES_FIX_ID
 from suggest.models import Suggest
+import collections
 
 language_codes = [i[0] for i in LANGUAGES_FIX_ID]
+
+
 def index(request):
     # return HttpResponse('ok')
     if request.GET.get('background') == '2':
@@ -38,7 +41,6 @@ def indexmanifest(request):
         "/static/bootstrap/js/bootstrap.js",
         "/static/backgrounds/background_min.jpg"]
 
-
     return HttpResponse('\n'.join(manifest), content_type=content_type)
 
 
@@ -52,8 +54,8 @@ def about(request):
 def history(request):
     return render(request, 'history.html')
 
-def selecttwo(request, app_name='library', model_name='tag', filter_field='name', filter_param='icontains', create=False):
 
+def selecttwo(request, app_name='library', model_name='tag', filter_field='name', filter_param='icontains', create=False):
     '''
     Returns a list (formatted for select2) of filtered options
     :param request:
@@ -86,13 +88,13 @@ def selecttwo(request, app_name='library', model_name='tag', filter_field='name'
         exact_filter_name = '{}__{}'.format(filter_field, 'iexact')
         exact_filter[exact_filter_name] = q
         if qs.filter(**exact_filter).count() != 1:
-            _list.append({'id':'__new__{}'.format(q),'text':'(New {}) {}'.format(model_name,q)})
+            _list.append({'id': '__new__{}'.format(q), 'text': '(New {}) {}'.format(model_name, q)})
 
     for r in qs:
 
         if hasattr(r, 'selectlist_repr'):
             text = getattr(r, 'selectlist_repr')
-            if callable(text):
+            if isinstance(text, collections.Callable):
                 text = text()
 
         else:
@@ -109,7 +111,6 @@ def selecttwo(request, app_name='library', model_name='tag', filter_field='name'
 
 
 def chosen(request, app_name='library', model_name='tag', filter_field='name', filter_param='icontains', include_suggestions=False):
-
     '''
     Returns a list (formatted for select2) of filtered options
     :param request:
@@ -150,13 +151,13 @@ def chosen(request, app_name='library', model_name='tag', filter_field='name', f
             'text': text
         })
 
-    response = {"q":q, 'results': _list}
+    response = {"q": q, 'results': _list}
 
     # If include_suggestions is TRUE, add in any matching values from the Suggestions application
 
     if include_suggestions:
         suggestion_model_name = '{}_{}'.format(app_name, model_name)
-        suggestions = Suggest.objects.filter(affectedinstance__primary = True, affectedinstance__model_name = suggestion_model_name, action='CM')
+        suggestions = Suggest.objects.filter(affectedinstance__primary=True, affectedinstance__model_name=suggestion_model_name, action='CM')
         _suggest_list = []
 
         for r in suggestions:
@@ -179,7 +180,6 @@ def selecttwo_create(request, **kw):
     return selecttwo(request, **kw)
 
 
-
 class TranslatedPageList(list):
     def __init__(self, language, **kwargs):
 
@@ -187,6 +187,8 @@ class TranslatedPageList(list):
         self.language = language
 
 # @login_required
+
+
 def flatpagelist(request):
     """
     Edit a flatpage by primary key
@@ -205,19 +207,19 @@ def flatpagelist(request):
         pages['languages'] = language_codes
         pages['translated'] = {}
 
-        page_names =  [page.url.split('/')[1] for page in page_objects]
+        page_names = [page.url.split('/')[1] for page in page_objects]
 
         for page in page_objects:
             page_name = page.url.split('/')[1]
             if page_name not in pages['translated']:
-                pages['translated'][page_name] = TranslatedPageList(size = len(language_codes))
+                pages['translated'][page_name] = TranslatedPageList(size=len(language_codes))
 
             language = page.url.split('/')[-2]
 
             if language == '':
-                language = 'en' # Default to english
+                language = 'en'  # Default to english
             if language not in language_codes:
-                language = 'en' # Default to english
+                language = 'en'  # Default to english
                 #raise AssertionError, language
 
             language_index = pages['languages'].index(language)
@@ -228,9 +230,9 @@ def flatpagelist(request):
 
     return render(request, 'flatpages/flatpage_list.html', c)
 
-def flatpage(request, pk):
-    return HttpResponse('Not here yet! pk %s'%pk)
 
+def flatpage(request, pk):
+    return HttpResponse('Not here yet! pk %s' % pk)
 
 
 @method_decorator(login_required, name='dispatch')

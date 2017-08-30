@@ -26,18 +26,17 @@ class AdminArea(MP_Lite):
     separator = '.'
     steps = 3
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def selectlist_repr(self):
 
         if 1 < self.pcode < 100:
-            return u'Postu Admin. %s'%self
+            return 'Postu Admin. %s' % self
         elif 100 < self.pcode < 10000:
-            return u'Subdistrito. %s'%self
+            return 'Subdistrito. %s' % self
         elif self.pcode > 10000:
-            return u'Suco. %s'%self
-
+            return 'Suco. %s' % self
 
     # class Meta:
     #     abstract = True
@@ -63,16 +62,16 @@ class AdminArea(MP_Lite):
     "name": "%s",
     "pcode": "%s"
   }
-}'''%(self.envelope.geojson, self.name, self.pcode)
+}''' % (self.envelope.geojson, self.name, self.pcode)
 
 
 class Suco(AdminArea):
 
-    def __unicode__(self):
-        return u'Suco {}'.format(self.name)
+    def __str__(self):
+        return 'Suco {}'.format(self.name)
 
     def selectlist_repr(self):
-        return u'%s'%self
+        return '%s' % self
 
     @property
     def subdistrict(self):
@@ -88,12 +87,13 @@ class Suco(AdminArea):
         except District.DoesNotExist:
             return None
 
+
 class Subdistrict(AdminArea):
-    def __unicode__(self):
-        return u'Subdistrict {}'.format(self.name)
+    def __str__(self):
+        return 'Subdistrict {}'.format(self.name)
 
     def selectlist_repr(self):
-        return u'%s'%self
+        return '%s' % self
 
     @property
     def district(self):
@@ -102,12 +102,13 @@ class Subdistrict(AdminArea):
         except District.DoesNotExist:
             return None
 
+
 class District(AdminArea):
-    def __unicode__(self):
-        return u'Postu Admin. {}'.format(self.name)
+    def __str__(self):
+        return 'Postu Admin. {}'.format(self.name)
 
     def selectlist_repr(self):
-        return u'%s'%self
+        return '%s' % self
 
 
 class Road(models.Model):
@@ -117,7 +118,7 @@ class Road(models.Model):
     highway = models.CharField(max_length=255, null=True)
     route = models.CharField(max_length=255, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -127,7 +128,6 @@ class World(models.Model):
     Countries of the world, not simplified, in EPSG:4326
     '''
 
-
     class Meta:
         ordering = ['name']
 
@@ -136,7 +136,7 @@ class World(models.Model):
     geom = models.MultiPolygonField(srid=4326, null=True, blank=True)
     objects = models.GeoManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @staticmethod
@@ -168,5 +168,5 @@ class PlaceAlternate(models.Model):
     geom = models.MultiPolygonField(srid=32751)
     objects = models.GeoManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name

@@ -48,9 +48,9 @@ class MP_Lite(models.Model):
         s = string.upper()
         if cls.separator in s:
             # Assume this already is pathformatted
-            return s#cls.objects.get(path=s)
+            return s  # cls.objects.get(path=s)
         path = cls.separator.join([string[i:i + cls.steps]
-                                  for i in xrange(0, len(s), cls.steps)])
+                                   for i in range(0, len(s), cls.steps)])
         return path
 
     def pathstring(self):
@@ -64,12 +64,11 @@ class MP_Lite(models.Model):
         """
         return self.lowerpathstring()
 
-
     class NoParentError(Exception):
         pass
 
     def __unicode__(self):
-        return u'{} (path:{})'.format(self.name, self.path)
+        return '{} (path:{})'.format(self.name, self.path)
 
     path = models.CharField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
@@ -132,6 +131,7 @@ class MP_Lite(models.Model):
         Count number of separators to determine level
         '''
         return self.path.count(self.separator)  # - 1
+
     def get_siblings(self, include_self=False):
         cls = self.__class__
         _w = ["path like %s"]

@@ -19,6 +19,7 @@ class FundingOfferAdmin(admin.ModelAdmin):
         FileInline,
     ]
 
+
 class DonorSurveyResponseAdmin(admin.ModelAdmin):
     raw_id_fields = ('organization',)
     autocomplete_lookup_fields = {
@@ -32,8 +33,10 @@ class DonorAnnouncementAdmin(admin.ModelAdmin):
     autocomplete_lookup_fields = {
         'fk': ('source',),
     }
+
+
 admin.site.register(FundingOffer, FundingOfferAdmin)
 admin.site.register(FundingSurveyInfoMethods)
 admin.site.register(FundingSurvey)
-admin.site.register(DonorSurveyResponse, DonorSurveyResponseAdmin )
+admin.site.register(DonorSurveyResponse, DonorSurveyResponseAdmin)
 admin.site.register(DonorAnnouncement, DonorAnnouncementAdmin)

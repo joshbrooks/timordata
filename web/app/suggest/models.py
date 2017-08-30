@@ -27,7 +27,7 @@ def get_field_type(obj, field_name):
         field = obj.__class__._meta.get_field(field_name)
         return field.__class__.__name__
     except FieldDoesNotExist:
-        raise KeyError, 'Field {} does not exist in this model'.format(field_name)
+        raise KeyError('Field {} does not exist in this model'.format(field_name))
 
 
 def is_foreign_key(obj, field_name):
@@ -45,6 +45,7 @@ def _get_model(app_model_name):
         raise ValueError('Looked for pattern (appname)_(modelname), did not find it in {}'.format(app_model_name))
     return apps.get_model(app_label=app_label, model_name=model_name)
 
+
 def safe_compare(input_a, input_b):
     """
     Try to compare two strings, handling UnicodeErrors with a bit more grace
@@ -58,12 +59,13 @@ def safe_compare(input_a, input_b):
     except UnicodeEncodeError:
         try:
             if unidecode(input_a) == unidecode(input_b):
-               return True
+                return True
         except:
             return False
-    return False 
+    return False
 
-class ReturnedData(unicode):
+
+class ReturnedData(str):
     # Wrapper to add 'ready' to the data
     def __init__(self, data):
         super(ReturnedData, self).__init__()
@@ -86,8 +88,8 @@ class SuggestionManager(models.Manager):
         model_name = '{}_{}'.format(obj._meta.app_label, obj._meta.model_name)
 
         return self.filter(
-                affectedinstance__model_name=model_name,
-                affectedinstance__model_pk=obj.pk)
+            affectedinstance__model_name=model_name,
+            affectedinstance__model_pk=obj.pk)
 
     def independent(self):
         """
@@ -127,7 +129,7 @@ class AffectedInstance(models.Model):
     # TODO: Make compatible with non integer PK's
     # model_pk_string = models.CharField(max_length=10, null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
 
         return 'From suggestion {} to change {} {} {}'.format(self.suggestion.id, self.model_name, self.model_pk,
                                                               self.primary)
@@ -157,14 +159,14 @@ class AffectedInstance(models.Model):
         model = _get_model(self.model_name)
         try:
             return model.objects.get(pk=self.model_pk)
-        except model.DoesNotExist, e:
+        except model.DoesNotExist as e:
             raise model.DoesNotExist('{}: query was .get(pk={})'.format(e.message, self.model_pk))
 
     @property
     def instance(self):
         try:
             return self.retrieve_instance()
-        except Exception, e:
+        except Exception as e:
 
             if self.suggestion.action and self.suggestion.state == 'A':
                 return "Removed"
@@ -191,7 +193,7 @@ class Suggest(models.Model):
     Intended to integrate with the Django REST framework for a one-click "approve" option for models
     '''
 
-    def __unicode__(self):
+    def __str__(self):
         # This is going to be different for each model
         # However if there is a "name", we can use that
         if self.action == 'CM':
@@ -209,7 +211,7 @@ class Suggest(models.Model):
         elif self.description:
             return self.description or ''
 
-        return u'No description provided'
+        return 'No description provided'
 
     OPTIONS_ACTION = (
 
@@ -307,7 +309,7 @@ class Suggest(models.Model):
 
         m = _get_model(p.model_name)
 
-        if key not in self.data_jsonify().keys():
+        if key not in list(self.data_jsonify().keys()):
             return
 
         k = self.data_jsonify().get(key)
@@ -383,19 +385,18 @@ class Suggest(models.Model):
             try:
                 file_field = getattr(i, f.field_name)
                 file_field.save(name, f.upload.file)
-            except AttributeError, e: #  Happens using image insertion into Summernote
+            except AttributeError as e:  # Happens using image insertion into Summernote
                 logger.error(e.message)
                 continue
-            except IntegrityError, e:
+            except IntegrityError as e:
                 logger.error(e.message)
                 continue
-
 
         # i.save()
 
     def _set(self, data=None, write=True):
         """
-        
+
         :param data: 
         :return: Boolean, String, Exception or None
         """
@@ -427,7 +428,7 @@ class Suggest(models.Model):
             model = instance._meta.model
 
             _d = self.data_jsonify()
-            for k, v in _d.items():
+            for k, v in list(_d.items()):
                 try:
                     t = get_field_type(model, k)
                 except FieldDoesNotExist:
@@ -460,7 +461,7 @@ class Suggest(models.Model):
                         # A Suggest object has been approved: update the SUggestion pk to the Object's pk
                         if not isinstance(i, Suggest):
                             if str(i.pk) != str(_d[k][index]):
-                                print 'Updated: %s -> %s' % (_d[k][index], i.pk)
+                                print('Updated: %s -> %s' % (_d[k][index], i.pk))
                                 _d[k][index] = i.pk
                                 changed = True
                             continue
@@ -589,8 +590,7 @@ class Suggest(models.Model):
         # Special exemption for sets
         # Set data example: {"projectplace_set": [{"project": 24536, "place": 5}, {"project": 24536, "place": 12}]}
 
-
-        for attr, val in json.loads(str(self.data)).items():
+        for attr, val in list(json.loads(str(self.data)).items()):
 
             try:
                 field_type = get_field_type(instance, attr)
@@ -610,7 +610,7 @@ class Suggest(models.Model):
                     try:
                         rel = model._meta.get_field(attr).rel.to
                         val = rel.objects.get(pk__in=[val, '{}'.format(val)])
-                    except Exception, e:
+                    except Exception as e:
                         val = e.message
 
                 elif val.startswith('_') and val[1:-1].isdigit():
@@ -619,7 +619,7 @@ class Suggest(models.Model):
                     try:
                         rel = model._meta.get_field(attr).rel.to
                         val = rel.objects.get(pk__in=[val, '{}'.format(val)])
-                    except Exception, e:
+                    except Exception as e:
                         val = e.message
 
             elif field_type == 'DateField':
@@ -653,7 +653,6 @@ class Suggest(models.Model):
                 #     else:
                 #         changes.append((attr, removed, None, False))
 
-
                 for added in set(vals) - set(current_values):
                     changes.append((attr, '', added, False))
                 for unchanged in set(vals).intersection(set(current_values)):
@@ -668,7 +667,7 @@ class Suggest(models.Model):
                 try:
                     current_value = getattr(instance, attr)
                     changes.append((attr, current_value, val, is_same(val, current_value)))
-                except Exception, e:
+                except Exception as e:
                     changes.append((attr, e.message, val, False))
 
         # Include suggested file fields
@@ -688,20 +687,20 @@ class Suggest(models.Model):
         def _suggestions(l):
             ret = []
             for pk in l:
-                s = re.match('_(\w+)_', unicode(pk))
-                print s
+                s = re.match('_(\w+)_', str(pk))
+                print(s)
                 if s:
                     ret.append(s.groups()[0])
-            return Suggest.objects.filter(pk__in = ret)
+            return Suggest.objects.filter(pk__in=ret)
 
         def wrap_class(text, css_class):
 
             if isinstance(text, list):
                 if len(text) == 0:
                     return ''
-                text = u', '.join([u'{}'.format(i) for i in text])
+                text = ', '.join(['{}'.format(i) for i in text])
 
-            return mark_safe(u'<span class="{}">{}</span>'.format(css_class, text))
+            return mark_safe('<span class="{}">{}</span>'.format(css_class, text))
         try:
             i = self.primary.instance
 
@@ -725,7 +724,7 @@ class Suggest(models.Model):
 
         if i.pk:
 
-            for key, value_suggested in suggestion_data.items():
+            for key, value_suggested in list(suggestion_data.items()):
 
                 if not hasattr(i, key):
                     continue
@@ -735,10 +734,10 @@ class Suggest(models.Model):
                 if get_field_type(i, key) == 'ManyToManyField':
                     # Get a list of primary key values related
                     pks = getattr(i, key).all().values_list('pk', flat=True)
-                    value_current = set([str(_i) for _i in pks if not re.match('_(\w+)_', unicode(_i))])
+                    value_current = set([str(_i) for _i in pks if not re.match('_(\w+)_', str(_i))])
 
                     # Get a set of suggested, updated, primary keys
-                    value_new = set([v for v in value_suggested if not re.match('_(\w+)_', unicode(v))])
+                    value_new = set([v for v in value_suggested if not re.match('_(\w+)_', str(v))])
 
                     f = i._meta.get_field(key).rel.to
 
@@ -746,53 +745,52 @@ class Suggest(models.Model):
                     drop = value_current - value_new
                     add = value_new - value_current
 
-                    current_objects = [u'%s' % (o) for o in f.objects.filter(pk__in=value_current)]
-                    drop_objects = [u' - %s' % (o) for o in f.objects.filter(pk__in=drop)]
-                    add_objects = [u' + %s' % (o) for o in f.objects.filter(pk__in=add)]
-                    keep_objects = [u'%s' % (o) for o in f.objects.filter(pk__in=keep)]
+                    current_objects = ['%s' % (o) for o in f.objects.filter(pk__in=value_current)]
+                    drop_objects = [' - %s' % (o) for o in f.objects.filter(pk__in=drop)]
+                    add_objects = [' + %s' % (o) for o in f.objects.filter(pk__in=add)]
+                    keep_objects = ['%s' % (o) for o in f.objects.filter(pk__in=keep)]
 
                     # Include "added" objects which are new
-                    add_objects.extend([u' + %s' % (o) for o in _suggestions(value_suggested)])
-                    r = ';'.join([wrap_class(keep_objects or u"None unchanged", u'unchanged'),
-                                  wrap_class(add_objects, u'added'), wrap_class(drop_objects, u'removed')])
+                    add_objects.extend([' + %s' % (o) for o in _suggestions(value_suggested)])
+                    r = ';'.join([wrap_class(keep_objects or "None unchanged", 'unchanged'),
+                                  wrap_class(add_objects, 'added'), wrap_class(drop_objects, 'removed')])
                     returns[key] = r
 
                 elif get_field_type(i, key) == 'ForeignKey':
 
                     value_suggested = self.follow(key)
                     if value_current == value_suggested and value_suggested is not None:
-                        returns[key] = wrap_class(value_current, u'unchanged')
+                        returns[key] = wrap_class(value_current, 'unchanged')
                     elif value_suggested is None:
-                            returns[key] = None
-                    else:
-                        returns[key] = mark_safe(u"{} {}").format(wrap_class(value_current, u'removed'),
-                                                                 wrap_class(value_suggested, u'added'))
-
-                
-                elif value_current == value_suggested and value_suggested is not None:
-                        returns[key] = wrap_class(value_current, u'unchanged')
-                elif value_suggested is None:
                         returns[key] = None
+                    else:
+                        returns[key] = mark_safe("{} {}").format(wrap_class(value_current, 'removed'),
+                                                                 wrap_class(value_suggested, 'added'))
+
+                elif value_current == value_suggested and value_suggested is not None:
+                    returns[key] = wrap_class(value_current, 'unchanged')
+                elif value_suggested is None:
+                    returns[key] = None
                     # Try coercing to the same value
-                    
+
                 else:
                     if safe_compare(value_suggested, value_current):
-                        returns[key] = wrap_class(value_current, u'unchanged')
+                        returns[key] = wrap_class(value_current, 'unchanged')
                     else:
                         try:
-                            returns[key] = mark_safe(u"{} {}").format(wrap_class(unidecode(value_current or ''), u'removed'),
-                                                                 wrap_class(unidecode(value_suggested or ''), u'added'))
+                            returns[key] = mark_safe("{} {}").format(wrap_class(unidecode(value_current or ''), 'removed'),
+                                                                     wrap_class(unidecode(value_suggested or ''), 'added'))
                         except AttributeError:
-                            returns_key = wrap_class(value_current, u'added')
+                            returns_key = wrap_class(value_current, 'added')
         else:
-            for key, value_suggested in suggestion_data.items():
+            for key, value_suggested in list(suggestion_data.items()):
                 if value_suggested is None:
                     returns[key] = None
                 else:
                     try:
-                        returns[key] = wrap_class(self.follow(key) or value_suggested, u'unchanged')
-                    except KeyError: #  This happens eg on -file-clear fields
-                        returns[key] = wrap_class(value_suggested, u'unchanged')
+                        returns[key] = wrap_class(self.follow(key) or value_suggested, 'unchanged')
+                    except KeyError:  # This happens eg on -file-clear fields
+                        returns[key] = wrap_class(value_suggested, 'unchanged')
 
         return returns
 
@@ -813,7 +811,7 @@ class Suggest(models.Model):
         field_names = [i.name for i in obj._meta.fields]
         m2m_names = [i.name for i in obj._meta.many_to_many]
 
-        for key, value in self.data_jsonify().items():
+        for key, value in list(self.data_jsonify().items()):
             if key not in field_names and key not in m2m_names:
                 continue
             field_type = get_field_type(obj, key)
@@ -854,7 +852,7 @@ class Suggest(models.Model):
 
         # TODO: Better error handling
 
-        if isinstance(obj, basestring):
+        if isinstance(obj, str):
             if self.state in ('D', 'R'):
                 return []
             assert (self.state == "A" and self.action == 'DM')
@@ -866,7 +864,7 @@ class Suggest(models.Model):
         field_names = [i.name for i in obj._meta.fields]
         m2m_names = [i.name for i in obj._meta.many_to_many]
 
-        for key in self.data_jsonify().keys():
+        for key in list(self.data_jsonify().keys()):
             if key not in field_names and key not in m2m_names:
                 continue
             field_type = get_field_type(obj, key)
@@ -890,17 +888,17 @@ class Suggest(models.Model):
     def parent(self):
 
         parent = Suggest.objects.filter(
-                pk__in=[int(i) for i in
-                        self.affectedinstance_set.filter(model_name='suggest_suggest').values_list('model_pk',
-                                                                                                   flat=True)])
+            pk__in=[int(i) for i in
+                    self.affectedinstance_set.filter(model_name='suggest_suggest').values_list('model_pk',
+                                                                                               flat=True)])
 
         return parent
 
     def children(self):
         return Suggest.objects.filter(
-                pk__in=[int(i) for i in
-                        AffectedInstance.objects.filter(model_name='suggest_suggest', model_pk=self.pk).values_list(
-                                'suggestion_id', flat=True)])
+            pk__in=[int(i) for i in
+                    AffectedInstance.objects.filter(model_name='suggest_suggest', model_pk=self.pk).values_list(
+                    'suggestion_id', flat=True)])
 
     @property
     def related_changes(self):
@@ -949,7 +947,7 @@ class Suggest(models.Model):
 
     def parseurl(self):
 
-        url = u'{}'.format(self.url)
+        url = '{}'.format(self.url)
         # Dependent URLS (for example, updates requested to a model not yet create)
         # use _0001_ to identify the primary key of an AffectedInstance object
 

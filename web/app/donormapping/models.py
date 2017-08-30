@@ -8,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from datetime import datetime
 from pivottable import pivot_table
 
+
 def isRichField(test):
     """
     Check to see if there's HTML tags in the code or if it's just text
@@ -18,8 +19,9 @@ def isRichField(test):
         return True
     return False
 
+
 class FundingOffer(models.Model):
-    def __unicode__(self):
+    def __str__(self):
 
         return self.title
 
@@ -40,12 +42,11 @@ class FundingOffer(models.Model):
     all_districts = models.BooleanField(default=False)
 
     sector = models.ManyToManyField(
-        'nhdb.PropertyTag', blank=True, related_name="fundingoffer_sector", limit_choices_to={'path__startswith':"INV."})
+        'nhdb.PropertyTag', blank=True, related_name="fundingoffer_sector", limit_choices_to={'path__startswith': "INV."})
     activity = models.ManyToManyField(
-        'nhdb.PropertyTag', blank=True, related_name="fundingoffer_activity", limit_choices_to={'path__startswith':"ACT."})
+        'nhdb.PropertyTag', blank=True, related_name="fundingoffer_activity", limit_choices_to={'path__startswith': "ACT."})
     beneficiary = models.ManyToManyField(
-        'nhdb.PropertyTag',  blank=True, related_name="fundingoffer_beneficiary", limit_choices_to={'path__startswith':"BEN."})
-
+        'nhdb.PropertyTag', blank=True, related_name="fundingoffer_beneficiary", limit_choices_to={'path__startswith': "BEN."})
 
     def get_admin_url(self):
         return reverse("admin:%s_%s_change" % (self._meta.app_label, self._meta.module_name), args=(self.id,))
@@ -53,6 +54,7 @@ class FundingOffer(models.Model):
     @property
     def rich_description(self):
         return isRichField(self.description)    \
+
 
     @property
     def rich_summary(self):
@@ -70,7 +72,7 @@ class DonorAnnouncement(models.Model):
     Information about announcements made about donor funding concerning Timor Leste
     '''
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     date = models.DateField()
@@ -78,7 +80,6 @@ class DonorAnnouncement(models.Model):
     title = models.CharField(max_length=256)
     summary = models.TextField()
     content = models.TextField()
-
 
 
 class DonorSurveyResponse(models.Model):
@@ -91,12 +92,12 @@ class DonorSurveyResponse(models.Model):
     @property
     def organization_display(self):
         if self.organization:
-            return self.organization.__unicode__()
+            return self.organization.__str__()
         else:
             return self.organizationname
 
-    def __unicode__(self):
-        return u'{} - {} - {}'.format(self.organization_display, self.survey_date, self.get_response_display())
+    def __str__(self):
+        return '{} - {} - {}'.format(self.organization_display, self.survey_date, self.get_response_display())
 
     OPTION_RESPONSE = (
         ('ND', 'No (works directly with local partners)'),
@@ -118,7 +119,7 @@ class FundingSurveyInfoMethods(models.Model):
     partner organisations
     """
 
-    def __unicode__(self):
+    def __str__(self):
         return self.description
 
     description = models.CharField(max_length=200)
@@ -132,8 +133,9 @@ class FundingSurvey(models.Model):
     This is a one-off table to collect information
     about funding opportunities in TimorLeste
     """
-    def __unicode__(self):
-        return u'{}'.format(self.organizationname)
+
+    def __str__(self):
+        return '{}'.format(self.organizationname)
 
     def get_absolute_url(self):
         return reverse('donormapping:survey:detail', kwargs={'pk': self.pk})
@@ -159,9 +161,9 @@ class FundingSurvey(models.Model):
 
     # Idea: Search for an existing organization to populate this?
     organizationname = models.CharField(max_length=100)
-    organizationtype = models.ForeignKey('nhdb.OrganizationClass', verbose_name =_("Organization type"))
+    organizationtype = models.ForeignKey('nhdb.OrganizationClass', verbose_name=_("Organization type"))
     properties = models.ManyToManyField('nhdb.PropertyTag',
-                                        limit_choices_to={'path__startswith': 'INV.'}, verbose_name = _("Properties"))
+                                        limit_choices_to={'path__startswith': 'INV.'}, verbose_name=_("Properties"))
     fundinggiven = models.NullBooleanField(default=None, verbose_name=_("Has your organization given funding in the past year?"))
     fundinggiveamt = models.IntegerField(null=True, blank=True,
                                          verbose_name=_("How much (approximately) given in the past year?"))
@@ -197,7 +199,7 @@ class FundingSurvey(models.Model):
                                        verbose_name=_("Donor funding is hard to find for the sectors this organization works in"),
                                        choices=STATEMENTS)
 
-    # These questions are to find out how technology is used in the 
+    # These questions are to find out how technology is used in the
     # different organisations
     usefacebook = models.CharField(verbose_name=_("How often do you use Facebook?"), max_length=2, choices=FREQUENCIES)
     usegmail = models.CharField(verbose_name=_("How often do you use Gmail?"), max_length=2, choices=FREQUENCIES)

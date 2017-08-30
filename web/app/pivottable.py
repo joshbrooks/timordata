@@ -21,11 +21,11 @@ def pivot_table(cls, _filter=None, field_name='activity', relation_data=None):
 
     for k, v in enumerate(relation_data):
         relations_index[v[0]] = k
-        relations_label[k] = {'name':v[1], 'count':relations_counts.get(v[0])}
+        relations_label[k] = {'name': v[1], 'count': relations_counts.get(v[0])}
 
     queryset_data = {}
     for item in queryset:
-        queryset_data[item.pk] = {'object': item, 'data': [False]*len(relation_data)}
+        queryset_data[item.pk] = {'object': item, 'data': [False] * len(relation_data)}
 
     for item_pk, attr in queryset.values_list('pk', field_name):
         if not attr:

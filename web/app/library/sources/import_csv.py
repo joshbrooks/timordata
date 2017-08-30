@@ -189,7 +189,7 @@ def import_generic(source_directory, source_file, absolute_paths=False, master_p
         Publication.objects.filter(**pub_kw).delete()
 
         publication = Publication.objects.create(**pub_kw)
-        logging.info(u'P.{} : {}'.format(publication.pk, publication.name))
+        logging.info('P.{} : {}'.format(publication.pk, publication.name))
 
         if r.get('author', None):
             for i in [i.strip() for i in r['author'].split(',')]:
@@ -203,9 +203,9 @@ def import_generic(source_directory, source_file, absolute_paths=False, master_p
                     try:
                         publication.location.add(AdminArea.objects.get(name__iexact=i))
                     except AdminArea.DoesNotExist:
-                        logging.error(u'No Location: {} ( {} )'.format(pub_kw['name'], i))
+                        logging.error('No Location: {} ( {} )'.format(pub_kw['name'], i))
                     except AdminArea.MultipleObjectsReturned:
-                        logging.warn(u'Multiple Location: {} ( {} )'.format(pub_kw['name'], i))
+                        logging.warn('Multiple Location: {} ( {} )'.format(pub_kw['name'], i))
                         for adminarea in AdminArea.objects.filter(name__iexact=i.strip()):
                             publication.location.add(adminarea)
 
@@ -221,28 +221,28 @@ def import_generic(source_directory, source_file, absolute_paths=False, master_p
                         if assists['location'].get(i):
                             publication.location.add(AdminArea.objects.get(path=assists['location'].get(i)))
                         else:
-                            logging.error(u'No Location: {} ( {} )'.format(pub_kw['name'], i))
+                            logging.error('No Location: {} ( {} )'.format(pub_kw['name'], i))
                 except AdminArea.MultipleObjectsReturned:
-                    logging.warn(u'Multiple Location: {} ( {} )'.format(pub_kw['name'], i))
+                    logging.warn('Multiple Location: {} ( {} )'.format(pub_kw['name'], i))
                     for adminarea in AdminArea.objects.filter(name__iexact=i.strip()):
                         publication.location.add(adminarea)
 
         if r.get('org', None):
             for i in [i.strip() for i in r['org'].split(',')]:
-                assert i in assists['org'].keys()
-                
+                assert i in list(assists['org'].keys())
+
                 logging.debug(i)
 
                 if assists['org'].get(i):
                     org_name = assists['org'].get(i)
                 else:
                     org_name = i
-                    
+
                 try:
                     publication.organization.add(Organization.objects.get(name=org_name))
-                    
+
                 except Organization.DoesNotExist:
-                    logging.warn(u'Creating a new Organization object: {}'.format(i))
+                    logging.warn('Creating a new Organization object: {}'.format(i))
                     publication.organization.add(Organization.objects.create(name=i, orgtype_id='None'))
 
         publication.save()
@@ -285,7 +285,7 @@ def import_generic(source_directory, source_file, absolute_paths=False, master_p
                 ver_kw['url'] = r['url']
 
         version = Version.objects.create(**ver_kw)
-        logging.info(u'V.{} : {}'.format(version.pk, version.title))
+        logging.info('V.{} : {}'.format(version.pk, version.title))
 
         for tag_text in [i.strip().lower() for i in r['tags'].split(',')]:
 
@@ -351,7 +351,7 @@ def import_fm():
 
         version = Version(**v)
         version.save()
-        logging.info(u'V.{} : {}'.format(version.pk, version.title))
+        logging.info('V.{} : {}'.format(version.pk, version.title))
         tag_text_strings = [i.strip().lower() for i in r['tags'].split(',')]
         tag_text_strings.extend([i.strip().lower() for i in r['tags_more'].split(',')])
 
@@ -359,22 +359,22 @@ def import_fm():
             if len(tag_text) < 1:
                 continue
             version_property_tags = PropertyTag.objects.filter(name__iexact=tag_text)
-            logging.info(u'%s' % version_property_tags)
+            logging.info('%s' % version_property_tags)
 
             for version_property_tag in version_property_tags:
 
                 if version_property_tag.path.startswith('BEN'):
-                    logging.info(u'Using PROPERTY: %s' % tag_text)
+                    logging.info('Using PROPERTY: %s' % tag_text)
                     version.beneficiary.add(version_property_tag)
                 elif version_property_tag.path.startswith('ACT'):
-                    logging.info(u'Using PROPERTY: %s' % tag_text)
+                    logging.info('Using PROPERTY: %s' % tag_text)
                     version.activity.add(version_property_tag)
                 elif version_property_tag.path.startswith('INV'):
-                    logging.info(u'Using PROPERTY: %s' % tag_text)
+                    logging.info('Using PROPERTY: %s' % tag_text)
                     version.sector.add(version_property_tag)
 
             if not version_property_tags:
-                logging.info(u'Using TAG: %s' % tag_text)
+                logging.info('Using TAG: %s' % tag_text)
                 version.tag.add(Tag.objects.get_or_create(name=tag_text)[0])
 
         version.save()

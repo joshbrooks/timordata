@@ -2,8 +2,8 @@ __author__ = 'josh'
 
 from django.conf.urls import url, include
 from rest_framework import routers, serializers, viewsets
-from models import *
-from serializers import *
+from .models import *
+from .serializers import *
 
 
 class PublicationViewSet(viewsets.ModelViewSet):
@@ -29,6 +29,7 @@ class AuthorViewSet(viewsets.ModelViewSet):
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
 
 router = routers.DefaultRouter()
 router.register(r'publication', PublicationViewSet)

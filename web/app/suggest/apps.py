@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 
+
 class SuggestAppConfig(AppConfig):
 
     name = 'suggest'
@@ -7,4 +8,4 @@ class SuggestAppConfig(AppConfig):
 
     def ready(self):
 
-        import signals
+        from . import signals

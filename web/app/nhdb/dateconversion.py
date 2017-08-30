@@ -14,29 +14,28 @@ for date, in cur.fetchall():
 
         try:
             if '-' in date:
-                y,m,d = date.split(' ')[0].split('-')
+                y, m, d = date.split(' ')[0].split('-')
             elif '/' in date:
-                y,m,d = date.split(' ')[0].split('/')
+                y, m, d = date.split(' ')[0].split('/')
             else:
-                print 'no convert for %s'%date
+                print('no convert for %s' % date)
                 continue
         except ValueError:
-            print 'invalid convert for %s'%date
+            print('invalid convert for %s' % date)
             continue
-        
+
         y, m, d = int(y), int(m), int(d)
-        
+
         # Swap y, d if y > 1900
-        
+
         if d > 1900:
-            y,d = d,y
+            y, d = d, y
         if m > 12:
-            m,d = d,m
-        
-        #print y,m,d
+            m, d = d, m
 
-        dt = datetime.datetime(y,m,d).date()
+        # print y,m,d
 
-        print date,
-        print dt.isoformat()
+        dt = datetime.datetime(y, m, d).date()
 
+        print(date, end=' ')
+        print(dt.isoformat())

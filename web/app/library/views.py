@@ -7,10 +7,10 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django_tables2 import SingleTableView
 from django.utils.translation import ugettext_lazy as _
 
-from forms import *
+from .forms import *
 from nhdb.models import Organization
 from suggest.models import Suggest, AffectedInstance
-from tables import VersionTable
+from .tables import VersionTable
 
 
 def index(request):
@@ -138,7 +138,7 @@ def publicationlist(request):
         'activefilters': {}
     }
 
-    for f in context['filters'].keys():
+    for f in list(context['filters'].keys()):
         if request.GET.getlist(f) != []:
             context['activefilters'][f] = request.GET.getlist(f)
 

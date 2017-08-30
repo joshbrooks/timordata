@@ -32,9 +32,9 @@ class Publication(models.Model):
     country = models.ManyToManyField('geo.World', blank=True)
     location = models.ManyToManyField(AdminArea, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         if self.name:
-            return unidecode(u'{}'.format(self.name))
+            return u'{}'.format(self.name)
         else:
             return str(None)
 
@@ -59,7 +59,7 @@ class Tag(models.Model):
     'Keywords' or 'Tags' for a particular project
     """
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     name = models.CharField(max_length=64, unique=True)
@@ -184,7 +184,7 @@ class Thumbnail(models.Model):
                 make_thumbnail(file_path, thumbnail_path, res, page)  # Slow
             except UnicodeEncodeError:
                 pass
-            except Exception, e:
+            except Exception as e:
                 logger.exception(e.message)
                 pass
 
@@ -231,7 +231,7 @@ class Version(models.Model):
     This allows a single "publication" to have "versions" in different languages
     """
 
-    def __unicode__(self):
+    def __str__(self):
 
         presentation_field = 'title'
 
@@ -244,12 +244,12 @@ class Version(models.Model):
             if v is not None and v != '':
                 langs.append(v)
         if langs:
-            r = r + u'{}'.format(','.join(langs))
+            r = r + '{}'.format(','.join(langs))
 
         if r:
             return unidecode(r)
         else:
-            return u"No title"
+            return "No title"
 
     @classmethod
     def get_translated_fields(cls, prefix='title'):
@@ -300,7 +300,7 @@ class Version(models.Model):
                 try:
                     returns[code]['thumbnail'] = Thumbnail.make(self, cover_field, **kw)
                     returns[code]['image'] = returns[code]['thumbnail'].img
-                except Exception, e:
+                except Exception as e:
 
                     returns[code]['image-errors'] = e.message
                     continue
@@ -314,10 +314,10 @@ class Version(models.Model):
                 with NamedTemporaryFile() as f:
                     # print(['convert', upload.path + '[0]', _format + ':' + f.name])
                     # subprocess.call(['convert', upload.path + '[0]', 'jpg' + ':' + f.name])
-                    print f.name
+                    print(f.name)
                     logger.info('Creating thumbnail: make_thumbnail({}, {}, 600, 0)'.format(upload_path, f.name))
                     cover_file_name = os.path.split(unidecode(upload.path))[1].replace('pdf', 'jpg')
-                    print cover_file_name
+                    print(cover_file_name)
                     # raise AssertionError
                     make_thumbnail(upload_path, f.name, 600, 0)
                     cover.save(cover_file_name, File(f))
@@ -325,7 +325,7 @@ class Version(models.Model):
                 try:
                     returns[code]['thumbnail'] = Thumbnail.make(self, upload_field, **kw)
                     returns[code]['image'] = returns[code]['thumbnail'].img
-                except Exception, e:
+                except Exception as e:
 
                     returns[code]['image-errors'] = e.message
                     continue
@@ -396,7 +396,7 @@ class Author(models.Model):
 
         return "{}, {}".format(fn, formatted_ini)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def savesortname(self):
@@ -421,7 +421,7 @@ class Pubtype(models.Model):
     Describes an object based on its type (eg newsletter, report...)
     """
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     code = models.CharField(max_length=3, primary_key=True)

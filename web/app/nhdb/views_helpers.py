@@ -9,6 +9,7 @@ from itertools import product
 def fromiso(date):
     return datetime.datetime.strptime(date, '%Y-%m-%d').date()
 
+
 def intize(l):
     """
     Filter a list returning only integers and strings which can
@@ -46,7 +47,7 @@ def orgset_filter(rq, qs=Organization.objects.all()):
 
     # Also possible to set "inactive=on"
     if rq.GET.get('inactive') == 'on':
-        status='any'
+        status = 'any'
 
     place = rq.GET.getlist('place', None)
     pcode = rq.GET.getlist('pcode', None)
@@ -89,14 +90,14 @@ def orgset_filter(rq, qs=Organization.objects.all()):
                 filters[root_name] = []
             filters[root_name].append(PropertyTag.separatestring(tag).upper())
 
-        for root_name, child_tags in filters.items():
+        for root_name, child_tags in list(filters.items()):
             lookup = {'act': 'activity', 'ben': 'beneficiary', 'inv': 'sector'}
             _filter = {
                 lookup[root_name.lower()] + '__path__in': [PropertyTag.separatestring(v).upper() for v in child_tags]}
 
             projects = projects.filter(**_filter)
 
-    # There are two ways to determine "place": using the "pcode" or 
+    # There are two ways to determine "place": using the "pcode" or
     # using the place path. Internally "pcode" is converted to "path".
 
     if pcode:
@@ -179,7 +180,7 @@ def projectset_filter(
             for v in vals:
                 q = q | Q(place__path__startswith=v)
             pl = pl.filter(q)
-            print pl
+            print(pl)
 
         elif opt == 'status':
             pl = pl.filter(status_id__in=vals)
@@ -208,7 +209,7 @@ def projectset_filter(
         elif opt.upper() in [i[0] for i in PropertyTag.get_root_nodes().values_list('path')]:
             lookup = {'act': 'activity', 'ben': 'beneficiary', 'inv': 'sector'}
 
-            _filter = {lookup[opt.lower()]+'__path__in': [PropertyTag.separatestring(v).upper() for v in vals]}
+            _filter = {lookup[opt.lower()] + '__path__in': [PropertyTag.separatestring(v).upper() for v in vals]}
             pl = pl.filter(**_filter)
 
         elif opt == 'orgtype':

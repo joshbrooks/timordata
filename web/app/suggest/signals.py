@@ -33,11 +33,11 @@ def suggest_saved(sender, instance, **kwargs):
             # TODO: Suggestions API can not yet handle non-integer values for a foreign key
 
         ai, c = AffectedInstance.objects.get_or_create(
-            model_name = u'%s_%s'%(model._meta.app_label, model._meta.model_name),
-            suggestion_id = instance.pk,
-            model_pk = model.pk,
-            primary = False
-             )
+            model_name='%s_%s' % (model._meta.app_label, model._meta.model_name),
+            suggestion_id=instance.pk,
+            model_pk=model.pk,
+            primary=False
+        )
         if c:
             ai.save()
 
@@ -60,7 +60,7 @@ def post_save_affectedinstance(sender, instance, **kwargs):
     if instance.primary and not isinstance(instance, Suggest) and s.action == 'CM':
         if instance.instance.pk:
             s.state = 'A'
-            s.skip_signal=True
+            s.skip_signal = True
             # s.state = 'A'
             s.save()
 

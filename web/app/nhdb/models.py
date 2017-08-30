@@ -1,4 +1,5 @@
 # from django.contrib.gis.db import models
+from codecs import getencoder
 from datetime import datetime
 
 from belun import settings
@@ -30,16 +31,6 @@ __all__ = [
 ]
 
 
-def unisafe(inputstring):
-    try:
-        return u'{}'.format(inputstring)
-    except UnicodeEncodeError:
-        try:
-            return unidecode(inputstring)
-        except:
-            return 'Sorry, unicode error'
-
-
 class ProjectManager(models.Manager):
     def past_enddate(self):
         """
@@ -47,9 +38,8 @@ class ProjectManager(models.Manager):
         :return:
         """
         return super(ProjectManager, self) \
-            .get_queryset() \
-            .filter(status__pk='A') \
-            .filter(enddate__lt=datetime.today().date())
+            .get_queryset()\
+            .filter(status__pk='A', enddate__lt=datetime.today().date())
 
     def active(self, include_unknown=False):
         """
@@ -173,7 +163,7 @@ class Organization(models.Model):
         ordering = ['name', ]
 
     def __str__(self):
-        return unisafe(self.name)
+        return self.name
 
     def get_absolute_url(self):
         return "/nhdb/organization/?q=active.true#object=%s" % (self.pk)
@@ -221,7 +211,8 @@ class Email(object):
         if self._address:
             e = re.sub('\.', ' dot ', self._address)
             e = re.sub('@', ' at ', e)
-            return e[::-1].encode('rot13')
+            encoder = getencoder('rot-13')
+            return encoder(e[::-1])[0]
 
 
 def emailencode(email):
@@ -254,7 +245,8 @@ def emailencode(email):
         if '@' in email:
             e = re.sub('\.', ' dot ', email)
             e = re.sub('@', ' at ', e)
-            return e[::-1].encode('rot13')
+            encoder = getencoder('rot-13')
+            return encoder(e[::-1])[0]
 
 
 @python_2_unicode_compatible
@@ -330,7 +322,7 @@ class ProjectImage(models.Model):
     def __str__(self):
         try:
             if self.project:
-                return u'Image from project {} - {}'.format(self.project, self.description)
+                return 'Image from project {} - {}'.format(self.project, self.description)
             else:
                 return None
         except Exception as e:
@@ -526,12 +518,12 @@ class ProjectPerson(models.Model):
         try:
 
             if self.is_primary:
-                return u'{} as primary contact of {}'.format(self.person, self.project)
-            return u'{} as contact of {}'.format(self.person, self.project)
+                return '{} as primary contact of {}'.format(self.person, self.project)
+            return '{} as contact of {}'.format(self.person, self.project)
 
         except Exception as e:
             try:
-                return u'contact of {}'.format(self.project)
+                return 'contact of {}'.format(self.project)
             except Exception as e:
                 return 'Error in formatting: {}'.format(e.message)
 
@@ -547,7 +539,7 @@ class ProjectPlace(models.Model):
         if self.description:
             return self.description
         elif self.place.name:
-            return u'{}, {}'.format(
+            return '{}, {}'.format(
                 self.project.name, self.place.name)
         else:
             return '?'
@@ -620,7 +612,7 @@ class OrganizationPlace(models.Model):
         if self.description:
             return self.description
         elif self.organization and self.point:
-            return u'Office or location for {}'.format(self.organization)
+            return 'Office or location for {}'.format(self.organization)
 
     organization = models.ForeignKey('nhdb.Organization', null=True, blank=False)
     description = models.CharField(max_length=256, null=True, blank=True)
