@@ -6,6 +6,7 @@ from belun import settings
 from django.apps import apps
 from unidecode import unidecode
 from geo.models import Suco
+from nhdb.mixins import TimestampedMixin
 from pivottable import pivot_table as pivot
 from django.contrib.gis.db import models
 from django.db.models import Q
@@ -102,7 +103,7 @@ class ExcelDownloadFeedback(models.Model):
 
 
 @python_2_unicode_compatible
-class Organization(models.Model):
+class Organization(TimestampedMixin):
     name = models.CharField(_('name'), max_length=150)
     description = models.TextField(_('description'), null=True, blank=True)
     orgtype = models.ForeignKey('OrganizationClass', verbose_name=_('class'), default="LNGO", )
@@ -182,7 +183,7 @@ class Organization(models.Model):
 
 
 @python_2_unicode_compatible
-class OrganizationClass(models.Model):
+class OrganizationClass(TimestampedMixin):
     def __str__(self):
         return self.orgtype
 
@@ -250,7 +251,7 @@ def emailencode(email):
 
 
 @python_2_unicode_compatible
-class Person(models.Model):
+class Person(TimestampedMixin):
     class Meta:
         ordering = ['name']
 
@@ -285,7 +286,7 @@ class Person(models.Model):
         return reverse('nhdb:person:detail', kwargs={'pk': self.pk})
 
 
-class PropertyTag(MP_Lite):
+class PropertyTag(MP_Lite, TimestampedMixin):
     def __str__(self):
         return self.name
 
@@ -302,7 +303,7 @@ class PropertyTag(MP_Lite):
 
 
 @python_2_unicode_compatible
-class ProjectType(models.Model):
+class ProjectType(TimestampedMixin):
     def __str__(self):
         return self.description
 
@@ -310,7 +311,7 @@ class ProjectType(models.Model):
 
 
 @python_2_unicode_compatible
-class RecordOwner(models.Model):
+class RecordOwner(TimestampedMixin):
     def __str__(self):
         return self.description
 
@@ -318,7 +319,7 @@ class RecordOwner(models.Model):
 
 
 @python_2_unicode_compatible
-class ProjectImage(models.Model):
+class ProjectImage(TimestampedMixin):
     def __str__(self):
         try:
             if self.project:
@@ -358,7 +359,7 @@ class ProjectImage(models.Model):
 
 
 @python_2_unicode_compatible
-class Project(models.Model):
+class Project(TimestampedMixin):
     def __str__(self):
 
         # Translated fields : should automagically do whichever 'name' is first on the list
@@ -466,7 +467,7 @@ class Project(models.Model):
 
 
 @python_2_unicode_compatible
-class ProjectStatus(models.Model):
+class ProjectStatus(TimestampedMixin):
     def __str__(self):
         return self.description
 
@@ -475,7 +476,7 @@ class ProjectStatus(models.Model):
 
 
 @python_2_unicode_compatible
-class ProjectOrganization(models.Model):
+class ProjectOrganization(TimestampedMixin):
     def __str__(self):
         try:
             return self.organization.__str__() + " " + self.project.__str__()
@@ -494,7 +495,7 @@ class ProjectOrganization(models.Model):
 
 
 @python_2_unicode_compatible
-class ProjectOrganizationClass(models.Model):
+class ProjectOrganizationClass(TimestampedMixin):
     """
     Replaces an "option" for organizationclass
     """
@@ -506,7 +507,7 @@ class ProjectOrganizationClass(models.Model):
 
 
 @python_2_unicode_compatible
-class ProjectPerson(models.Model):
+class ProjectPerson(TimestampedMixin):
     class Meta:
         unique_together = (('person', 'project'))
 
@@ -534,7 +535,7 @@ class ProjectPerson(models.Model):
 
 
 @python_2_unicode_compatible
-class ProjectPlace(models.Model):
+class ProjectPlace(TimestampedMixin):
     def __str__(self):
         if self.description:
             return self.description
@@ -591,7 +592,7 @@ class ProjectPlace(models.Model):
 
 
 @python_2_unicode_compatible
-class OrganizationPlaceDescription(models.Model):
+class OrganizationPlaceDescription(TimestampedMixin):
     """
     Cache the OrganizationPlace to prevent looking up suco, subd., district every time
     """
@@ -606,7 +607,7 @@ class OrganizationPlaceDescription(models.Model):
 
 
 @python_2_unicode_compatible
-class OrganizationPlace(models.Model):
+class OrganizationPlace(TimestampedMixin):
     def __str__(self):
 
         if self.description:
