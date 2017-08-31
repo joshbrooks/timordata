@@ -47,7 +47,7 @@ class ProjectImageThumbnails(TestCase):
         '''
 
         i = ProjectImage.objects.create(
-            image=File(file('/home/josh/Documents/test.png')),
+            image=File(open('/home/josh/Documents/test.png')),
             project=Project.objects.create(name="Test Project")
         )
 

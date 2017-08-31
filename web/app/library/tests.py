@@ -1,33 +1,29 @@
-import subprocess
+import os
 import re
-import suggest
+import subprocess
+
+import fuzzywuzzy
+import unicodecsv as csv
 from crispy_forms.utils import render_crispy_form
 from django.contrib.auth.models import User
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from django.test import TestCase, Client
+from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+from unidecode import unidecode
+
+import suggest
 from geo.models import World
-from library import forms
+from library import forms, forms_delete
 from library import models
-
 from nhdb.models import Organization, PropertyTag, OrganizationClass
-import unicodecsv as csv
-from django.core.files import File
-import os
-import fuzzywuzzy
-
 from suggest.models import Suggest, AffectedInstance
 from suggest.tests import create_suggestion, affirm
-from unidecode import unidecode
-from django.core.files.uploadedfile import SimpleUploadedFile
 
-import logging
-import sys
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from selenium.webdriver.firefox.webdriver import WebDriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from belun.tests import logger
 os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS'] = 'localhost:8089'
 data_dir = '/home/josh/Desktop/DATA_CENTRE/'
 
@@ -216,9 +212,9 @@ class VersionThumbnailsTestCase(StaticLiveServerTestCase):
                 name='test', pubtype=models.Pubtype.objects.create(
                     code='RPT', name="Report")
             ),
-            upload_en=File(file('/home/josh/Documents/test.png')),
-            upload_tet=File(file('/home/josh/Documents/test.png')),
-            cover_pt=File(file('/home/josh/Documents/test.png'))
+            upload_en=File(open('/home/josh/Documents/test.png')),
+            upload_tet=File(open('/home/josh/Documents/test.png')),
+            cover_pt=File(open('/home/josh/Documents/test.png'))
         )
         v.save()
 
@@ -281,7 +277,7 @@ class FormsTestCase(TestCase):
                 name="Report")
         )
 
-        f = forms.PublicationDeleteForm(publication=publication)
+        f = forms_delete.PublicationDeleteForm(publication=publication)
         assert isinstance(f.helper, suggest.forms.DeleteFormHelper)
         render_crispy_form(f)
 

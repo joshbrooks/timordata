@@ -31,12 +31,13 @@ class ProjectSerializer(serializers.ModelSerializer):
 class SimplePersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
+        fields = '__all__'
 
 
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
-
+        fields = '__all__'
 
 class PersonIdNameSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,17 +48,17 @@ class PersonIdNameSerializer(serializers.ModelSerializer):
 class ProjectOrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectOrganization
-
+        fields = '__all__'
 
 class ProjectImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectImage
-
+        fields = '__all__'
 
 class PropertyTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = PropertyTag
-
+        fields = '__all__'
 
 class ProjectTypeSerializer(serializers.ModelSerializer):
     class Meta:

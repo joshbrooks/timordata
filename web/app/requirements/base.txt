@@ -24,6 +24,7 @@ psycopg2
 ghostscript
 uwsgi
 wand
+fuzzywuzzy
 
 # django-datatrans
 # mysqlclient
