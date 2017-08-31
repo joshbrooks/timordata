@@ -1,4 +1,4 @@
-from .settings_secret import SECRET_KEY, DEBUG, CRISPY_FAIL_SILENTLY, DATABASES, ALLOWED_HOSTS
+from .settings_secret import SECRET_KEY, DEBUG, CRISPY_FAIL_SILENTLY, DATABASES, ALLOWED_HOSTS, LOGGING
 import os
 
 from django.utils.translation import gettext_noop
@@ -91,6 +91,7 @@ INSTALLED_APPS = (
     'django_tables2',
     'crispy_forms',
     'django_extensions',
+    'django_behave',
 
     'rest_framework_swagger',
 
@@ -135,6 +136,17 @@ WSGI_APPLICATION = 'belun.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'USER': 'postgres',
+        'NAME': 'timordata_db',
+        # 'PASSWORD': 'L1terary20@',
+        'HOST': 'localhost',
+        'PORT': '5436',
+    }
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
@@ -148,7 +160,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = ['/var/www/html/static/']
+STATICFILES_DIRS = ['/var/www/html/static/', '/home/josh/Desktop/timordata_media/static', 'node_modules']
 MEDIA_ROOT = '/var/www/html/media/'
 MEDIA_URL = '/media/'
 
@@ -214,9 +226,9 @@ AUTHENTICATION_BACKENDS = (
 )
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
-    'PAGE_SIZE': 100,
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination'
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
+    # 'PAGE_SIZE': 100,
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination'
 
 }
 LOGIN_REDIRECT_URL = '/'
@@ -225,8 +237,4 @@ DATE_FORMAT = 'Y-m-d'
 SELECT2_BOOTSTRAP = True
 AUTO_RENDER_SELECT2_STATICS = False
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = ['/home/josh/Desktop/timordata_media/static']
-MEDIA_ROOT = '/home/josh/Desktop/timordata_media/media'
-MEDIA_URL = '/media/'
-# STATIC_ROOT = '/home/josh/Desktop/timordata_media/collect/'
+TEST_RUNNER = 'django_behave.runner.DjangoBehaveOnlyTestSuiteRunner'
