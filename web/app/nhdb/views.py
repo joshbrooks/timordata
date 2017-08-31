@@ -7,15 +7,18 @@ from itertools import product
 
 from crispy_forms.utils import render_crispy_form
 from django.contrib.admin.views.decorators import staff_member_required
+from django.core.exceptions import FieldError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q, Count
 from django.forms import modelformset_factory
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
-from django.template import RequestContext
-from django.views.generic import DetailView, ListView
+from django.template import RequestContext, Context
+from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import CreateView, DeleteView
 from django_tables2 import SingleTableView
+from rest_framework.renderers import JSONRenderer
+from rest_framework.utils.encoders import JSONEncoder
 from six import BytesIO
 
 from geo.models import District, Subdistrict, Suco, AdminArea
@@ -29,7 +32,7 @@ from nhdb.tables import OrganizationTable, ProjectTable, PropertyTagTable, Proje
 from rest_framework.parsers import JSONParser
 from suggest.models import Suggest
 from .views_helpers import projectset_filter, orgset_filter
-
+from . import models
 import logging
 
 logger = logging.getLogger(__name__)
@@ -918,6 +921,105 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
+
+
+
+from django.contrib.postgres.fields import ArrayField
+from django.db.models import Aggregate, IntegerField
+
+class IntegerArray(Aggregate):
+    # supports COUNT(distinct field)
+    function = 'ARRAY_AGG'
+    template = '%(function)s(%(distinct)s%(expressions)s)'
+
+    def __init__(self, expression, distinct=True, **extra):
+        super(IntegerArray, self).__init__(
+            expression,
+            distinct='DISTINCT ' if distinct else '',
+            output_field=ArrayField(IntegerField()),
+            **extra
+        )
+
+
+def object_dump(object, indent=None):
+    return mark_safe(json.dumps(object, indent=indent, cls=JSONEncoder))
+
+
+def list_values(objects, values, since=None):
+    if since and hasattr(objects, 'filter'):
+        try:
+            created = objects.filter(created_at__gte=since, deleted_at__isnull=True)
+            updated = objects.filter(updated_at__gte=since, created_at__lt=since, deleted_at__isnull=True)
+            deleted = objects.filter(deleted_at__gte=since, created_at__lt=since)
+
+            return {
+                'created': created.values(*values),
+                'updated': updated.values(*values),
+                'deleted': deleted.values(*values)
+            }
+
+        except FieldError:
+            warnings.warn('Expected created_at, updated_at, deleted_at fields in query')
+    if hasattr(objects, 'values'):
+        objects = list(objects.values(*values))
+
+    return objects
+
+def list_value_list(objects, values):
+    return list(objects.values_list(*values))
+
+
+class MainJS(TemplateView):
+    template_name = 'riot/database.j2'
+    content_type = 'application/javascript'
+
+    def get_context_data(self, **kwargs):
+        context = {}
+        # if kwargs['ts']:
+        #     dt = datetime.fromtimestamp(kwargs['ts'] / 1000.0)
+
+        projects = Project.objects.all()\
+            .annotate(orgs=IntegerArray('projectorganization__organization'))\
+            .annotate(places=IntegerArray('projectplace__place'))\
+            .annotate(sector_=IntegerArray('sector'))\
+            .annotate(activity_=IntegerArray('activity'))\
+            .annotate(beneficiary_=IntegerArray('beneficiary'))
+
+        organizations = models.Organization.objects.all()
+        propertytag = models.PropertyTag.objects.all()
+
+        now = datetime.now().timestamp()
+
+        datasets = (
+            ('Project', projects, ['pk', 'orgs', 'status', 'places', 'sector_', 'activity_', 'beneficiary_']),
+            ('Organization', organizations, ['pk']),
+            ('PropertyTag', propertytag, ['pk', 'name']),
+            ('ProjectStatus', models.ProjectStatus.objects.all(), ['pk', 'project__pk', 'code']),
+            ('ProjectOrganization', models.ProjectOrganization.objects.all(), ['pk', 'project__pk', 'organization', 'organizationclass']),
+            ('OrganizationClass', models.OrganizationClass.objects.all(), ['pk', 'code', 'orgtype']),
+            ('ProjectPerson', models.ProjectPerson.objects.all(), ['pk', 'project', 'person', 'is_primary']),
+            ('Person', models.Person.objects.all(), ['pk', 'name', 'title', 'organization']),
+            ('settings', [{'key': 'lastupdated', 'value':now}], ['key', 'value']),
+        )
+        timestamp = self.request.GET.get('timestamp')
+        if timestamp:
+            since = datetime.fromtimestamp(float(timestamp))
+            objects = { dataset[0]: {'columns': dataset[2], 'data': list_values(dataset[1], dataset[2], since)} for dataset in datasets }
+            context['objects'] = object_dump(objects)
+
+
+        dexie_tables = {dataset[0]:  ', '.join(dataset[2]) for dataset in datasets }
+        context['dexied'] = object_dump(dexie_tables, indent=1)
+        context['db_name'] = 'database'
+        context['db_version'] = '0.1'
+        context['now'] = now
+
+        return context
+
+
+class Main(TemplateView):
+    template_name = 'riot/project_list.html'
+    # content_type = 'application/html'
 
 
 def projectlist(request):

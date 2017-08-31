@@ -35,7 +35,9 @@ projectperson = [
 project = [
 
     # url(r'^$', views.ProjectList.as_view(), name='list'),
-    url(r'^$', views.projectlist, name='list'),
+    # url(r'^$', views.projectlist, name='list'),
+    url(r'^database.js/$', views.MainJS.as_view(), name='nhdb.database.js'),
+    url(r'^$', views.Main.as_view(), name='list'),
     # url(r'^table/$', views.ProjectList.as_view(template_name='nhdb/project_list_table.html'), name='list_as_table'),
     url(r'^dashboard/$', views.projectdashboard, name='dashboard'),
     url(r'^places/$', views.projectplaces, name='places'),
