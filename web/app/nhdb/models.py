@@ -339,7 +339,7 @@ class ProjectImage(TimestampedMixin):
         except KeyError:
             pass
         except Exception as e:
-            logger.error('Failed to create thumbnail: {}'.format(e.message))
+            logger.error('Failed to create thumbnail {}'.format(e))
             return False
 
     @property

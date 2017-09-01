@@ -160,7 +160,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = ['/var/www/html/static/', '/home/josh/Desktop/timordata_media/static', 'node_modules']
+STATICFILES_DIRS = ['/var/www/html/static/', '/home/josh/Desktop/timordata_media/static', '../node_modules']
 MEDIA_ROOT = '/var/www/html/media/'
 MEDIA_URL = '/media/'
 
@@ -237,4 +237,9 @@ DATE_FORMAT = 'Y-m-d'
 SELECT2_BOOTSTRAP = True
 AUTO_RENDER_SELECT2_STATICS = False
 
-TEST_RUNNER = 'django_behave.runner.DjangoBehaveOnlyTestSuiteRunner'
+# TEST_RUNNER = 'django_behave.runner.DjangoBehaveTestSuiteRunner'
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = ['/home/josh/Desktop/timordata_media/static', 'node_modules']
+MEDIA_ROOT = '/home/josh/Desktop/timordata_media/media'
+MEDIA_URL = '/media/'

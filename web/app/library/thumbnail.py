@@ -53,7 +53,7 @@ def make_thumbnail(file_path, thumbnail_path, res, page):
 
     logger.debug('Opening {}'.format(file_path))
     temp_file = None
-    if file_path.endswith('pdf'):
+    if file_path.endswith(b'pdf'):
         temp_file = NamedTemporaryFile()
         # Rip to an image with ghostscript first
         file_path = make_thumbnail_gs(file_path, thumbnail_path=temp_file.name, res=res, page=page)

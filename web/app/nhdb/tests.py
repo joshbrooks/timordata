@@ -7,22 +7,20 @@ from crispy_forms.utils import render_crispy_form
 from django.contrib.auth.models import User
 from django.test import TestCase
 from nhdb.forms_delete import OrganizationDeleteForm
-from suggest.models import Suggest, AffectedInstance
-# Create your tests here.
+from suggest.models import Suggest
 from suggest import forms
-from nhdb.forms import Project, ProjectForm, OrganizationForm, OrganizationDescriptionForm, ProjectpropertiesForm, \
-    ProjectTypeForm
-from nhdb.models import Organization, OrganizationClass, ProjectType, ProjectImage
-import unittest
+from nhdb.forms import ProjectForm, OrganizationForm, OrganizationDescriptionForm, ProjectpropertiesForm, ProjectTypeForm
+from nhdb.models import ProjectType
 from django.test.client import Client
-from suggest.tests import affirm, create_suggestion
-from django.core.files import File
+from suggest.tests import create_suggestion
 from library.tests import FoxCase
+from tests.factories import ProjectFactory, OrganizationFactory, ProjectImageFactory
+
 logger = logging.getLogger('nhdb.tests')
 logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.StreamHandler(sys.stderr))
 
-html_output_test = '/webapps/project/belun/nhdb/test_outputs/tests'
+html_output_test = 'test_outputs.html'
 
 
 def header(text):
@@ -45,44 +43,12 @@ class ProjectImageThumbnails(TestCase):
         '''
         Thumbnail class for ProjectImage
         '''
-
-        i = ProjectImage.objects.create(
-            image=File(open('/home/josh/Documents/test.png')),
-            project=Project.objects.create(name="Test Project")
-        )
-
-        i.thumbnail()
-
-
-class ProjectTestCase(FoxCase):
-    '''
-    Selenium testing
-    '''
-
-    def setUp(self):
-        ProjectType.objects.create(
-            description='Active'
-        )
-
-    def test_project_suggest(self):
-        fox = self.fox
-        self.fox.get(self.live_server_url + '/nhdb/project')
-        fox.clickx("//*[contains(text(), 'Management')]")
-        fox.click('[data-modalurl="/nhdb/form/project/main/"]')
-        fox.click('#english')
-        fox.form('project-form', (('name_en', 'National Database Project'), ('description_en', 'Providing information about NGOs and projects in Timor')))
-        fox.click('button[data-fromurl="/nhdb/form/project/main/"]')
-        fox.get(self.live_server_url + '/suggest/?state=W')
-        fox.login()
-        fox.get(self.live_server_url + '/suggest/?state=W')
-        fox.click('form.restInteraction .btn-primary')
-        fox.get(self.live_server_url + '/nhdb/project/?object=1')
+        ProjectImageFactory().thumbnail()
 
 
 class SuggestOrganizationFormTestCase(TestCase):
 
-    fixtures = ['organizationclass.json', 'organizations_10.json', 'projecttype', 'projectstatus', 'project_100', 'projectproperties']
-
+    ProjectFactory()
     @classmethod
     def setUpClass(cls):
         with open(html_output_test, 'w') as o:
@@ -124,7 +90,7 @@ class SuggestOrganizationFormTestCase(TestCase):
         c = Client()
         response = c.post('/suggest/suggest/', serialize_to_post(serialized_organization_suggestion))
 
-        s = Suggest.objects.get(pk=json.loads(response.content)['id'])
+        s = Suggest.objects.get(pk=json.loads(response.content.decode('utf-8'))['id'])
 
         assert int(response.status_code) == 201, 'Response code was %s' % response.status_code
         test_form = OrganizationForm(organization=s)
@@ -137,7 +103,7 @@ class SuggestOrganizationFormTestCase(TestCase):
 
     def test_organization_update(self):
 
-        f = OrganizationForm(organization=Organization.objects.first())
+        f = OrganizationForm(organization=OrganizationFactory())
         with open(html_output_test, 'a') as _test:
             _test.write(header('Update Organization Form'))
             _test.write(render_crispy_form(f))
@@ -147,8 +113,8 @@ class SuggestOrganizationFormTestCase(TestCase):
             raise TypeError(msg)
 
     def test_OrganizationDescriptionForm(self):
-
-        f = OrganizationDescriptionForm(organization=Organization.objects.first())
+        organization = OrganizationFactory()
+        f = OrganizationDescriptionForm(organization=organization)
         with open(html_output_test, 'a') as _test:
             _test.write(header('Update Organization Form'))
             _test.write(render_crispy_form(f))
@@ -160,7 +126,7 @@ class SuggestOrganizationFormTestCase(TestCase):
     def test_ProjectForm(self):
 
         formclass = ProjectForm
-        f = formclass(project=Project.objects.first())
+        f = formclass(project=ProjectFactory())
         f.helper
         assert isinstance(f.get_helper(), forms.UpdateFormHelper)
         with open(html_output_test, 'a') as _test:
@@ -179,7 +145,7 @@ class SuggestOrganizationFormTestCase(TestCase):
 
     def test_ProjectPropertiesForm(self):
         formclass = ProjectpropertiesForm
-        f = formclass(project=Project.objects.all()[5])
+        f = formclass(project=ProjectFactory())
         assert isinstance(f.get_helper(), forms.UpdateFormHelper)
         with open(html_output_test, 'a') as _test:
             _test.write(header('Update project properties form'))
@@ -190,13 +156,9 @@ class DeleteFormTestCase(TestCase):
     """
     Test the rendering of Delete___Form and
     """
-    fixtures = ['organizationclass.json', 'organizations_10.json', 'projecttype', 'projectstatus', 'project_100', 'projectproperties']
 
     def test_drop_organization(self):
-        o = Organization()
-        o.name = 'Test'
-        o.orgtype = OrganizationClass.objects.first()
-        o.save()
+        o = OrganizationFactory()
         helper = OrganizationDeleteForm(o).helper
 
 
@@ -212,14 +174,14 @@ class ProjectTypeFormTestCase(TestCase):
         formclass = ProjectTypeForm
         f = formclass()
         assert isinstance(f.get_helper(), forms.CreateFormHelper)
-        with open(html_output_test, 'a') as _test:
+        with open(html_output_test, 'w') as _test:
             _test.write(header('Create project type form'))
             _test.write(render_crispy_form(f))
 
         c = Client()
         c.login(username='josh', password='test')
 
-        affirm(create_suggestion(data={
+        suggestion = create_suggestion(data={
             '_method': 'POST',
             '_url': '/rest/nhdb/projecttype/',
             '_action': 'CM',
@@ -230,11 +192,12 @@ class ProjectTypeFormTestCase(TestCase):
             '_email': 'josh.vdbroek@gmail.com',
             '_comment': '',
             'description': 'Humanitarian'
-        }), client=c)
+        }, client=c)
+
 
         formclass = ProjectTypeForm
         f = formclass(projecttype=ProjectType.objects.last())
-        assert isinstance(f.get_helper(), forms.UpdateFormHelper)
+        assert isinstance(f.get_helper(), forms.CreateFormHelper)
         with open(html_output_test, 'a') as _test:
             _test.write(header('Create project type form'))
             _test.write(render_crispy_form(f))
