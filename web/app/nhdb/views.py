@@ -927,8 +927,8 @@ def get_client_ip(request):
 from django.contrib.postgres.fields import ArrayField
 from django.db.models import Aggregate, IntegerField
 
+
 class IntegerArray(Aggregate):
-    # supports COUNT(distinct field)
     function = 'ARRAY_AGG'
     template = '%(function)s(%(distinct)s%(expressions)s)'
 
@@ -943,30 +943,6 @@ class IntegerArray(Aggregate):
 
 def object_dump(object, indent=None):
     return mark_safe(json.dumps(object, indent=indent, cls=JSONEncoder))
-
-
-def list_values(objects, values, since=datetime.fromtimestamp(0)):
-    if since and hasattr(objects, 'filter'):
-        try:
-            created = objects.filter(created_at__gte=since, deleted_at__isnull=True)
-            updated = objects.filter(updated_at__gte=since, created_at__lt=since, deleted_at__isnull=True)
-            deleted = objects.filter(deleted_at__gte=since)
-
-            return {
-                'created': created.values(*values),
-                'updated': updated.values(*values),
-                'deleted': deleted.values(*values)
-            }
-
-        except FieldError:
-            warnings.warn('Expected created_at, updated_at, deleted_at fields in query')
-    if hasattr(objects, 'values'):
-        objects = list(objects.values(*values))
-
-    return objects
-
-def list_value_list(objects, values):
-    return list(objects.values_list(*values))
 
 
 class OfflineContent():
@@ -998,23 +974,46 @@ class OfflineContent():
         )
 
     @property
-    def datasets_dict(self):
-        return {
-            dataset[0]: {
-                'queryset': dataset[1],
-                'fields': dataset[2]
-            }
-            for dataset in self.datasets
-        }
-
-    @property
     def dexie_tables(self):
         return {dataset[0]: ', '.join(dataset[2]) for dataset in self.datasets}
 
     @property
     def timestamped_models(self):
-        objects = {dataset[0]: {'columns': dataset[2], 'data': list_values(dataset[1], dataset[2], self.since)} for dataset in self.datasets}
-        return objects
+
+        def list_values(objects, values, since=datetime.fromtimestamp(0)):
+
+            if not hasattr(objects, 'filter'):
+                return {
+                    'created': objects,
+                    'updated': [],
+                    'deleted': [],
+                }
+
+            try:
+                created = objects.filter(created_at__gte=since, deleted_at__isnull=True)
+                updated = objects.filter(updated_at__gte=since, created_at__lt=since, deleted_at__isnull=True)
+                deleted = objects.filter(created_at__lte=since, deleted_at__gte=since)
+
+            except FieldError:
+                warnings.warn('Expected created_at, updated_at, deleted_at fields in query')
+                created = objects.all()
+                updated = objects.none()
+                deleted = objects.none()
+
+            return {
+                'created': created.values(*values),
+                'updated': updated.values(*values),
+                'deleted': deleted.values('pk')
+            }
+
+        return {
+            name: {
+                'columns': columns,
+                'data': list_values(objects, columns, self.since)
+            }
+            for name, objects, columns in self.datasets
+        }
+
 
 class MainJS(TemplateView):
     template_name = 'riot/database.j2'
@@ -1028,10 +1027,11 @@ class MainJS(TemplateView):
         now = datetime.now().timestamp()
         timestamp = float(self.request.GET.get('timestamp', 0))
         db = OfflineContent(timestamp, now)
-        if timestamp > 0:
+        if 'timestamp' in self.request.GET:
             context['objects'] = object_dump(db.timestamped_models)
 
         context['dexied'] = object_dump(db.dexie_tables, indent=1)
+        # TODO: Store this value so that it can be compared and autoincremented
         context['db_name'] = 'database'
         context['db_version'] = '0.1'
         context['now'] = now

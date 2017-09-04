@@ -890,9 +890,9 @@ riot-tmpl@^3.0.8:
   dependencies:
     eslint-config-riot "^1.0.0"
 
-riot@^3.6.3:
-  version "3.6.3"
-  resolved "https://registry.yarnpkg.com/riot/-/riot-3.6.3.tgz#26aeea30f1a90a3c5eb6f770a2a11f7fe0103e77"
+riot@^3.7.0:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/riot/-/riot-3.7.0.tgz#2238705fa612a3fdf174666004765a6fd6e6d711"
   dependencies:
     riot-cli "^3.0.2"
     riot-compiler "^3.2.4"

@@ -3,6 +3,7 @@ import json
 import logging
 import sys
 
+import time
 from crispy_forms.utils import render_crispy_form
 from django.contrib.auth.models import User
 from django.test import TestCase
@@ -232,9 +233,10 @@ class OfflineDatabaseContent(TestCase):
     def test_update_project(self):
         project = ProjectFactory()
         project.name = 'new name'
-        project.save()
-        ts = project.created_at.timestamp()
-        assert OfflineContent(ts).timestamped_models['Project']['data']['updated'].count() == 1
+        project.save(force_updated_at=True) # force_updated kwarg makes sure that the updated_time != created_time
+        updated_after = project.updated_at.timestamp() - 1e-6
+        assert OfflineContent(updated_after).timestamped_models['Project']['data']['updated'].count() == 1
+
 
 class MySeleniumTests(StaticLiveServerTestCase):
     fixtures = ['user-data.json']
@@ -252,14 +254,6 @@ class MySeleniumTests(StaticLiveServerTestCase):
     def tearDownClass(cls):
         cls.selenium.quit()
         super(MySeleniumTests, cls).tearDownClass()
-
-    # def test_login(self):
-    #     self.selenium.get('%s%s' % (self.live_server_url, '/login/'))
-    #     username_input = self.selenium.find_element_by_name("username")
-    #     username_input.send_keys('myuser')
-    #     password_input = self.selenium.find_element_by_name("password")
-    #     password_input.send_keys('secret')
-    #     self.selenium.find_element_by_xpath('//input[@value="Log in"]').click()
 
     def test_projectpage(self):
         self.selenium.get('%s%s' % (self.live_server_url, '/nhdb/project'))
