@@ -7,8 +7,9 @@ from nhdb import models as nhdb
 class ProjectStatusFactory(DjangoModelFactory):
     class Meta:
         model = nhdb.ProjectStatus
+        django_get_or_create = ('code',)
 
-    code = factory.Faker('pystr', min_chars=2, max_chars=2)
+    code = 'A'
     description = factory.Faker('sentence', nb_words=4)
 
 
@@ -29,8 +30,8 @@ class ProjectFactory(DjangoModelFactory):
     enddate = factory.Faker('date_object')
     verified = factory.Faker('date_object')
     notes = factory.Faker('sentence', nb_words=10)
-    status = factory.RelatedFactory(ProjectStatusFactory)
-    projecttype = factory.RelatedFactory(ProjectTypeFactory)
+    status = factory.SubFactory(ProjectStatusFactory)
+    projecttype = factory.SubFactory(ProjectTypeFactory)
     stafffulltime = factory.Faker('pyint')
     staffparttime = factory.Faker('pyint')
 

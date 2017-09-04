@@ -6,15 +6,17 @@ import sys
 from crispy_forms.utils import render_crispy_form
 from django.contrib.auth.models import User
 from django.test import TestCase
-from nhdb.forms_delete import OrganizationDeleteForm
+from selenium import webdriver
+
+from .forms_delete import OrganizationDeleteForm
 from suggest.models import Suggest
 from suggest import forms
-from nhdb.forms import ProjectForm, OrganizationForm, OrganizationDescriptionForm, ProjectpropertiesForm, ProjectTypeForm
-from nhdb.models import ProjectType
+from .forms import ProjectForm, OrganizationForm, OrganizationDescriptionForm, ProjectpropertiesForm, ProjectTypeForm
+from .models import ProjectType
 from django.test.client import Client
 from suggest.tests import create_suggestion
-from library.tests import FoxCase
 from tests.factories import ProjectFactory, OrganizationFactory, ProjectImageFactory
+from .views import OfflineContent
 
 logger = logging.getLogger('nhdb.tests')
 logger.setLevel(logging.DEBUG)
@@ -202,13 +204,78 @@ class ProjectTypeFormTestCase(TestCase):
             _test.write(header('Create project type form'))
             _test.write(render_crispy_form(f))
 
-# class TestFormsAllExist(TestCase):
-#
-#     def test_all(self):
-#         """
-#         Check for the existence of a "CreateForm" for every model
-#         :return:
-#         """
-#         from form_present_check import form_present
-#         form_present()
-#
+
+
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from selenium.webdriver import Chrome as WebDriver
+
+
+class OfflineDatabaseContent(TestCase):
+
+    def test_create_project(self):
+        project = ProjectFactory()
+        offline = OfflineContent()
+        assert offline.timestamped_models['Project']['data']['created'].count() == 1
+        # If a client has an update timestamp from after the creation of this project it should not be included in the Created items
+        assert OfflineContent(timestamp=project.created_at.timestamp() + 1).timestamped_models['Project']['data']['created'].count() == 0
+
+    def test_delete_project(self):
+        project = ProjectFactory()
+        project.delete()
+
+        #  The default views should not return this "deleted" model as the client ought not to have it anyway
+        assert OfflineContent().timestamped_models['Project']['data']['deleted'].count() == 0
+        # If client has this record, it ought to include "delete this model"
+        ts = project.created_at.timestamp()
+        assert OfflineContent(ts).timestamped_models['Project']['data']['deleted'].count() == 1
+
+    def test_update_project(self):
+        project = ProjectFactory()
+        project.name = 'new name'
+        project.save()
+        ts = project.created_at.timestamp()
+        assert OfflineContent(ts).timestamped_models['Project']['data']['updated'].count() == 1
+
+class MySeleniumTests(StaticLiveServerTestCase):
+    fixtures = ['user-data.json']
+
+    @classmethod
+    def setUpClass(cls):
+        super(MySeleniumTests, cls).setUpClass()
+        options = webdriver.ChromeOptions()
+        options.add_argument('headless')
+        options.add_argument('window-size=1280x1024')
+        cls.selenium = webdriver.Chrome(chrome_options=options)
+        cls.selenium.implicitly_wait(10)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super(MySeleniumTests, cls).tearDownClass()
+
+    # def test_login(self):
+    #     self.selenium.get('%s%s' % (self.live_server_url, '/login/'))
+    #     username_input = self.selenium.find_element_by_name("username")
+    #     username_input.send_keys('myuser')
+    #     password_input = self.selenium.find_element_by_name("password")
+    #     password_input.send_keys('secret')
+    #     self.selenium.find_element_by_xpath('//input[@value="Log in"]').click()
+
+    def test_projectpage(self):
+        self.selenium.get('%s%s' % (self.live_server_url, '/nhdb/project'))
+        projects = []
+        projects.append(ProjectFactory())
+        self.selenium.get('%s%s' % (self.live_server_url, '/nhdb/project/database.js/?timestamp=0'))
+        projects.append(ProjectFactory())
+        ts = projects[0].created_at.timestamp() + 1
+        self.selenium.get('%s%s' % (self.live_server_url, '/nhdb/project/database.js/?timestamp={}'.format(ts)))
+        projects.append(ProjectFactory())
+        projects[0].delete()
+        ts = projects[0].deleted_at.timestamp() + 1
+        self.selenium.get('%s%s' % (self.live_server_url, '/nhdb/project/database.js/?timestamp={}'.format(ts)))
+        projects[1].name = 'new name blah blah blah'
+        projects[1].save()
+        ts = projects[1].updated_at.timestamp() + 1
+        self.selenium.get('%s%s' % (self.live_server_url, '/nhdb/project/database.js/?timestamp={}'.format(ts)))
+        r = self.selenium.page_source
+        print(r)

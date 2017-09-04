@@ -945,12 +945,12 @@ def object_dump(object, indent=None):
     return mark_safe(json.dumps(object, indent=indent, cls=JSONEncoder))
 
 
-def list_values(objects, values, since=None):
+def list_values(objects, values, since=datetime.fromtimestamp(0)):
     if since and hasattr(objects, 'filter'):
         try:
             created = objects.filter(created_at__gte=since, deleted_at__isnull=True)
             updated = objects.filter(updated_at__gte=since, created_at__lt=since, deleted_at__isnull=True)
-            deleted = objects.filter(deleted_at__gte=since, created_at__lt=since)
+            deleted = objects.filter(deleted_at__gte=since)
 
             return {
                 'created': created.values(*values),
@@ -969,51 +969,72 @@ def list_value_list(objects, values):
     return list(objects.values_list(*values))
 
 
-class MainJS(TemplateView):
-    template_name = 'riot/database.j2'
-    content_type = 'application/javascript'
+class OfflineContent():
 
-    def get_context_data(self, **kwargs):
-        context = {}
-        # if kwargs['ts']:
-        #     dt = datetime.fromtimestamp(kwargs['ts'] / 1000.0)
-
-        projects = Project.objects.all()\
-            .annotate(orgs=IntegerArray('projectorganization__organization'))\
-            .annotate(places=IntegerArray('projectplace__place'))\
-            .annotate(sector_=IntegerArray('sector'))\
-            .annotate(activity_=IntegerArray('activity'))\
+    def __init__(self, timestamp=0.0, now=datetime.now().timestamp()):
+        projects = Project.objects.all() \
+            .annotate(orgs=IntegerArray('projectorganization__organization')) \
+            .annotate(places=IntegerArray('projectplace__place')) \
+            .annotate(sector_=IntegerArray('sector')) \
+            .annotate(activity_=IntegerArray('activity')) \
             .annotate(beneficiary_=IntegerArray('beneficiary'))
 
         organizations = models.Organization.objects.all()
         propertytag = models.PropertyTag.objects.all()
-
-        now = datetime.now().timestamp()
-
-        datasets = (
-            ('Project', projects, ['pk', 'orgs', 'status', 'places', 'sector_', 'activity_', 'beneficiary_']),
+        self.since = datetime.fromtimestamp(float(timestamp))
+        self.datasets = (
+            ('Project', projects,
+             ['pk', 'name', 'description', 'startdate', 'enddate', 'orgs', 'status', 'places', 'sector_',
+              'activity_', 'beneficiary_']),
             ('Organization', organizations, ['pk']),
             ('PropertyTag', propertytag, ['pk', 'name']),
             ('ProjectStatus', models.ProjectStatus.objects.all(), ['pk', 'project__pk', 'code']),
-            ('ProjectOrganization', models.ProjectOrganization.objects.all(), ['pk', 'project__pk', 'organization', 'organizationclass']),
+            ('ProjectOrganization', models.ProjectOrganization.objects.all(),
+             ['pk', 'project__pk', 'organization', 'organizationclass']),
             ('OrganizationClass', models.OrganizationClass.objects.all(), ['pk', 'code', 'orgtype']),
             ('ProjectPerson', models.ProjectPerson.objects.all(), ['pk', 'project', 'person', 'is_primary']),
             ('Person', models.Person.objects.all(), ['pk', 'name', 'title', 'organization']),
-            ('settings', [{'key': 'lastupdated', 'value':now}], ['key', 'value']),
+            ('settings', [{'key': 'lastupdated', 'value': now}], ['key', 'value']),
         )
-        timestamp = self.request.GET.get('timestamp')
-        if timestamp:
-            since = datetime.fromtimestamp(float(timestamp))
-            objects = { dataset[0]: {'columns': dataset[2], 'data': list_values(dataset[1], dataset[2], since)} for dataset in datasets }
-            context['objects'] = object_dump(objects)
 
+    @property
+    def datasets_dict(self):
+        return {
+            dataset[0]: {
+                'queryset': dataset[1],
+                'fields': dataset[2]
+            }
+            for dataset in self.datasets
+        }
 
-        dexie_tables = {dataset[0]:  ', '.join(dataset[2]) for dataset in datasets }
-        context['dexied'] = object_dump(dexie_tables, indent=1)
+    @property
+    def dexie_tables(self):
+        return {dataset[0]: ', '.join(dataset[2]) for dataset in self.datasets}
+
+    @property
+    def timestamped_models(self):
+        objects = {dataset[0]: {'columns': dataset[2], 'data': list_values(dataset[1], dataset[2], self.since)} for dataset in self.datasets}
+        return objects
+
+class MainJS(TemplateView):
+    template_name = 'riot/database.j2'
+    content_type = 'application/javascript'
+
+    def get_content_type(self):
+        return 'application/javascript'
+
+    def get_context_data(self, **kwargs):
+        context = {}
+        now = datetime.now().timestamp()
+        timestamp = float(self.request.GET.get('timestamp', 0))
+        db = OfflineContent(timestamp, now)
+        if timestamp > 0:
+            context['objects'] = object_dump(db.timestamped_models)
+
+        context['dexied'] = object_dump(db.dexie_tables, indent=1)
         context['db_name'] = 'database'
         context['db_version'] = '0.1'
         context['now'] = now
-
         return context
 
 
