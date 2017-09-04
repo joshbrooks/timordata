@@ -95,3 +95,4 @@ ENV/
 .ropeproject
 
 web/app/belun/settings_local\.py
+web/app/node_modules/

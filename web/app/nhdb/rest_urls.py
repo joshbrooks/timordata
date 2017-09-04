@@ -69,14 +69,12 @@ class ProjectViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
     # filter_backends = (filters.OrderingFilter, DjangoFilterBackend)
     ordering_fields = ('verified', 'name')
-    filter_fields = ('activity', 'sector', 'organization', 'beneficiary')
+    # filter_fields = ('activity', 'sector', 'organization', 'beneficiary')
 
     def get_queryset(self):
+        prefetch = ['beneficiary', 'sector', 'activity', 'organization']
         queryset = Project.objects.all()
-        queryset = queryset.prefetch_related(
-            'beneficiary', 'sector', 'activity', 'organization'
-        )
-        return queryset
+        return queryset.prefetch_related(*prefetch)
 
 
 class ProjectProjectPersonViewSet(viewsets.ModelViewSet):

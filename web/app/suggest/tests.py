@@ -24,7 +24,7 @@ def create_suggestion(data, code=201, client=None):
     if create_post.status_code != code:
         raise AssertionError('Expected code %s, got code %s  /n Error message was %s' % (code, create_post.status_code, create_post.content))
 
-    s = Suggest.objects.get(pk=json.loads(create_post.content)['id'])
+    s = Suggest.objects.get(pk=json.loads(create_post.content.decode('utf-8'))['id'])
     assert s.state == 'W'
 
     for i in s.affectedinstance_set.all():
@@ -134,7 +134,7 @@ class SuggestProjectFormTestCase(TestCase):
         c = Client()
         response = c.post('/suggest/suggest/', project_test_data)
 
-        s = Suggest.objects.get(pk=json.loads(response.content)['id'])
+        s = Suggest.objects.get(pk=json.loads(response.content.decode('utf-8'))['id'])
 
         assert int(response.status_code) == 201, 'Response code was %s' % response.status_code
         test_form = ProjectForm(project=s)
@@ -147,7 +147,7 @@ class SuggestProjectFormTestCase(TestCase):
         c = Client()
         c.login(username='josh', password='test')
         response = c.post('/suggest/suggest/', project_test_data)
-        s = Suggest.objects.get(pk=json.loads(response.content)['id'])
+        s = Suggest.objects.get(pk=json.loads(response.content.decode('utf-8'))['id'])
         # Generate a 'post' request from the suggestion data
         p = c.post(s.url, {'_content': s.data, '_content_type': 'application/json'})
         assert int(p.status_code) == 201, 'Response code was %s' % response.status_code
@@ -194,7 +194,8 @@ class SuggestProjectFormTestCase(TestCase):
         c = Client()
         response = c.post('/suggest/suggest/', projectorganization_test_data)
         c.login(username='josh', password='test')
-        s = Suggest.objects.get(pk=json.loads(response.content)['id'])
+
+        s = Suggest.objects.get(pk=json.loads(response.content.decode('utf-8'))['id'])
         # Generate a 'post' request from the suggestion data
 
         s.follow('organization')

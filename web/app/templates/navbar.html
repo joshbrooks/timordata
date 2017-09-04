@@ -15,7 +15,8 @@
         <nav id="navbar" class="navbar-collapse collapse">
 
             <ul class="nav navbar-nav">
-                <li><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{% trans "Database" %}
+                <li><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-expanded="false">{% trans "Database" %}
                     <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="{% url 'nhdb:project:list' %}?q=status.A">{% trans "Projects" %} </a></li>
@@ -23,7 +24,8 @@
                     </ul>
                 </li>
 
-                <li><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{% trans "Library" %}
+                <li><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-expanded="false">{% trans "Library" %}
                     <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="{% url 'library:publication:list' %}">{% trans "Publications" %} </a></li>
@@ -38,45 +40,68 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Management
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li>{% if user.is_authenticated %}<a href="{% url 'nhdb:logout' %}">Log out</a>{% else %}<a href="{% url 'admin:login' %}?next={{request.get_full_path|urlencode}}">Login</a>{% endif %}</li>
-            <li>{% if user.is_authenticated %}<a href="{% url 'nhdb:downloadexcel_list' %}">See Downloads</a>{% endif %}</li>
-                        <li><a data-modalurl="{% url 'nhdb:form' model='project' form='main'%}"  data-modaltitle="New Project" data-toggle="modal" href="#">{% trans "Add a project" %}</a></li>
-                        <li><a data-modalurl="{% url 'nhdb:form' model='organization' form='main'%}"  data-modaltitle="New Organization" data-toggle="modal" href="#">{% trans "Add an organization" %}</a></li>
+                        <li>{% if user.is_authenticated %}<a href="{% url 'nhdb:logout' %}">Log out</a>{% else %}
+                            <a href="{% url 'admin:login' %}?next={{ request.get_full_path|urlencode }}">Login</a>{% endif %}
+                        </li>
+                        <li>{% if user.is_authenticated %}
+                            <a href="{% url 'nhdb:downloadexcel_list' %}">See Downloads</a>{% endif %}</li>
+                        <li><a data-modalurl="{% url 'nhdb:form' model='project' form='main' %}"
+                               data-modaltitle="New Project" data-toggle="modal"
+                               href="#">{% trans "Add a project" %}</a></li>
+                        <li><a data-modalurl="{% url 'nhdb:form' model='organization' form='main' %}"
+                               data-modaltitle="New Organization" data-toggle="modal"
+                               href="#">{% trans "Add an organization" %}</a></li>
                         <li class="divider"></li>
-                        <li><a data-modalurl="{% url 'library:form' model='publication' form='main'%}"  data-modaltitle="New Publication" data-toggle="modal" href="#">{% trans "Add a publication" %}</a></li>
+                        <li><a data-modalurl="{% url 'library:form' model='publication' form='main' %}"
+                               data-modaltitle="New Publication" data-toggle="modal"
+                               href="#">{% trans "Add a publication" %}</a></li>
                         <li class="divider"></li>
-                        <li><a data-modalurl="{% url 'donormapping:form' model='fundingoffer' form='main'%}"  data-modaltitle="New Funding Offer" data-container="true" data-toggle="modal" href="#">{% trans "Add a funding offer" %}</a></li><li class="divider"></li>
+                        <li><a data-modalurl="{% url 'donormapping:form' model='fundingoffer' form='main' %}"
+                               data-modaltitle="New Funding Offer" data-container="true" data-toggle="modal"
+                               href="#">{% trans "Add a funding offer" %}</a></li>
+                        <li class="divider"></li>
                         <li><a href="/suggest/?state=W">{% trans "Suggestions" %} </a></li>
-                         <li class="divider"></li>
-                        <li><a href="{%  url 'nhdb:project:verification' %}">{% trans "Project Verification" %} </a></li>
+                        <li class="divider"></li>
+                        <li><a href="{% url 'nhdb:project:verification' %}">{% trans "Project Verification" %} </a></li>
                     </ul>
                 </li>{% endblock managementdropdown %}
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{% trans "About" %}<span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-expanded="false">{% trans "About" %}<span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='history' %}">{% trans "History" %}</a></li>
-                        <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about' %}">{% trans "About Us" %}</a></li>
-                        <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/tet/' %}">{% trans "About Us" %} (Tetun)</a></li>
-                        <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='help' %}">{% trans "Help" %}</a></li>
+                        <li>
+                            <a href="{% url 'django.contrib.flatpages.views.flatpage' url='history' %}">{% trans "History" %}</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'django.contrib.flatpages.views.flatpage' url='about' %}">{% trans "About Us" %}</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/tet/' %}">{% trans "About Us" %}
+                                (Tetun)</a></li>
+                        <li>
+                            <a href="{% url 'django.contrib.flatpages.views.flatpage' url='help' %}">{% trans "Help" %}</a>
+                        </li>
                     </ul>
                 </li>
 
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Language
                         <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">{% get_language_info_list for LANGUAGES as languages %}{% for language in languages %}
+                    <ul class="dropdown-menu" role="menu">
+                        {% get_language_info_list for LANGUAGES as languages %}{% for language in languages %}
 
-                        <li><form role="form" action="{% url 'set_language' %}" method="post" autocomplete="off">
-                            {%csrf_token%}
-                            <button name="language" type="submit" class="btn btn-default btn-block {% if language.code == request.LANGUAGE_CODE %}disabled{% endif %}" value="{{ language.code }}">{{language.name_translated}}</button>
-                            </form>
-                            </li>{% endfor%}
-                        </ul>
+                            <li>
+                                <form role="form" action="{% url 'set_language' %}" method="post" autocomplete="off">
+                                    {% csrf_token %}
+                                    <button name="language" type="submit"
+                                            class="btn btn-default btn-block {% if language.code == request.LANGUAGE_CODE %}disabled{% endif %}"
+                                            value="{{ language.code }}">{{ language.name_translated }}</button>
+                                </form>
+                            </li>{% endfor %}
+                    </ul>
                 </li>
 
-
             </ul>
-
         </nav>
     </div>
 </div>

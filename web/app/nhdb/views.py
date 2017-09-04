@@ -7,15 +7,18 @@ from itertools import product
 
 from crispy_forms.utils import render_crispy_form
 from django.contrib.admin.views.decorators import staff_member_required
+from django.core.exceptions import FieldError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q, Count
 from django.forms import modelformset_factory
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
-from django.template import RequestContext
-from django.views.generic import DetailView, ListView
+from django.template import RequestContext, Context
+from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import CreateView, DeleteView
 from django_tables2 import SingleTableView
+from rest_framework.renderers import JSONRenderer
+from rest_framework.utils.encoders import JSONEncoder
 from six import BytesIO
 
 from geo.models import District, Subdistrict, Suco, AdminArea
@@ -29,7 +32,7 @@ from nhdb.tables import OrganizationTable, ProjectTable, PropertyTagTable, Proje
 from rest_framework.parsers import JSONParser
 from suggest.models import Suggest
 from .views_helpers import projectset_filter, orgset_filter
-
+from . import models
 import logging
 
 logger = logging.getLogger(__name__)
@@ -918,6 +921,126 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
+
+
+
+from django.contrib.postgres.fields import ArrayField
+from django.db.models import Aggregate, IntegerField
+
+
+class IntegerArray(Aggregate):
+    function = 'ARRAY_AGG'
+    template = '%(function)s(%(distinct)s%(expressions)s)'
+
+    def __init__(self, expression, distinct=True, **extra):
+        super(IntegerArray, self).__init__(
+            expression,
+            distinct='DISTINCT ' if distinct else '',
+            output_field=ArrayField(IntegerField()),
+            **extra
+        )
+
+
+def object_dump(object, indent=None):
+    return mark_safe(json.dumps(object, indent=indent, cls=JSONEncoder))
+
+
+class OfflineContent():
+
+    def __init__(self, timestamp=0.0, now=datetime.now().timestamp()):
+        projects = Project.objects.all() \
+            .annotate(orgs=IntegerArray('projectorganization__organization')) \
+            .annotate(places=IntegerArray('projectplace__place')) \
+            .annotate(sector_=IntegerArray('sector')) \
+            .annotate(activity_=IntegerArray('activity')) \
+            .annotate(beneficiary_=IntegerArray('beneficiary'))
+
+        organizations = models.Organization.objects.all()
+        propertytag = models.PropertyTag.objects.all()
+        self.since = datetime.fromtimestamp(float(timestamp))
+        self.datasets = (
+            ('Project', projects,
+             ['pk', 'name', 'description', 'startdate', 'enddate', 'orgs', 'status', 'places', 'sector_',
+              'activity_', 'beneficiary_']),
+            ('Organization', organizations, ['pk']),
+            ('PropertyTag', propertytag, ['pk', 'name']),
+            ('ProjectStatus', models.ProjectStatus.objects.all(), ['pk', 'project__pk', 'code']),
+            ('ProjectOrganization', models.ProjectOrganization.objects.all(),
+             ['pk', 'project__pk', 'organization', 'organizationclass']),
+            ('OrganizationClass', models.OrganizationClass.objects.all(), ['pk', 'code', 'orgtype']),
+            ('ProjectPerson', models.ProjectPerson.objects.all(), ['pk', 'project', 'person', 'is_primary']),
+            ('Person', models.Person.objects.all(), ['pk', 'name', 'title', 'organization']),
+            ('settings', [{'key': 'lastupdated', 'value': now}], ['key', 'value']),
+        )
+
+    @property
+    def dexie_tables(self):
+        return {dataset[0]: ', '.join(dataset[2]) for dataset in self.datasets}
+
+    @property
+    def timestamped_models(self):
+
+        def list_values(objects, values, since=datetime.fromtimestamp(0)):
+
+            if not hasattr(objects, 'filter'):
+                return {
+                    'created': objects,
+                    'updated': [],
+                    'deleted': [],
+                }
+
+            try:
+                created = objects.filter(created_at__gte=since, deleted_at__isnull=True)
+                updated = objects.filter(updated_at__gte=since, created_at__lt=since, deleted_at__isnull=True)
+                deleted = objects.filter(created_at__lte=since, deleted_at__gte=since)
+
+            except FieldError:
+                warnings.warn('Expected created_at, updated_at, deleted_at fields in query')
+                created = objects.all()
+                updated = objects.none()
+                deleted = objects.none()
+
+            return {
+                'created': created.values(*values),
+                'updated': updated.values(*values),
+                'deleted': deleted.values('pk')
+            }
+
+        return {
+            name: {
+                'columns': columns,
+                'data': list_values(objects, columns, self.since)
+            }
+            for name, objects, columns in self.datasets
+        }
+
+
+class MainJS(TemplateView):
+    template_name = 'riot/database.j2'
+    content_type = 'application/javascript'
+
+    def get_content_type(self):
+        return 'application/javascript'
+
+    def get_context_data(self, **kwargs):
+        context = {}
+        now = datetime.now().timestamp()
+        timestamp = float(self.request.GET.get('timestamp', 0))
+        db = OfflineContent(timestamp, now)
+        if 'timestamp' in self.request.GET:
+            context['objects'] = object_dump(db.timestamped_models)
+
+        context['dexied'] = object_dump(db.dexie_tables, indent=1)
+        # TODO: Store this value so that it can be compared and autoincremented
+        context['db_name'] = 'database'
+        context['db_version'] = '0.1'
+        context['now'] = now
+        return context
+
+
+class Main(TemplateView):
+    template_name = 'riot/project_list.html'
+    # content_type = 'application/html'
 
 
 def projectlist(request):

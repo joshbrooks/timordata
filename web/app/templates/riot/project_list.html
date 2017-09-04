@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel='stylesheet' href='{% static "timordata.css" %}'>
+    <link rel='stylesheet' href='{% static "bootstrap/dist/css/bootstrap.min.css" %}'>
+
+    <script src='{% static "jquery/dist/jquery.js" %}'></script>
+    <script src='{% static "bootstrap/dist/js/bootstrap.min.js" %}'></script>
+    <script src='{% static "dexie/dist/dexie.min.js" %}'></script>
+    <script src='{% static "lodash/lodash.min.js" %}'></script>
+
+    <script src='{% url "nhdb:project:nhdb.database.js" %}'></script>
+
+</head>
+<body>
+{% block navbar %}{% include "navbar.html" %}{% endblock navbar %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col col-sm-4">
+            <h3>Filter</h3>
+
+        </div>
+        <div class="col col-sm-8">
+            <h3>Data</h3>
+            <project-list></project-list>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+{% block footer %}
+    <div class="container">
+        <hr>
+        <footer>
+            <p>Contents © Belun / FONGTIL / Alola / The Asia Foundation / Oxfam / Fundasaun Mahein 2017. Site designed by <a href="mailto:josh.vdbroek@gmail.com">Joshua Brooks</a>. Artwork © <a href="mailto:aziby.dias216@gmail.com">Gibrael Carocho</a></p>
+        </footer>
+    </div>
+{% endblock %}
+
+    <script type="riot/tag" src='{% static "riot-tags/project-tags.tag.html" %}'></script>
+    <script src='{% static "riot/riot+compiler.js" %}'></script>
+    <script>
+        riot.mount('*')
+    </script>
+
+</body>
+</html>

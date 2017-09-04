@@ -1,0 +1,23 @@
+{% if not objects %}
+
+var version = {{db_version}};
+var stores = {{dexied}};
+var dbname = '{{ db_name }}';
+var now = {{ now }};
+var date = new Date(now*1000);
+var src='{% url "nhdb:project:nhdb.database.js" %}'
+
+window.db = new Dexie(dbname);
+db.version(version).stores(stores);
+
+{% include 'riot/load_data_function.js' %}
+
+db.settings.get('lastupdated').then (function (lastupdated) {
+    $.getJSON(src, {timestamp:_.get(lastupdated, 'value', 0)}).then(function(objects){
+          loaddata(db, objects)
+    })
+});
+
+{% else %}
+{{ objects }}
+{%  endif %}
