@@ -48,13 +48,21 @@
             function apply_one_filter(t, i, f, p) {
                 var where = _.invoke(t, 'where', i);
                 var filter = _.invoke(where, f, p);
-                var pks = filter.primaryKeys();
-                return pks
+                return filter.toArray()
             };
             Filters.prototype.clear = function(){
+                this.offset = 0;
                 _.set(this, 'filters', {})
             };
+            Filters.prototype.unset = function(i,f){
+                this.offset = 0;
+                _.unset(this, ['filters', i, f]);
+                if (_.has(this, ['filters', i]) && _.keys(_.get(this, ['filters', i])).length === 0){
+                    _.unset(this, ['filters', i])
+                }
+            };
             Filters.prototype.set = function (i, f, p) {
+                this.offset = 0;
                 _.set(this, ['filters', i, f], p)
             };
             Filters.prototype._apply = function () {
@@ -70,31 +78,28 @@
             Filters.prototype.results = function () {
                 var table = this.table;
                 var self = this;
-                console.log(this.filters, this.limit, this.offset);
-                var promise;
+                if (self.offset < 0){self.offset = 0};
 
                 if (_.keys(this.filters).length === 0){
-                    promise = table.toCollection();
-                    if (this.offset) {promise = promise.offset(this.offset)}
-                    if (this.limit) {promise.limit(this.limit)}
+                    table.count().then(function(c){self.count = c});
+                    return table.orderBy('name').offset(self.offset).limit(self.limit).toArray();
                 }
                 else {
                     return this._apply().then(function (a) {
-                        promise = table.where('pk').anyOf(_.intersection.apply(this, a));
-                        if (self.offset) {promise = promise.offset(self.offset)}
-                        if (self.limit) {promise.limit(self.limit)}
-                        return promise
+                        var filtered = _.intersection.apply(this, a, 'pk');
+                        self.count = _.size(filtered);
+                        return _(filtered).sortBy('name').slice(self.offset, self.offset+self.limit).value();
                     })
                 }
-
-                return promise;
             };
 
 {#            scope.Filters = Filters;#}
             riot.mixin('tableFilterMixin', {
                 init: function(){
                     var tag = this;
-                    tag.filters = new Filters(this.opts.table);
+                    tag.filters = new Filters(tag.opts.table);
+                    tag.filters.limit = tag.opts.limit || tag.filters.limit;
+                    tag.filters.offset = tag.opts.offset || tag.filters.offset;
                 },
                 get_results: function(){
                     var tag = this;

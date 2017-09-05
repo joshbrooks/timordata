@@ -1,9 +1,15 @@
 <search-input>
-    <input ref="input" oninput="{oninput}" placeholder="{opts.placeholder}">
+    <label>{opts.label}
+        <input ref="input" oninput="{oninput}" placeholder="{opts.placeholder}">
+    </label>
     <script>
         var tag = this;
         tag.oninput = function(e){
             var val = tag.refs.input.value;
+            if (val === ''){
+                tag.parent.trigger('unset_filter', tag.opts.index, tag.opts.func);
+                return;
+            }
             if (opts.int){val = _.toInteger(val)}
             tag.parent.trigger('set_filter', tag.opts.index, tag.opts.func, val)
         }
@@ -14,12 +20,14 @@
 <project-app>
     <div class="col col-sm-4">
         <h3>Filter</h3>
-        <span data-is="search-input" placeholder="By Beneficiary Id" int=true func="equals" index="beneficiary_"></span>
-        <span data-is="search-input" placeholder="By Name" func="startsWithIgnoreCase" index="name"></span>
+        <span data-is="search-input" label="Beneficiary" placeholder="By Beneficiary Id" int=true func="equals" index="beneficiary_"></span>
+        <span data-is="search-input" label="Name" placeholder="By Name" func="startsWithIgnoreCase" index="name"></span>
     </div>
     <div class="col col-sm-8">
-        <h3>Data</h3>
-        <project-list ref="project_list" table="{db.Project}"></project-list>
+        <h3 if="{!detail}">List of Projects</h3>
+        <h3 if="{detail}">Project Detail</h3>
+        <project-list hide="{detail}" ref="project_list" table="{db.Project}"></project-list>
+        <project-detail if="{detail}" ref="project_detail" table="{db.Project}" pk="{}"></project-detail>
     </div>
 
     <script>
@@ -31,13 +39,19 @@
             list.trigger('refresh_list');
         });
 
+        tag.on('unset_filter', function(index, func){
+            var list = tag.refs.project_list;
+            list.filters.unset(index, func);
+            list.trigger('refresh_list');
+        })
+
     </script>
 
 </project-app>
 
 <project-list>
     <h5>Hello World</h5>
-    Object {offset + 1} to {offset + limit + 1} of {count }
+    Object {filters.offset + 1} to {filters.offset + filters.limit + 1} of { filters.count }
         <table if={!loading} class='table table-condensed table-bordered table-striped'>
             <thead>
                 <tr>
@@ -45,7 +59,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr each="{project in projects}">
+                <tr onclick="{detail}" each="{project in projects}">
                     <td>{project.name}</td>
                 </tr>
             </tbody>
@@ -64,25 +78,37 @@
         tag.mixin('tableFilterMixin');
 
         tag.table = window.db.Project;
-        tag.defaults = {
-            limit: 10,
-            offset: 0,
-            count: 100
-        };
-
         tag.one('mount', function () {
-            tag.trigger('refresh_list', tag.defaults.limit, tag.defaults.offset);
-            db.Project.count().then(function(c){tag.update({count:c})})
+            tag.filters.limit = tag.opts.limit || tag.filters.limit;
+            tag.filters.offset = tag.opts.offset || tag.filters.offset;
+            tag.trigger('refresh_list');
         });
-        tag.on('refresh_list', function () {
-            var p = tag.filters.results();
-            if (!_.isUndefined(p.toArray)){p.toArray().then(function (r) {tag.update({loading: false, projects: r})});}
-            else {p.then(function (a) {a.toArray().then(function (r) {tag.update({loading: false, projects: r})});})}
+        tag.on('refresh_list', function (opts) {
+            _.extend(tag.filters, opts);
+            var promiseArray = tag.filters.results();
+            promiseArray.then(function(project_list) {tag.update({loading: false, projects: project_list})})
         });
 
         tag.page = {};
-        tag.page.up = function () {tag.trigger('refresh_list', tag.limit, tag.offset + tag.limit)};
-        tag.page.down = function () {tag.trigger('refresh_list', tag.limit, tag.offset - tag.limit)};
+        tag.page.up = function () {tag.trigger('refresh_list', {offset: tag.filters.offset + tag.filters.limit})};
+        tag.page.down = function () {tag.trigger('refresh_list', {offset: tag.filters.offset - tag.filters.limit})};
 
+        tag.detail = function(e){
+              tag.opts.table.get(_.toInteger(e.item.project.pk)).then(function(detail){
+              tag.parent.update({detail: detail})
+          }
+              )}
     </script>
 </project-list>
+<project-detail>
+
+    <p>{parent.detail.id}</p>
+    <p>{parent.detail.name}</p>
+    <button onclick="{list}">Back to list</button>
+    <script>
+        var tag = this;
+    tag.list = function(){
+        tag.parent.update({detail:false})
+    }
+    </script>
+</project-detail>
