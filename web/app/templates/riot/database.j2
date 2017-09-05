@@ -7,6 +7,7 @@ var now = {{ now }};
 var date = new Date(now*1000);
 var src='{% url "nhdb:project:nhdb.database.js" %}'
 
+{#Dexie.delete(dbname);#}
 window.db = new Dexie(dbname);
 db.version(version).stores(stores);
 

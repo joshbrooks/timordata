@@ -951,18 +951,19 @@ class OfflineContent():
         projects = Project.objects.all() \
             .annotate(orgs=IntegerArray('projectorganization__organization')) \
             .annotate(places=IntegerArray('projectplace__place')) \
-            .annotate(sector_=IntegerArray('sector')) \
-            .annotate(activity_=IntegerArray('activity')) \
-            .annotate(beneficiary_=IntegerArray('beneficiary'))
+            .annotate(sector_s=IntegerArray('sector')) \
+            .annotate(activity_s=IntegerArray('activity')) \
+            .annotate(beneficiary_s=IntegerArray('beneficiary'))
 
         organizations = models.Organization.objects.all()
         propertytag = models.PropertyTag.objects.all()
+
         self.since = datetime.fromtimestamp(float(timestamp))
         self.datasets = (
             ('Project', projects,
-             ['pk', 'name', 'description', 'startdate', 'enddate', 'orgs', 'status', 'places', '*sector_',
-              '*activity_', '*beneficiary_']),
-            ('Organization', organizations, ['pk']),
+             ['pk', 'name', 'description', 'startdate', 'enddate', 'orgs', 'status', 'places', '*sector_s',
+              '*activity_s', '*beneficiary_s']),
+            ('Organization', organizations, ['pk', 'name']),
             ('PropertyTag', propertytag, ['pk', 'name']),
             ('ProjectStatus', models.ProjectStatus.objects.all(), ['pk', 'project__pk', 'code']),
             ('ProjectOrganization', models.ProjectOrganization.objects.all(),

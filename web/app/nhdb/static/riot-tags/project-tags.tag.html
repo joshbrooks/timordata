@@ -17,17 +17,71 @@
     </script>
 </search-input>
 
+<search-choice>
+    <label>{opts.label}
+        <select  class="form-control" multiple={opts.multiple} onchange="{onselect}" ref="input" oninput="{oninput}">
+            <option>-----</option>
+          <option each="{option in choice}" value="{option.pk}">{option.name}</option>
+        </select>
+    </label>
+    <script>
+        var tag = this;
+
+        tag.on('before-mount', function() {
+
+            var filter_table = tag.opts.filter_table || db.Project;
+            var related_table = tag.opts.related_table || db.PropertyTag;
+            var relation_name = tag.opts.index || 'beneficiary_s';
+
+            filter_table.toArray().then(function (i) {
+                var show = _(i).map(relation_name).flatten().uniq().compact().value();
+                related_table.toArray().then(function (choice) {
+                    var choices = _.map(choice, function (i) {
+                        if (!_.includes(show, i.pk)){return}
+                        return {pk: i.pk, name: i.name}
+                    });
+                    tag.update({choice: _.compact(choices)})
+                })
+            });
+        });
+
+
+        tag.onselect = function(e){
+            if (!opts.multiple){
+                var val = tag.refs.input.value;
+                if (val === ''){
+                    tag.parent.trigger('unset_filter', tag.opts.index, tag.opts.func);
+                    return;
+                }
+                if (opts.int){val = _.toInteger(val)}
+                tag.parent.trigger('set_filter', tag.opts.index, tag.opts.func, val)
+            }
+            if (opts.multiple){
+                var val = _.map(tag.refs.input.selectedOptions, 'value');
+                if (opts.int){val = _.map(val, _.toInteger)}
+                val = _.compact(val);
+                tag.parent.trigger('set_filter', tag.opts.index, tag.opts.func, val)
+            }
+        }
+
+    </script>
+</search-choice>
+
 <project-app>
-    <div class="col col-sm-4">
+    <div hide="{detail}" class="col col-sm-4">
         <h3>Filter</h3>
-        <span data-is="search-input" label="Beneficiary" placeholder="By Beneficiary Id" int=true func="equals" index="beneficiary_"></span>
+        <span data-is="search-choice" label="Beneficiary" int=true func="equals" index="beneficiary_s" filter_table="{db.Project}" related_table="{db.PropertyTag}"></span>
+        <span data-is="search-choice" multiple=1 label="Sector" int=true func="anyOf" index="sector_s" filter_table="{db.Project}" related_table="{db.PropertyTag}"></span>
         <span data-is="search-input" label="Name" placeholder="By Name" func="startsWithIgnoreCase" index="name"></span>
     </div>
-    <div class="col col-sm-8">
-        <h3 if="{!detail}">List of Projects</h3>
-        <h3 if="{detail}">Project Detail</h3>
-        <project-list hide="{detail}" ref="project_list" table="{db.Project}"></project-list>
-        <project-detail if="{detail}" ref="project_detail" table="{db.Project}" pk="{}"></project-detail>
+    <div hide="{detail}" class="col col-sm-8">
+        <h3>List of Projects</h3>
+        <project-list ref="project_list" table="{db.Project}"></project-list>
+    </div>
+
+    <div if="{detail}" class="col col-sm-12">
+        <h3>Project Detail</h3>
+        <project-detail ref="project_detail" table="{db.Project}" pk="{}"></project-detail>
     </div>
 
     <script>
@@ -61,6 +115,12 @@
             <tbody>
                 <tr onclick="{detail}" each="{project in projects}">
                     <td>{project.name}</td>
+                    <td> <span each="{ sector in project.sector_s }" sector="{sector}" table="{db.PropertyTag}" property="name" data-is="sector-name"></span></td>
+                    <td> <span each="{ sector in project.beneficiary_s }" sector="{sector}" table="{db.PropertyTag}" property="name" data-is="sector-name"></span></td>
+                    <td>{ project.beneficiary_s }</td>
+                    <td>{ project.places }</td>
+                    <td>{ project.orgs }</td>
+                    <td>{project.startdate}</td>
                 </tr>
             </tbody>
         </table>
@@ -86,6 +146,7 @@
         tag.on('refresh_list', function (opts) {
             _.extend(tag.filters, opts);
             var promiseArray = tag.filters.results();
+            console.log(tag.filters)
             promiseArray.then(function(project_list) {tag.update({loading: false, projects: project_list})})
         });
 
@@ -112,3 +173,17 @@
     }
     </script>
 </project-detail>
+
+<sector-name>
+    <p if="{!s}">Looking up</p>
+    <p if="{s}">{s}</p>
+    <script>
+        var tag =this;
+        tag.on('before-mount', function(){
+            var table = tag.opts.table || db.PropertyTag;
+            var property = tag.opts.property || 'name';
+            tag.opts.table.get(_.toInteger(tag.opts.sector)).then(function(s){
+                tag.update({s:_.get(s, property)})})
+        });
+    </script>
+</sector-name>
