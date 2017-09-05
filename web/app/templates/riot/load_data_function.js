@@ -1,7 +1,5 @@
 function loaddata(db, data) {
     _.each(data, function (dataset, tablename) {
-        console.log(tablename, dataset.data.created);
-        console.log(tablename, dataset.data.updated);
         db[tablename].bulkPut(dataset.data.created).catch(Dexie.BulkError, function (e) {
             // Explicitly catching the bulkAdd() operation makes those successful
             // additions commit despite that there were errors.

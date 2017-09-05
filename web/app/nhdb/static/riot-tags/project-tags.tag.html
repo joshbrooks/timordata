@@ -1,11 +1,88 @@
+<search-input>
+    <input ref="input" oninput="{oninput}" placeholder="{opts.placeholder}">
+    <script>
+        var tag = this;
+        tag.oninput = function(e){
+            var val = tag.refs.input.value;
+            if (opts.int){val = _.toInteger(val)}
+            tag.parent.trigger('set_filter', tag.opts.index, tag.opts.func, val)
+        }
+
+    </script>
+</search-input>
+
+<project-app>
+    <div class="col col-sm-4">
+        <h3>Filter</h3>
+        <span data-is="search-input" placeholder="By Beneficiary Id" int=true func="equals" index="beneficiary_"></span>
+        <span data-is="search-input" placeholder="By Name" func="startsWithIgnoreCase" index="name"></span>
+    </div>
+    <div class="col col-sm-8">
+        <h3>Data</h3>
+        <project-list ref="project_list" table="{db.Project}"></project-list>
+    </div>
+
+    <script>
+        var tag = this;
+
+        tag.on('set_filter', function(index, func, param){
+            var list = tag.refs.project_list;
+            list.filters.set(index, func, param);
+            list.trigger('refresh_list');
+        });
+
+    </script>
+
+</project-app>
+
 <project-list>
     <h5>Hello World</h5>
+    Object {offset + 1} to {offset + limit + 1} of {count }
+        <table if={!loading} class='table table-condensed table-bordered table-striped'>
+            <thead>
+                <tr>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr each="{project in projects}">
+                    <td>{project.name}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button onclick="{page.up}"> Up </button>
+        <button onclick="{page.down}"> Down </button>
 
     <style>
         h5 {color: blue;}
+
     </style>
 
     <script type="text/javascript">
         var tag = this;
+        tag.mixin('tableFilterMixin');
+
+        tag.table = window.db.Project;
+        tag.defaults = {
+            limit: 10,
+            offset: 0,
+            count: 100
+        };
+
+        tag.one('mount', function () {
+            tag.trigger('refresh_list', tag.defaults.limit, tag.defaults.offset);
+            db.Project.count().then(function(c){tag.update({count:c})})
+        });
+        tag.on('refresh_list', function () {
+            var p = tag.filters.results();
+            if (!_.isUndefined(p.toArray)){p.toArray().then(function (r) {tag.update({loading: false, projects: r})});}
+            else {p.then(function (a) {a.toArray().then(function (r) {tag.update({loading: false, projects: r})});})}
+        });
+
+        tag.page = {};
+        tag.page.up = function () {tag.trigger('refresh_list', tag.limit, tag.offset + tag.limit)};
+        tag.page.down = function () {tag.trigger('refresh_list', tag.limit, tag.offset - tag.limit)};
+
     </script>
 </project-list>

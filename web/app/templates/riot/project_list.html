@@ -20,20 +20,9 @@
 {% block navbar %}{% include "navbar.html" %}{% endblock navbar %}
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col col-sm-4">
-            <h3>Filter</h3>
-
-        </div>
-        <div class="col col-sm-8">
-            <h3>Data</h3>
-            <project-list></project-list>
-        </div>
-
-
+    <div>
+        <project-app></project-app>
     </div>
-
-
 </div>
 
 {% block footer %}
@@ -47,8 +36,88 @@
 
     <script type="riot/tag" src='{% static "riot-tags/project-tags.tag.html" %}'></script>
     <script src='{% static "riot/riot+compiler.js" %}'></script>
+
     <script>
-        riot.mount('*')
+        (function filters(scope) {
+            var Filters = function (table) {
+                this.filters = {};
+                this.table = table;
+                this.offset = 0;
+                this.limit = 10;
+            }
+            function apply_one_filter(t, i, f, p) {
+                var where = _.invoke(t, 'where', i);
+                var filter = _.invoke(where, f, p);
+                var pks = filter.primaryKeys();
+                return pks
+            };
+            Filters.prototype.clear = function(){
+                _.set(this, 'filters', {})
+            };
+            Filters.prototype.set = function (i, f, p) {
+                _.set(this, ['filters', i, f], p)
+            };
+            Filters.prototype._apply = function () {
+                var t = this.table;
+                var filters = this.filters;
+                var promises = _.map(filters, function (index, ix) {
+                    return _.map(index, function (p, func) {
+                        return apply_one_filter(t, ix, func, p)
+                    })
+                });
+                return Promise.all(_.flatten(promises));
+            };
+            Filters.prototype.results = function () {
+                var table = this.table;
+                var self = this;
+                console.log(this.filters, this.limit, this.offset);
+                var promise;
+
+                if (_.keys(this.filters).length === 0){
+                    promise = table.toCollection();
+                    if (this.offset) {promise = promise.offset(this.offset)}
+                    if (this.limit) {promise.limit(this.limit)}
+                }
+                else {
+                    return this._apply().then(function (a) {
+                        promise = table.where('pk').anyOf(_.intersection.apply(this, a));
+                        if (self.offset) {promise = promise.offset(self.offset)}
+                        if (self.limit) {promise.limit(self.limit)}
+                        return promise
+                    })
+                }
+
+                return promise;
+            };
+
+{#            scope.Filters = Filters;#}
+            riot.mixin('tableFilterMixin', {
+                init: function(){
+                    var tag = this;
+                    tag.filters = new Filters(this.opts.table);
+                },
+                get_results: function(){
+                    var tag = this;
+                    tag.filters.results().then(function(results){
+                        console.log(results);
+                        tag.update({results:results});
+                    });
+            }
+{#                _test_filters: function(){#}
+{#                    this.filters.set('beneficiary_', 'equals', 36);#}
+{#                    this.filters.set('name', 'startsWithIgnoreCase', 'cap');#}
+{#                    this.filters.results().then(function (results) {console.log(results)});#}
+{#                    this.filters.clear();#}
+{#                    this.filters.set('beneficiary_', 'equals', 37);#}
+{#                    this.filters.results().then(function (results) {console.log(results)})#}
+{#                }#}
+            })
+        })();//(window);
+
+    </script>
+
+    <script>
+        riot.mount('project-app');
     </script>
 
 </body>

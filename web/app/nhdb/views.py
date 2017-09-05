@@ -960,8 +960,8 @@ class OfflineContent():
         self.since = datetime.fromtimestamp(float(timestamp))
         self.datasets = (
             ('Project', projects,
-             ['pk', 'name', 'description', 'startdate', 'enddate', 'orgs', 'status', 'places', 'sector_',
-              'activity_', 'beneficiary_']),
+             ['pk', 'name', 'description', 'startdate', 'enddate', 'orgs', 'status', 'places', '*sector_',
+              '*activity_', '*beneficiary_']),
             ('Organization', organizations, ['pk']),
             ('PropertyTag', propertytag, ['pk', 'name']),
             ('ProjectStatus', models.ProjectStatus.objects.all(), ['pk', 'project__pk', 'code']),
@@ -981,7 +981,7 @@ class OfflineContent():
     def timestamped_models(self):
 
         def list_values(objects, values, since=datetime.fromtimestamp(0)):
-
+            values = [v.replace('*', '') for v in values]
             if not hasattr(objects, 'filter'):
                 return {
                     'created': objects,
