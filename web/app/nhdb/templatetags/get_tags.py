@@ -1,7 +1,6 @@
 from django import template
 
-from django.template import Library, Node, resolve_variable, TemplateSyntaxError
-from django.template import Context, Template, Node, resolve_variable, TemplateSyntaxError, Variable
+from django.template import Node, Variable
 
 register = template.Library()
 
@@ -19,7 +18,7 @@ class DropGetParam(Node):
             self.values.append([i[0], template.Variable(i[1])])
 
     def render(self, context):
-        req = resolve_variable('request', context)
+        req = Variable('request').resolve(context)
         params = req.GET.copy()
 
         for key, value in self.values:
@@ -50,7 +49,7 @@ class HasGetParam(Node):
             self.values.append([i[0], template.Variable(i[1])])
 
     def render(self, context):
-        req = resolve_variable('request', context)
+        req = Variable('request').resolve(context)
         params = req.GET.copy()
 
         for key, value in self.values:
@@ -74,7 +73,7 @@ class AddGetParameter(Node):
             self.values.append([i[0], template.Variable(i[1])])
 
     def render(self, context):
-        req = resolve_variable('request', context)
+        req = Variable('request').resolve(context)
         params = req.GET.copy()
         for key, value in self.values:
             if key.startswith("__REPLACE__"):

@@ -1,12 +1,10 @@
 __author__ = 'josh'
 
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url
 from suggest import views
 
 
 urlpatterns = [
-
-    # url(r'^$', views.SuggestList.as_view(), name='list'),
     url(r'^$', views.suggestlist, name='list'),
     url(r'^(?P<pk>[0-9]+)/$', views.suggest, name='detail'),
     url(r'^(?P<pk>[0-9]+)/ajax/$', views.suggest_ajax, name='detail_ajax'),

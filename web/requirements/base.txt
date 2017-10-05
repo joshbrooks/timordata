@@ -1,8 +1,8 @@
+django>=1.9.5
 commonmark
 dateutils
 six>=1.2
 pandas>=0.14.1
-django>=1.9.5
 django-ckeditor
 django-crispy-forms
 django-datatrans
@@ -11,9 +11,7 @@ django-extensions
 django-grappelli
 django-model-utils
 django-modeltranslation
-# django-pandas
 django-rest-swagger
-# django-reversion
 django-tables2
 djangorestframework
 fuzzywuzzy
@@ -23,23 +21,18 @@ ipython
 jinja2
 numpy
 pillow
-# pypdf2
 python-dateutil
 python-memcached
 pytz
 pyyaml
-# qrcode
 redis
 selenium
 setuptools
 simplejson
 sorl-thumbnail
-#sphinx
 unicodecsv
 unidecode
 xlsxwriter
-# mysqlclient
 psycopg2
-# wand
 ghostscript
 uwsgi

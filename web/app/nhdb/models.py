@@ -4,7 +4,6 @@ from datetime import datetime
 
 from belun import settings
 from django.apps import apps
-from unidecode import unidecode
 from geo.models import Suco
 from nhdb.mixins import TimestampedMixin
 from pivottable import pivot_table as pivot

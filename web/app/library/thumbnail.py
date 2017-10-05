@@ -3,10 +3,6 @@ import os
 import subprocess
 from tempfile import NamedTemporaryFile
 
-import ghostscript
-import shutil
-
-from unidecode import unidecode
 from wand.color import Color
 from wand.image import Image
 

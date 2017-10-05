@@ -12,154 +12,229 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
+        migrations.AddField(
             model_name='organization',
             name='created_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='created at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='organization',
             name='updated_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='updated at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='organizationclass',
             name='created_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='created at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='organizationclass',
             name='updated_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='updated at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='organizationplace',
             name='created_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='created at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='organizationplace',
             name='updated_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='updated at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='organizationplacedescription',
             name='created_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='created at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='organizationplacedescription',
             name='updated_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='updated at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='person',
             name='created_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='created at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='person',
             name='updated_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='updated at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='project',
             name='created_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='created at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='project',
             name='updated_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='updated at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='projectimage',
             name='created_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='created at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='projectimage',
             name='updated_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='updated at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='projectorganization',
             name='created_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='created at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='projectorganization',
             name='updated_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='updated at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='projectorganizationclass',
             name='created_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='created at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='projectorganizationclass',
             name='updated_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='updated at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='projectperson',
             name='created_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='created at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='projectperson',
             name='updated_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='updated at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='projectplace',
             name='created_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='created at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='projectplace',
             name='updated_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='updated at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='projectstatus',
             name='created_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='created at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='projectstatus',
             name='updated_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='updated at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='projecttype',
             name='created_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='created at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='projecttype',
             name='updated_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='updated at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='propertytag',
             name='created_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='created at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='propertytag',
             name='updated_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='updated at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='recordowner',
             name='created_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='created at'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='recordowner',
             name='updated_at',
             field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='updated at'),
         ),
+        migrations.AddField(
+            model_name='organization',
+            name='deleted_at',
+            field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='deleted at'),
+        ),
+        migrations.AddField(
+            model_name='organizationclass',
+            name='deleted_at',
+            field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='deleted at'),
+        ),
+        migrations.AddField(
+            model_name='organizationplace',
+            name='deleted_at',
+            field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='deleted at'),
+        ),
+        migrations.AddField(
+            model_name='organizationplacedescription',
+            name='deleted_at',
+            field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='deleted at'),
+        ),
+        migrations.AddField(
+            model_name='person',
+            name='deleted_at',
+            field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='deleted at'),
+        ),
+        migrations.AddField(
+            model_name='project',
+            name='deleted_at',
+            field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='deleted at'),
+        ),
+        migrations.AddField(
+            model_name='projectimage',
+            name='deleted_at',
+            field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='deleted at'),
+        ),
+        migrations.AddField(
+            model_name='projectorganization',
+            name='deleted_at',
+            field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='deleted at'),
+        ),
+        migrations.AddField(
+            model_name='projectorganizationclass',
+            name='deleted_at',
+            field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='deleted at'),
+        ),
+        migrations.AddField(
+            model_name='projectperson',
+            name='deleted_at',
+            field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='deleted at'),
+        ),
+        migrations.AddField(
+            model_name='projectplace',
+            name='deleted_at',
+            field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='deleted at'),
+        ),
+        migrations.AddField(
+            model_name='projectstatus',
+            name='deleted_at',
+            field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='deleted at'),
+        ),
+        migrations.AddField(
+            model_name='projecttype',
+            name='deleted_at',
+            field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='deleted at'),
+        ),
+        migrations.AddField(
+            model_name='propertytag',
+            name='deleted_at',
+            field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='deleted at'),
+        ),
+        migrations.AddField(
+            model_name='recordowner',
+            name='deleted_at',
+            field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='deleted at'),
+        )
     ]

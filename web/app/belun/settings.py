@@ -1,4 +1,4 @@
-from .settings_secret import SECRET_KEY, DEBUG, CRISPY_FAIL_SILENTLY, DATABASES, ALLOWED_HOSTS, LOGGING
+from .settings_secret import SECRET_KEY, DEBUG, CRISPY_FAIL_SILENTLY, DATABASES, ALLOWED_HOSTS
 import os
 
 from django.utils.translation import gettext_noop

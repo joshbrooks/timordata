@@ -1,6 +1,6 @@
 
 __author__ = 'josh'
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url
 from geo import views
 
 urlpatterns = [
