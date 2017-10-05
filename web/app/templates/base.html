@@ -1,25 +1,5 @@
 {% load i18n %}
 {% load static %}
-{% comment "Description of content" %}
-
-Base Bootstrap Template
-
-    blocks defined:
-        title
-            Timor Development Data
-        css
-        style
-        bodyopen
-        navbar
-            include navbar code
-        body
-        containerclass
-        content
-            Same as body but wrapped with "container"
-        footer
-        script
-        
-{% endcomment %}
 <!DOCTYPE html>
 
 <html {% block manifest %}{% endblock manifest %}>
@@ -34,12 +14,11 @@ Base Bootstrap Template
     <title>{% block title %}Timor Development Data &middot;{% endblock title %}</title>
 
     {% block css %}
-      <link href='{% static "font-awesome.min.css" %}' rel="stylesheet">
+      <link href='{% static "font-awesome/css/font-awesome.min.css" %}' rel="stylesheet">
     {% if media.css %}{% for css_url in media.css %}
       <link href="{{ STATIC_URL }}{{ css_url }}" rel="stylesheet">
     {% endfor %}{% endif %}
-      <link href='{% static "bootstrap-modal/css/bootstrap-modal-bs3patch.css" %}' rel="stylesheet">
-      <link href='{% static "bootstrap/css/bootstrap.min.css" %}' rel="stylesheet">
+      <link href='{% static "bootstrap/dist/css/bootstrap.min.css" %}' rel="stylesheet">
     {% endblock css %}
 
     {% block style %}{# Use "style" block to add custom CSS files to a template like so #}
@@ -69,8 +48,8 @@ Base Bootstrap Template
     </div>
   {% endblock footer %}
 
-    <script src='{% static "jquery.js" %}'></script>
-    <script src='{% static "bootstrap/js/bootstrap.js" %}'></script>
+    <script src='{% static "jquery/dist/jquery.js" %}'></script>
+    <script src='{% static "bootstrap/dist/js/bootstrap.js" %}'></script>
    <script>
     $(document).ready(function(){
         $('form#mysuggestions input[name=name]').val(localStorage.user_name)

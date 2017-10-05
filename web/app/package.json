@@ -2,7 +2,10 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "dexie": "^1.5.1",
+    "font-awesome": "^4.7.0",
+    "fontawesome": "^4.7.2",
     "jquery": "^3.2.1",
+    "leaflet": "^1.2.0",
     "lodash": "^4.17.4",
     "riot": "^3.7.0",
     "riot-route": "^3.1.2",

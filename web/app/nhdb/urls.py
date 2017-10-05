@@ -4,18 +4,15 @@ from belun import views_authentication
 from nhdb import views, views_excel
 
 organization = [
-    # url(r'^$', views.OrganizationList.as_view(), name='list'),
     url(r'^$', views.organizationlist, name='list'),
     url(r'^xls$', views_excel.organization, name='list_as_excel'),
     url(r'^list.json/$', views.organization_list_as_json, name='list_as_json'),
     url(r'^(?P<pk>[0-9]+)/$', views.OrganizationDetail.as_view(), name='detail'),
-    url(r'^(?P<pk>[0-9]+)/ajax/$', views.OrganizationDetail.as_view(template_name='nhdb/organization_detail_ajax.html'),
-        name='detail_ajax'),
+    url(r'^(?P<pk>[0-9]+)/ajax/$', views.OrganizationDetail.as_view(template_name='nhdb/organization_detail_ajax.html'), name='detail_ajax'),
     url(r'^new/$', views.OrganizationCreate.as_view(), name='create'),
     url(r'^form/(?P<form>\w+)/$', views.organizationupdate, name='update'),
     url(r'^(?P<pk>\d+)/delete/$', views.OrganizationDelete.as_view(), name='delete'),
     url(r'^(?P<pk>\d+)/description_(?P<language_code>\w+)/$', views.organizationdescription, name='update_description'),
-    # url(r'^(?P<pk>\d+)/places/$', views.organizationplace, name='places'),
     url(r'^(?P<organization_id>\d+)/people/$', views.organization_persons, name='persons'),
 ]
 

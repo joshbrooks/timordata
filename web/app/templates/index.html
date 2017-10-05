@@ -1,28 +1,29 @@
 {% extends "base.html" %}
 {% load i18n %}
-{#{% block manifest %}manifest="/static/indexmanifest"{% endblock %}#}
+{% load static %}
 
 {% block style %}
-<link href="/static/timordata.css" rel="stylesheet">
-{% endblock style%}
+    <link href='{%  static "timordata.css" %}' rel="stylesheet">
+{% endblock style %}
 
 {% block navbar %}
 {% endblock navbar %}
 
 
 {% block body %}
-<div class="jumbotron box_textshadow">
-    <div class="container">
-        <h1><strong>{% trans 'Timor-Leste Data Center' %}</strong></h1>
+    <div class="jumbotron box_textshadow">
+        <div class="container">
+            <h1><strong>{% trans 'Timor-Leste Data Center' %}</strong></h1>
+        </div>
     </div>
-</div>
 
-{% include "navbar.html" %}
+    {% include "navbar.html" %}
 
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                <h2>{% trans 'Development' %}{% if request.LANGUAGE_CODE != 'tet' %} <span class="small">Dezenvolvimentu</span> {% endif %}</h2>
+                <h2>{% trans 'Development' %}{% if request.LANGUAGE_CODE != 'tet' %}
+                    <span class="small">Dezenvolvimentu</span> {% endif %}</h2>
 
                 <p> Search for information about humanitarian projects and NGO's working in Timor-Leste </p>
 
@@ -37,8 +38,10 @@
                 </h2>
                 <p>Search for information on research papers published about Timor-Leste</p>
 
-                <p><a class="btn btn-default" href='{% url "library:publication:list" %}' role="button">{% trans 'Publications' %} &raquo;</a></p>
-                <p><a class="btn btn-default" href='{% url "library:untl:list" %}' role="button">{% trans 'UNTL Library' %} &raquo;</a></p>
+                <p><a class="btn btn-default" href='{% url "library:publication:list" %}'
+                      role="button">{% trans 'Publications' %} &raquo;</a></p>
+                <p><a class="btn btn-default" href='{% url "library:untl:list" %}'
+                      role="button">{% trans 'UNTL Library' %} &raquo;</a></p>
 
             </div>
 
@@ -46,14 +49,18 @@
                 <h2>{% trans 'Donor Funding' %}<br>
                     {% if request.LANGUAGE_CODE != 'tet' %} <span class="small">Fundus husi Doadores</span> {% endif %}
                 </h2>
-                <p>The Donor Funding database will help donors and recipients to connect, supporting projects financially in Timor.</p>
-                <p><a class="btn btn-default" href='{% url "donormapping:fundingoffer:list" %}' role="button">{% trans 'View' %} &raquo;</a>
+                <p>The Donor Funding database will help donors and recipients to connect, supporting projects
+                    financially in Timor.</p>
+                <p><a class="btn btn-default" href='{% url "donormapping:fundingoffer:list" %}'
+                      role="button">{% trans 'View' %} &raquo;</a>
                 </p>
                 <h4>{% trans 'Funding Opportunities Survey' %}</h4>
                 <p>Summary of the funding opportunities survey</p>
-                <p> <a class="btn btn-default" href='{% url "donormapping:survey:list" %}' role="button">{% trans 'View' %} &raquo;</a>
-                    <a class="btn btn-default" href='/admin/donormapping/fundingsurvey/add/' role="button">{% trans 'Add' %} &raquo;</a></p>
+                <p><a class="btn btn-default" href='{% url "donormapping:survey:list" %}'
+                      role="button">{% trans 'View' %} &raquo;</a>
+                    <a class="btn btn-default" href='/admin/donormapping/fundingsurvey/add/'
+                       role="button">{% trans 'Add' %} &raquo;</a></p>
             </div>
-    </div>
+        </div>
     </div>
 {% endblock body %}
