@@ -30,27 +30,17 @@ projectperson = [
 ]
 
 project = [
-
-    # url(r'^$', views.ProjectList.as_view(), name='list'),
-    # url(r'^$', views.projectlist, name='list'),
-    url(r'^database.js/$', views.MainJS.as_view(content_type='application/javascript'), name='nhdb.database.js'),
     url(r'^$', views.Main.as_view(), name='list'),
-    # url(r'^table/$', views.ProjectList.as_view(template_name='nhdb/project_list_table.html'), name='list_as_table'),
+    url(r'^database.js/$', views.MainJS.as_view(content_type='application/javascript'), name='nhdb.database.js'),
     url(r'^dashboard/$', views.projectdashboard, name='dashboard'),
     url(r'^places/$', views.projectplaces, name='places'),
     url(r'^xls$', views_excel.project, name='list_as_excel'),
     url(r'^csv/$', views.projectcsv, name='csv'),
     url(r'^csv_export/$', views.projectcsv_nutrition, name='csv_export'),
-
-    # url(r'^new/$', views.project_suggested, name="new"),
-
-    # url(r'^form/(?P<form>\w+)/$', views.projectupdate), Replaced with new URL scheme
-
     url(r'^confirm/(?P<suggest_pk>[0-9]+)/$', views.confirmprojectchange, name='confirm'),
     url(r'(?P<pk>[0-9]+)/$', views.ProjectDetail.as_view(), name='detail'),
     url(r'(?P<pk>[0-9]+)/organizations/$', views.ProjectOrganizations.as_view(), name='projectorganizations'),
-    url(r'^(?P<pk>[0-9]+)/ajax/$', views.ProjectDetail.as_view(template_name='nhdb/project_detail_ajax.html'),
-        name='project_detail_ajax'),
+    url(r'^(?P<pk>[0-9]+)/ajax/$', views.ProjectDetail.as_view(template_name='nhdb/project_detail_ajax.html'), name='project_detail_ajax'),
     url(r'^(?P<pk>[0-9]+)/update/description/(?P<language_code>\w+)/$', views.projectdescription),
     url(r'^thumbnail_image/', views.thumbnail_image, name='thumbnail_image'),
     url(r'^verification/', views.project_verification, name='verification'),
