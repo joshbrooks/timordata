@@ -1,15 +1,16 @@
 {% extends "bootstrap_nhdb.html" %}
+{% load static %}
 
 {% block title %} NHDB Search Projects {% endblock title %}
 {% block extracss %}
-    <link href="{{ STATIC_URL }}bootstrap/css/dashboard.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}bootstrap/css/nhdb_start.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}css/bootstrap-modal-bs3patch.css" rel="stylesheet" />
-    <link href="{{ STATIC_URL }}css/bootstrap-modal.css" rel="stylesheet" />
+    <link href='{% static "bootstrap/css/dashboard.css" %}' rel="stylesheet">
+    <link href='{% static "bootstrap/css/nhdb_start.css" %}' rel="stylesheet">
+    <link href='{% static "css/bootstrap-modal-bs3patch.css" %}' rel="stylesheet" />
+    <link href='{% static "css/bootstrap-modal.css" %}' rel="stylesheet" />
     
-    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}css/jquery.dataTables.css">
-    <link rel="stylesheet" href="{{ STATIC_URL }}leaflet/css/leaflet.css" />
-    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}jquery.dropdown.css" />
+    <link type="text/css" rel="stylesheet" href='{% static "css/jquery.dataTables.css" %}'>
+    <link rel="stylesheet" href='{% static "leaflet/css/leaflet.css" %}' />
+    <link type="text/css" rel="stylesheet" href='{% static "jquery.dropdown.css" %}' />
 {% endblock extracss %}
     
 {% block pageheader %}<h1 class="page-header">Search for Organizations</h1>{% endblock %}
@@ -77,7 +78,7 @@
 
 
 {% block endscript %}
-    <script src="{{ STATIC_URL }}require.js" data-main="{{ STATIC_URL }}projects.require.js"></script>
+    <script src='{% static "require.js" %}' data-main='{% static "projects.require.js" %}'></script>
 {% endblock %}
 
 

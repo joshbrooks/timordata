@@ -1,10 +1,11 @@
 {% extends "base.html" %}
+{% load static %}
 {% load i18n %}
 {% load crispy_forms_tags %}
 {% block containerclass %}"container-fluid"{% endblock %}
  {% block style %}
-    <link href="{{ STATIC_URL }}css/select2.min.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}css/fileinput.min.css" rel="stylesheet">
+    <link href='{% static "css/select2.min.css" %}' rel="stylesheet">
+    <link href='{% static "css/fileinput.min.css" %}' rel="stylesheet">
 
 <style>
 
@@ -40,8 +41,8 @@
 
 {% block script %}
     {{block.super}}
-<script src="{{ STATIC_URL }}js/select2.min.js"></script>
-<script src="{{ STATIC_URL }}js/fileinput.min.js"></script>
+<script src='{% static "js/select2.min.js" %}'></script>
+<script src='{% static "js/fileinput.min.js" %}'></script>
 
 
 <script>

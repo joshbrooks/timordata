@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load django_select2_tags %}
+{% load static %}
 
 {% block script %}
     {{block.super}}
 
-    <link rel="stylesheet" href="{{ STATIC_URL }}zebra/css/bootstrap.css" />
-    <script src="{{ STATIC_URL }}zebra/javascript/zebra_datepicker.js"></script>
-    <script src="{{ STATIC_URL }}simply-toast/simply-toast.js"></script>
+    <link rel="stylesheet" href='{% static "zebra/css/bootstrap.css" %}' />
+    <script src='{% static "zebra/javascript/zebra_datepicker.js" %}'></script>
+    <script src='{% static "simply-toast/simply-toast.js" %}'></script>
 
 <script>
 
@@ -55,13 +56,13 @@
 </script>
 
     {% import_django_select2_js_css %}
-    <script src="{{ STATIC_URL }}project_edit.js"></script>
-    <script src="{{ STATIC_URL }}select2/js/select2.min.js"></script>
+    <script src='{% static "project_edit.js" %}'></script>
+    <script src='{% static "select2/js/select2.min.js" %}'></script>
 {% endblock script %}
  {% block style %}
-    <link href="{{ STATIC_URL }}django_tables2/themes/paleblu/css/screen.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}selectize/css/selectize.bootstrap3.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}select2/css/select2.min.css" rel="stylesheet">
+    <link href='{% static "django_tables2/themes/paleblu/css/screen.css" %}' rel="stylesheet">
+    <link href='{% static "selectize/css/selectize.bootstrap3.css" %}' rel="stylesheet">
+    <link href='{% static "select2/css/select2.min.css" %}' rel="stylesheet">
     <style>
     ul.pagination {
         border-radius: 0px;

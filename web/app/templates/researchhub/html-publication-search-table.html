@@ -1,13 +1,14 @@
 {% extends 'nhdb/new_project_search/base.html' %}
 {% load i18n %}
+{% load static %}
 {% block script %}
 
-  <script src="{{ STATIC_URL }}require.js" data-main="/require.publication.results.js"></script>
+  <script src='{% static "require.js" %}' data-main="/require.publication.results.js"></script>
 {% endblock %}
 {% block style %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}datatables/media/css/dataTables.bootstrap.css">
-    <link rel="stylesheet" href="{{ STATIC_URL }}/selectize.js/dist/css/selectize.bootstrap3.css">
-    <link rel="stylesheet" href="{{ STATIC_URL }}/css/zebra/default.css">
+    <link rel="stylesheet" href='{% static "datatables/media/css/dataTables.bootstrap.css" %}'>
+    <link rel="stylesheet" href='{% static "/selectize.js/dist/css/selectize.bootstrap3.css" %}'>
+    <link rel="stylesheet" href='{% static "/css/zebra/default.css" %}'>
     <style>
     span.tags {
         line-height: 22px;

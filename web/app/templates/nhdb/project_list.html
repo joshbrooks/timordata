@@ -1,5 +1,6 @@
 {% extends "object_list.html" %}
 {% load i18n %}
+{% load static %}
 {% load render_table from django_tables2 %}
 {% load crispy_forms_tags %}
 {% load cache %}
@@ -7,16 +8,16 @@
 
 {% block script %}
     {{block.super}}
-    <script src="{{ STATIC_URL }}leaflet-place-selector.js"></script>
-    <script src="{{ STATIC_URL }}js/jquery.blueimp-gallery.min.js"></script>
-    <script src="{{ STATIC_URL }}js/project_list.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap-table-master/dist/bootstrap-table.js"></script>
+    <script src='{% static "leaflet-place-selector.js" %}'></script>
+    <script src='{% static "js/jquery.blueimp-gallery.min.js" %}'></script>
+    <script src='{% static "js/project_list.js" %}'></script>
+    <script src='{% static "bootstrap-table-master/dist/bootstrap-table.js" %}'></script>
 {% endblock script %}
 
  {% block style %}
     {{block.super}}
-    <link href="{{ STATIC_URL }}leaflet/leaflet.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/blueimp-gallery.min.css">
+    <link href='{% static "leaflet/leaflet.css" %}' rel="stylesheet">
+    <link rel="stylesheet" href='{% static "css/blueimp-gallery.min.css" %}'>
     <link rel="stylesheet" href="/static/bootstrap-table-master/dist/bootstrap-table.css">
 {% endblock style %}
 

@@ -1,24 +1,25 @@
 {% extends "base.html" %}
 {% load render_table from django_tables2 %}
 {% load thumbnail %}
+{% load static %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}webwidget_vertical_menu.css" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}staffselect.css" />
-	<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/css/leaflet.css" />
-	<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/markercluster/dist/MarkerCluster.css" />
-	<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/markercluster/dist/MarkerCluster.Default.css" />
-	<link rel="stylesheet" href="{{ STATIC_URL }}leaflet/fullscreen/Control.FullScreen.css" />
+    <link rel="stylesheet" href='{% static "webwidget_vertical_menu.css" %}' />
+    <link rel="stylesheet" href='{% static "staffselect.css" %}' />
+	<link rel="stylesheet" href='{% static "leaflet/css/leaflet.css" %}' />
+	<link rel="stylesheet" href='{% static "leaflet/markercluster/dist/MarkerCluster.css" %}' />
+	<link rel="stylesheet" href='{% static "leaflet/markercluster/dist/MarkerCluster.Default.css" %}' />
+	<link rel="stylesheet" href='{% static "leaflet/fullscreen/Control.FullScreen.css" %}' />
 {% endblock extra_css %}
 
 {% block resources %}
-    <script src="{{ STATIC_URL }}leaflet/js/leaflet.js"></script>
-    <script src="{{ STATIC_URL }}leaflet/js/proj4-compressed.js"></script>
-    <script src="{{ STATIC_URL }}leaflet/js/proj4leaflet.js"></script>
-    <script src="{{ STATIC_URL }}leaflet/markercluster/dist/leaflet.markercluster.js"></script>
-    <script src="{{ STATIC_URL }}leaflet/fullscreen/Control.FullScreen.js"></script>
-    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}organizationmap.js"></script>
-    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}jquery.optiontable.js"></script>
+    <script src='{% static "leaflet/js/leaflet.js" %}'></script>
+    <script src='{% static "leaflet/js/proj4-compressed.js" %}'></script>
+    <script src='{% static "leaflet/js/proj4leaflet.js" %}'></script>
+    <script src='{% static "leaflet/markercluster/dist/leaflet.markercluster.js" %}'></script>
+    <script src='{% static "leaflet/fullscreen/Control.FullScreen.js" %}'></script>
+    <script language="javascript" type="text/javascript" src='{% static "organizationmap.js" %}'></script>
+    <script language="javascript" type="text/javascript" src='{% static "jquery.optiontable.js" %}'></script>
 {% endblock resources %}
 
 {% block script %}

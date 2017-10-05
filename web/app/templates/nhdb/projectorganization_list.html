@@ -1,12 +1,13 @@
 {% extends "object_list.html" %}
 {% load i18n %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block script %}
     {{block.super}}
-    <script src="{{ STATIC_URL }}simply-toast/simply-toast.js"></script>
-    <script src="{{ STATIC_URL }}select2/js/select2.min.js"></script>
-    <link href="{{ STATIC_URL }}select2/css/select2.css" rel="stylesheet">
+    <script src='{% static "simply-toast/simply-toast.js" %}'></script>
+    <script src='{% static "select2/js/select2.min.js" %}'></script>
+    <link href='{% static "select2/css/select2.css" %}' rel="stylesheet">
     <script>
 
         //Since we're looking for a one-click solution to suggest adding a Organization and a ProjectOrganization object

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load static %}
 {% load crispy_forms_tags %}
 {% load django_select2_tags %}
 {% get_current_language as LANGUAGE_CODE %}
@@ -7,11 +8,11 @@
 {% block script %}
      {{block.super}}
 
-    <link rel="stylesheet" href="{{ STATIC_URL }}leaflet/leaflet.css" />
-    <script src="{{ STATIC_URL }}leaflet/leaflet.js"></script>
-    <script src="{{ STATIC_URL }}leaflet/leaflet.utfgrid.js"></script>
-    <script src="{{ STATIC_URL }}leaflet/leaflet.ajax.min.js"></script>
-    <script src="{{ STATIC_URL }}project_detail.js"></script>
+    <link rel="stylesheet" href='{% static "leaflet/leaflet.css" %}' />
+    <script src='{% static "leaflet/leaflet.js" %}'></script>
+    <script src='{% static "leaflet/leaflet.utfgrid.js" %}'></script>
+    <script src='{% static "leaflet/leaflet.ajax.min.js" %}'></script>
+    <script src='{% static "project_detail.js" %}'></script>
 
 
     <script>

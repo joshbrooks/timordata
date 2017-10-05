@@ -1,12 +1,13 @@
 {% extends "bootstrap_nhdb.html" %}
+{% load static %}
 {% block title %} NHDB - {{proj.name}} {% endblock title %}{% block extracss %}
-    <link href="{{ STATIC_URL }}bootstrap/css/dashboard.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}bootstrap/css/nhdb_start.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ STATIC_URL }}leaflet/css/leaflet.css" />
+    <link href='{% static "bootstrap/css/dashboard.css" %}' rel="stylesheet">
+    <link href='{% static "bootstrap/css/nhdb_start.css" %}' rel="stylesheet">
+    <link rel="stylesheet" href='{% static "leaflet/css/leaflet.css" %}' />
     {{linksform.media}}
     {{organizationformset.media}}
-    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}jquery.dropdown.css" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}jqueryui/development-bundle/themes/base/jquery.ui.all.css">{% endblock extracss %}
+    <link type="text/css" rel="stylesheet" href='{% static "jquery.dropdown.css" %}' />
+    <link rel="stylesheet" href='{% static "jqueryui/development-bundle/themes/base/jquery.ui.all.css" %}'>{% endblock extracss %}
 
 {% block navbarright %}
 <form class="navbar-form navbar-right">
@@ -116,7 +117,7 @@
 </div>
 {% endblock %}
 {% block endscript %}
-    <script src="{{ STATIC_URL }}require.js" data-main="{{ STATIC_URL }}leaflet_loader.js"></script>
+    <script src='{% static "require.js" %}' data-main='{% static "leaflet_loader.js" %}'></script>
 {% endblock %}
 
 {% block dropdowns %}

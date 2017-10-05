@@ -1,20 +1,21 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load i18n %}
+{% load static %}
 
 {% block script %}
     {{block.super}}
 
 
-    <script src="{{ STATIC_URL }}zebra/javascript/zebra_datepicker.js"></script>
-    <script src="{{ STATIC_URL }}simply-toast/simply-toast.js"></script>
-    <script src="{{ STATIC_URL }}select2/js/select2.min.js"></script>
-    <script src="{{ STATIC_URL }}moment.min.js"></script>
+    <script src='{% static "zebra/javascript/zebra_datepicker.js" %}'></script>
+    <script src='{% static "simply-toast/simply-toast.js" %}'></script>
+    <script src='{% static "select2/js/select2.min.js" %}'></script>
+    <script src='{% static "moment.min.js" %}'></script>
     {% comment %} Leaflet integration (testing)
     {% endcomment %}
-    <script src="{{ STATIC_URL }}leaflet/leaflet.js"></script>
-    <script src="{{ STATIC_URL }}leaflet/leaflet.utfgrid.js"></script>
-    <script src="{{ STATIC_URL }}leaflet/leaflet.ajax.min.js"></script>
+    <script src='{% static "leaflet/leaflet.js" %}'></script>
+    <script src='{% static "leaflet/leaflet.utfgrid.js" %}'></script>
+    <script src='{% static "leaflet/leaflet.ajax.min.js" %}'></script>
 
 
     {% if suggestion.pk %}
@@ -396,14 +397,14 @@
 
 </script>
 
-    <!--<script src="{{ STATIC_URL }}project_edit.js"></script>-->
+    <!--<script src='{% static "project_edit.js" %}'></script>-->
 {% endblock script %}
  {% block style %}
-    <link href="{{ STATIC_URL }}django_tables2/themes/paleblu/css/screen.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}selectize/css/selectize.bootstrap3.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ STATIC_URL }}leaflet/leaflet.css" />
-    <link href="{{ STATIC_URL }}select2/css/select2.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ STATIC_URL }}zebra/css/bootstrap.css" />
+    <link href='{% static "django_tables2/themes/paleblu/css/screen.css" %}' rel="stylesheet">
+    <link href='{% static "selectize/css/selectize.bootstrap3.css" %}' rel="stylesheet">
+    <link rel="stylesheet" href='{% static "leaflet/leaflet.css" %}' />
+    <link href='{% static "select2/css/select2.css" %}' rel="stylesheet">
+    <link rel="stylesheet" href='{% static "zebra/css/bootstrap.css" %}' />
     <style>
 
     .select2_auto{

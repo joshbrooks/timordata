@@ -1,19 +1,20 @@
 {% extends "object_list.html" %}
+{% load static %}
 {% load i18n %}
 {% load render_table from django_tables2 %}
 {% load crispy_forms_tags %}
 
  {% block style %}
 {{block.super}}
-        <link rel="stylesheet" href="{{ STATIC_URL }}font-awesome.min.css">
-        <link rel="stylesheet" href="{{ STATIC_URL }}summernote/dist/summernote.css">
+        <link rel="stylesheet" href='{% static "font-awesome.min.css" %}'>
+        <link rel="stylesheet" href='{% static "summernote/dist/summernote.css" %}'>
 {% endblock style %}
 
 {% block script %}
 
     {{block.super}}
         <!--Loaded from fundingoffer_list for summernote integration-->
-        <script src="{{ STATIC_URL }}summernote/dist/summernote.min.js"></script>
+        <script src='{% static "summernote/dist/summernote.min.js" %}'></script>
 {% endblock %}
 
 {% block tab_first %}
@@ -22,8 +23,8 @@
         {% include "donormapping/alert-welcome-donormapping-list.html" %}
     </div>
     <div class="col-lg-12 col-sm-12" >
-        <img width="20%" src="{{ STATIC_URL }}logo/oxfam_logo_trans.png">
-        <img width="50%" src="{{ STATIC_URL }}logo/belun_en.png">
+        <img width="20%" src='{% static "logo/oxfam_logo_trans.png" %}'>
+        <img width="50%" src='{% static "logo/belun_en.png" %}'>
     </div>
 </div>
 {% endblock tab_first %}

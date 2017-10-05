@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load static %}
 {% load crispy_forms_tags %}
 <div class="container-fluid">
 <div class="row small-alerts" style="margin-bottom:40px;">
@@ -147,7 +148,7 @@
         {% if object.has_locations %}
         <img src="{{object.image_overlay_url}}&width=500&height=300" style="max-width:100%; width:500px">
         {% else %}
-        <img src="{{ STATIC_URL }}img/location-none.jpg" style="max-width:100%; width:500px">
+        <img src='{% static "img/location-none.jpg" %}' style="max-width:100%; width:500px">
 
         {% endif %}
     </div>

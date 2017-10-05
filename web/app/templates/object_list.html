@@ -1,24 +1,26 @@
 {% extends "base.html" %}
+{% load static %}
 {% load i18n %}
 {% load render_table from django_tables2 %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block script %}
     {{block.super}}
-    <script src="{{ STATIC_URL }}js/bootstrap-multiselect.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap-modal/js/bootstrap-modal.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap-modal/js/bootstrap-modalmanager.js"></script>
-    <script src="{{ STATIC_URL }}js/bootstrap-multiselect-collapsible-groups.js"></script>
-    <script src="{{ STATIC_URL }}object_list.js"></script>
-    <script src="{{ STATIC_URL }}select2/js/select2.min.js"></script>
-    <script src="{{ STATIC_URL }}simply-toast/simply-toast.js"></script>
-    <script src="{{ STATIC_URL }}js/spin/jquery-waiting.js"></script>
-    <script src="{{ STATIC_URL }}jquery.form.min.js"></script>
-    <script src="{{ STATIC_URL }}chosen_v1.4.2/chosen.jquery.min.js"></script>
-    <script src="{{ STATIC_URL }}chosen-ajax-addition-master/chosen.ajaxaddition.jquery.js"></script>
-    <script src="{{ STATIC_URL }}jasny-bootstrap.min.js"></script>
-    <script src="{{ STATIC_URL }}zebra/javascript/zebra_datepicker.js"> </script>
-    <script src="{{ STATIC_URL }}summernote/summernote.js"></script>
+    <script src='{% static "js/bootstrap-multiselect.js" %}'></script>
+    <script src='{% static "bootstrap-modal/js/bootstrap-modal.js" %}'></script>
+    <script src='{% static "bootstrap-modal/js/bootstrap-modalmanager.js" %}'></script>
+    <script src='{% static "js/bootstrap-multiselect-collapsible-groups.js" %}'></script>
+    <script src='{% static "object_list.js" %}'></script>
+    <script src='{% static "select2/js/select2.min.js" %}'></script>
+    <script src='{% static "simply-toast/simply-toast.js" %}'></script>
+    <script src='{% static "js/spin/jquery-waiting.js" %}'></script>
+    <script src='{% static "jquery.form.min.js" %}'></script>
+    <script src='{% static "chosen_v1.4.2/chosen.jquery.min.js" %}'></script>
+    <script src='{% static "chosen-ajax-addition-master/chosen.ajaxaddition.jquery.js" %}'></script>
+    <script src='{% static "jasny-bootstrap.min.js" %}'></script>
+    <script src='{% static "zebra/javascript/zebra_datepicker.js" %}'> </script>
+    <script src='{% static "summernote/summernote.js" %}'></script>
     {% comment %}
     This is a trivial function to reverse email obfuscation: it's reversed and rot13 encoded. The obfuscated code is shown below.
     Note that it provides 3 functions for a string: .reverse, .dotat, .rot13
@@ -48,19 +50,19 @@
 {% endblock script %}
  {% block style %}
 {{block.super}}
-    <link href="{{ STATIC_URL }}timordata.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}css/object_list.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}leaflet/leaflet.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}select2/css/select2.min.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}css/bootstrap-multiselect.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet" />
-    <link href="{{ STATIC_URL }}bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet" />
-    <link href="{{ STATIC_URL }}chosen_v1.4.2/chosen.min.css" rel="stylesheet" />
-    <link href="{{ STATIC_URL }}js/spin/jquery-waiting.css" rel="stylesheet" />
-    <link href="{{ STATIC_URL }}zebra/css/bootstrap.css" rel="stylesheet" />
-    <link href="{{ STATIC_URL }}jasny-bootstrap.min.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}django_tables2/themes/paleblu/css/screen.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}summernote/summernote.css" rel="stylesheet">
+    <link href='{% static "timordata.css" %}' rel="stylesheet">
+    <link href='{% static "css/object_list.css" %}' rel="stylesheet">
+    <link href='{% static "leaflet/leaflet.css" %}' rel="stylesheet">
+    <link href='{% static "select2/css/select2.min.css" %}' rel="stylesheet">
+    <link href='{% static "css/bootstrap-multiselect.css" %}' rel="stylesheet">
+    <link href='{% static "bootstrap-modal/css/bootstrap-modal-bs3patch.css" %}' rel="stylesheet" />
+    <link href='{% static "bootstrap-modal/css/bootstrap-modal.css" %}' rel="stylesheet" />
+    <link href='{% static "chosen_v1.4.2/chosen.min.css" %}' rel="stylesheet" />
+    <link href='{% static "js/spin/jquery-waiting.css" %}' rel="stylesheet" />
+    <link href='{% static "zebra/css/bootstrap.css" %}' rel="stylesheet" />
+    <link href='{% static "jasny-bootstrap.min.css" %}' rel="stylesheet">
+    <link href='{% static "django_tables2/themes/paleblu/css/screen.css" %}' rel="stylesheet">
+    <link href='{% static "summernote/summernote.css" %}' rel="stylesheet">
 {% endblock style %}
 
 {% block bodyopen %}  <body data-spy="scroll" data-target="#listactions"> {% endblock %}

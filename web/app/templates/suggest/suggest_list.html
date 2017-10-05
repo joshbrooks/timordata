@@ -1,13 +1,14 @@
 {% extends "object_list.html" %}
 {% load i18n %}
+{% load static %}
 {% load render_table from django_tables2 %}
 {% load crispy_forms_tags %}
 
 
 {% block script %}
 {{block.super}}
-    <!--<script src="{{ STATIC_URL }}rest_framework_333/js/ajax-form.js"> </script>-->
-    <!--<script src="{{ STATIC_URL }}rest_framework_333/js/csrf.js"> </script>-->
+    <!--<script src='{% static "rest_framework_333/js/ajax-form.js" %}'> </script>-->
+    <!--<script src='{% static "rest_framework_333/js/csrf.js" %}'> </script>-->
 
 {% comment %}
 The "create / update / delete" buttons are rendered in django-tables2. This doesn't have the context for the CSRF token so we need to set this manually.
@@ -22,7 +23,7 @@ The "create / update / delete" buttons are rendered in django-tables2. This does
 
 
 
-<script src="{{ STATIC_URL }}suggestionlist.js"></script>
+<script src='{% static "suggestionlist.js" %}'></script>
 <script>
 
 
