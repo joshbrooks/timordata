@@ -2,6 +2,8 @@
 from codecs import getencoder
 from datetime import datetime
 
+from django.contrib.postgres.fields import JSONField
+
 from belun import settings
 from django.apps import apps
 from geo.models import Suco
@@ -300,6 +302,29 @@ class PropertyTag(MP_Lite, TimestampedMixin):
 
     description = models.CharField(max_length=255)
 
+
+class Sector(TimestampedMixin):
+    def __str__(self):
+        return self.name
+
+    name = JSONField()
+    description = JSONField()
+
+
+class Beneficiary(TimestampedMixin):
+    def __str__(self):
+        return self.name
+
+    name = JSONField()
+    description = JSONField()
+
+
+class Activity(TimestampedMixin):
+    def __str__(self):
+        return self.name
+
+    name = JSONField()
+    description = JSONField()
 
 @python_2_unicode_compatible
 class ProjectType(TimestampedMixin):
