@@ -1,11 +1,8 @@
 from django.contrib import admin
-from django.core.exceptions import ValidationError
 from modeltranslation.admin import TranslationAdmin
-from nhdb.models import *
-from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Count
-from django.core.validators import validate_email
+from . import models
 import string
 import logging
 logger = logging.getLogger(__name__)
@@ -138,7 +135,7 @@ class PersonAdmin(admin.ModelAdmin):
 
 class ProjOrgInline(admin.TabularInline):
 
-    model = ProjectOrganization
+    model = models.ProjectOrganization
     raw_id_fields = ("project", "organization")
     #  radio_fields = {'organizationclass': admin.HORIZONTAL}
     extra = 1
@@ -161,11 +158,11 @@ class OrganizationAdmin(TranslationAdmin):
     exclude = ['description_en', 'description_pt', 'description_tet', 'description_id']
 
     class PersonInline(admin.TabularInline):
-        model = Person
+        model = models.Person
 
     class ProjOrgInline(admin.TabularInline):
 
-        model = ProjectOrganization
+        model = models.ProjectOrganization
         autocomplete_lookup_fields = {
             # 'm2m': ['sector', 'activity', 'beneficiary'],
             'fk': ['project']}
@@ -179,11 +176,11 @@ class OrganizationAdmin(TranslationAdmin):
     radio_fields = {'orgtype': admin.HORIZONTAL}
 
 
-admin.site.register(Project, ProjectAdmin)
-admin.site.register(Organization)
-admin.site.register(Person, PersonAdmin)
-admin.site.register(ProjectImage)
-admin.site.register(ProjectPlace)
-admin.site.register(ProjectOrganization)
-admin.site.register(PropertyTag)
-admin.site.register(ProjectPerson)
+admin.site.register(models.Project, ProjectAdmin)
+admin.site.register(models.Organization)
+admin.site.register(models.Person, PersonAdmin)
+admin.site.register(models.ProjectImage)
+admin.site.register(models.ProjectPlace)
+admin.site.register(models.ProjectOrganization)
+admin.site.register(models.PropertyTag)
+admin.site.register(models.ProjectPerson)

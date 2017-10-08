@@ -288,6 +288,9 @@ class Person(TimestampedMixin):
 
 
 class PropertyTag(MP_Lite, TimestampedMixin):
+    """
+    Deprecated in favor of individual models
+    """
     def __str__(self):
         return self.name
 
@@ -404,17 +407,10 @@ class Project(TimestampedMixin):
     projecttype = models.ForeignKey('ProjectType', null=True, blank=True)
 
     person = models.ManyToManyField(Person, through='ProjectPerson', blank=True)
-    # properties = models.ManyToManyField('PropertyTag', null=True, blank=True, )
-    # Deprecated (again!) in favour of individual fields
-    sector = models.ManyToManyField(
-        'nhdb.PropertyTag', blank=True, related_name="project_sector",
-        limit_choices_to={'path__startswith': "INV."})
-    activity = models.ManyToManyField(
-        'nhdb.PropertyTag', blank=True, related_name="project_activity",
-        limit_choices_to={'path__startswith': "ACT."})
-    beneficiary = models.ManyToManyField(
-        'nhdb.PropertyTag', blank=True, related_name="project_beneficiary",
-        limit_choices_to={'path__startswith': "BEN."})
+
+    sector = models.ManyToManyField('nhdb.Sector', blank=True)
+    activity = models.ManyToManyField('nhdb.Activity', blank=True)
+    beneficiary = models.ManyToManyField('nhdb.Beneficiary', blank=True)
 
     place = models.ManyToManyField("geo.AdminArea", through='ProjectPlace', blank=True)
     organization = models.ManyToManyField(Organization, through='ProjectOrganization', blank=True)

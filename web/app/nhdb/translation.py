@@ -1,5 +1,5 @@
 from modeltranslation.translator import register, TranslationOptions
-from nhdb.models import *
+from nhdb.models import PropertyTag, Project, Organization
 
 
 @register(PropertyTag)
