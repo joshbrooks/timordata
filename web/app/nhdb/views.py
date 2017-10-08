@@ -956,15 +956,19 @@ class OfflineContent():
             .annotate(beneficiary_s=IntegerArray('beneficiary'))
 
         organizations = models.Organization.objects.all()
-        propertytag = models.PropertyTag.objects.all()
+        activity = models.Activity.objects.all()
+        beneficiary = models.Beneficiary.objects.all()
+        sector = models.Sector.objects.all()
 
         self.since = datetime.fromtimestamp(float(timestamp))
         self.datasets = (
             ('Project', projects,
              ['pk', 'name', 'description', 'startdate', 'enddate', 'orgs', 'status', 'places', '*sector_s',
-              '*activity_s', '*beneficiary_s']),
+              '*activity_s', '*beneficiary_s', '*searchIndex']),
             ('Organization', organizations, ['pk', 'name']),
-            ('PropertyTag', propertytag, ['pk', 'name']),
+            ('Activity', activity, ['pk', 'name',  '*searchIndex']),
+            ('Beneficiary', beneficiary, ['pk', 'name',  '*searchIndex']),
+            ('Sector', sector, ['pk', 'name', '*searchIndex']),
             ('ProjectStatus', models.ProjectStatus.objects.all(), ['pk', 'project__pk', 'code']),
             ('ProjectOrganization', models.ProjectOrganization.objects.all(),
              ['pk', 'project__pk', 'organization', 'organizationclass']),
@@ -980,9 +984,10 @@ class OfflineContent():
 
     @property
     def timestamped_models(self):
+        special_field_names = ['*searchIndex']
 
         def list_values(objects, values, since=datetime.fromtimestamp(0)):
-            values = [v.replace('*', '') for v in values]
+            values = [v.replace('*', '') for v in values if v not in special_field_names]
             if not hasattr(objects, 'filter'):
                 return {
                     'created': objects,

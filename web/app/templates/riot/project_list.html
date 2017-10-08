@@ -34,7 +34,11 @@
     <script src='{% static "nhdb/riot-filters.js"%}'></script>
 
     <script>
+    riot.compile(function() {
         riot.mount('project-app');
+{#        route.start(true)#}
+      });
+
     </script>
 
 </body>

@@ -13,6 +13,7 @@ Dexie.delete(dbname);
 window.db = new Dexie(dbname);
 db.version(version).stores(stores);
 
+{% include 'riot/hooks.js' %}
 {% include 'riot/load_data_function.js' %}
 
 {% else %}

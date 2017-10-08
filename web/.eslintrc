@@ -14,7 +14,8 @@
         "riot": true,
         "moment": true,
         "stores": true,
-        "performance": true
+        "performance": true,
+        "Promise": true
     },
     "env": {
         "browser":true,
