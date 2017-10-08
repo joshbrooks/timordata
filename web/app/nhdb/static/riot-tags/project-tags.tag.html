@@ -18,12 +18,12 @@
 </search-input>
 
 <search-choice>
-    <label>{opts.label}
-        <select  class="form-control" multiple={opts.multiple} onchange="{onselect}" ref="input" oninput="{oninput}">
-            <option>-----</option>
+    <label>{opts.label}</label>
+        <input class="form-control" placeholder="Search" ref="searchbox" oninput="{search}">
+        <select class="form-control" multiple={opts.multiple} onchange="{onselect}" ref="input" oninput="{oninput}">
+            <option value="">All</option>
           <option each="{option in choice}" value="{option.pk}">{option.name}</option>
         </select>
-    </label>
     <script>
         var tag = this;
 
@@ -33,46 +33,235 @@
             var related_table = tag.opts.related_table || db.PropertyTag;
             var relation_name = tag.opts.index || 'beneficiary_s';
 
-            filter_table.toArray().then(function (i) {
-                var show = _(i).map(relation_name).flatten().uniq().compact().value();
-                related_table.toArray().then(function (choice) {
-                    var choices = _.map(choice, function (i) {
-                        if (!_.includes(show, i.pk)){return}
-                        return {pk: i.pk, name: i.name}
-                    });
-                    tag.update({choice: _.compact(choices)})
-                })
-            });
+            related_table.toArray().then(function (choice) {
+                var choices = _.map(choice, function (i) {
+                    return {pk: i.pk, name: i.name}
+                });
+                tag.update({choice: _.compact(choices)})
+            })
         });
 
+        tag.search = function(e){
 
-        tag.onselect = function(e){
-            if (!opts.multiple){
-                var val = tag.refs.input.value;
-                if (val === ''){
-                    tag.parent.trigger('unset_filter', tag.opts.index, tag.opts.func);
-                    return;
-                }
-                if (opts.int){val = _.toInteger(val)}
-                tag.parent.trigger('set_filter', tag.opts.index, tag.opts.func, val)
-            }
-            if (opts.multiple){
-                var val = _.map(tag.refs.input.selectedOptions, 'value');
-                if (opts.int){val = _.map(val, _.toInteger)}
-                val = _.compact(val);
-                tag.parent.trigger('set_filter', tag.opts.index, tag.opts.func, val)
-            }
-        }
+            console.log(tag.refs.searchbox.value);
+            tag.opts.related_table.where(tag.opts.index)
+                .startsWithIgnoreCase(tag.refs.searchbox.value).toArray().then(function(choice){
+                    var choices = _.map(choice, function (i) {
+                    return {pk: i.pk, name: i.name}
+                });
+                tag.update({choice: _.compact(choices)})
+            })
+        };
+
+        tag.onselect = function(){
+
+            var trigger = tag.parent.trigger;
+            var opts = tag.opts;
+
+            var i = opts.filter_table_index; // Which index on the target table to filter on
+            var cb = opts.func; // Callback function on selection
+            var cast_int = opts.int; // Should we expect all values to be integers (ie index key type)
+            var multi = opts.multiple; // Should we have multiple options (ie array)
+            var val = multi ? _.map(tag.refs.input.selectedOptions, 'value') : tag.refs.input.value;
+
+            // Coercion and casting of types to integer
+            if (!multi && cast_int){val = _.toInteger(val)}
+            if (multi && cast_int){val = _.map(val, _.toInteger)}
+            if (multi){val = _.compact(val)}
+
+            function set(val){trigger('set_filter' , i, cb, val) }
+            function unset(){trigger('unset_filter', i, cb);}
+
+            if (!multi && val === '') { return unset();}
+            if (multi && _.size(val) === 1 && val[0] === ""){return unset();}
+            if (multi && _.size(val) === 0){return unset();}
+            return set(val);
+        };
 
     </script>
 </search-choice>
 
+
+<bootstrap-dropdown>
+     label="Sector" int=true func="anyOf" index="sector_s" filter_table="{db.Project}"
+    <label>{opts.label}</label>
+    <div class="btn-group btn-group-sm" style="width:100%" role="group" each="{index in _.range(repeats || 1)}">
+      <a type="button" class="ell btn btn-sm btn-default dropdown-toggle" style="width: 80%; border-bottom-right-radius: 0px; border-top-right-radius: 0px;" onclick="{toggle}" aria-haspopup="true" aria-expanded="false">
+        <span class="{placeholder: _.isUndefined(_.get(selected_name, index))}">
+            {_.get(selected_name, index) || parent.opts.placeholder || 'Click to search...'}
+        </span>
+      </a>
+
+      <ul class="dropdown-menu" if="{open[index]}" style="display:block">
+
+          <li if="{searchable}"><input placeholder="Search" ref="searchbox" oninput="{search}"> </li>
+          <li if="{searchable}" role="separator" class="divider"></li>
+
+          <li if="{paginated}" onclick="{page_up}" class="align-center"><a><span class="glyphicon glyphicon-chevron-up"></span></a> </li>
+        <li each="{opt in page(options)}" role="{separator: opt[0] == '_'}"
+            class="{divider: opt[0] == '_', disabled: _.includes(selected, opt)}"
+            disabled="{_.includes(selected, opt)}"
+            onclick="{invoke}"
+            data-index="{index}"
+        >
+            <a href="#">{opt[1]} </a>
+        </li>
+          <li if="{paginated}" onclick="{page_down}" class="align-center"><a><span class="glyphicon glyphicon-chevron-down"></span></a></li>
+      </ul>
+
+          <a style="width: 20%" class="btn btn-default btn-sm" onclick="{remove_dropdown}">&times;</a>
+
+    </div>
+    <hr>
+
+
+    <style>
+        bootstrap-dropdown ul.dropdown-menu {
+            overflow-y:auto;
+            display: block;
+            max-height: 330px;
+            max-width:310px;
+        }
+        .ell {
+            text-overflow:ellipsis;
+            overflow-x:hidden;
+        }
+
+        span.placeholder {
+            color: gray;
+        }
+        .dropdown-menu a {
+            text-overflow:ellipsis;
+            overflow-x:hidden;
+        }
+
+        ul {position: absolute!important;}
+    </style>
+
+    <script>
+        var tag = this;
+        tag.open = false;
+
+        tag.tag_page = 1;
+        tag.pagesize = 10;
+        tag.paginated = true;
+        tag.searchable = true;
+
+        tag.search = function(e){
+
+            console.log(tag.refs.searchbox.value)
+            tag.opts.filter_table.where('searchIndex')
+                .startsWithIgnoreCase(tag.refs.searchbox.value).toArray().then(function(options){
+                    tag.tag_page = 1;
+                    tag.update({options:options})
+            })
+        };
+
+        function page(options){
+            return _.slice(options, tag.tag_page*tag.pagesize - tag.pagesize, tag.tag_page*tag.pagesize)
+        }
+
+        tag.page = page;
+        tag.page_up = function page_up(){tag.update({tag_page: tag.tag_page - 1})}
+        tag.page_down = function page_down(){tag.update({tag_page:tag.tag_page + 1})}
+
+        function add_dropdown(){
+            if (tag.opts.single) {return}
+            tag.repeats += 1;
+            tag.selected.push(undefined);
+            tag.selected_name.push(undefined);
+            tag.open.push(undefined);
+        }
+
+        function remove_dropdown(e){
+            tag.repeats -= 1;
+            _.pullAt(tag.selected, e);
+            _.pullAt(tag.selected_name,e);
+            _.pullAt(tag.open, e);
+            if (tag.repeats === 0){ add_dropdown() }
+            tag.update();
+            tag.parent.trigger(tag.opts.trigger, tag)
+        }
+
+        function toggle(e, set) {
+            var open = _.fill(new Array(tag.repeats), false);
+            open[e] = set || !tag.open[e];
+            tag.update({open: open});
+        }
+
+        tag.toggle = function(e){toggle(e.item.index)};
+        tag.remove_dropdown = function(e){ remove_dropdown(e.item.index)};
+        tag.add_dropdown = add_dropdown;
+
+        var defaults = {
+            repeats: 1,
+            trigger: 'dropdown_select',
+            make_options: function(option){
+                var name;
+                if ( _.isUndefined(option.name)){ name = '?'}
+                else name = option.name.en || option.name.tet || option.name.name || option.name ||  '?';
+                return[option.id, name]
+            }
+        };
+        tag.on('mount', function(){
+            _.defaults(tag.opts, defaults);
+            tag.repeats = tag.opts.repeats || 1;
+            tag.selected = _.fill(new Array(tag.repeats), undefined);
+            tag.selected_name = _.fill(new Array(tag.repeats), undefined);
+            tag.open = _.fill(new Array(tag.repeats), undefined);
+
+            if (!_.isUndefined(window.stores[tag.opts.store])) {
+                tag.update({options: _.map(window.stores[tag.opts.store].objects, tag.opts.make_options)});
+                window.stores[tag.opts.store].on('load-end', function (objects) {
+                    var options = _.map(objects, tag.opts.make_options);
+                    options = _.orderBy(options, 1);
+                    tag.update({options: options});
+                });
+            }
+        });
+
+        tag.invoke = function(e){
+            e.preventDefault();
+            var index = $(e.currentTarget).data('index') || 0;
+            tag.selected[index] =  e.item.opt;
+            tag.selected_name[index] =  e.item.opt[1];
+            if (!_.isUndefined(_.last(tag.selected)) && !opts.single){tag.add_dropdown()}
+            tag.parent.trigger(tag.opts.trigger, tag);
+            toggle(e.item.index, false)
+        };
+
+
+    </script>
+
+</bootstrap-dropdown>
+
 <project-app>
     <div hide="{detail}" class="col col-sm-4">
         <h3>Filter</h3>
-        <span data-is="search-choice" label="Beneficiary" int=true func="equals" index="beneficiary_s" filter_table="{db.Project}" related_table="{db.PropertyTag}"></span>
-        <span data-is="search-choice" multiple=1 label="Sector" int=true func="anyOf" index="sector_s" filter_table="{db.Project}" related_table="{db.PropertyTag}"></span>
+        <span data-is="search-choice"
+              multiple="1"
+              label="Beneficiary"
+              int=true
+              func="anyOf"
+              index="name"
+              filter_table_index="beneficiary_s"
+              filter_table="{db.Project}"
+              related_table="{db.PropertyTag}"
+        ></span>
+        <span data-is="search-choice"
+              multiple=1
+              label="Sector"
+              int=true
+              func="anyOf"
+              index="name"
+              filter_table_index="sector_s"
+              filter_table="{db.Project}"
+              related_table="{db.PropertyTag}"
+        ></span>
         <span data-is="search-input" label="Name" placeholder="By Name" func="startsWithIgnoreCase" index="name"></span>
+
+        <span data-is="bootstrap-dropdown" label="Sector" int=true func="anyOf" index="name" filter_table="{db.Project}" related_table="{db.PropertyTag}" placeholder="Sector"></span>
+
     </div>
     <div hide="{detail}" class="col col-sm-8">
         <h3>List of Projects</h3>

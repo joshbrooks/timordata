@@ -13,3 +13,9 @@ function loaddata(db, data) {
     });
     return Promise.all(promises)
 }
+
+db.settings.get('lastupdated').then (function (lastupdated) {
+    $.getJSON(src, {timestamp:_.get(lastupdated, 'value', 0)}).then(function(objects){
+          loaddata(db, objects)
+    })
+});

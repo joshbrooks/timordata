@@ -1035,7 +1035,7 @@ class MainJS(TemplateView):
         # TODO: Store this value so that it can be compared and autoincremented
         context['db_name'] = 'database'
         context['db_version'] = '0.1'
-        context['now'] = now
+        context['now_js'] = int(now * 1000)
         return context
 
 
