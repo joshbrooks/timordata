@@ -19,21 +19,85 @@
 
 <search-choice>
     <label>{opts.label}</label>
-        <input class="form-control" placeholder="Search" ref="searchbox" oninput="{search}">
-        <select class="form-control" multiple={opts.multiple} onchange="{onselect}" ref="input" oninput="{oninput}">
-            <option value="">All</option>
-          <option each="{option in choice}" value="{option.pk}">{option.name}</option>
-        </select>
+    <!--
+        <input class="form-control" placeholder="Search" ref="searchbox" oninput="{search}" onfocus="{show_dropdown}">
+        <virtual if="{i_am_visible}">
+            <select class="form-control" multiple={opts.multiple} onchange="{onselect}" ref="input" oninput="{oninput}">
+                <option value="">All</option>
+              <option each="{option in choice}" value="{option.pk}">{option.name}</option>
+            </select>
+        </virtual>
+    -->
+
+    <div class="dropdown {open:dropdown_open}">
+
+        <button class="buttontext btn btn-block btn-default dropdown-toggle" type="button" onclick="{toggle_dropdown}" disabled="{opts.is_disabled}">
+            <span>{ opts.label }: {_.size(selected_choices) > 1 ? '('+_.size(selected_choices)+')' : ''} { selected || 'All' }</span>
+            <span if="{opts.show_code}" class="small"></span>
+            <span class="right"><span class="caret"></span></span>
+        </button>
+
+        <ul if="{dropdown_open}" class="dropdown-menu">
+            <li>
+                <div class="input-group search">
+                    <input type="text" class="form-control" placeholder="{opts.placeholder|| 'Search for...'}" ref="searchbox" oninput="{ search }">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
+                </div><!-- /input-group -->
+            </li>
+
+            <li each="{option in choice}" onclick="{cowsay}">
+                <span class="btn btn-link">
+                    {option.name}
+                </span>
+            </li>
+        </ul>
+    </div>
+
+    <style>
+        .buttontext {
+          width: 95%;
+          overflow: hidden;
+          white-space: nowrap;
+          display: block;
+          text-overflow: ellipsis;
+        }​
+    </style>
+
+
     <script>
         var tag = this;
+        tag.selected_choices = tag.opts.selected_choices || [];
+
+        tag.cowsay = function cowsay(e){tag.onselect(e.item.option);};
+        /**
+         * Toggle dropdown options open or cloded
+         */
+        function toggle_dropdown() {
+
+            if (tag.dropdown_open === false) {
+                tag.update({dropdown_open: true});
+                tag.one('updated', function () {
+                    $('input[ref="searchbox"]', tag.root).focus();
+                });
+            } else {
+                tag.update({dropdown_open: false});
+            }
+        }
+        tag.toggle_dropdown = toggle_dropdown;
+
+
         function make_options(option){
             var name;
+            var choice;
             if ( _.isUndefined(option.name)){ name = '?'}
             else name = option.name.en || option.name.tet || option.name.name || option.name ||  '?';
-            return {pk: option.pk, name: name}
+            choice = {pk: option.pk, name: name};
+            if (_.includes(tag.selected_choices , choice)){choice.active=true}
+            return choice
         }
 
         tag.on('before-mount', function() {
+            tag.dropdown_open = false;
 
             var related_table = tag.opts.related_table;
 
@@ -41,6 +105,8 @@
             if (!_.isFunction(related_table.toArray)) {return {}} // This is NOT a table probalbly
 
             related_table.toArray().then(function (choice) {
+                if (!_.isUndefined(tag.opts.number_of_choices) && _.size(choice) > _.toInteger(tag.opts.number_of_choices))
+                { debugger; choice = _.slice(choice,0,_.toInteger(tag.opts.number_of_choices))}
                 var choices = _.map(choice, make_options);
                 tag.update({choice: _.compact(choices)})
             })
@@ -52,11 +118,20 @@
             tag.opts.related_table.where(tag.opts.index)
                 .startsWithIgnoreCase(tag.refs.searchbox.value).toArray().then(function(choice){
                     var choices = _.map(choice, make_options);
-                    tag.update({choice: _.compact(choices)})
+                    // Things get interesting here with multiple languages
+                    // Hence , 'uniqBy'
+                    choices =  _.compact(_.uniqBy(choices, 'pk'));
+                    tag.update({choice: choices})
             })
         };
 
-        tag.onselect = function(){
+        tag.onselect = function(choice){
+            var selected = _.includes(tag.selected_choices, choice);
+            if (!tag.opts.multiple){
+                _.each(tag.selected_choices, function(c){c.active = false});
+                tag.selected_choices = []}
+            if (selected) {choice.active = false; _.pull(tag.selected_choices, choice)}
+            else {choice.active = true; tag.selected_choices.push(choice)}
 
             var trigger = tag.parent.trigger;
             var opts = tag.opts;
@@ -65,7 +140,7 @@
             var cb = opts.func; // Callback function on selection
             var cast_int = opts.int; // Should we expect all values to be integers (ie index key type)
             var multi = opts.multiple; // Should we have multiple options (ie array)
-            var val = multi ? _.map(tag.refs.input.selectedOptions, 'value') : tag.refs.input.value;
+            var val =  _.map(tag.selected_choices, 'pk');
 
             // Coercion and casting of types to integer
             if (!multi && cast_int){val = _.toInteger(val)}
@@ -80,8 +155,9 @@
                 if (multi && _.size(val) === 0){return true}
             }
 
-            if (do_unset()) {return unset()}
-            return set(val);
+            if (do_unset()) {unset();}
+            else {set(val)}
+            return tag.update({selected: _(tag.selected_choices).map('name').join(', ')});
         };
 
     </script>
@@ -122,6 +198,19 @@
               filter_table="{db.Project}"
               related_table="{db.Activity}"
         ></span>
+
+        <span data-is="search-choice"
+              multiple=1
+              label="Organizations"
+              int=true
+              func="anyOf"
+              index="name"
+              filter_table_index="orgs"
+              filter_table="{db.Project}"
+              related_table="{db.Organization}"
+              number_of_choices=100
+        ></span>
+
 
 
         <span data-is="search-input" label="Name" placeholder="By Name" func="startsWithIgnoreCase" index="name"></span>
