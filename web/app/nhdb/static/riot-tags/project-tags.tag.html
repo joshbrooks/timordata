@@ -31,7 +31,7 @@
 
     <div class="dropdown {open:dropdown_open}">
 
-        <button class="buttontext btn btn-block btn-default dropdown-toggle" type="button" onclick="{toggle_dropdown}" disabled="{opts.is_disabled}">
+        <button class="buttontext btn btn-block btn-default" type="button" onclick="{toggle_dropdown}" disabled="{opts.is_disabled}">
             <span>{ opts.label }: {_.size(selected_choices) > 1 ? '('+_.size(selected_choices)+')' : ''} { selected || 'All' }</span>
             <span if="{opts.show_code}" class="small"></span>
             <span class="right"><span class="caret"></span></span>
@@ -44,12 +44,22 @@
                     <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
                 </div><!-- /input-group -->
             </li>
-
+            <li onclick="{clear_choices}">
+                <span class="btn btn-link">
+                    Clear
+                </span>
+            </li>
             <li each="{option in choice}" onclick="{cowsay}">
                 <span class="btn btn-link">
                     {option.name}
                 </span>
             </li>
+            <li if="{has_overflow}">
+                <span>
+                    Some options are not displayed. Use the search filter to show other options.
+                </span>
+            </li>
+
         </ul>
     </div>
 
@@ -69,24 +79,23 @@
         tag.selected_choices = tag.opts.selected_choices || [];
 
         tag.cowsay = function cowsay(e){tag.onselect(e.item.option);};
+
+        function clear_choices(){tag.onselect();}
         /**
          * Toggle dropdown options open or cloded
          */
         function toggle_dropdown() {
-
             if (tag.dropdown_open === false) {
                 tag.update({dropdown_open: true});
                 tag.one('updated', function () {
                     $('input[ref="searchbox"]', tag.root).focus();
                 });
             } else {
+                tag.search('__CLEAR__');
                 tag.update({dropdown_open: false});
             }
         }
-        tag.toggle_dropdown = toggle_dropdown;
-
-
-        function make_options(option){
+        function make_option(option){
             var name;
             var choice;
             if ( _.isUndefined(option.name)){ name = '?'}
@@ -95,43 +104,40 @@
             if (_.includes(tag.selected_choices , choice)){choice.active=true}
             return choice
         }
+        function make_options(options){
+            return _.map(options, make_option)
+        }
+        function searchValue(){return tag.refs.searchbox.value}
+        function overflow(choices){return (!_.isUndefined(tag.opts.number_of_choices) && _.size(choices) > _.toInteger(tag.opts.number_of_choices))}
+        function slice(choices, page){return _.slice(choices, page || 0, _.toInteger(tag.opts.number_of_choices))}
+        function setChoices(choices){
+            var has_overflow = overflow(choices);
 
-        tag.on('before-mount', function() {
-            tag.dropdown_open = false;
-
-            var related_table = tag.opts.related_table;
-
-            if (_.isUndefined(related_table)){console.warn('Related_table is undefined')}
-            if (!_.isFunction(related_table.toArray)) {return {}} // This is NOT a table probalbly
-
-            related_table.toArray().then(function (choice) {
-                if (!_.isUndefined(tag.opts.number_of_choices) && _.size(choice) > _.toInteger(tag.opts.number_of_choices))
-                { debugger; choice = _.slice(choice,0,_.toInteger(tag.opts.number_of_choices))}
-                var choices = _.map(choice, make_options);
-                tag.update({choice: _.compact(choices)})
-            })
-        });
-
-        tag.search = function(e){
-
-            console.log(tag.refs.searchbox.value);
-            tag.opts.related_table.where(tag.opts.index)
-                .startsWithIgnoreCase(tag.refs.searchbox.value).toArray().then(function(choice){
-                    var choices = _.map(choice, make_options);
-                    // Things get interesting here with multiple languages
-                    // Hence , 'uniqBy'
-                    choices =  _.compact(_.uniqBy(choices, 'pk'));
-                    tag.update({choice: choices})
-            })
-        };
-
-        tag.onselect = function(choice){
+            if (has_overflow){choices = slice(choices)}
+            var processed_choices = make_options(choices);
+            // Things get interesting here with multiple languages
+            // Hence , 'uniqBy'
+            processed_choices =  _.compact(_.uniqBy(processed_choices, 'pk'));
+            tag.update({choice: processed_choices, has_overflow:has_overflow})
+        }
+        function search(value){
+            var searchvalue = searchValue();
+            var promise;
+            if (value === '__CLEAR__' || searchvalue === ''){
+                promise = tag.opts.related_table.toArray();
+            } else {
+                promise = tag.opts.related_table.where(tag.opts.index).startsWithIgnoreCase(tag.refs.searchbox.value).toArray();
+            }
+            promise.then(function(choice){setChoices(choice)})
+        }
+        function onselect(choice){
+            var clear_choices = _.isUndefined(choice);
             var selected = _.includes(tag.selected_choices, choice);
-            if (!tag.opts.multiple){
+            if (!tag.opts.multiple || _.isUndefined(choice)){
                 _.each(tag.selected_choices, function(c){c.active = false});
                 tag.selected_choices = []}
             if (selected) {choice.active = false; _.pull(tag.selected_choices, choice)}
-            else {choice.active = true; tag.selected_choices.push(choice)}
+            else if (!clear_choices) {choice.active = true; tag.selected_choices.push(choice)}
 
             var trigger = tag.parent.trigger;
             var opts = tag.opts;
@@ -158,7 +164,20 @@
             if (do_unset()) {unset();}
             else {set(val)}
             return tag.update({selected: _(tag.selected_choices).map('name').join(', ')});
-        };
+        }
+
+        tag.on('before-mount', function() {
+            tag.dropdown_open = false;
+            var related_table = tag.opts.related_table;
+            if (_.isUndefined(related_table)){console.warn('Related_table is undefined')}
+            if (!_.isFunction(related_table.toArray)) {return {}} // This is NOT a table probably
+            related_table.toArray().then(function (choice) {setChoices(choice)})
+        });
+
+        tag.toggle_dropdown = toggle_dropdown;
+        tag.onselect = onselect;
+        tag.search = search;
+        tag.clear_choices = clear_choices;
 
     </script>
 </search-choice>
@@ -175,6 +194,7 @@
               filter_table_index="beneficiary_s"
               filter_table="{db.Project}"
               related_table="{db.Beneficiary}"
+              number_of_choices=8
         ></span>
 
         <span data-is="search-choice"
@@ -186,6 +206,7 @@
               filter_table_index="sector_s"
               filter_table="{db.Project}"
               related_table="{db.Sector}"
+              number_of_choices=8
         ></span>
 
         <span data-is="search-choice"
@@ -197,6 +218,7 @@
               filter_table_index="activity_s"
               filter_table="{db.Project}"
               related_table="{db.Activity}"
+              number_of_choices=8
         ></span>
 
         <span data-is="search-choice"
@@ -208,7 +230,7 @@
               filter_table_index="orgs"
               filter_table="{db.Project}"
               related_table="{db.Organization}"
-              number_of_choices=100
+              number_of_choices=8
         ></span>
 
 
