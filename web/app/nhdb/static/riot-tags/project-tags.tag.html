@@ -295,9 +295,9 @@
             <tbody>
                 <tr onclick="{detail}" each="{project in projects}">
                     <td>{project.name}</td>
-                    <td> <span each="{ sector in project.sector_s }" sector="{sector}" table="{db.Sector}" property="name.en" data-is="sector-name"></span></td>
-                    <td> <span each="{ sector in project.beneficiary_s }" sector="{sector}" table="{db.Beneficiary}" property="name.en" data-is="sector-name"></span></td>
-                    <td> <span each="{ sector in project.activity_s }" sector="{sector}" table="{db.Beneficiary}" property="name.en" data-is="sector-name"></span></td>
+                    <td> <span each="{ sector in project.sector_s }" if="{sector}" sector="{sector}" table="{db.Sector}" property="name.en" data-is="sector-name"></span></td>
+                    <td> <span each="{ sector in project.beneficiary_s }" if="{sector}" sector="{sector}" table="{db.Beneficiary}" property="name.en" data-is="sector-name"></span></td>
+                    <td> <span each="{ sector in project.activity_s }" if="{sector}" sector="{sector}" table="{db.Beneficiary}" property="name.en" data-is="sector-name"></span></td>
 
                     <td>{project.startdate}</td>
                 </tr>
@@ -354,6 +354,7 @@
 </project-detail>
 
 <sector-name>
+
     <p if="{!s}">Looking up</p>
     <p if="{s}">{s}</p>
     <script>
@@ -363,6 +364,7 @@
             var property = tag.opts.property || 'name';
             if (!tag.opts.table){tag.update({s:"Missing Table"}); return}
             tag.opts.table.get(_.toInteger(tag.opts.sector)).then(function(s){
+                console.log(s);
                 tag.update({s:_.get(s, property)})})
         });
     </script>
