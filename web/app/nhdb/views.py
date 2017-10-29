@@ -963,7 +963,7 @@ class OfflineContent():
         self.since = datetime.fromtimestamp(float(timestamp))
         self.datasets = (
             ('Project', projects,
-             ['pk', 'name', 'description', 'startdate', 'enddate', 'orgs', 'status', 'places', '*sector_s',
+             ['pk', 'name', 'description', 'startdate', 'enddate', '*orgs', 'status', 'places', '*sector_s',
               '*activity_s', '*beneficiary_s', '*searchIndex']),
             ('Organization', organizations, ['pk', 'name']),
             ('Activity', activity, ['pk', 'name',  '*searchIndex']),

@@ -50,8 +50,9 @@ Filters.prototype.results = function () {
     }
 
     return this._apply().then(function (a) {
+        var filtered;
         a.push('pk');
-        var filtered = _.intersectionBy.apply(this, a);
+        filtered = _.intersectionBy.apply(this, a);
         self.count = _.size(filtered);
         return _(filtered).sortBy('name').slice(self.offset, self.offset + self.limit).value();
     });

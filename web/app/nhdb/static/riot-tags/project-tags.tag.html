@@ -19,15 +19,6 @@
 
 <search-choice>
     <label>{opts.label}</label>
-    <!--
-        <input class="form-control" placeholder="Search" ref="searchbox" oninput="{search}" onfocus="{show_dropdown}">
-        <virtual if="{i_am_visible}">
-            <select class="form-control" multiple={opts.multiple} onchange="{onselect}" ref="input" oninput="{oninput}">
-                <option value="">All</option>
-              <option each="{option in choice}" value="{option.pk}">{option.name}</option>
-            </select>
-        </virtual>
-    -->
 
     <div class="dropdown {open:dropdown_open}">
 
@@ -38,26 +29,28 @@
         </button>
 
         <ul if="{dropdown_open}" class="dropdown-menu">
-            <li>
-                <div class="input-group search">
-                    <input type="text" class="form-control" placeholder="{opts.placeholder|| 'Search for...'}" ref="searchbox" oninput="{ search }">
-                    <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
-                </div><!-- /input-group -->
-            </li>
+
+            <div class="input-group search">
+                <input type="text" class="form-control" placeholder="{opts.placeholder|| 'Search for...'}" ref="searchbox" oninput="{ search }">
+                <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
+            </div>
+
             <li onclick="{clear_choices}">
-                <span class="btn btn-link">
+                <a>
                     Clear
-                </span>
+                </a>
             </li>
+            <li class="divider"></li>
             <li each="{option in choice}" onclick="{cowsay}">
-                <span class="btn btn-link">
-                    {option.name}
-                </span>
+                <a>
+                        {option.name}
+                    <span class="glyphicon glyphicon-ok" onclick="{nope}" if="{_.includes(selected_choices, option)}" aria-hidden="true"></span>
+                </a>
             </li>
-            <li if="{has_overflow}">
-                <span>
+            <li if="{has_overflow}" class="disabled">
+                <a>
                     Some options are not displayed. Use the search filter to show other options.
-                </span>
+                </a>
             </li>
 
         </ul>
@@ -70,7 +63,10 @@
           white-space: nowrap;
           display: block;
           text-overflow: ellipsis;
-        }​
+        }​,
+        .search {
+            margin-left: 10px; margin-right:10px; margin-bottom:10px;
+                 }
     </style>
 
 
@@ -78,7 +74,9 @@
         var tag = this;
         tag.selected_choices = tag.opts.selected_choices || [];
 
-        tag.cowsay = function cowsay(e){tag.onselect(e.item.option);};
+        tag.cowsay = function cowsay(e){
+            e.stopPropagation();
+            tag.onselect(e.item.option);};
 
         function clear_choices(){tag.onselect();}
         /**
@@ -174,6 +172,24 @@
             related_table.toArray().then(function (choice) {setChoices(choice)})
         });
 
+        function handleClickOutside(e) {
+
+            /* Click outside the dropdown to close it, unless the target of the click is a "show_more" or "show_less" button */
+            if (!tag.root.contains(e.target) && tag.dropdown_open)
+                 {
+                toggle_dropdown();
+            }
+        }
+
+        tag.on('mount', function () {
+            document.addEventListener('click', handleClickOutside);
+        });
+
+        tag.on('unmount', function () {
+            document.removeEventListener('click', handleClickOutside);
+        });
+
+
         tag.toggle_dropdown = toggle_dropdown;
         tag.onselect = onselect;
         tag.search = search;
@@ -268,8 +284,8 @@
 </project-app>
 
 <project-list>
-    <h5>Hello World</h5>
-    Object {filters.offset + 1} to {filters.offset + filters.limit + 1} of { filters.count }
+
+    {object_name || 'Projects'} {filters.offset + 1} to {filters.offset + filters.limit + 1} of { filters.count }
         <table if={!loading} class='table table-condensed table-bordered table-striped'>
             <thead>
                 <tr>
