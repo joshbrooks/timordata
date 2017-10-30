@@ -6,6 +6,7 @@
     "font-awesome": "^4.7.0",
     "fontawesome": "^4.7.2",
     "jquery": "^3.2.1",
+    "jquery.json-viewer": "^1.1.0",
     "leaflet": "^1.2.0",
     "lodash": "^4.17.4",
     "riot": "^3.7.0",

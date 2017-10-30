@@ -289,7 +289,11 @@
         <table if={!loading} class='table table-condensed table-bordered table-striped'>
             <thead>
                 <tr>
-                    <th></th>
+                    <th>Name</th>
+                    <th>Sector</th>
+                    <th>Beneficiary</th>
+                    <th>Activity</th>
+                    <th>Start Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -298,7 +302,6 @@
                     <td> <span each="{ sector in project.sector_s }" if="{sector}" sector="{sector}" table="{db.Sector}" property="name.en" data-is="sector-name"></span></td>
                     <td> <span each="{ sector in project.beneficiary_s }" if="{sector}" sector="{sector}" table="{db.Beneficiary}" property="name.en" data-is="sector-name"></span></td>
                     <td> <span each="{ sector in project.activity_s }" if="{sector}" sector="{sector}" table="{db.Beneficiary}" property="name.en" data-is="sector-name"></span></td>
-
                     <td>{project.startdate}</td>
                 </tr>
             </tbody>
@@ -344,12 +347,55 @@
 
     <p>{parent.detail.id}</p>
     <p>{parent.detail.name}</p>
+
+    <p ref="json">
+
+    </p>
     <button onclick="{list}">Back to list</button>
     <script>
         var tag = this;
     tag.list = function(){
         tag.parent.update({detail:false})
-    }
+    };
+    tag.on('mount', function(){
+        var d = _.clone(tag.parent.detail);
+
+            var a = function () {
+                return new Promise(function (resolve, reject) {
+                return db.Activity.where('pk').anyOf(d.activity_s).toArray().then(function (a) {
+                        d.activity_s = _.map(a, 'name')
+                    });
+                });
+            };
+
+            var s = function () {
+                return new Promise(function (resolve, reject) {
+                db.Sector.where('pk').anyOf(d.sector_s).toArray().then(function (a) {
+                        d.sector_s = _.map(a, 'name')
+                    });
+                });
+            }
+
+            var o = function () {
+                return new Promise(function (resolve, reject) {
+                db.Organization.where('pk').anyOf(d.orgs).toArray().then(function (a) {
+                        d.orgs = _.map(a, 'name')
+                });
+            })
+            }
+
+
+
+
+
+         a().then(s).then(o).then(function(){debugger; $(tag.refs.json).jsonViewer(d)})
+        console.log(tag);
+        console.log(tag.parent);
+        console.log(tag.parent.detail);
+
+
+    })
+
     </script>
 </project-detail>
 
