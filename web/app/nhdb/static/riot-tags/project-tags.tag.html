@@ -299,9 +299,9 @@
             <tbody>
                 <tr onclick="{detail}" each="{project in projects}">
                     <td>{project.name}</td>
-                    <td> <span each="{ sector in project.sector_s }" if="{sector}" sector="{sector}" table="{db.Sector}" property="name.en" data-is="sector-name"></span></td>
-                    <td> <span each="{ sector in project.beneficiary_s }" if="{sector}" sector="{sector}" table="{db.Beneficiary}" property="name.en" data-is="sector-name"></span></td>
-                    <td> <span each="{ sector in project.activity_s }" if="{sector}" sector="{sector}" table="{db.Beneficiary}" property="name.en" data-is="sector-name"></span></td>
+                    <td data-is="lookup-array" array="{project.sector_s}" table="{db.Sector}" display_attribute="name.en"></td>
+                    <td data-is="lookup-array" array="{project.beneficiary_s}" table="{db.Beneficiary}" display_attribute="name.en"></td>
+                    <td data-is="lookup-array" array="{project.activity_s}" table="{db.Activity}" display_attribute="name.en"></td>
                     <td>{project.startdate}</td>
                 </tr>
             </tbody>
@@ -343,6 +343,34 @@
               )}
     </script>
 </project-list>
+
+<lookup-array>
+    <span if="{!resolved}" each="{pk in opts.array}">...<br></span>
+    <span if="{resolved}" each="{tag in resolved}">{tag}<br></span>
+
+    <script>
+        var tag= this;
+
+        function lookup_array() {
+            return new Promise(function (resolve, reject) {
+                tag.opts.table.where('pk').anyOf(_.compact(tag.opts.array)).toArray()
+                    .then(function (a) {
+                        var r = _.map(a, tag.opts.display_attribute);
+                        resolve(r);
+                    }).catch(function (a) {
+                    reject([]);
+                });
+            });
+        }
+
+        tag.on('mount', function(){
+            lookup_array().then(function(r){tag.update({resolved:r})});
+        })
+
+
+    </script>
+</lookup-array>
+
 <project-detail>
 
     <p>{parent.detail.id}</p>
@@ -360,40 +388,42 @@
     tag.on('mount', function(){
         var d = _.clone(tag.parent.detail);
 
-            var a = function () {
-                return new Promise(function (resolve, reject) {
-                return db.Activity.where('pk').anyOf(d.activity_s).toArray().then(function (a) {
-                        d.activity_s = _.map(a, 'name')
-                    });
+        function onResolve(values) {
+            _.each(values, function(v){_.set(d, v[0], v[1])});
+            $(tag.refs.json).jsonViewer(d);
+        }
+        function onReject(){};
+
+        function lookup(value, table, lookup_attribute, display_attribute){
+            if (_.isArray(value)){return lookup_array(value, table, lookup_attribute, display_attribute)}
+            return new Promise(function (resolve) {
+                table.where('pk').equals(value).first().then(function (a) {
+                        var r = a[display_attribute];
+                        resolve([lookup_attribute, r]);
                 });
-            };
+            });
+        }
 
-            var s = function () {
-                return new Promise(function (resolve, reject) {
-                db.Sector.where('pk').anyOf(d.sector_s).toArray().then(function (a) {
-                        d.sector_s = _.map(a, 'name')
-                    });
+        function lookup_array(array, table, lookup_attribute, display_attribute) {
+            return new Promise(function (resolve, reject) {
+                table.where('pk').anyOf(_.compact(array)).toArray()
+                    .then(function (a) {
+                        var r = _.map(a, display_attribute);
+                        resolve([lookup_attribute, r]);
+                    }).catch(function (a) {
+                    reject([lookup_attribute, []]);
                 });
-            }
-
-            var o = function () {
-                return new Promise(function (resolve, reject) {
-                db.Organization.where('pk').anyOf(d.orgs).toArray().then(function (a) {
-                        d.orgs = _.map(a, 'name')
-                });
-            })
-            }
-
-
-
-
-
-         a().then(s).then(o).then(function(){debugger; $(tag.refs.json).jsonViewer(d)})
-        console.log(tag);
-        console.log(tag.parent);
-        console.log(tag.parent.detail);
-
-
+            });
+        }
+        Promise.all([
+            lookup(d.activity_s, db.Activity, 'activity_s', 'name'),
+            lookup(d.sector_s, db.Sector, 'sector_s', 'name'),
+            lookup(d.orgs, db.Organization, 'orgs', 'name'),
+            lookup(d.beneficiary_s, db.Beneficiary, 'beneficiary_s', 'name'),
+            lookup(d.places, db.AdminArea, 'places', 'name'),
+            lookup(d.status, db.ProjectStatus, 'status', 'description')
+            ]
+        ).then(onResolve, onResolve)
     })
 
     </script>

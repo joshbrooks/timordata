@@ -22,6 +22,7 @@ from rest_framework.utils.encoders import JSONEncoder
 from six import BytesIO
 
 from geo.models import District, Subdistrict, Suco, AdminArea
+
 from nhdb import forms as nhdb_forms
 from nhdb import forms_delete as nhdb_forms_delete
 from nhdb import serializers
@@ -969,12 +970,13 @@ class OfflineContent():
             ('Activity', activity, ['pk', 'name',  '*searchIndex']),
             ('Beneficiary', beneficiary, ['pk', 'name',  '*searchIndex']),
             ('Sector', sector, ['pk', 'name', '*searchIndex']),
-            ('ProjectStatus', models.ProjectStatus.objects.all(), ['pk', 'project__pk', 'code']),
+            ('ProjectStatus', models.ProjectStatus.objects.all(), ['pk', 'code', 'description']),
             ('ProjectOrganization', models.ProjectOrganization.objects.all(),
              ['pk', 'project__pk', 'organization', 'organizationclass']),
             ('OrganizationClass', models.OrganizationClass.objects.all(), ['pk', 'code', 'orgtype']),
             ('ProjectPerson', models.ProjectPerson.objects.all(), ['pk', 'project', 'person', 'is_primary']),
             ('Person', models.Person.objects.all(), ['pk', 'name', 'title', 'organization']),
+            ('AdminArea', AdminArea.objects.all(), ['pk', 'path', 'name']),
             ('settings', [{'key': 'lastupdated', 'value': now}], ['key', 'value']),
         )
 
