@@ -1,6 +1,7 @@
 from django.contrib.gis.db import models
 from django.utils.translation import ugettext_lazy as _
 from mp_lite.mp_lite import MP_Lite
+from nhdb.mixins import TimestampedMixin
 
 
 class Town(models.Model):
@@ -16,7 +17,7 @@ class Town(models.Model):
     size = models.IntegerField(choices=SIZE_CHOICES)
 
 
-class AdminArea(MP_Lite):
+class AdminArea(MP_Lite, TimestampedMixin):
     pcode = models.IntegerField(primary_key=True)
     geom = models.MultiPolygonField(srid=4326, null=True, blank=True)
     envelope = models.PolygonField(srid=4326, null=True, blank=True)
