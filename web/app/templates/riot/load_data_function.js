@@ -1,4 +1,4 @@
-/* globals db, src */
+/* globals db, src, Dexie */
 function consoleLogError(e) {
     console.error('Some database PUTs did not succeed.' + e.failures.length + 'failed in ' + tablename);
 }
@@ -19,6 +19,9 @@ function loaddata(db, data) {
 
 db.settings.get('lastupdated').then(function (lastupdated) {
     $.getJSON(src, { timestamp: _.get(lastupdated, 'value', 0) }).then(function (objects) {
-        loaddata(db, objects);
+        var promises = loaddata(db, objects);
+        promises.then(function () {
+
+        });
     });
 });

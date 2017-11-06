@@ -394,10 +394,7 @@ class Project(TimestampedMixin):
             return self.name
         return '?'
 
-    class Meta:
-        ordering = ['name', ]
-
-    name = models.CharField(_('name'), max_length=256, blank=True, null=True)
+    name = JSONField()
     description = models.TextField(null=True, blank=True, verbose_name=_("Project Description"))
     startdate = models.DateField(null=True, blank=True, verbose_name="Start date")
     enddate = models.DateField(null=True, blank=True, verbose_name="End date")

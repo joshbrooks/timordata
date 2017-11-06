@@ -17,3 +17,4 @@ function objectwords(object, field_name) {
 db.Activity.hook('creating', function (primKey, obj) { obj.searchIndex = objectwords(obj, 'name'); });
 db.Beneficiary.hook('creating', function (primKey, obj) { obj.searchIndex = objectwords(obj, 'name'); });
 db.Sector.hook('creating', function (primKey, obj) { obj.searchIndex = objectwords(obj, 'name'); });
+db.Project.hook('creating', function (primKey, obj) { obj.searchIndex = objectwords(obj, 'name'); });

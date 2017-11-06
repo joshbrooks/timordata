@@ -10,6 +10,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.core.exceptions import FieldError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q, Count
+from django.db.models.expressions import RawSQL
 from django.forms import modelformset_factory
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
@@ -954,7 +955,7 @@ class OfflineContent():
             .annotate(places=IntegerArray('projectplace__place')) \
             .annotate(sector_s=IntegerArray('sector')) \
             .annotate(activity_s=IntegerArray('activity')) \
-            .annotate(beneficiary_s=IntegerArray('beneficiary'))
+            .annotate(beneficiary_s=IntegerArray('beneficiary'))\
 
         organizations = models.Organization.objects.all()
         activity = models.Activity.objects.all()
@@ -963,6 +964,7 @@ class OfflineContent():
 
         self.since = datetime.fromtimestamp(float(timestamp))
         self.datasets = (
+            #TODO: Include translated values for Project description and name!
             ('Project', projects,
              ['pk', 'name', 'description', 'startdate', 'enddate', '*orgs', 'status', 'places', '*sector_s',
               '*activity_s', '*beneficiary_s', '*searchIndex']),

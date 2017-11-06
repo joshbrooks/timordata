@@ -19,7 +19,7 @@
 {% block navbar %}{% include "navbar.html" %}{% endblock navbar %}
 <div class="container-fluid">
     <div>
-        <project-app></project-app>
+        <project-app/>
     </div>
 </div>
 
@@ -34,13 +34,12 @@
 
     <script type="riot/tag" src='{% static "riot-tags/project-tags.tag.html" %}'></script>
     <script src='{% static "riot/riot+compiler.js" %}'></script>
+    <script src='{% static "riot-route/dist/route+tag.js" %}'></script>
     <script src='{% static "nhdb/riot-filters.js"%}'></script>
 
     <script>
-    riot.compile(function() {
-        riot.mount('project-app');
+        riot.mount('project-app')
 {#        route.start(true)#}
-      });
 
     </script>
 
