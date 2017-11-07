@@ -2,18 +2,18 @@
     <label>{opts.label}
         <input ref="input" oninput="{oninput}" placeholder="{opts.placeholder}">
     </label>
-    <script>
+    <script type="javascript">
         var tag = this;
-        tag.oninput = function(e){
+        tag.oninput = function (e) {
             var val = tag.refs.input.value;
-            if (val === ''){
-                tag.parent.trigger('unset_filter', tag.opts.index, tag.opts.func);
-                return;
+            if (val === '') {
+                return window.project_app.trigger('unset_filter', tag.opts.index, tag.opts.func);
             }
-            if (opts.int){val = _.toInteger(val)}
-            tag.parent.trigger('set_filter', tag.opts.index, tag.opts.func, val)
-        }
-
+            if (opts.int) {
+                val = _.toInteger(val);
+            }
+            return window.project_app.trigger('set_filter', tag.opts.index, tag.opts.func, val);
+        };
     </script>
 </search-input>
 
@@ -68,7 +68,6 @@
             margin-left: 10px; margin-right:10px; margin-bottom:10px;
                  }
     </style>
-
 
     <script>
         var tag = this;
@@ -138,7 +137,6 @@
             if (selected) {choice.active = false; _.pull(tag.selected_choices, choice)}
             else if (!clear_choices) {choice.active = true; tag.selected_choices.push(choice)}
 
-            var trigger = tag.parent.trigger;
             var opts = tag.opts;
 
             var i = opts.filter_table_index; // Which index on the target table to filter on
@@ -152,8 +150,8 @@
             if (multi && cast_int){val = _.map(val, _.toInteger)}
             if (multi){val = _.compact(val)}
 
-            function set(val){trigger('set_filter' , i, cb, val) }
-            function unset(){trigger('unset_filter', i, cb);}
+            function set(val){window.project_app.trigger('set_filter' , i, cb, val) }
+            function unset(){window.project_app.trigger('unset_filter', i, cb);}
             function do_unset(){ // "Unset" filter if an empty-is value is given
                 if (!multi && val === '') { return true;}
                 if (multi && _.size(val) === 1 && val[0] === ""){return true}
@@ -190,7 +188,6 @@
             document.removeEventListener('click', handleClickOutside);
         });
 
-
         tag.toggle_dropdown = toggle_dropdown;
         tag.onselect = onselect;
         tag.search = search;
@@ -201,20 +198,22 @@
 
 <project-app>
     <router>
-        <route path="project"><<project-list/></route>
+        <route path="list"><project-list ref="project_list"/></route>
         <route path="project/*"><<project-detail/></route>
     </router>
     <script>
         var tag = this;
-
+        tag.on('mount', function(){
+            window.project_app = tag;
+        });
         tag.on('set_filter', function(index, func, param){
-            var list = tag.refs.project_list;
+            var list = tag.tags.router.tags.route[0].refs.project_list;
             list.filters.set(index, func, param);
             list.trigger('refresh_list');
         });
 
         tag.on('unset_filter', function(index, func){
-            var list = tag.refs.project_list;
+            var list = tag.tags.router.tags.route[0].refs.project_list;
             list.filters.unset(index, func);
             list.trigger('refresh_list');
         })
@@ -286,10 +285,8 @@
               number_of_choices=8
         ></span>
         <span data-is="search-input" label="Name" placeholder="By Name" func="startsWithIgnoreCase" index="name"></span>
-
-
-
     </div>
+
 
 </project-filter>
 

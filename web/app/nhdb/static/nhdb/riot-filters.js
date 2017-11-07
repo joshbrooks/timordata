@@ -1,70 +1,61 @@
-var Filters = function (table) {
-    this.filters = {};
-    this.table = table;
-    this.offset = 0;
-    this.limit = 10;
-    this.order_by = 'name';
-};
-
-function apply_one_filter(t, i, f, p) {
-    var where = _.invoke(t, 'where', i);
-    var filter = _.invoke(where, f, p);
-    return filter.toArray();
-}
-
-Filters.prototype.clear = function () {
-    this.offset = 0;
-    _.set(this, 'filters', {});
-};
-Filters.prototype.unset = function (i, f) {
-    this.offset = 0;
-    _.unset(this, ['filters', i, f]);
-    if (_.has(this, ['filters', i]) && _.keys(_.get(this, ['filters', i])).length === 0) {
-        _.unset(this, ['filters', i]);
+var Filters = (function () {
+    function Filters(table) {
+        this.table = table;
+        this.offset = 0;
+        this.limit = 10;
+        this.reverse = false;
+        this.order_by = 'name';
     }
-};
-Filters.prototype.set = function (i, f, p) {
-    this.offset = 0;
-    _.set(this, ['filters', i, f], p);
-};
-Filters.prototype.set_order_by = function(p){
-    this.order_by = p;
-};
-
-Filters.prototype._apply = function () {
-    var t = this.table;
-    var filters = this.filters;
-    var promises = _.map(filters, function (index, ix) {
-        return _.map(index, function (p, func) {
-            return apply_one_filter(t, ix, func, p);
+    Filters.prototype.apply_one_filter = function (t, i, f, p) {
+        var where = _.invoke(t, 'where', i);
+        var filter = _.invoke(where, f, p);
+        return filter.toArray();
+    };
+    Filters.prototype.clear = function () { this.offset = 0; this.filters = {}; };
+    Filters.prototype.unset = function (i, f) {
+        _.unset(this, ['filters', i, f]);
+        if (_.has(this, ['filters', i]) && _.keys(_.get(this, ['filters', i])).length === 0) {
+            _.unset(this, ['filters', i]);
+        }
+    };
+    Filters.prototype.set = function (i, f, p) { this.offset = 0; _.set(this, ['filters', i, f], p); };
+    Filters.prototype.set_order_by = function (p) { this.order_by = p; };
+    Filters.prototype._apply = function () {
+        var _this = this;
+        var promises = _.map(this.filters, function (index, ix) {
+            return _.map(index, function (p, func) { return _this.apply_one_filter(_this.table, ix, func, p); });
         });
-    });
-    return Promise.all(_.flatten(promises));
-};
-Filters.prototype.results = function () {
-    var table = this.table;
-    var self = this;
-    if (self.offset < 0) {
-        self.offset = 0;
-    }
-    if (_.keys(this.filters).length === 0) {
-        table.count().then(function (c) {
-            self.count = c;
+        return Promise.all(_.flatten(promises));
+    };
+    Filters.prototype.results = function () {
+        var table = this.table;
+        var self = this;
+        var order = self.order_by;
+        if (self.offset < 0) {
+            self.offset = 0;
+        }
+        if (_.keys(this.filters).length === 0) {
+            table.count().then(function (c) {
+                self.count = c;
+            });
+            if (self.reverse) {
+                return table.orderBy(order).reverse().offset(self.offset).limit(self.limit).toArray();
+            }
+            return table.orderBy(this.order_by).offset(self.offset).limit(self.limit).toArray();
+        }
+        return this._apply().then(function (a) {
+            var filtered;
+            a.push('pk');
+            filtered = _.intersectionBy.apply(this, a);
+            self.count = _.size(filtered);
+            if (self.reverse) {
+                return _(filtered).sortBy(order).reverse().slice(self.offset, self.offset + self.limit).value();
+            }
+            return _(filtered).sortBy(order).slice(self.offset, self.offset + self.limit).value();
         });
-        if (self.reverse){return table.orderBy(this.order_by).reverse().offset(self.offset).limit(self.limit).toArray();}
-        return table.orderBy(this.order_by).offset(self.offset).limit(self.limit).toArray();
-    }
-
-    return this._apply().then(function (a) {
-        var filtered;
-        a.push('pk');
-        filtered = _.intersectionBy.apply(this, a);
-        self.count = _.size(filtered);
-        if (self.reverse){return _(filtered).sortBy(this.order_by).reverse().slice(self.offset, self.offset + self.limit).value();}
-        return _(filtered).sortBy(this.order_by).slice(self.offset, self.offset + self.limit).value();
-    });
-};
-
+    };
+    return Filters;
+}());
 riot.mixin('tableFilterMixin', {
     init: function () {
         var tag = this;
@@ -76,7 +67,7 @@ riot.mixin('tableFilterMixin', {
     get_results: function () {
         var tag = this;
         tag.filters.results().then(function (results) {
-            tag.update({results: results});
+            tag.update({ results: results });
         });
     }
 });

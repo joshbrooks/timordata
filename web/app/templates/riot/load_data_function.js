@@ -1,9 +1,6 @@
-/* globals db, src, Dexie */
-function consoleLogError(e) {
-    console.error('Some database PUTs did not succeed.' + e.failures.length + 'failed in ' + tablename);
-}
-
-function loaddata(db, data) {
+/* globals db, src, Dexie, $, _ */
+var consoleLogError = function (e) { return console.error('Some database PUTs did not succeed.' + e.failures.length + 'failed in ' + tablename); };
+var loaddata = function (db, data) {
     var promises = [];
     _.each(data, function (dataset, tablename) {
         var createP;
@@ -15,13 +12,10 @@ function loaddata(db, data) {
         promises.push(updateP);
     });
     return Promise.all(promises);
-}
-
+};
 db.settings.get('lastupdated').then(function (lastupdated) {
     $.getJSON(src, { timestamp: _.get(lastupdated, 'value', 0) }).then(function (objects) {
         var promises = loaddata(db, objects);
-        promises.then(function () {
-
-        });
+        promises.then(function () { });
     });
 });
