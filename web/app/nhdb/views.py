@@ -15,6 +15,7 @@ from django.forms import modelformset_factory
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.template import RequestContext, Context
+from django.views import View
 from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import CreateView, DeleteView
 from django_tables2 import SingleTableView
@@ -1025,27 +1026,20 @@ class OfflineContent():
         }
 
 
-class MainJS(TemplateView):
-    template_name = 'riot/database.j2'
+class MainJS(View):
     content_type = 'application/javascript'
 
     def get_content_type(self):
         return 'application/javascript'
 
-    def get_context_data(self, **kwargs):
-        context = {}
+    def get(self, timestamp):
         now = datetime.now().timestamp()
         timestamp = float(self.request.GET.get('timestamp', 0))
         db = OfflineContent(timestamp, now)
-        if 'timestamp' in self.request.GET:
-            context['objects'] = object_dump(db.timestamped_models)
-
-        context['dexied'] = object_dump(db.dexie_tables, indent=1)
-        # TODO: Store this value so that it can be compared and autoincremented
-        context['db_name'] = 'database'
-        context['db_version'] = '0.1'
-        context['now_js'] = int(now * 1000)
-        return context
+        return HttpResponse(
+            content_type='application/javascript',
+            content=object_dump(db.timestamped_models)
+        )
 
 
 class Main(TemplateView):

@@ -1,3 +1,6 @@
+import Table from "dexie";
+import riot = require('riot');
+import _ = require('lodash');
 
 class Filters {
     filters: object;

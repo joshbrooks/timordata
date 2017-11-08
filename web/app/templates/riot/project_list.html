@@ -7,13 +7,14 @@
     <link rel='stylesheet' href='{% static "timordata.css" %}'>
     <link rel='stylesheet' href='{% static "bootstrap/dist/css/bootstrap.min.css" %}'>
     <link rel='stylesheet' href='{% static "jquery.json-viewer/json-viewer/jquery.json-viewer.css" %}'>
-    <script src='{% static "jquery/dist/jquery.js" %}'></script>
-    <script src='{% static "bootstrap/dist/js/bootstrap.min.js" %}'></script>
-    <script src='{% static "dexie/dist/dexie.min.js" %}'></script>
-    <script src='{% static "lodash/lodash.min.js" %}'></script>
-    <script src='{% static "jquery.json-viewer/json-viewer/jquery.json-viewer.js" %}'></script>
+{#    <script src='{% static "jquery/dist/jquery.js" %}'></script>#}
+{#    <script src='{% static "bootstrap/dist/js/bootstrap.min.js" %}'></script>#}
+{#    <script src='{% static "dexie/dist/dexie.min.js" %}'></script>#}
+{#    <script src='{% static "lodash/lodash.min.js" %}'></script>#}
+{#    <script src='{% static "jquery.json-viewer/json-viewer/jquery.json-viewer.js" %}'></script>#}
 
-    <script src='{% url "nhdb:project:nhdb.database.js" %}'></script>
+{#    <script src='{% url "nhdb:project:nhdb.database.js" %}'></script>#}
+    <script src='{% static "requirejs/require.js"%}' data-main='{% static "app-init.js" %}'></script>
 </head>
 <body>
 {% block navbar %}{% include "navbar.html" %}{% endblock navbar %}
@@ -32,16 +33,18 @@
     </div>
 {% endblock %}
 
-    <script type="riot/tag" src='{% static "riot-tags/project-tags.tag.html" %}'></script>
-    <script src='{% static "riot/riot+compiler.js" %}'></script>
-    <script src='{% static "riot-route/dist/route+tag.js" %}'></script>
-    <script src='{% static "nhdb/riot-filters.js"%}'></script>
+{#    <script type="riot/tag" src='{% static "tags/project-tags.tag" %}'></script>#}
+{#    <script src='{% static "riot/riot+compiler.js" %}'></script>#}
+{#    <script src='{% static "riot-route/dist/route+tag.js" %}'></script>#}
+{#    <script src='{% static "nhdb/riot-filters.js"%}'></script>#}
 
-    <script>
-        riot.mount('project-app')
+{#    <script>#}
+{#        import riot from 'riot';#}
+
+{#        riot.mount('project-app')#}
 {#        route.start(true)#}
 
-    </script>
+{#    </script>#}
 
 </body>
 </html>

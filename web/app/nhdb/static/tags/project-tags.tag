@@ -1,21 +1,3 @@
-<search-input>
-    <label>{opts.label}
-        <input ref="input" oninput="{oninput}" placeholder="{opts.placeholder}">
-    </label>
-    <script type="javascript">
-        var tag = this;
-        tag.oninput = function (e) {
-            var val = tag.refs.input.value;
-            if (val === '') {
-                return window.project_app.trigger('unset_filter', tag.opts.index, tag.opts.func);
-            }
-            if (opts.int) {
-                val = _.toInteger(val);
-            }
-            return window.project_app.trigger('set_filter', tag.opts.index, tag.opts.func, val);
-        };
-    </script>
-</search-input>
 
 <search-choice>
     <label>{opts.label}</label>
@@ -187,6 +169,7 @@
         tag.on('unmount', function () {
             document.removeEventListener('click', handleClickOutside);
         });
+
 
         tag.toggle_dropdown = toggle_dropdown;
         tag.onselect = onselect;
