@@ -1,4 +1,4 @@
-import Table from "dexie";
+import Dexie from "dexie";
 import riot = require('riot');
 import _ = require('lodash');
 
@@ -6,12 +6,12 @@ class Filters {
     filters: object;
     offset: number = 0;
     limit: number = 10;
-    count: number;
     reverse: boolean = false;
-    order_by: string = 'name';
-    constructor(readonly table: Table) {}
+    order_by: string = 'name.en';
+    count: number = 0;
+    constructor(readonly table: Dexie.Table<any, number>) {}
 
-    private apply_one_filter(t, i, f, p) : any[] {
+    private static apply_one_filter(t, i, f, p) : any[] {
         const where = _.invoke(t, 'where', i);
         const filter = _.invoke(where, f, p);
         return filter.toArray();
@@ -26,28 +26,28 @@ class Filters {
     }
     set(i, f, p): void {this.offset = 0; _.set(this, ['filters', i, f], p)}
     set_order_by(p): void {this.order_by = p;}
-    _apply (): Promise {
-        const promises = _.map(this.filters, (index, ix) =>
-            _.map(index, (p, func) => this.apply_one_filter(this.table, ix, func, p)));
-        return Promise.all(_.flatten(promises));
+    private apply (): Promise<any> {
+        const promises: Array<any> = _.map(this.filters, (index, ix) => _.map(index, (p, func) => Filters.apply_one_filter(this.table, ix, func, p)));
+        return Promise.all<void>(_.flatten(promises));
     }
-    results() : void {
-        const table = this.table;
+    results() : any {
         const self = this;
         const order = self.order_by;
         if (self.offset < 0) {
             self.offset = 0;
         }
         if (_.keys(this.filters).length === 0) {
-            table.count().then(function (c) {
+            this.table.count().then(function (c) {
                 self.count = c;
             });
-            if (self.reverse){return table.orderBy(order).reverse().offset(self.offset).limit(self.limit).toArray();}
-            return table.orderBy(this.order_by).offset(self.offset).limit(self.limit).toArray();
+            if (self.reverse){
+                return this.table.orderBy(order).reverse().offset(self.offset).limit(self.limit).toArray();
+            }
+            return this.table.orderBy(order).offset(self.offset).limit(self.limit).toArray();
         }
 
-        return this._apply().then(function (a) {
-            let filtered : array;
+        return this.apply().then(function (a) {
+            let filtered;
             a.push('pk');
             filtered = _.intersectionBy.apply(this, a);
             self.count = _.size(filtered);

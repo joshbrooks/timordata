@@ -1,15 +1,16 @@
 define(["require", "exports", "riot", "lodash"], function (require, exports, riot, _) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var Filters = (function () {
+    var Filters = /** @class */ (function () {
         function Filters(table) {
             this.table = table;
             this.offset = 0;
             this.limit = 10;
             this.reverse = false;
-            this.order_by = 'name';
+            this.order_by = 'name.en';
+            this.count = 0;
         }
-        Filters.prototype.apply_one_filter = function (t, i, f, p) {
+        Filters.apply_one_filter = function (t, i, f, p) {
             var where = _.invoke(t, 'where', i);
             var filter = _.invoke(where, f, p);
             return filter.toArray();
@@ -23,30 +24,27 @@ define(["require", "exports", "riot", "lodash"], function (require, exports, rio
         };
         Filters.prototype.set = function (i, f, p) { this.offset = 0; _.set(this, ['filters', i, f], p); };
         Filters.prototype.set_order_by = function (p) { this.order_by = p; };
-        Filters.prototype._apply = function () {
+        Filters.prototype.apply = function () {
             var _this = this;
-            var promises = _.map(this.filters, function (index, ix) {
-                return _.map(index, function (p, func) { return _this.apply_one_filter(_this.table, ix, func, p); });
-            });
+            var promises = _.map(this.filters, function (index, ix) { return _.map(index, function (p, func) { return Filters.apply_one_filter(_this.table, ix, func, p); }); });
             return Promise.all(_.flatten(promises));
         };
         Filters.prototype.results = function () {
-            var table = this.table;
             var self = this;
             var order = self.order_by;
             if (self.offset < 0) {
                 self.offset = 0;
             }
             if (_.keys(this.filters).length === 0) {
-                table.count().then(function (c) {
+                this.table.count().then(function (c) {
                     self.count = c;
                 });
                 if (self.reverse) {
-                    return table.orderBy(order).reverse().offset(self.offset).limit(self.limit).toArray();
+                    return this.table.orderBy(order).reverse().offset(self.offset).limit(self.limit).toArray();
                 }
-                return table.orderBy(this.order_by).offset(self.offset).limit(self.limit).toArray();
+                return this.table.orderBy(order).offset(self.offset).limit(self.limit).toArray();
             }
-            return this._apply().then(function (a) {
+            return this.apply().then(function (a) {
                 var filtered;
                 a.push('pk');
                 filtered = _.intersectionBy.apply(this, a);

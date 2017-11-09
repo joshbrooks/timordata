@@ -1,11 +1,13 @@
-import Dexie  = require("dexie");
+import Dexie from "dexie";
 import _ = require('lodash');
 import $ = require('jquery');
 
 const src='/nhdb/project/database.js';
+const languages = ['en', 'pt', 'tet', 'ind'];
+const translated_idx = _.join(_.map(languages, function(i){return 'name.'+i}), ', ')
 
 const stores = {'0.1': {
- "Activity": "pk, name, *searchIndex",
+ "Activity": "pk, *searchIndex, " + translated_idx,
  "AdminArea": "pk, path, name",
  "OrganizationClass": "pk, code, orgtype",
  "Beneficiary": "pk, name, *searchIndex",
@@ -13,7 +15,7 @@ const stores = {'0.1': {
  "ProjectStatus": "pk, code, description",
  "ProjectOrganization": "pk, project__pk, organization, organizationclass",
  "Person": "pk, name, title, organization",
- "Project": "pk, name, description, startdate, enddate, *orgs, status, places, *sector_s, *activity_s, *beneficiary_s, *searchIndex",
+ "Project": "pk, description, startdate, enddate, *orgs, status, places, *sector_s, *activity_s, *beneficiary_s, *searchIndex, " + translated_idx,
  "Organization": "pk, name",
  "Sector": "pk, name, *searchIndex",
  "ProjectPerson": "pk, project, person, is_primary"
@@ -76,8 +78,8 @@ let loaddata = (db : ApplicationDatabase, data: object) => {
     let promises = [];
     _.each(data, (dataset : object, tablename : string) => {
         let createP : Promise<any>;
-        let updateP : Promise<any>;
-        let deleteP : Promise<any>; // TODO: Promise removes matching values
+        let updateP : Dexie.Promise<any>;
+        let deleteP : Dexie.Promise<any>; // TODO: Promise removes matching values
         createP = db[tablename].bulkPut(dataset['data']['created']).catch(Dexie.BulkError, (e) => { consoleLogError(e, tablename); });
         updateP = db[tablename].bulkPut(dataset['data']['updated']).catch(Dexie.BulkError, (e) => { consoleLogError(e, tablename); });
         promises.push(createP);
