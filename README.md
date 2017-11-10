@@ -1,16 +1,39 @@
-[![Coverage Status](https://coveralls.io/repos/github/joshbrooks/timordata/badge.svg)](https://coveralls.io/github/joshbrooks/timordata)
+# TimorData Repository
 
-# timordata
+## Stack
 
-This GIT repository is the home of the Timor-Leste Data Center. This is a database application to track projects,
-organizations, publications and more concerning Timor-Leste (East Timor).
+ - postgresql
+ - python
+ - django
+ - riotjs
+ - requirejs
+ - typescript
 
-## About The Data Center
 
-The centre was initiated by Belun, FONGTIL and Alola Foundation as a coordination tool for aid agencies.
+## Development
 
-## Deployment
+In development,
 
-- Clone from git
-- Clone the submodules
-- Run it!
+ - Use 'tsc' to compile typescript when a typescript file is edited
+
+```
+# riot watcher
+REPO=/home/josh/github/joshbrooks/timordata; APP=web/app; cd ${REPO}/${APP}/nhdb/static; ${REPO}/${APP}/node_modules/riot/node_modules/.bin/riot -m -w . tags/project_tags.js
+
+``` bash
+# tsc watcher
+REPO=/home/josh/github/joshbrooks/timordata
+APP=web/app
+cd ${REPO}/${APP}/nhdb/static
+${REPO}/${APP}/node_modules/typescript/bin/tsc -w
+```
+
+``` bash
+# Runserver
+virtualenv_name="timordata_env"
+workon ${virtualenv_name}
+REPO=/home/josh/github/joshbrooks/timordata
+APP=web/app
+cd ${REPO}/${APP}
+./manage.py runserver
+```

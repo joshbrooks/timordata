@@ -395,7 +395,7 @@ class Project(TimestampedMixin):
         return '?'
 
     name = JSONField()
-    description = models.TextField(null=True, blank=True, verbose_name=_("Project Description"))
+    description = JSONField(null=True, blank=True, verbose_name=_("Project Description"))
     startdate = models.DateField(null=True, blank=True, verbose_name="Start date")
     enddate = models.DateField(null=True, blank=True, verbose_name="End date")
     verified = models.DateField(auto_now=True, null=True, blank=True)

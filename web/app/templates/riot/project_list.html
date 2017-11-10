@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,6 +15,18 @@
 {#    <script src='{% static "jquery.json-viewer/json-viewer/jquery.jquery.json-viewer.js" %}'></script>#}
 
 {#    <script src='{% url "nhdb:project:nhdb.database.js" %}'></script>#}
+
+    {% get_available_languages as languages %}
+    <script>
+        window.languages = { {% for lang_code, lang_name in languages %} {%  if lang_code != 'id' %}
+            {{ lang_code }} :'{{ lang_name }}',  {%  else  %}
+            ind :'{{ lang_name }}',{%  endif  %}{%  endfor %}
+        }
+    </script>
+
+    </ul>
+</nav>
+
     <script src='{% static "requirejs/require.js"%}' data-main='{% static "app-init.js" %}'></script>
 </head>
 <body>

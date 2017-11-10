@@ -62,15 +62,23 @@ const db = new ApplicationDatabase();
 const objectwords = (object: object, field_name: string) => {
     /* Return values from an object split into individual words */
     /* Use where a 'name' object has translated strings as values */
-    const strings = _.values(_.get(object, field_name));
-    const w = _.map(strings, function (thestring) { return _.split(thestring); });
-    return _.flatten(w);
+        let words : string[] = _.values (_.get(object, field_name)).join(' ').split(' ');
+        words = _.map(words, function(word){return _.replace(word, /[\W\(\)]/g, '')});
+        words = _.filter(words, function(word){return _.size(word) > 3});
+        return words;
 };
 
-db.Activity.hook('creating', function(primKey?: number, obj?: IActivity) { obj.searchIndex = objectwords(obj, 'name');});
+db.Activity.hook('creating', (primKey?: number, obj?: IActivity) => { obj.searchIndex = objectwords(obj, 'name');});
 db.Beneficiary.hook('creating', (primKey?, obj?:IBeneficiary) => { obj.searchIndex = objectwords(obj, 'name'); });
 db.Sector.hook('creating', (primKey?, obj?:ISector) => { obj.searchIndex = objectwords(obj, 'name'); });
 db.Project.hook('creating', (primKey?, obj?:IProject) => { obj.searchIndex = objectwords(obj, 'name'); });
+
+db.Activity.hook('updating', (modifications: object, primKey?: number, obj?: IActivity) => {if (!_.isUndefined(modifications.name)) {return {searchIndex: objectwords(modifications, 'name')}}});
+db.Beneficiary.hook('updating', (modifications: object, primKey?, obj?:IBeneficiary) => {if (!_.isUndefined(modifications.name)) {return {searchIndex: objectwords(modifications, 'name')}}});
+db.Sector.hook('updating', (modifications: object, primKey?, obj?:ISector) => {if (!_.isUndefined(modifications.name)) {return {searchIndex: objectwords(modifications, 'name')}}});
+db.Project.hook('updating', (modifications: object, primKey?, obj?:IProject) => {if (!_.isUndefined(modifications.name)) {return {searchIndex: objectwords(modifications, 'name')}}});
+
+
 
 let consoleLogError = (e, tablename : string) => console.error('Some database PUTs did not succeed.' + e.failures.length + 'failed on '+tablename);
 
@@ -96,3 +104,4 @@ db.settings.get('lastupdated').then((lastupdated) => {
 });
 
 window['db'] = db;
+console.log(db);

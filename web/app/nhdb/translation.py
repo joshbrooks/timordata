@@ -9,7 +9,7 @@ class PropertyTagTranslationOptions(TranslationOptions):
 
 @register(Project)
 class ProjectTranslation(TranslationOptions):
-    fields = ('description', 'notes')
+    fields = ('notes',)
 
 
 @register(Organization)
