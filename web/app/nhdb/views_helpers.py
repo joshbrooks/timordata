@@ -7,7 +7,8 @@ from itertools import product
 
 
 def fromiso(date):
-    return datetime.datetime.strptime(date, '%Y-%m-%d').date()
+    return datetime.datetime.strptime(date, "%Y-%m-%d").date()
+
 
 def intize(l):
     """
@@ -27,7 +28,7 @@ def intize(l):
         else:
             return None
 
-    if 'all' in l:
+    if "all" in l:
         return []
 
     return [i for i in map(getint, l) if i is not None]
@@ -40,37 +41,37 @@ def orgset_filter(rq, qs=Organization.objects.all()):
 
     projects = Project.objects.all()
 
-    orgtype = rq.GET.getlist('orgtype', None)
-    namelike = rq.GET.get('name', None)
-    status = rq.GET.get('status', "active")
+    orgtype = rq.GET.getlist("orgtype", None)
+    namelike = rq.GET.get("name", None)
+    status = rq.GET.get("status", "active")
 
     # Also possible to set "inactive=on"
-    if rq.GET.get('inactive') == 'on':
-        status='any'
+    if rq.GET.get("inactive") == "on":
+        status = "any"
 
-    place = rq.GET.getlist('place', None)
-    pcode = rq.GET.getlist('pcode', None)
+    place = rq.GET.getlist("place", None)
+    pcode = rq.GET.getlist("pcode", None)
 
     # "tags" and "projectstatus" actually refer to project not organization.
     # That distinction is made here.
 
-    tags = rq.GET.getlist('tag', [])
-    tags.extend(rq.GET.getlist('inv', []))
-    tags.extend(rq.GET.getlist('ben', []))
-    tags.extend(rq.GET.getlist('act', []))
+    tags = rq.GET.getlist("tag", [])
+    tags.extend(rq.GET.getlist("inv", []))
+    tags.extend(rq.GET.getlist("ben", []))
+    tags.extend(rq.GET.getlist("act", []))
 
-    projectstatus = rq.GET.getlist('projectstatus', 'any')
-    projectplace = rq.GET.getlist('location')
+    projectstatus = rq.GET.getlist("projectstatus", "any")
+    projectplace = rq.GET.getlist("location")
 
     if orgtype:
-        if orgtype != 'any':
+        if orgtype != "any":
             qs = qs.filter(orgtype__pk__in=orgtype)
 
     if projectplace:
         projects = projects.filter(projectplace__place__pcode__in=projectplace)
 
     if projectstatus:
-        if 'any' not in projectstatus:
+        if "any" not in projectstatus:
             projects = projects.filter(status__in=projectstatus)
 
     if tags:
@@ -90,17 +91,28 @@ def orgset_filter(rq, qs=Organization.objects.all()):
             filters[root_name].append(PropertyTag.separatestring(tag).upper())
 
         for root_name, child_tags in filters.items():
-            lookup = {'act': 'activity', 'ben': 'beneficiary', 'inv': 'sector'}
+            lookup = {"act": "activity", "ben": "beneficiary", "inv": "sector"}
             _filter = {
-                lookup[root_name.lower()] + '__path__in': [PropertyTag.separatestring(v).upper() for v in child_tags]}
+                lookup[root_name.lower()]
+                + "__path__in": [
+                    PropertyTag.separatestring(v).upper() for v in child_tags
+                ]
+            }
 
             projects = projects.filter(**_filter)
 
-    # There are two ways to determine "place": using the "pcode" or 
+    # There are two ways to determine "place": using the "pcode" or
     # using the place path. Internally "pcode" is converted to "path".
 
     if pcode:
-        place = set(place).union(set([i[0] for i in AdminArea.objects.filter(pk__in=pcode).values_list('path')]))
+        place = set(place).union(
+            set(
+                [
+                    i[0]
+                    for i in AdminArea.objects.filter(pk__in=pcode).values_list("path")
+                ]
+            )
+        )
 
     if place or pcode:
 
@@ -133,10 +145,22 @@ def orgset_filter(rq, qs=Organization.objects.all()):
 
 
 def projectset_filter(
-        rq,
-        pl=Project.objects.all(),
-        pass_parameters=('orgs', 'csrfmiddlewaretoken', 'searchtexttext', 'display', 'type', 'search', 'page', 'sort',
-                         'format', 'nullenddate', 'nullstartdate')):
+    rq,
+    pl=Project.objects.all(),
+    pass_parameters=(
+        "orgs",
+        "csrfmiddlewaretoken",
+        "searchtexttext",
+        "display",
+        "type",
+        "search",
+        "page",
+        "sort",
+        "format",
+        "nullenddate",
+        "nullstartdate",
+    ),
+):
     """
     Filter projects by foreign key properties based on request GET
     parameters
@@ -147,57 +171,61 @@ def projectset_filter(
         # For compatibility with "django-modeltranslation" expand a nonspecific filter such as "name" to "name_en",
         # "name_pt" etc
         _q = Q()
-        for language, parameter, value in product(settings.LANGUAGES_FIX_ID, parameters, filter_values):
-            filter_name = '%s_%s__%s' % (parameter, language[0], filter_type)
+        for language, parameter, value in product(
+            settings.LANGUAGES_FIX_ID, parameters, filter_values
+        ):
+            filter_name = "%s_%s__%s" % (parameter, language[0], filter_type)
             __filter = {filter_name: value}
             _q = _q | Q(**__filter)
 
         return _q
 
     params = rq.GET.iterlists()
-    translated_fields = ('name', 'description')
+    translated_fields = ("name", "description")
 
     for i in params:
         # opt is the GET parameter eg 'place' or 'inv'
         # vals is a list of values eg['10','15']
 
         opt, vals = i
-        if opt in pass_parameters or vals == [''] or vals == ['all']:
+        if opt in pass_parameters or vals == [""] or vals == ["all"]:
             continue
 
         if opt in translated_fields:
 
             values = []
             for v in vals:
-                values.extend([i.strip() for i in v.split(',')])
+                values.extend([i.strip() for i in v.split(",")])
 
-            pl = pl.filter(translatedfilter(parameters=translated_fields, filter_values=values))
+            pl = pl.filter(
+                translatedfilter(parameters=translated_fields, filter_values=values)
+            )
 
-        elif opt == 'place':
+        elif opt == "place":
             q = Q()
             # Get the places
             for v in vals:
                 q = q | Q(place__path__startswith=v)
             pl = pl.filter(q)
-            print pl
+            print(pl)
 
-        elif opt == 'status':
+        elif opt == "status":
             pl = pl.filter(status_id__in=vals)
 
-        elif opt == 'organization':
+        elif opt == "organization":
             q = Q()
             for v in vals:
                 q = Q(organization__pk=v)
             pl = pl.filter(q)
 
-        elif opt == 'pcode':
+        elif opt == "pcode":
             q = Q()
             for v in intize(vals):
                 q = Q(place=AdminArea.objects.get(pk=v))
                 q = q | Q(place__in=AdminArea.objects.get(pk=v).get_descendants())
             pl = pl.filter(q)
 
-        elif opt == 'projectstatus':
+        elif opt == "projectstatus":
             q = Q()
             for v in vals:
                 q = q | Q(status=v)
@@ -205,27 +233,32 @@ def projectset_filter(
 
         # INV, BEN, ACT rationalization (Sept 2014)
         # Legacy code
-        elif opt.upper() in [i[0] for i in PropertyTag.get_root_nodes().values_list('path')]:
-            lookup = {'act': 'activity', 'ben': 'beneficiary', 'inv': 'sector'}
+        elif opt.upper() in [
+            i[0] for i in PropertyTag.get_root_nodes().values_list("path")
+        ]:
+            lookup = {"act": "activity", "ben": "beneficiary", "inv": "sector"}
 
-            _filter = {lookup[opt.lower()]+'__path__in': [PropertyTag.separatestring(v).upper() for v in vals]}
+            _filter = {
+                lookup[opt.lower()]
+                + "__path__in": [PropertyTag.separatestring(v).upper() for v in vals]
+            }
             pl = pl.filter(**_filter)
 
-        elif opt == 'orgtype':
+        elif opt == "orgtype":
             q = Q()
             for v in vals:
                 q = q | Q(organization__orgtype__code=v)
             pl = pl.filter(q)
 
-        elif opt == 'startdateafter':
-            if rq.GET.get('nullstartdate') == 'on':
+        elif opt == "startdateafter":
+            if rq.GET.get("nullstartdate") == "on":
                 q = Q(startdate__gt=fromiso(vals[0])) | Q(startdate=None)
                 pl = pl.filter(q)
             else:
                 pl = pl.filter(startdate__gt=fromiso(vals[0]))
-        elif opt == 'startdatebefore':
+        elif opt == "startdatebefore":
             pl = pl.filter(startdate__lt=fromiso(vals[0]))
-        elif opt == 'enddateafter':
+        elif opt == "enddateafter":
             # if rq.GET.get('nullenddate') == 'on':
             q = Q(enddate__gt=fromiso(vals[0])) | Q(enddate=None)
             pl = pl.filter(q)
@@ -233,14 +266,14 @@ def projectset_filter(
             # pl = pl.filter(enddate__gt = fromiso(vals[0]))
             pass
             #  pl = pl.filter(enddate__gt = fromiso(vals[0]))
-        elif opt == 'enddatebefore':
+        elif opt == "enddatebefore":
             pl = pl.filter(startdate__lt=fromiso(vals[0]))
 
         else:
-            raise AssertionError('Invalid filter passed: %s' % opt)
+            raise AssertionError("Invalid filter passed: %s" % opt)
 
-    if not rq.GET.get('projectstatus') and not rq.GET.get('status'):
-        pl = pl.filter(status='A')
+    if not rq.GET.get("projectstatus") and not rq.GET.get("status"):
+        pl = pl.filter(status="A")
 
     pl = pl.distinct()
 

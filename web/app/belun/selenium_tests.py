@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-page = 'https://localhost/nhdb/project/?q=status.A#object=24536'
+page = "https://localhost/nhdb/project/?q=status.A#object=24536"
 
 
 # el = fox.find_element_by_class_name('show-edit-canvas')

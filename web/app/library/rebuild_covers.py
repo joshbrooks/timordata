@@ -9,9 +9,10 @@ import re
 
 logging.basicConfig(level=logging.WARN)
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'belun.settings'
-sys.path.append(os.path.join(os.path.abspath('.'), '../'))
+os.environ["DJANGO_SETTINGS_MODULE"] = "belun.settings"
+sys.path.append(os.path.join(os.path.abspath("."), "../"))
 import django
+
 django.setup()
 from library.models import *
 from django.core.files import File

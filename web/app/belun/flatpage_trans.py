@@ -8,7 +8,7 @@ from django.template import loader
 from django.utils.safestring import mark_safe
 from django.views.decorators.csrf import csrf_protect
 
-DEFAULT_TEMPLATE = 'flatpages/default.html'
+DEFAULT_TEMPLATE = "flatpages/default.html"
 
 # This view is called from FlatpageFallbackMiddleware.process_response
 # when a 404 is raised, which often means CsrfViewMiddleware.process_view
@@ -25,13 +25,16 @@ def flatpage_translation(request, url):
     Search for a flatpage translated into a different language
     EG returns index_tet for a request to index, if index_tet exists.
     """
-    if not url.startswith('/'):
-        url = '/' + url
+    if not url.startswith("/"):
+        url = "/" + url
     site_id = get_current_site(request).id
     try:
-        return render_flatpage(request, FlatPage.objects.get(
-            url='{}{}/'.format(url, request.LANGUAGE_CODE),
-            sites=site_id))
+        return render_flatpage(
+            request,
+            FlatPage.objects.get(
+                url="{}{}/".format(url, request.LANGUAGE_CODE), sites=site_id
+            ),
+        )
 
     except FlatPage.DoesNotExist:
         return flatpage(request, url)
@@ -46,6 +49,7 @@ def render_flatpage(request, f):
     # logged in, redirect to the login page.
     if f.registration_required and not request.user.is_authenticated():
         from django.contrib.auth.views import redirect_to_login
+
         return redirect_to_login(request.path)
     if f.template_name:
         template = loader.select_template((f.template_name, DEFAULT_TEMPLATE))
@@ -58,5 +62,5 @@ def render_flatpage(request, f):
     f.title = mark_safe(f.title)
     f.content = mark_safe(f.content)
 
-    response = HttpResponse(template.render({'flatpage': f}, request))
+    response = HttpResponse(template.render({"flatpage": f}, request))
     return response

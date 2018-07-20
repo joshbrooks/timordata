@@ -8,18 +8,18 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('nhdb', '0007_auto_20160610_0629'),
-    ]
+    dependencies = [("nhdb", "0007_auto_20160610_0629")]
 
     operations = [
-        migrations.RemoveField(
-            model_name='organizationplacedescription',
-            name='id',
-        ),
+        migrations.RemoveField(model_name="organizationplacedescription", name="id"),
         migrations.AlterField(
-            model_name='organizationplacedescription',
-            name='organizationplace',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='nhdb.OrganizationPlace'),
+            model_name="organizationplacedescription",
+            name="organizationplace",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                primary_key=True,
+                serialize=False,
+                to="nhdb.OrganizationPlace",
+            ),
         ),
     ]

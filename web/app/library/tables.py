@@ -6,6 +6,7 @@ from belun import settings
 from library.models import Version
 from nhdb.models import PropertyTag
 import modeltranslation
+
 static_url = settings.STATIC_URL
 
 
@@ -19,14 +20,13 @@ class VersionTable(tables.Table):
 
 
 class PublicationTable(tables.Table):
-
     def __init__(self, *args, **kwargs):
         super(PublicationTable, self).__init__(*args, **kwargs)
 
     class Meta:
         # model = Publication
         attrs = {"class": "paleblu"}
-        fields = ('publication', 'year')
+        fields = ("publication", "year")
 
     # pk = tables.LinkColumn('library:publication:detail', args=[A('pk')])
     publication = tables.Column(empty_values=())
@@ -37,11 +37,18 @@ class PublicationTable(tables.Table):
     def render_organization(self, value):
 
         pattern = u'<a href="/nhdb/organization/?q=active.true#object={organization.pk}">{organization.name}({organization.orgtype_id})</a>'
-        return mark_safe(u'<br>'.join([pattern.format(organization=organization) for organization in value.all()]))
+        return mark_safe(
+            u"<br>".join(
+                [
+                    pattern.format(organization=organization)
+                    for organization in value.all()
+                ]
+            )
+        )
 
     @property
     def language_ids(self):
-        return self.context["request"].GET.getlist('language_id')
+        return self.context["request"].GET.getlist("language_id")
 
     # @property
     # def versions(self):
@@ -83,11 +90,12 @@ class PublicationTable(tables.Table):
         version_count = record.versions.count()
         hide_versions_after = 5
         extra = version_count - hide_versions_after
-        detail_url = '#object='+str(record.pk)
-        returns = u'<strong>{}</strong><a href={}> More &raquo;</a><br>'\
-            .format(record.__unicode__(), detail_url)
+        detail_url = "#object=" + str(record.pk)
+        returns = u"<strong>{}</strong><a href={}> More &raquo;</a><br>".format(
+            record.__unicode__(), detail_url
+        )
 
-        return ''
+        return ""
         #
         # for idx, i in enumerate(record.versions.all()):
         #     # "Filter keys" for record: "sector__path", "activity__path", "beneficiary__path"

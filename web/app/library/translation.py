@@ -4,19 +4,19 @@ from library.models import Version, Publication, Pubtype, Tag
 
 
 class PublicationTranslationOptions(TranslationOptions):
-    fields = ('name', 'description')
+    fields = ("name", "description")
 
 
 class VersionTranslationOptions(TranslationOptions):
-    fields = ('description','title','upload','cover','url')
+    fields = ("description", "title", "upload", "cover", "url")
 
 
 class PubtypeTranslationOptions(TranslationOptions):
-    fields = ('name',)
+    fields = ("name",)
 
 
 class Tagtranslation(TranslationOptions):
-    fields = ('name',)
+    fields = ("name",)
 
 
 translator.register(Version, VersionTranslationOptions)

@@ -7,14 +7,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('library', '0002_auto_20161117_1528'),
-    ]
+    dependencies = [("library", "0002_auto_20161117_1528")]
 
     operations = [
         migrations.AlterField(
-            model_name='publication',
-            name='sector',
-            field=models.ManyToManyField(blank=True, to='nhdb.PropertyTag'),
-        ),
+            model_name="publication",
+            name="sector",
+            field=models.ManyToManyField(blank=True, to="nhdb.PropertyTag"),
+        )
     ]

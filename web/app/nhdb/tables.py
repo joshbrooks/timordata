@@ -4,80 +4,112 @@ from django_tables2 import LinkColumn, Column, Table
 from nhdb.models import Organization, Project, PropertyTag, ProjectPerson, Email, Person
 from django_tables2.utils import A
 
-__author__ = 'josh'
+__author__ = "josh"
 
 
 class ProjectPersonTable(Table):
     class Meta:
         model = ProjectPerson
         attrs = {"class": "paleblu"}
-        exclude = ('project',)
+        exclude = ("project",)
 
 
 class PersonTable(Table):
     class Meta:
         model = Person
         attrs = {"class": "paleblu"}
-        exclude = ('title',)
+        exclude = ("title",)
 
     def render_email(self, value, record):
         return Email(record.email).rot
 
     def render_name(self, value, record):
 
-        detail_url = '#object='+str(record.pk)
-        return mark_safe(u'<a href="{}">{}</a><br><span class="table-person-name">{}</span>'.format(detail_url, value,  record.title or ''))
+        detail_url = "#object=" + str(record.pk)
+        return mark_safe(
+            u'<a href="{}">{}</a><br><span class="table-person-name">{}</span>'.format(
+                detail_url, value, record.title or ""
+            )
+        )
 
 
 class PersonProjectTable(Table):
     class Meta:
         model = ProjectPerson
         attrs = {"class": "paleblu"}
-        exclude = ('person',)
+        exclude = ("person",)
 
 
 class OrganizationTable(Table):
     class Meta:
         model = Organization
-        exclude = ('pk','fongtilid', 'justiceid', 'name_en', 'name_tet', 'name_pt', 'name_id',
-        'description', 'description_en', 'description_tet', 'description_pt', 'description_id',
-        'stafffulltime', 'staffparttime')
+        exclude = (
+            "pk",
+            "fongtilid",
+            "justiceid",
+            "name_en",
+            "name_tet",
+            "name_pt",
+            "name_id",
+            "description",
+            "description_en",
+            "description_tet",
+            "description_pt",
+            "description_id",
+            "stafffulltime",
+            "staffparttime",
+        )
 
         attrs = {"class": "paleblu"}
 
-    organization_phone = Column(accessor='contact.phoneprimary')
+    organization_phone = Column(accessor="contact.phoneprimary")
     email = Column()
 
     def render_email(self, value, record):
         return Email(record.email).rot
 
     def render_name(self, value, record):
-        change_url = urlresolvers.reverse('admin:nhdb_project_change', args=[A('pk')])
+        change_url = urlresolvers.reverse("admin:nhdb_project_change", args=[A("pk")])
         # detail_url = urlresolvers.reverse('nhdb:project:detail', kwargs={'pk': record.pk})
-        detail_url = '#object='+str(record.pk)
-        return mark_safe(u'<a href="{}">{}</a><br><span class="table-organization-description">{}</span>'.format(detail_url, value,  record.description or ''))
+        detail_url = "#object=" + str(record.pk)
+        return mark_safe(
+            u'<a href="{}">{}</a><br><span class="table-organization-description">{}</span>'.format(
+                detail_url, value, record.description or ""
+            )
+        )
 
 
 class ProjectTable(Table):
     class Meta:
         model = Project
         attrs = {"class": "paleblu"}
-        fields = ('name', 'startdate', 'enddate', 'verified', 'status')
+        fields = ("name", "startdate", "enddate", "verified", "status")
 
     sector = Column()
     organization = Column()
 
     def render_sector(self, value):
-        return ', '.join([activity.name for activity in value.all()])
+        return ", ".join([activity.name for activity in value.all()])
 
     def render_organization(self, value):
 
         pattern = u'<a href="/nhdb/organization/?q=active.true#object={organization.pk}">{organization.name}({organization.orgtype_id})</a>'
-        return mark_safe(u'<br>'.join([pattern.format(organization=organization) for organization in value.all()]))
+        return mark_safe(
+            u"<br>".join(
+                [
+                    pattern.format(organization=organization)
+                    for organization in value.all()
+                ]
+            )
+        )
 
     def render_name(self, value, record):
-        detail_url = '#object='+str(record.pk)
-        return mark_safe(u'<a href="{}">{}</a><br><span class="table-project-description">{}</span>'.format(detail_url, value,  record.description or ''))
+        detail_url = "#object=" + str(record.pk)
+        return mark_safe(
+            u'<a href="{}">{}</a><br><span class="table-project-description">{}</span>'.format(
+                detail_url, value, record.description or ""
+            )
+        )
 
 
 class PropertyTagTable(Table):
@@ -85,4 +117,4 @@ class PropertyTagTable(Table):
         model = PropertyTag
         attrs = {"class": "paleblu"}
 
-    id = LinkColumn('nhdb:propertytag:update', args=[A('pk')])
+    id = LinkColumn("nhdb:propertytag:update", args=[A("pk")])

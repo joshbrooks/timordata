@@ -1,1 +1,1 @@
-default_app_config = 'suggest.apps.SuggestAppConfig'
+default_app_config = "suggest.apps.SuggestAppConfig"

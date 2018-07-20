@@ -7,15 +7,13 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('nhdb', '0004_auto_20160506_0610'),
-    ]
+    dependencies = [("nhdb", "0004_auto_20160506_0610")]
 
     operations = [
         migrations.AddField(
-            model_name='person',
-            name='primary_contact',
+            model_name="person",
+            name="primary_contact",
             field=models.BooleanField(default=False),
             preserve_default=False,
-        ),
+        )
     ]

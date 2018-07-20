@@ -1,1 +1,1 @@
-default_app_config = 'nhdb.apps.NhdbAppConfig'
+default_app_config = "nhdb.apps.NhdbAppConfig"

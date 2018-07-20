@@ -10,141 +10,318 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        ('geo', '__first__'),
-        ('nhdb', '0009_person_primary_contact_of'),
-    ]
+    dependencies = [("geo", "__first__"), ("nhdb", "0009_person_primary_contact_of")]
 
     operations = [
         migrations.CreateModel(
-            name='Author',
+            name="Author",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128)),
-                ('displayname', models.CharField(blank=True, max_length=128, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=128)),
+                (
+                    "displayname",
+                    models.CharField(blank=True, max_length=128, null=True),
+                ),
             ],
-            options={
-                'ordering': ('name',),
-                'verbose_name_plural': 'Authors',
-            },
+            options={"ordering": ("name",), "verbose_name_plural": "Authors"},
         ),
         migrations.CreateModel(
-            name='Publication',
+            name="Publication",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('year', models.IntegerField(blank=True, null=True, verbose_name='Year')),
-                ('name', models.TextField(blank=True, null=True, verbose_name='name')),
-                ('name_tet', models.TextField(blank=True, null=True, verbose_name='name')),
-                ('name_en', models.TextField(blank=True, null=True, verbose_name='name')),
-                ('name_pt', models.TextField(blank=True, null=True, verbose_name='name')),
-                ('name_ind', models.TextField(blank=True, null=True, verbose_name='name')),
-                ('description', models.TextField(blank=True, null=True, verbose_name='description')),
-                ('description_tet', models.TextField(blank=True, null=True, verbose_name='description')),
-                ('description_en', models.TextField(blank=True, null=True, verbose_name='description')),
-                ('description_pt', models.TextField(blank=True, null=True, verbose_name='description')),
-                ('description_ind', models.TextField(blank=True, null=True, verbose_name='description')),
-                ('author', models.ManyToManyField(blank=True, to='library.Author')),
-                ('country', models.ManyToManyField(blank=True, to='geo.World')),
-                ('location', models.ManyToManyField(blank=True, to='geo.AdminArea')),
-                ('organization', models.ManyToManyField(blank=True, to='nhdb.Organization')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "year",
+                    models.IntegerField(blank=True, null=True, verbose_name="Year"),
+                ),
+                ("name", models.TextField(blank=True, null=True, verbose_name="name")),
+                (
+                    "name_tet",
+                    models.TextField(blank=True, null=True, verbose_name="name"),
+                ),
+                (
+                    "name_en",
+                    models.TextField(blank=True, null=True, verbose_name="name"),
+                ),
+                (
+                    "name_pt",
+                    models.TextField(blank=True, null=True, verbose_name="name"),
+                ),
+                (
+                    "name_ind",
+                    models.TextField(blank=True, null=True, verbose_name="name"),
+                ),
+                (
+                    "description",
+                    models.TextField(blank=True, null=True, verbose_name="description"),
+                ),
+                (
+                    "description_tet",
+                    models.TextField(blank=True, null=True, verbose_name="description"),
+                ),
+                (
+                    "description_en",
+                    models.TextField(blank=True, null=True, verbose_name="description"),
+                ),
+                (
+                    "description_pt",
+                    models.TextField(blank=True, null=True, verbose_name="description"),
+                ),
+                (
+                    "description_ind",
+                    models.TextField(blank=True, null=True, verbose_name="description"),
+                ),
+                ("author", models.ManyToManyField(blank=True, to="library.Author")),
+                ("country", models.ManyToManyField(blank=True, to="geo.World")),
+                ("location", models.ManyToManyField(blank=True, to="geo.AdminArea")),
+                (
+                    "organization",
+                    models.ManyToManyField(blank=True, to="nhdb.Organization"),
+                ),
             ],
-            options={
-                'ordering': ('name',),
-                'verbose_name_plural': 'Publications',
-            },
+            options={"ordering": ("name",), "verbose_name_plural": "Publications"},
         ),
         migrations.CreateModel(
-            name='Pubtype',
+            name="Pubtype",
             fields=[
-                ('code', models.CharField(max_length=3, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=128)),
-                ('name_tet', models.CharField(max_length=128, null=True)),
-                ('name_en', models.CharField(max_length=128, null=True)),
-                ('name_pt', models.CharField(max_length=128, null=True)),
-                ('name_ind', models.CharField(max_length=128, null=True)),
+                (
+                    "code",
+                    models.CharField(max_length=3, primary_key=True, serialize=False),
+                ),
+                ("name", models.CharField(max_length=128)),
+                ("name_tet", models.CharField(max_length=128, null=True)),
+                ("name_en", models.CharField(max_length=128, null=True)),
+                ("name_pt", models.CharField(max_length=128, null=True)),
+                ("name_ind", models.CharField(max_length=128, null=True)),
             ],
-            options={
-                'ordering': ('name',),
-                'verbose_name_plural': 'Publication Types',
-            },
+            options={"ordering": ("name",), "verbose_name_plural": "Publication Types"},
         ),
         migrations.CreateModel(
-            name='Tag',
+            name="Tag",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=64, unique=True)),
-                ('name_tet', models.CharField(max_length=64, null=True, unique=True)),
-                ('name_en', models.CharField(max_length=64, null=True, unique=True)),
-                ('name_pt', models.CharField(max_length=64, null=True, unique=True)),
-                ('name_ind', models.CharField(max_length=64, null=True, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=64, unique=True)),
+                ("name_tet", models.CharField(max_length=64, null=True, unique=True)),
+                ("name_en", models.CharField(max_length=64, null=True, unique=True)),
+                ("name_pt", models.CharField(max_length=64, null=True, unique=True)),
+                ("name_ind", models.CharField(max_length=64, null=True, unique=True)),
             ],
-            options={
-                'ordering': ('name', 'name_en'),
-                'verbose_name_plural': 'Tags',
-            },
+            options={"ordering": ("name", "name_en"), "verbose_name_plural": "Tags"},
         ),
         migrations.CreateModel(
-            name='Thumbnail',
+            name="Thumbnail",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('app_name', models.CharField(blank=True, max_length=256, null=True)),
-                ('model_name', models.CharField(blank=True, max_length=256, null=True)),
-                ('model_field', models.CharField(blank=True, max_length=256, null=True)),
-                ('model_pk', models.CharField(blank=True, max_length=256, null=True)),
-                ('resolution', models.IntegerField()),
-                ('file_name', models.CharField(blank=True, max_length=256, null=True)),
-                ('file_page', models.IntegerField(blank=True, default=0, null=True)),
-                ('thumbnailPath', models.CharField(blank=True, max_length=256, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("app_name", models.CharField(blank=True, max_length=256, null=True)),
+                ("model_name", models.CharField(blank=True, max_length=256, null=True)),
+                (
+                    "model_field",
+                    models.CharField(blank=True, max_length=256, null=True),
+                ),
+                ("model_pk", models.CharField(blank=True, max_length=256, null=True)),
+                ("resolution", models.IntegerField()),
+                ("file_name", models.CharField(blank=True, max_length=256, null=True)),
+                ("file_page", models.IntegerField(blank=True, default=0, null=True)),
+                (
+                    "thumbnailPath",
+                    models.CharField(blank=True, max_length=256, null=True),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Version',
+            name="Version",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.CharField(blank=True, max_length=256, null=True)),
-                ('description_tet', models.CharField(blank=True, max_length=256, null=True)),
-                ('description_en', models.CharField(blank=True, max_length=256, null=True)),
-                ('description_pt', models.CharField(blank=True, max_length=256, null=True)),
-                ('description_ind', models.CharField(blank=True, max_length=256, null=True)),
-                ('title', models.CharField(blank=True, max_length=256, null=True)),
-                ('title_tet', models.CharField(blank=True, max_length=256, null=True)),
-                ('title_en', models.CharField(blank=True, max_length=256, null=True)),
-                ('title_pt', models.CharField(blank=True, max_length=256, null=True)),
-                ('title_ind', models.CharField(blank=True, max_length=256, null=True)),
-                ('upload', models.FileField(blank=True, max_length=256, null=True, upload_to=b'publications')),
-                ('upload_tet', models.FileField(blank=True, max_length=256, null=True, upload_to=b'publications')),
-                ('upload_en', models.FileField(blank=True, max_length=256, null=True, upload_to=b'publications')),
-                ('upload_pt', models.FileField(blank=True, max_length=256, null=True, upload_to=b'publications')),
-                ('upload_ind', models.FileField(blank=True, max_length=256, null=True, upload_to=b'publications')),
-                ('cover', models.FileField(blank=True, max_length=256, null=True, upload_to=b'publication_covers')),
-                ('cover_tet', models.FileField(blank=True, max_length=256, null=True, upload_to=b'publication_covers')),
-                ('cover_en', models.FileField(blank=True, max_length=256, null=True, upload_to=b'publication_covers')),
-                ('cover_pt', models.FileField(blank=True, max_length=256, null=True, upload_to=b'publication_covers')),
-                ('cover_ind', models.FileField(blank=True, max_length=256, null=True, upload_to=b'publication_covers')),
-                ('url', models.CharField(blank=True, max_length=256, null=True)),
-                ('url_tet', models.CharField(blank=True, max_length=256, null=True)),
-                ('url_en', models.CharField(blank=True, max_length=256, null=True)),
-                ('url_pt', models.CharField(blank=True, max_length=256, null=True)),
-                ('url_ind', models.CharField(blank=True, max_length=256, null=True)),
-                ('journal', models.CharField(blank=True, max_length=128, null=True)),
-                ('volume', models.CharField(blank=True, max_length=5, null=True)),
-                ('issue', models.IntegerField(blank=True, null=True)),
-                ('page_start', models.IntegerField(blank=True, null=True)),
-                ('page_end', models.IntegerField(blank=True, null=True)),
-                ('activity', models.ManyToManyField(blank=True, related_name='publication_activity', to='nhdb.PropertyTag')),
-                ('beneficiary', models.ManyToManyField(blank=True, related_name='publication_beneficiary', to='nhdb.PropertyTag')),
-                ('publication', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='versions', to='library.Publication')),
-                ('sector', models.ManyToManyField(blank=True, related_name='version_sector', to='nhdb.PropertyTag')),
-                ('tag', models.ManyToManyField(blank=True, to='library.Tag')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "description",
+                    models.CharField(blank=True, max_length=256, null=True),
+                ),
+                (
+                    "description_tet",
+                    models.CharField(blank=True, max_length=256, null=True),
+                ),
+                (
+                    "description_en",
+                    models.CharField(blank=True, max_length=256, null=True),
+                ),
+                (
+                    "description_pt",
+                    models.CharField(blank=True, max_length=256, null=True),
+                ),
+                (
+                    "description_ind",
+                    models.CharField(blank=True, max_length=256, null=True),
+                ),
+                ("title", models.CharField(blank=True, max_length=256, null=True)),
+                ("title_tet", models.CharField(blank=True, max_length=256, null=True)),
+                ("title_en", models.CharField(blank=True, max_length=256, null=True)),
+                ("title_pt", models.CharField(blank=True, max_length=256, null=True)),
+                ("title_ind", models.CharField(blank=True, max_length=256, null=True)),
+                (
+                    "upload",
+                    models.FileField(
+                        blank=True, max_length=256, null=True, upload_to=b"publications"
+                    ),
+                ),
+                (
+                    "upload_tet",
+                    models.FileField(
+                        blank=True, max_length=256, null=True, upload_to=b"publications"
+                    ),
+                ),
+                (
+                    "upload_en",
+                    models.FileField(
+                        blank=True, max_length=256, null=True, upload_to=b"publications"
+                    ),
+                ),
+                (
+                    "upload_pt",
+                    models.FileField(
+                        blank=True, max_length=256, null=True, upload_to=b"publications"
+                    ),
+                ),
+                (
+                    "upload_ind",
+                    models.FileField(
+                        blank=True, max_length=256, null=True, upload_to=b"publications"
+                    ),
+                ),
+                (
+                    "cover",
+                    models.FileField(
+                        blank=True,
+                        max_length=256,
+                        null=True,
+                        upload_to=b"publication_covers",
+                    ),
+                ),
+                (
+                    "cover_tet",
+                    models.FileField(
+                        blank=True,
+                        max_length=256,
+                        null=True,
+                        upload_to=b"publication_covers",
+                    ),
+                ),
+                (
+                    "cover_en",
+                    models.FileField(
+                        blank=True,
+                        max_length=256,
+                        null=True,
+                        upload_to=b"publication_covers",
+                    ),
+                ),
+                (
+                    "cover_pt",
+                    models.FileField(
+                        blank=True,
+                        max_length=256,
+                        null=True,
+                        upload_to=b"publication_covers",
+                    ),
+                ),
+                (
+                    "cover_ind",
+                    models.FileField(
+                        blank=True,
+                        max_length=256,
+                        null=True,
+                        upload_to=b"publication_covers",
+                    ),
+                ),
+                ("url", models.CharField(blank=True, max_length=256, null=True)),
+                ("url_tet", models.CharField(blank=True, max_length=256, null=True)),
+                ("url_en", models.CharField(blank=True, max_length=256, null=True)),
+                ("url_pt", models.CharField(blank=True, max_length=256, null=True)),
+                ("url_ind", models.CharField(blank=True, max_length=256, null=True)),
+                ("journal", models.CharField(blank=True, max_length=128, null=True)),
+                ("volume", models.CharField(blank=True, max_length=5, null=True)),
+                ("issue", models.IntegerField(blank=True, null=True)),
+                ("page_start", models.IntegerField(blank=True, null=True)),
+                ("page_end", models.IntegerField(blank=True, null=True)),
+                (
+                    "activity",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="publication_activity",
+                        to="nhdb.PropertyTag",
+                    ),
+                ),
+                (
+                    "beneficiary",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="publication_beneficiary",
+                        to="nhdb.PropertyTag",
+                    ),
+                ),
+                (
+                    "publication",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="versions",
+                        to="library.Publication",
+                    ),
+                ),
+                (
+                    "sector",
+                    models.ManyToManyField(
+                        blank=True, related_name="version_sector", to="nhdb.PropertyTag"
+                    ),
+                ),
+                ("tag", models.ManyToManyField(blank=True, to="library.Tag")),
             ],
-            options={
-                'ordering': ('title',),
-                'verbose_name_plural': 'Versions',
-            },
+            options={"ordering": ("title",), "verbose_name_plural": "Versions"},
         ),
         migrations.AddField(
-            model_name='publication',
-            name='pubtype',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='library.Pubtype', verbose_name='Type'),
+            model_name="publication",
+            name="pubtype",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="library.Pubtype",
+                verbose_name="Type",
+            ),
         ),
     ]

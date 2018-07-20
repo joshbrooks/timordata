@@ -4,14 +4,14 @@ from nhdb.models import *
 
 @register(PropertyTag)
 class PropertyTagTranslationOptions(TranslationOptions):
-    fields = ('name', 'description',)
+    fields = ("name", "description")
 
 
 @register(Project)
 class ProjectTranslation(TranslationOptions):
-    fields = ('name', 'description', 'notes')
+    fields = ("name", "description", "notes")
 
 
 @register(Organization)
 class OrganizationTranslation(TranslationOptions):
-    fields = ('description',)
+    fields = ("description",)

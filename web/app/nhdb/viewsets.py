@@ -3,12 +3,13 @@ from nhdb.serializers import *
 from nhdb.models import *
 
 __all__ = [
-    'ProjectViewSet',
-    'ProjectSearchViewSet',
-    'OrganizationViewSet', 'ProjectPersonViewSet',
-    'Project_ProjectPersonViewSet',
-    'ProjectOrganizationViewSet',
-    'Project_ProjectPlaceViewSet'
+    "ProjectViewSet",
+    "ProjectSearchViewSet",
+    "OrganizationViewSet",
+    "ProjectPersonViewSet",
+    "Project_ProjectPersonViewSet",
+    "ProjectOrganizationViewSet",
+    "Project_ProjectPlaceViewSet",
 ]
 
 
@@ -17,9 +18,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Project.objects.all()
-        queryset = queryset.prefetch_related(
-            'activity'
-        )
+        queryset = queryset.prefetch_related("activity")
         return queryset
 
 

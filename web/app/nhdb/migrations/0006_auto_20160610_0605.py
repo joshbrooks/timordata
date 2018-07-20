@@ -8,19 +8,18 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('geo', '__first__'),
-        ('nhdb', '0005_person_primary_contact'),
-    ]
+    dependencies = [("geo", "__first__"), ("nhdb", "0005_person_primary_contact")]
 
     operations = [
-        migrations.RemoveField(
-            model_name='person',
-            name='primary_contact',
-        ),
+        migrations.RemoveField(model_name="person", name="primary_contact"),
         migrations.AddField(
-            model_name='organizationplace',
-            name='suco',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='geo.Suco'),
+            model_name="organizationplace",
+            name="suco",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="geo.Suco",
+            ),
         ),
     ]

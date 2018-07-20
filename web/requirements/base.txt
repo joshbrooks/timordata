@@ -1,8 +1,8 @@
 commonmark
 dateutils
-six>=1.2
-pandas>=0.14.1
-django>=1.9.5
+six
+pandas
+django
 django-ckeditor
 django-crispy-forms
 django-datatrans
@@ -38,8 +38,6 @@ sorl-thumbnail
 unicodecsv
 unidecode
 xlsxwriter
-# mysqlclient
 psycopg2
-# wand
 ghostscript
 uwsgi

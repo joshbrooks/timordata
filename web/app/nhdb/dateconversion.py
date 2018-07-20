@@ -8,35 +8,29 @@ import datetime
 conn = psycopg2.connect("dbname=import user=belun")
 cur = conn.cursor()
 
-cur.execute('select verified from tblpeople')
-for date, in cur.fetchall():
+cur.execute("select verified from tblpeople")
+for (date,) in cur.fetchall():
     if date:
 
         try:
-            if '-' in date:
-                y,m,d = date.split(' ')[0].split('-')
-            elif '/' in date:
-                y,m,d = date.split(' ')[0].split('/')
+            if "-" in date:
+                y, m, d = date.split(" ")[0].split("-")
+            elif "/" in date:
+                y, m, d = date.split(" ")[0].split("/")
             else:
-                print 'no convert for %s'%date
+                print(("no convert for %s" % date))
                 continue
         except ValueError:
-            print 'invalid convert for %s'%date
+            print(("invalid convert for %s" % date))
             continue
-        
+
         y, m, d = int(y), int(m), int(d)
-        
+
         # Swap y, d if y > 1900
-        
+
         if d > 1900:
-            y,d = d,y
+            y, d = d, y
         if m > 12:
-            m,d = d,m
-        
-        #print y,m,d
+            m, d = d, m
 
-        dt = datetime.datetime(y,m,d).date()
-
-        print date,
-        print dt.isoformat()
-
+        dt = datetime.datetime(y, m, d).date()

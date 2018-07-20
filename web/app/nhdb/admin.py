@@ -8,6 +8,7 @@ from django.db.models import Count
 from django.core.validators import validate_email
 import string
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -17,8 +18,8 @@ class AlphabetFilter(admin.SimpleListFilter):
 
 
 class NameListFilter(AlphabetFilter):
-    title = _('Name')
-    parameter_name = 'name'
+    title = _("Name")
+    parameter_name = "name"
 
     def queryset(self, request, queryset):
         if self.value():
@@ -27,8 +28,8 @@ class NameListFilter(AlphabetFilter):
 
 class FirstNameListFilter(AlphabetFilter):
     # Human-readable title
-    title = _('First Name')
-    parameter_name = 'firstname'
+    title = _("First Name")
+    parameter_name = "firstname"
 
     def queryset(self, request, queryset):
         if self.value():
@@ -37,8 +38,8 @@ class FirstNameListFilter(AlphabetFilter):
 
 class LastNameListFilter(AlphabetFilter):
     # Human-readable title
-    title = _('Last Name')
-    parameter_name = 'lastname'
+    title = _("Last Name")
+    parameter_name = "lastname"
 
     def queryset(self, request, queryset):
         if self.value():
@@ -47,12 +48,13 @@ class LastNameListFilter(AlphabetFilter):
 
 class PersonFirstNameListFilter(AlphabetFilter):
     # Human-readable title
-    title = _('First Name')
-    parameter_name = 'firstname'
+    title = _("First Name")
+    parameter_name = "firstname"
 
     def queryset(self, request, queryset):
         if self.value():
             return queryset.filter(name__startswith=self.value())
+
 
 #
 # class PersonLastNameListFilter(AlphabetFilter):
@@ -67,57 +69,58 @@ class PersonFirstNameListFilter(AlphabetFilter):
 
 
 class NumberOfStaffFilter(admin.SimpleListFilter):
-    title = _('Staff')
-    parameter_name = 'staff'
+    title = _("Staff")
+    parameter_name = "staff"
 
     def lookups(self, request, model_admin):
-        count = ['0', '2', '5', '10', '20', 'gt20']
-        labels = ['None', '0 to 2', '2 to 5', '5 to 10', '10 to 20', 'More than 20']
+        count = ["0", "2", "5", "10", "20", "gt20"]
+        labels = ["None", "0 to 2", "2 to 5", "5 to 10", "10 to 20", "More than 20"]
         return zip(count, labels)
 
     def queryset(self, request, queryset):
 
-        queryset.annotate(num_staff=Count('person'))
+        queryset.annotate(num_staff=Count("person"))
 
-        if self.value() == '0':
+        if self.value() == "0":
             return queryset.filter(num_staff=0)
-        elif self.value() == '2':
+        elif self.value() == "2":
             return queryset.filter(num_staff__gt=0).filter(num_staff__lte=2)
-        elif self.value() == '5':
+        elif self.value() == "5":
             return queryset.filter(num_staff__gt=2).filter(num_staff__lte=5)
-        elif self.value() == '10':
+        elif self.value() == "10":
             return queryset.filter(num_staff__gt=5).filter(num_staff__lte=10)
-        elif self.value() == '20':
+        elif self.value() == "20":
             return queryset.filter(num_staff__gt=10).filter(num_staff__lte=20)
-        elif self.value() == 'gt20':
+        elif self.value() == "gt20":
             return queryset.filter(num_staff__gt=20)
         else:
             return queryset
 
+
 class NumberOfProjectsFilter(admin.SimpleListFilter):
-    title = _('No. of Projects')
-    parameter_name = 'projects'
+    title = _("No. of Projects")
+    parameter_name = "projects"
 
     def lookups(self, request, model_admin):
-        count = [0, 2, 5, 10, 20, 'gt20']
-        labels = ['None', '0 to 2', '2 to 5', '5 to 10', '10 to 20', 'More than 20']
+        count = [0, 2, 5, 10, 20, "gt20"]
+        labels = ["None", "0 to 2", "2 to 5", "5 to 10", "10 to 20", "More than 20"]
         return zip(count, labels)
 
     def queryset(self, request, queryset):
 
-        queryset.annotate(num_projects=Count('project'))
+        queryset.annotate(num_projects=Count("project"))
 
-        if self.value() == '0':
+        if self.value() == "0":
             return queryset.filter(num_projects=0)
-        elif self.value() == '2':
+        elif self.value() == "2":
             return queryset.filter(num_projects__gt=0).filter(num_projects__lte=2)
-        elif self.value() == '5':
+        elif self.value() == "5":
             return queryset.filter(num_projects__gt=2).filter(num_projects__lte=5)
-        elif self.value() == '10':
+        elif self.value() == "10":
             return queryset.filter(num_projects__gt=5).filter(num_projects__lte=10)
-        elif self.value() == '20':
+        elif self.value() == "20":
             return queryset.filter(num_projects__gt=10).filter(num_projects__lte=20)
-        elif self.value() == 'gt20':
+        elif self.value() == "gt20":
             return queryset.filter(num_projects__gt=20)
         else:
             return queryset
@@ -125,12 +128,10 @@ class NumberOfProjectsFilter(admin.SimpleListFilter):
 
 class PersonAdmin(admin.ModelAdmin):
     # form = PersonAdminForm
-    list_display = ('name',)
-    raw_id_fields = ('organization',)
-    autocomplete_lookup_fields = {
-        'fk': ['organization']
-    }
-    list_filter = (PersonFirstNameListFilter,)#, PersonLastNameListFilter)
+    list_display = ("name",)
+    raw_id_fields = ("organization",)
+    autocomplete_lookup_fields = {"fk": ["organization"]}
+    list_filter = (PersonFirstNameListFilter,)  # , PersonLastNameListFilter)
 
     # form = PersonInlineAdminForm
 
@@ -141,23 +142,19 @@ class ProjOrgInline(admin.TabularInline):
     raw_id_fields = ("project", "organization")
     #  radio_fields = {'organizationclass': admin.HORIZONTAL}
     extra = 1
-    autocomplete_lookup_fields = {
-        'fk': ['organization']
-    }
+    autocomplete_lookup_fields = {"fk": ["organization"]}
 
 
 class ProjectAdmin(TranslationAdmin):
-    search_fields = ('name','name_en')
-    raw_id_fields = ('sector', 'activity', 'beneficiary')
-    autocomplete_lookup_fields = {
-        'm2m': ['sector', 'activity', 'beneficiary'],
-    }
+    search_fields = ("name", "name_en")
+    raw_id_fields = ("sector", "activity", "beneficiary")
+    autocomplete_lookup_fields = {"m2m": ["sector", "activity", "beneficiary"]}
     inlines = [ProjOrgInline]
 
 
 class OrganizationAdmin(TranslationAdmin):
 
-    exclude = ['description_en', 'description_pt', 'description_tet', 'description_id']
+    exclude = ["description_en", "description_pt", "description_tet", "description_id"]
 
     class PersonInline(admin.TabularInline):
         model = Person
@@ -167,15 +164,22 @@ class OrganizationAdmin(TranslationAdmin):
         model = ProjectOrganization
         autocomplete_lookup_fields = {
             # 'm2m': ['sector', 'activity', 'beneficiary'],
-            'fk':['project']}
+            "fk": ["project"]
+        }
         raw_id_fields = ("project", "organization")
-        radio_fields = {'organizationclass': admin.HORIZONTAL}
+        radio_fields = {"organizationclass": admin.HORIZONTAL}
         extra = 1
 
     inlines = [ProjOrgInline, PersonInline]
-    list_filter = ('orgtype', 'active', NumberOfStaffFilter, NameListFilter, NumberOfProjectsFilter)
+    list_filter = (
+        "orgtype",
+        "active",
+        NumberOfStaffFilter,
+        NameListFilter,
+        NumberOfProjectsFilter,
+    )
 
-    radio_fields = {'orgtype': admin.HORIZONTAL}
+    radio_fields = {"orgtype": admin.HORIZONTAL}
 
 
 admin.site.register(Project, ProjectAdmin)

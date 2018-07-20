@@ -1,4 +1,4 @@
-__author__ = 'josh'
+__author__ = "josh"
 
 from django.conf.urls import url, include
 from rest_framework import routers, serializers, viewsets
@@ -30,14 +30,15 @@ class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
+
 router = routers.DefaultRouter()
-router.register(r'publication', PublicationViewSet)
-router.register(r'pubtype', PubtypeViewSet)
-router.register(r'version', VersionViewSet)
-router.register(r'author', AuthorViewSet)
-router.register(r'tag', TagViewSet)
+router.register(r"publication", PublicationViewSet)
+router.register(r"pubtype", PubtypeViewSet)
+router.register(r"version", VersionViewSet)
+router.register(r"author", AuthorViewSet)
+router.register(r"tag", TagViewSet)
 
 urlpatterns = [
-    url(r'^', include(router.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r"^", include(router.urls)),
+    url(r"^api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 ]

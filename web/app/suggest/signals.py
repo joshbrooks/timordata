@@ -12,17 +12,18 @@ def skip_signal():
     def _skip_signal(signal_func):
         @wraps(signal_func)
         def _decorator(sender, instance, **kwargs):
-            if hasattr(instance, 'skip_signal'):
+            if hasattr(instance, "skip_signal"):
                 return None
             return signal_func(sender, instance, **kwargs)
+
         return _decorator
+
     return _skip_signal
 
 
 @receiver(post_save, sender=Suggest)
 @skip_signal()
 def suggest_saved(sender, instance, **kwargs):
-
     def make_ai(instance, model):
 
         if not isinstance(model, Model):
@@ -33,11 +34,11 @@ def suggest_saved(sender, instance, **kwargs):
             # TODO: Suggestions API can not yet handle non-integer values for a foreign key
 
         ai, c = AffectedInstance.objects.get_or_create(
-            model_name = u'%s_%s'%(model._meta.app_label, model._meta.model_name),
-            suggestion_id = instance.pk,
-            model_pk = model.pk,
-            primary = False
-             )
+            model_name=u"%s_%s" % (model._meta.app_label, model._meta.model_name),
+            suggestion_id=instance.pk,
+            model_pk=model.pk,
+            primary=False,
+        )
         if c:
             ai.save()
 
@@ -57,10 +58,10 @@ def post_save_affectedinstance(sender, instance, **kwargs):
         return
     # Mark the suggestion as "Accepted" if conditions are met
 
-    if instance.primary and not isinstance(instance, Suggest) and s.action == 'CM':
+    if instance.primary and not isinstance(instance, Suggest) and s.action == "CM":
         if instance.instance.pk:
-            s.state = 'A'
-            s.skip_signal=True
+            s.state = "A"
+            s.skip_signal = True
             # s.state = 'A'
             s.save()
 

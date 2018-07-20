@@ -8,14 +8,18 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('nhdb', '0008_auto_20160610_0630'),
-    ]
+    dependencies = [("nhdb", "0008_auto_20160610_0630")]
 
     operations = [
         migrations.AddField(
-            model_name='person',
-            name='primary_contact_of',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='primary_contact_person', to='nhdb.Organization'),
-        ),
+            model_name="person",
+            name="primary_contact_of",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="primary_contact_person",
+                to="nhdb.Organization",
+            ),
+        )
     ]

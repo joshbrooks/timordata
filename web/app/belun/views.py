@@ -13,15 +13,17 @@ from settings import LANGUAGES_FIX_ID
 from suggest.models import Suggest
 
 language_codes = [i[0] for i in LANGUAGES_FIX_ID]
+
+
 def index(request):
     # return HttpResponse('ok')
-    if request.GET.get('background') == '2':
-        return render(request, 'index_background_2.html')
+    if request.GET.get("background") == "2":
+        return render(request, "index_background_2.html")
 
-    if request.GET.get('background') == '3':
-        return render(request, 'index_background_3.html')
+    if request.GET.get("background") == "3":
+        return render(request, "index_background_3.html")
 
-    return render(request, 'index.html')
+    return render(request, "index.html")
 
 
 def indexmanifest(request):
@@ -36,25 +38,33 @@ def indexmanifest(request):
         "/static/timordata.css",
         "/static/jquery.js",
         "/static/bootstrap/js/bootstrap.js",
-        "/static/backgrounds/background_min.jpg"]
+        "/static/backgrounds/background_min.jpg",
+    ]
 
-
-    return HttpResponse('\n'.join(manifest), content_type=content_type)
+    return HttpResponse("\n".join(manifest), content_type=content_type)
 
 
 def about(request):
-    if request.LANGUAGE_CODE == 'tet':
-        return render(request, 'about_tet.html')
+    if request.LANGUAGE_CODE == "tet":
+        return render(request, "about_tet.html")
 
-    return render(request, 'about.html')
+    return render(request, "about.html")
 
 
 def history(request):
-    return render(request, 'history.html')
+    return render(request, "history.html")
 
-def selecttwo(request, app_name='library', model_name='tag', filter_field='name', filter_param='icontains', create=False):
 
-    '''
+def selecttwo(
+    request,
+    app_name="library",
+    model_name="tag",
+    filter_field="name",
+    filter_param="icontains",
+    create=False,
+):
+
+    """
     Returns a list (formatted for select2) of filtered options
     :param request:
     :param app_name: Application name
@@ -65,13 +75,13 @@ def selecttwo(request, app_name='library', model_name='tag', filter_field='name'
 
     Specify a property named 'selectlist_repr' on a model to modify the appearance of the object in the list
 
-    '''
+    """
 
-    m = apps.get_model('{}.{}'.format(app_name, model_name))
-    q = request.GET.get('q') or request.GET.get('q')
+    m = apps.get_model("{}.{}".format(app_name, model_name))
+    q = request.GET.get("q") or request.GET.get("q")
     k = {}
 
-    filter_name = '{}__{}'.format(filter_field, filter_param)
+    filter_name = "{}__{}".format(filter_field, filter_param)
 
     k[filter_name] = q
     try:
@@ -83,34 +93,43 @@ def selecttwo(request, app_name='library', model_name='tag', filter_field='name'
 
     if create:
         exact_filter = {}
-        exact_filter_name = '{}__{}'.format(filter_field, 'iexact')
+        exact_filter_name = "{}__{}".format(filter_field, "iexact")
         exact_filter[exact_filter_name] = q
         if qs.filter(**exact_filter).count() != 1:
-            _list.append({'id':'__new__{}'.format(q),'text':'(New {}) {}'.format(model_name,q)})
+            _list.append(
+                {
+                    "id": "__new__{}".format(q),
+                    "text": "(New {}) {}".format(model_name, q),
+                }
+            )
 
     for r in qs:
 
-        if hasattr(r, 'selectlist_repr'):
-            text = getattr(r, 'selectlist_repr')
+        if hasattr(r, "selectlist_repr"):
+            text = getattr(r, "selectlist_repr")
             if callable(text):
                 text = text()
 
         else:
             text = getattr(r, filter_field)
 
-        _list.append({
-            'id': getattr(r, 'pk'),
-            'text': text
-        })
+        _list.append({"id": getattr(r, "pk"), "text": text})
 
     response = {"results": _list}
 
-    return HttpResponse(json.dumps(response), content_type='application/json')
+    return HttpResponse(json.dumps(response), content_type="application/json")
 
 
-def chosen(request, app_name='library', model_name='tag', filter_field='name', filter_param='icontains', include_suggestions=False):
+def chosen(
+    request,
+    app_name="library",
+    model_name="tag",
+    filter_field="name",
+    filter_param="icontains",
+    include_suggestions=False,
+):
 
-    '''
+    """
     Returns a list (formatted for select2) of filtered options
     :param request:
     :param app_name: Application name
@@ -122,13 +141,13 @@ def chosen(request, app_name='library', model_name='tag', filter_field='name', f
     Specify a property named 'selectlist_repr' on a model to modify the appearance of the object in the list
 
 
-    '''
+    """
 
-    m = apps.get_model('{}.{}'.format(app_name, model_name))
-    q = request.GET.get('data[q]')
+    m = apps.get_model("{}.{}".format(app_name, model_name))
+    q = request.GET.get("data[q]")
     k = {}
 
-    filter_name = '{}__{}'.format(filter_field, filter_param)
+    filter_name = "{}__{}".format(filter_field, filter_param)
 
     k[filter_name] = q
     try:
@@ -140,44 +159,41 @@ def chosen(request, app_name='library', model_name='tag', filter_field='name', f
 
     for r in qs:
 
-        if hasattr(r, 'selectlist_repr'):
-            text = getattr(r, 'selectlist_repr')
+        if hasattr(r, "selectlist_repr"):
+            text = getattr(r, "selectlist_repr")
         else:
             text = getattr(r, filter_field)
 
-        _list.append({
-            'id': getattr(r, 'pk'),
-            'text': text
-        })
+        _list.append({"id": getattr(r, "pk"), "text": text})
 
-    response = {"q":q, 'results': _list}
+    response = {"q": q, "results": _list}
 
     # If include_suggestions is TRUE, add in any matching values from the Suggestions application
 
     if include_suggestions:
-        suggestion_model_name = '{}_{}'.format(app_name, model_name)
-        suggestions = Suggest.objects.filter(affectedinstance__primary = True, affectedinstance__model_name = suggestion_model_name, action='CM')
+        suggestion_model_name = "{}_{}".format(app_name, model_name)
+        suggestions = Suggest.objects.filter(
+            affectedinstance__primary=True,
+            affectedinstance__model_name=suggestion_model_name,
+            action="CM",
+        )
         _suggest_list = []
 
         for r in suggestions:
 
-            if hasattr(r, 'selectlist_repr'):
-                text = getattr(r, 'selectlist_repr')
+            if hasattr(r, "selectlist_repr"):
+                text = getattr(r, "selectlist_repr")
             else:
                 text = getattr(r, filter_field)
 
-            _list.append({
-                'id': getattr(r, 'pk'),
-                'text': text
-            })
+            _list.append({"id": getattr(r, "pk"), "text": text})
 
-    return HttpResponse(json.dumps(response), content_type='application/json')
+    return HttpResponse(json.dumps(response), content_type="application/json")
 
 
 def selecttwo_create(request, **kw):
-    kw['create'] = True
+    kw["create"] = True
     return selecttwo(request, **kw)
-
 
 
 class TranslatedPageList(list):
@@ -185,6 +201,7 @@ class TranslatedPageList(list):
 
         super(TranslatedPageList, self).__init__(**kwargs)
         self.language = language
+
 
 # @login_required
 def flatpagelist(request):
@@ -202,42 +219,45 @@ def flatpagelist(request):
         page_objects = FlatPage.objects.all()
         pages = {}
 
-        pages['languages'] = language_codes
-        pages['translated'] = {}
+        pages["languages"] = language_codes
+        pages["translated"] = {}
 
-        page_names =  [page.url.split('/')[1] for page in page_objects]
+        page_names = [page.url.split("/")[1] for page in page_objects]
 
         for page in page_objects:
-            page_name = page.url.split('/')[1]
-            if page_name not in pages['translated']:
-                pages['translated'][page_name] = TranslatedPageList(size = len(language_codes))
+            page_name = page.url.split("/")[1]
+            if page_name not in pages["translated"]:
+                pages["translated"][page_name] = TranslatedPageList(
+                    size=len(language_codes)
+                )
 
-            language = page.url.split('/')[-2]
+            language = page.url.split("/")[-2]
 
-            if language == '':
-                language = 'en' # Default to english
+            if language == "":
+                language = "en"  # Default to english
             if language not in language_codes:
-                language = 'en' # Default to english
-                #raise AssertionError, language
+                language = "en"  # Default to english
+                # raise AssertionError, language
 
-            language_index = pages['languages'].index(language)
-            pages['translated'][page_name][language_index] = page
+            language_index = pages["languages"].index(language)
+            pages["translated"][page_name][language_index] = page
 
         return pages
-    c['pages'] = pages()
 
-    return render(request, 'flatpages/flatpage_list.html', c)
+    c["pages"] = pages()
+
+    return render(request, "flatpages/flatpage_list.html", c)
+
 
 def flatpage(request, pk):
-    return HttpResponse('Not here yet! pk %s'%pk)
+    return HttpResponse("Not here yet! pk %s" % pk)
 
 
-
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class FlatpageList(ListView):
     model = FlatPage
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class FlatpageDetail(DetailView):
     model = FlatPage

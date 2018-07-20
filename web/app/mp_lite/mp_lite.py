@@ -29,10 +29,11 @@ class MP_Lite(models.Model):
       steps (int): How many characters at each level
 
     """
+
     class Meta:
         abstract = True
 
-    separator = '.'
+    separator = "."
     steps = 2
 
     @classmethod
@@ -48,13 +49,14 @@ class MP_Lite(models.Model):
         s = string.upper()
         if cls.separator in s:
             # Assume this already is pathformatted
-            return s#cls.objects.get(path=s)
-        path = cls.separator.join([string[i:i + cls.steps]
-                                  for i in xrange(0, len(s), cls.steps)])
+            return s  # cls.objects.get(path=s)
+        path = cls.separator.join(
+            [string[i : i + cls.steps] for i in xrange(0, len(s), cls.steps)]
+        )
         return path
 
     def pathstring(self):
-        return self.path.replace(self.separator, '').upper()
+        return self.path.replace(self.separator, "").upper()
 
     def lowerpathstring(self):
         return self.pathstring().lower()
@@ -64,12 +66,11 @@ class MP_Lite(models.Model):
         """
         return self.lowerpathstring()
 
-
     class NoParentError(Exception):
         pass
 
     def __unicode__(self):
-        return u'{} (path:{})'.format(self.name, self.path)
+        return u"{} (path:{})".format(self.name, self.path)
 
     path = models.CharField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
@@ -86,8 +87,7 @@ class MP_Lite(models.Model):
             try:
                 self.__class__.get_ancestor(self)
             except self.__class__.DoesNotExist:
-                raise self.__class__.NoParentError(
-                    'No ancestor node to %s' % self.path)
+                raise self.__class__.NoParentError("No ancestor node to %s" % self.path)
 
             super(MP_Lite, self).save(*args, **kwargs)
 
@@ -107,101 +107,102 @@ class MP_Lite(models.Model):
 
         descendants = self.get_descendants()
 
-        self.path = new_parent.path + self.separator + \
-            self.path[len(new_parent.path) + len(self.separator):]
+        self.path = (
+            new_parent.path
+            + self.separator
+            + self.path[len(new_parent.path) + len(self.separator) :]
+        )
         self.save()
 
         for s in descendants:
-            s.path = new_parent.path + s.separator + \
-                s.path[len(new_parent.path) + len(self.separator):]
+            s.path = (
+                new_parent.path
+                + s.separator
+                + s.path[len(new_parent.path) + len(self.separator) :]
+            )
             s.save()
 
     @classmethod
     def get_root_nodes(cls):
         """ Return all of the lowest level nodes
         """
-        return cls.objects.extra(where=["path like %s"], params=['_' * cls.steps]).all()
+        return cls.objects.extra(where=["path like %s"], params=["_" * cls.steps]).all()
 
     @classmethod
     def level(cls, level):
         where = level * cls.steps + (level - 1) * len(cls.separator)
-        return cls.objects.extra(where=["path like %s"], params=['_' * where]).all()
+        return cls.objects.extra(where=["path like %s"], params=["_" * where]).all()
 
     def _level(self):
-        '''
+        """
         Count number of separators to determine level
-        '''
+        """
         return self.path.count(self.separator)  # - 1
+
     def get_siblings(self, include_self=False):
         cls = self.__class__
         _w = ["path like %s"]
-        _p = ['_' * len(self.path)]
+        _p = ["_" * len(self.path)]
 
         if include_self:
-            _w[0] = _w[0] + (' AND path != %s')
+            _w[0] = _w[0] + (" AND path != %s")
             _p.append(self.path)
-        return cls.objects.extra(
-            where=_w,
-            params=_p
-        ).all()
+        return cls.objects.extra(where=_w, params=_p).all()
 
     def get_children(self, include_self=False):
 
         cls = self.__class__
         _w = ["path like %s"]
-        _p = [self.path + self.separator + '_' * cls.steps]
+        _p = [self.path + self.separator + "_" * cls.steps]
 
         if include_self:
-            _w[0] = _w[0] + (' OR path like %s')
+            _w[0] = _w[0] + (" OR path like %s")
             _p.append(self.path)
-        return cls.objects.extra(
-            where=_w,
-            params=_p
-        ).all().order_by('path')
+        return cls.objects.extra(where=_w, params=_p).all().order_by("path")
 
     def childvaluesjson(self, attr="name"):
-        return mark_safe(json.dumps([i[0] for i in self.get_children().values_list(attr)]))
+        return mark_safe(
+            json.dumps([i[0] for i in self.get_children().values_list(attr)])
+        )
 
     def childvalueslist(self, attr="name"):
-        '''
+        """
         Return a list of specified child attributes
-        '''
+        """
         from django.utils.safestring import mark_safe
+
         return mark_safe([i[0] for i in self.get_children().values_list(attr)])
 
     def childnames(self):
-        '''
+        """
         Return a list of child names
-        '''
-        return self.childvalueslist('name')
+        """
+        return self.childvalueslist("name")
 
     def childpaths(self):
-        '''
+        """
         Return a list of child paths
-        '''
+        """
 
-        return self.childvalueslist('path')
+        return self.childvalueslist("path")
 
     def childpks(self):
-        '''
+        """
         Return a list of child primary keys
-        '''
-        return self.childvalueslist('pk')
+        """
+        return self.childvalueslist("pk")
 
     def get_descendants(self, include_self=True):
         cls = self.__class__
 
         if include_self:
-            extra = self.path + '%'
+            extra = self.path + "%"
         else:
-            extra = self.path + self.separator + '%'
-        return cls.objects.extra(
-            where=["path like %s"],
-            params=[extra]
-        ).all()
+            extra = self.path + self.separator + "%"
+        return cls.objects.extra(where=["path like %s"], params=[extra]).all()
 
     def get_ancestor_path(self):
-        ancestor_path = self.path[:-(self.steps + len(self.separator))]
+        ancestor_path = self.path[: -(self.steps + len(self.separator))]
         return ancestor_path
 
     def get_ancestor_list(self):

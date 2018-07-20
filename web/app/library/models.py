@@ -21,37 +21,39 @@ class Publication(models.Model):
     Represents a single published document, possibly with different languages
     """
 
-    year = models.IntegerField(verbose_name=_('Year'), null=True, blank=True)
-    name = models.TextField(verbose_name=_('name'), null=True, blank=True)
-    description = models.TextField(null=True, blank=True, verbose_name=_('description'))
-    pubtype = models.ForeignKey('Pubtype', verbose_name=_("Type"))
+    year = models.IntegerField(verbose_name=_("Year"), null=True, blank=True)
+    name = models.TextField(verbose_name=_("name"), null=True, blank=True)
+    description = models.TextField(null=True, blank=True, verbose_name=_("description"))
+    pubtype = models.ForeignKey("Pubtype", verbose_name=_("Type"))
 
     # ---- m2m fields ----
-    organization = models.ManyToManyField('nhdb.Organization', blank=True)
-    author = models.ManyToManyField('Author', blank=True)
-    country = models.ManyToManyField('geo.World', blank=True)
+    organization = models.ManyToManyField("nhdb.Organization", blank=True)
+    author = models.ManyToManyField("Author", blank=True)
+    country = models.ManyToManyField("geo.World", blank=True)
     location = models.ManyToManyField(AdminArea, blank=True)
 
     def __unicode__(self):
         if self.name:
-            return unidecode(u'{}'.format(self.name))
+            return unidecode(u"{}".format(self.name))
         else:
             return str(None)
 
     @classmethod
-    def get_translated_fields(cls, prefix='title'):
-        return ['name', 'description']
+    def get_translated_fields(cls, prefix="title"):
+        return ["name", "description"]
 
     def get_absolute_url(self):
-        return '/library/publication/#object=%s' % (self.id)
+        return "/library/publication/#object=%s" % (self.id)
 
     def get_admin_url(self):
-        return reverse("admin:%s_%s_change" %
-                       (self._meta.app_label, self._meta.module_name), args=(self.id,))
+        return reverse(
+            "admin:%s_%s_change" % (self._meta.app_label, self._meta.module_name),
+            args=(self.id,),
+        )
 
     class Meta:
         verbose_name_plural = _("Publications")
-        ordering = ('name',)
+        ordering = ("name",)
 
 
 class Tag(models.Model):
@@ -66,7 +68,7 @@ class Tag(models.Model):
 
     class Meta:
         verbose_name_plural = _("Tags")
-        ordering = ('name', 'name_en')
+        ordering = ("name", "name_en")
 
 
 class Thumbnail(models.Model):
@@ -77,20 +79,30 @@ class Thumbnail(models.Model):
     model_pk = models.CharField(blank=True, null=True, max_length=256)
     resolution = models.IntegerField()
     file_name = models.CharField(blank=True, null=True, max_length=256)
-    file_page = models.IntegerField(blank=True, null=True, default=0)  # Use for multipage docs like PDF files
+    file_page = models.IntegerField(
+        blank=True, null=True, default=0
+    )  # Use for multipage docs like PDF files
     thumbnailPath = models.CharField(blank=True, null=True, max_length=256)
 
     @property
     def url(self):
-        return self.thumbnailPath.replace(settings.MEDIA_ROOT, '/media/')
+        return self.thumbnailPath.replace(settings.MEDIA_ROOT, "/media/")
 
     @property
     def img(self):
         return mark_safe('<img src="{}">'.format(self.url))
 
     @classmethod
-    def make(cls, instance, model_field=None, res='150', page=0, root='thumbnails', _format='jpg', rebuild=False):
-
+    def make(
+        cls,
+        instance,
+        model_field=None,
+        res="150",
+        page=0,
+        root="thumbnails",
+        _format="jpg",
+        rebuild=False,
+    ):
         def auto_field(instance):
             """
             Return the first "FileField" or "ImageField" object
@@ -100,7 +112,7 @@ class Thumbnail(models.Model):
             """
 
             for fieldname in instance._meta.get_all_field_names():
-                if get_field_type(instance, fieldname) in ['FileField', 'ImageField']:
+                if get_field_type(instance, fieldname) in ["FileField", "ImageField"]:
                     return fieldname
 
         def v(fp):
@@ -110,32 +122,34 @@ class Thumbnail(models.Model):
             v = 0
             t, e = os.path.splitext(fp)
             while os.path.exists(fp):
-                fp = '{}_{}{}'.format(t, v, e)
+                fp = "{}_{}{}".format(t, v, e)
                 v += 1
             return fp
 
-        if page == 'cover':  # Saving an integer in the thumbnails table
+        if page == "cover":  # Saving an integer in the thumbnails table
             page = 0
 
         if not model_field:
             model_field = auto_field(instance)
         if not model_field:
-            raise KeyError('No valid field type found for a thumbnail')
+            raise KeyError("No valid field type found for a thumbnail")
 
         if not hasattr(instance, model_field) and bool(getattr(instance, model_field)):
-            logger.warn('Called for a Thumbnail on a nonexistant file field')
+            logger.warn("Called for a Thumbnail on a nonexistant file field")
             return
         try:
             file_path = getattr(instance, model_field).path
             # workaround for UnicodeEncodeError
-            file_path = file_path.encode('utf-8')
+            file_path = file_path.encode("utf-8")
 
         except ValueError:
-            logger.warn('Called for a Thumbnail on a  file field which returned ValueError')
+            logger.warn(
+                "Called for a Thumbnail on a  file field which returned ValueError"
+            )
             return
 
         if not os.path.exists(file_path):
-            logger.error('Could not find model file at {}'.format(file_path))
+            logger.error("Could not find model file at {}".format(file_path))
             return False
 
         # Remove any instances of Thumbnail where the model is the same but the file name has changed!
@@ -156,26 +170,38 @@ class Thumbnail(models.Model):
             model_pk=instance.pk,
             resolution=res,
             file_name=file_path,
-            file_page=page
+            file_page=page,
         )
         if not os.path.exists(file_path):
-            logger.error('Could not find model file at {}'.format(file_path))
+            logger.error("Could not find model file at {}".format(file_path))
 
-        if not was_created and thumbnail.thumbnailPath and not os.path.exists(thumbnail.thumbnailPath):
-            logger.warning('Expired / removed thumbnail')
+        if (
+            not was_created
+            and thumbnail.thumbnailPath
+            and not os.path.exists(thumbnail.thumbnailPath)
+        ):
+            logger.warning("Expired / removed thumbnail")
 
         elif rebuild is True:
             return thumbnail
 
-        cover_file_name = "{}_{}_{}_{}_{}.{}".format(instance._meta.app_label, instance._meta.model_name, instance.pk,
-                                                     res, model_field, _format)
+        cover_file_name = "{}_{}_{}_{}_{}.{}".format(
+            instance._meta.app_label,
+            instance._meta.model_name,
+            instance.pk,
+            res,
+            model_field,
+            _format,
+        )
         cover_file_dir = os.path.join(settings.MEDIA_ROOT, root, str(res))
 
         if not os.path.exists(cover_file_dir):
             try:
                 os.makedirs(cover_file_dir)
             except:
-                raise Exception('Could not create root directory at %s' % (cover_file_dir))
+                raise Exception(
+                    "Could not create root directory at %s" % (cover_file_dir)
+                )
 
         thumbnail_path = os.path.join(cover_file_dir, cover_file_name)
         logger.info(thumbnail_path)
@@ -184,12 +210,12 @@ class Thumbnail(models.Model):
                 make_thumbnail(file_path, thumbnail_path, res, page)  # Slow
             except UnicodeEncodeError:
                 pass
-            except Exception, e:
+            except Exception as e:
                 logger.exception(e.message)
                 pass
 
             if not os.path.exists(thumbnail_path):
-                thumbnail_path = '404'
+                thumbnail_path = "404"
             thumbnail.thumbnailPath = thumbnail_path
             thumbnail.save()
         obsolete.delete()
@@ -203,13 +229,13 @@ class Thumbnail(models.Model):
         :param instance:
         :return:
         """
-        if not hasattr(instance, '_meta'):
-            raise TypeError('Requires a model instance')
+        if not hasattr(instance, "_meta"):
+            raise TypeError("Requires a model instance")
 
         return cls.objects.filter(
             app_name=instance._meta.app_label,
             model_name=instance._meta.model_name,
-            model_pk=instance.pk
+            model_pk=instance.pk,
         )
 
     @classmethod
@@ -233,7 +259,7 @@ class Version(models.Model):
 
     def __unicode__(self):
 
-        presentation_field = 'title'
+        presentation_field = "title"
 
         r = getattr(self, presentation_field)
         langs = []
@@ -241,10 +267,10 @@ class Version(models.Model):
 
             v = getattr(self, l)
 
-            if v is not None and v != '':
+            if v is not None and v != "":
                 langs.append(v)
         if langs:
-            r = r + u'{}'.format(','.join(langs))
+            r = r + u"{}".format(",".join(langs))
 
         if r:
             return unidecode(r)
@@ -252,11 +278,11 @@ class Version(models.Model):
             return u"No title"
 
     @classmethod
-    def get_translated_fields(cls, prefix='title'):
-        return ['description', 'title', 'upload', 'cover', 'url']
+    def get_translated_fields(cls, prefix="title"):
+        return ["description", "title", "upload", "cover", "url"]
 
     @classmethod
-    def populate_covers(cls, res='150'):
+    def populate_covers(cls, res="150"):
         """
         Populates 'thumbnail' for every Version in the system
         :return:
@@ -265,7 +291,7 @@ class Version(models.Model):
             version.thumbnail()
 
     @classmethod
-    def populate_thumbnails(cls, res='150'):
+    def populate_thumbnails(cls, res="150"):
         """
         Populates 'thumbnail' for every Version in the system
         :return:
@@ -283,92 +309,118 @@ class Version(models.Model):
 
             if language and code != language:
                 continue
-            if (
-                not getattr(self, 'title_%s' % (code))
-                and not getattr(self, 'description_%s' % (code))
+            if not getattr(self, "title_%s" % (code)) and not getattr(
+                self, "description_%s" % (code)
             ):
                 continue
             returns[code] = {}
-            upload_field = 'upload_%s' % (code)
-            cover_field = 'cover_%s' % (code)
-            url_field = 'url_%s' % (code)
+            upload_field = "upload_%s" % (code)
+            cover_field = "cover_%s" % (code)
+            url_field = "url_%s" % (code)
 
             # Move along if all language fields are empty
             # Generate an image URL (if possible)
-            if (hasattr(self, cover_field) and bool(getattr(self, cover_field)) and os.path.exists(
-                    getattr(self, cover_field).path)):
+            if (
+                hasattr(self, cover_field)
+                and bool(getattr(self, cover_field))
+                and os.path.exists(getattr(self, cover_field).path)
+            ):
                 try:
-                    returns[code]['thumbnail'] = Thumbnail.make(self, cover_field, **kw)
-                    returns[code]['image'] = returns[code]['thumbnail'].img
-                except Exception, e:
+                    returns[code]["thumbnail"] = Thumbnail.make(self, cover_field, **kw)
+                    returns[code]["image"] = returns[code]["thumbnail"].img
+                except Exception as e:
 
-                    returns[code]['image-errors'] = e.message
+                    returns[code]["image-errors"] = e.message
                     continue
 
-            elif (hasattr(self, upload_field) and bool(getattr(self, upload_field))):
+            elif hasattr(self, upload_field) and bool(getattr(self, upload_field)):
 
                 upload = getattr(self, upload_field)
-                upload_path = upload.path.encode('utf-8')
+                upload_path = upload.path.encode("utf-8")
                 cover = getattr(self, cover_field)
 
                 with NamedTemporaryFile() as f:
                     # print(['convert', upload.path + '[0]', _format + ':' + f.name])
                     # subprocess.call(['convert', upload.path + '[0]', 'jpg' + ':' + f.name])
-                    print f.name
-                    logger.info('Creating thumbnail: make_thumbnail({}, {}, 600, 0)'.format(upload_path, f.name))
-                    cover_file_name = os.path.split(unidecode(upload.path))[1].replace('pdf', 'jpg')
-                    print cover_file_name
+                    print(f.name)
+                    logger.info(
+                        "Creating thumbnail: make_thumbnail({}, {}, 600, 0)".format(
+                            upload_path, f.name
+                        )
+                    )
+                    cover_file_name = os.path.split(unidecode(upload.path))[1].replace(
+                        "pdf", "jpg"
+                    )
+                    print(cover_file_name)
                     # raise AssertionError
                     make_thumbnail(upload_path, f.name, 600, 0)
                     cover.save(cover_file_name, File(f))
 
                 try:
-                    returns[code]['thumbnail'] = Thumbnail.make(self, upload_field, **kw)
-                    returns[code]['image'] = returns[code]['thumbnail'].img
-                except Exception, e:
+                    returns[code]["thumbnail"] = Thumbnail.make(
+                        self, upload_field, **kw
+                    )
+                    returns[code]["image"] = returns[code]["thumbnail"].img
+                except Exception as e:
 
-                    returns[code]['image-errors'] = e.message
+                    returns[code]["image-errors"] = e.message
                     continue
             # Generate a link (local or foreign)
 
             if hasattr(self, upload_field) and bool(getattr(self, upload_field)):
-                returns[code]['url'] = getattr(self, upload_field).url
+                returns[code]["url"] = getattr(self, upload_field).url
             elif hasattr(self, url_field) and getattr(self, url_field) is not None:
-                returns[code]['url'] = getattr(self, url_field)
+                returns[code]["url"] = getattr(self, url_field)
 
-            returns[code]['title'] = getattr(self, 'title_%s' % (code))
-            returns[code]['description'] = getattr(self, 'description_%s' % (code))
+            returns[code]["title"] = getattr(self, "title_%s" % (code))
+            returns[code]["description"] = getattr(self, "description_%s" % (code))
         return returns
 
-    def has_language(self, language_code='en',
-                     language_fields=('title', 'upload', 'url', 'description')):
+    def has_language(
+        self,
+        language_code="en",
+        language_fields=("title", "upload", "url", "description"),
+    ):
         """
         Returns whether or not this object has translated fields (en, pt, id, or tet)
         :return:
         """
-        if language_code == 'id':
-            language_code = 'ind'
+        if language_code == "id":
+            language_code = "ind"
         for i in language_fields:
-            if getattr(self, i + '_' + language_code):
+            if getattr(self, i + "_" + language_code):
                 return True
         return False
 
-    publication = models.ForeignKey('Publication', related_name="versions")
+    publication = models.ForeignKey("Publication", related_name="versions")
     description = models.CharField(max_length=256, null=True, blank=True)
     title = models.CharField(max_length=256, null=True, blank=True)
-    upload = models.FileField(upload_to="publications", max_length=256, null=True, blank=True)
-    cover = models.FileField(upload_to="publication_covers", max_length=256, null=True, blank=True)
+    upload = models.FileField(
+        upload_to="publications", max_length=256, null=True, blank=True
+    )
+    cover = models.FileField(
+        upload_to="publication_covers", max_length=256, null=True, blank=True
+    )
     url = models.CharField(max_length=256, null=True, blank=True)
-    tag = models.ManyToManyField('Tag', blank=True)
+    tag = models.ManyToManyField("Tag", blank=True)
     sector = models.ManyToManyField(
-        'nhdb.PropertyTag', blank=True, related_name="publication_sector",
-        limit_choices_to={'path__startswith': "INV."})
+        "nhdb.PropertyTag",
+        blank=True,
+        related_name="publication_sector",
+        limit_choices_to={"path__startswith": "INV."},
+    )
     activity = models.ManyToManyField(
-        'nhdb.PropertyTag', blank=True, related_name="publication_activity",
-        limit_choices_to={'path__startswith': "ACT."})
+        "nhdb.PropertyTag",
+        blank=True,
+        related_name="publication_activity",
+        limit_choices_to={"path__startswith": "ACT."},
+    )
     beneficiary = models.ManyToManyField(
-        'nhdb.PropertyTag', blank=True, related_name="publication_beneficiary",
-        limit_choices_to={'path__startswith': "BEN."})
+        "nhdb.PropertyTag",
+        blank=True,
+        related_name="publication_beneficiary",
+        limit_choices_to={"path__startswith": "BEN."},
+    )
 
     # This additional information might not be very useful - consider moving
     # to a new location?
@@ -381,7 +433,7 @@ class Version(models.Model):
 
     class Meta:
         verbose_name_plural = _("Versions")
-        ordering = ('title',)
+        ordering = ("title",)
 
 
 class Author(models.Model):
@@ -390,9 +442,9 @@ class Author(models.Model):
 
     @classmethod
     def suggestdisplayname(cls, name):
-        fn = name.split(' ')[-1]
-        ini = [i[0] for i in name.split(' ')[:-1]]
-        formatted_ini = '.'.join(ini) + '.'
+        fn = name.split(" ")[-1]
+        ini = [i[0] for i in name.split(" ")[:-1]]
+        formatted_ini = ".".join(ini) + "."
 
         return "{}, {}".format(fn, formatted_ini)
 
@@ -413,7 +465,7 @@ class Author(models.Model):
 
     class Meta:
         verbose_name_plural = _("Authors")
-        ordering = ('name',)
+        ordering = ("name",)
 
 
 class Pubtype(models.Model):
@@ -429,4 +481,4 @@ class Pubtype(models.Model):
 
     class Meta:
         verbose_name_plural = _("Publication Types")
-        ordering = ('name',)
+        ordering = ("name",)

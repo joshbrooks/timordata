@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 
-__author__ = 'josh'
+__author__ = "josh"
 
 from django.conf.urls import url, include
 from rest_framework import routers, serializers, viewsets
@@ -14,9 +14,9 @@ class SuggestionViewSet(viewsets.ModelViewSet):
 
 
 router = routers.DefaultRouter()
-router.register(r'suggest', SuggestionViewSet)
+router.register(r"suggest", SuggestionViewSet)
 
 urlpatterns = [
-    url(r'^', include(router.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r"^", include(router.urls)),
+    url(r"^api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 ]

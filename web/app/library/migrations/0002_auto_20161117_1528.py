@@ -8,19 +8,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('nhdb', '0009_person_primary_contact_of'),
-        ('library', '0001_initial'),
+        ("nhdb", "0009_person_primary_contact_of"),
+        ("library", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='publication',
-            name='sector',
-            field=models.ManyToManyField(blank=True, related_name='publication_sector', to='nhdb.PropertyTag'),
+            model_name="publication",
+            name="sector",
+            field=models.ManyToManyField(
+                blank=True, related_name="publication_sector", to="nhdb.PropertyTag"
+            ),
         ),
         migrations.AddField(
-            model_name='publication',
-            name='tag',
-            field=models.ManyToManyField(blank=True, to='library.Tag'),
+            model_name="publication",
+            name="tag",
+            field=models.ManyToManyField(blank=True, to="library.Tag"),
         ),
     ]

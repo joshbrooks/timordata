@@ -23,7 +23,7 @@ def version_dropped(sender, instance, **kwargs):
     """
     Remove all thumbnails for a created version
     """
-    Thumbnail.get_from_instance(instance = instance).delete()
+    Thumbnail.get_from_instance(instance=instance).delete()
 
 
 @receiver(pre_delete, sender=Thumbnail)
@@ -35,5 +35,3 @@ def thumbnail_delete(sender, instance, **kwargs):
     if not os.path.isfile(instance.thumbnailPath):
         return
     os.remove(instance.thumbnailPath)
-
-

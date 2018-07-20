@@ -5,11 +5,7 @@ from mp_lite.mp_lite import MP_Lite
 
 class Town(models.Model):
 
-    SIZE_CHOICES = (
-        (1, _('Major town')),
-        (2, _('Minor town')),
-        (3, _('Hamlet')),
-    )
+    SIZE_CHOICES = ((1, _("Major town")), (2, _("Minor town")), (3, _("Hamlet")))
 
     geom = models.MultiPolygonField(srid=32751)
     name = models.TextField()
@@ -23,7 +19,7 @@ class AdminArea(MP_Lite):
     leafletextent = models.TextField(null=True, blank=True)
     objects = models.GeoManager()
 
-    separator = '.'
+    separator = "."
     steps = 3
 
     def __unicode__(self):
@@ -32,19 +28,18 @@ class AdminArea(MP_Lite):
     def selectlist_repr(self):
 
         if 1 < self.pcode < 100:
-            return u'Postu Admin. %s'%self
+            return u"Postu Admin. %s" % self
         elif 100 < self.pcode < 10000:
-            return u'Subdistrito. %s'%self
+            return u"Subdistrito. %s" % self
         elif self.pcode > 10000:
-            return u'Suco. %s'%self
-
+            return u"Suco. %s" % self
 
     # class Meta:
     #     abstract = True
 
     @staticmethod
     def autocomplete_search_fields():
-        return ("name__icontains", "path__icontains",)
+        return ("name__icontains", "path__icontains")
 
     @property
     def id(self):
@@ -56,23 +51,26 @@ class AdminArea(MP_Lite):
 
     @property
     def envelope_geojson(self):
-        return '''{
+        return """{
   "type": "Feature",
   "geometry": %s,
   "properties": {
     "name": "%s",
     "pcode": "%s"
   }
-}'''%(self.envelope.geojson, self.name, self.pcode)
+}""" % (
+            self.envelope.geojson,
+            self.name,
+            self.pcode,
+        )
 
 
 class Suco(AdminArea):
-
     def __unicode__(self):
-        return u'Suco {}'.format(self.name)
+        return u"Suco {}".format(self.name)
 
     def selectlist_repr(self):
-        return u'%s'%self
+        return u"%s" % self
 
     @property
     def subdistrict(self):
@@ -84,16 +82,19 @@ class Suco(AdminArea):
     @property
     def district(self):
         try:
-            return District.objects.get(path=self.get_ancestor_path().get_ancestor_path())
+            return District.objects.get(
+                path=self.get_ancestor_path().get_ancestor_path()
+            )
         except District.DoesNotExist:
             return None
 
+
 class Subdistrict(AdminArea):
     def __unicode__(self):
-        return u'Subdistrict {}'.format(self.name)
+        return u"Subdistrict {}".format(self.name)
 
     def selectlist_repr(self):
-        return u'%s'%self
+        return u"%s" % self
 
     @property
     def district(self):
@@ -102,12 +103,13 @@ class Subdistrict(AdminArea):
         except District.DoesNotExist:
             return None
 
+
 class District(AdminArea):
     def __unicode__(self):
-        return u'Postu Admin. {}'.format(self.name)
+        return u"Postu Admin. {}".format(self.name)
 
     def selectlist_repr(self):
-        return u'%s'%self
+        return u"%s" % self
 
 
 class Road(models.Model):
@@ -123,13 +125,12 @@ class Road(models.Model):
 
 class World(models.Model):
 
-    '''
+    """
     Countries of the world, not simplified, in EPSG:4326
-    '''
-
+    """
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
 
     iso3 = models.CharField(max_length=3, unique=True)
     name = models.CharField(max_length=100)
@@ -141,14 +142,15 @@ class World(models.Model):
 
     @staticmethod
     def autocomplete_search_fields():
-        return ("name__icontains", "iso3__icontains",)
+        return ("name__icontains", "iso3__icontains")
 
 
 class Worldsimple(models.Model):
 
-    '''
+    """
     Countries of the world, simpified, in EPSG:4326
-    '''
+    """
+
     iso3 = models.CharField(max_length=3)
     name = models.CharField(max_length=100)
     geom = models.PolygonField(srid=4326)
@@ -160,10 +162,11 @@ class Worldsimple(models.Model):
 
 class PlaceAlternate(models.Model):
 
-    '''
+    """
     Alternative or "unofficial" place names which are commonly used
     but not officially recognised in 2010 census information
-    '''
+    """
+
     name = models.CharField(max_length=100)
     geom = models.MultiPolygonField(srid=32751)
     objects = models.GeoManager()

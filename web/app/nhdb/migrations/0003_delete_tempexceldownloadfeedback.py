@@ -7,12 +7,6 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('nhdb', '0002_tempexceldownloadfeedback'),
-    ]
+    dependencies = [("nhdb", "0002_tempexceldownloadfeedback")]
 
-    operations = [
-        migrations.DeleteModel(
-            name='TempExcelDownloadFeedback',
-        ),
-    ]
+    operations = [migrations.DeleteModel(name="TempExcelDownloadFeedback")]
